@@ -11,6 +11,7 @@ import Quality from '../components/quality/quality'
 import Equipment from '../components/equipment/equipment'
 import Materiel from '../components/materiel/materiel'
 import Security from '../components/security/security'
+import TaskList from '../components/taskList/TaskList'
 
 
 Vue.use(Router);
@@ -27,6 +28,11 @@ export default new Router({
       name: 'ProductionExecutionLogin',
       component: ProductionExecutionLogin,
 
+    },
+    {
+      path: '/taskList',
+      name: 'TaskList',
+      component: TaskList
     },
     {
       path: '/Drawing',

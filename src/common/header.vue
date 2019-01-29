@@ -4,7 +4,7 @@
         <div class="collapse-btn">
           <i class="el-icon-menu"></i>
         </div>
-        <div class="logo">中二线生产执行系统</div>
+        <div class="logo">中二线管加工生产执行系统</div>
       </div>
       <div class="header-right fl" >
         <div class="headerOut fr" @click="LeavePost">
@@ -55,7 +55,6 @@
     },
     created() {
       this.getAdminState();
-      this.getIndexListData();
 
     },
     methods: {
@@ -90,6 +89,7 @@
                     message: '离岗成功!'
                   });
                   setTimeout(() => {
+                    localStorage.setItem("IndexUrl", 0);
                     sessionStorage.removeItem("userInfo");
                     this.$router.push("/ProductionExecutionLogin");
                   }, 3000);
@@ -110,16 +110,6 @@
               type: 'info',
               message: '已取消离岗'
             });
-          });
-      },
-      //获得头部表格和登陆时间
-      getIndexListData() {
-        axios.get("/api/indexListData")
-          .then((res) => {
-            this.tableData = res.data;
-          })
-          .catch(() => {
-            console.log(err)
           });
       },
 
@@ -204,7 +194,10 @@
 
   @media only screen and (max-width: 1150px) {
     .headerCommon {
+      .header-left {
+        font-size: @font-size-large;
 
+      }
       .header-right {
         .headerAvatar {
           width: 20%;
@@ -225,7 +218,10 @@
   }
   @media only screen and (max-width: 700px) {
     .headerCommon {
+      .header-left {
+        font-size: @font-size-medium-x;
 
+      }
       .header-right {
         .headerAvatar {
           width: 30%;
@@ -248,7 +244,7 @@
   @media only screen and (max-width:540px) {
     .headerCommon {
       .header-left {
-        font-size: @font-size-large;
+        font-size: @font-size-small;
 
       }
       .header-right {
@@ -268,7 +264,7 @@
   @media only screen and (max-width:410px) {
     .headerCommon {
       .header-left {
-        font-size: @font-size-medium;
+        font-size: @font-size-small-s
 
       }
       .header-right {

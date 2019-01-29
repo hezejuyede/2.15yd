@@ -1,7 +1,8 @@
 <template>
   <div class="currentTask">
+    <header-nav></header-nav>
     <div class="currentTaskTitle">
-      <div class="titleDiv fl"  v-for="(item,index) in titleData">
+      <div class="titleDiv fl" v-for="(item,index) in titleData">
         <div class="titleDivLeft">
           {{item.name}}
         </div>
@@ -65,11 +66,11 @@
           min-width="10%">
         </el-table-column>
         <el-table-column
-        prop="songxian"
-        label="送先"
-        align="center"
-        min-width="10%">
-      </el-table-column>
+          prop="songxian"
+          label="送先"
+          align="center"
+          min-width="10%">
+        </el-table-column>
         <el-table-column
           prop="shuliang"
           label="数量"
@@ -96,18 +97,28 @@
       <el-card class="box-card">
         <div class="">注意事项</div>
         <div class="" v-for="(item,index) in matterData">
-         {{item.context}}
+          {{item.context}}
         </div>
-
-
       </el-card>
     </div>
     <div class="currentTaskButton">
-      <el-button type="primary" @click="startWork">开始</el-button>
-      <el-button type="success" @click="endWord">完成</el-button>
+      <el-button type="primary" @click="startWork" :disabled="startWorkBtn == -1">开始</el-button>
+      <el-button type="success" @click="endWord" :disabled="endWorkBtn == -1">完成</el-button>
       <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
       <el-button type="warning" @click="straightPipeState">直管完成状态</el-button>
     </div>
+    <div class="currentTaskRouter">
+      <div class="currentTaskRouterTitle">
+        <h2>当前工位</h2>
+      </div>
+      <div class="currentTaskRouterList">
+        <el-steps align-center :active="step">
+          <el-step v-for="(item,index) in routerList" :title="item.stationname"></el-step>
+        </el-steps>
+      </div>
+    </div>
+    <Modal :msg="message"
+           :isHideModal="HideModal"></Modal>
     <div class="loading-container" v-show="!img.length">
       <loading></loading>
     </div>
@@ -116,23 +127,32 @@
 </template>
 <script type="text/ecmascript-6">
   import axios from 'axios'
+  import headerNav from '../../common/header'
   import footerNav from '../../common/footer'
   import Loading from '../../common/loading'
   import url from '../../assets/js/URL'
+  import Modal from '../../common/modal'
 
   export default {
     name: 'drawing',
     data() {
       return {
+        message: '',
+        HideModal: true,
+        step: 3,
+        routerList: [],
+
         img: "",
-        id:"",
-        titleData:[],
+        id: "",
+        startWorkBtn: "1",
+        endWorkBtn: "-1",
+        titleData: [],
         tableData: [],
-        matterData:[]
+        matterData: []
       }
 
     },
-    components: {Loading, footerNav},
+    components: {Loading, footerNav, headerNav, Modal},
     mounted() {
 
 
@@ -167,10 +187,12 @@
             setTimeout(() => {
               axios.post(" " + url + "/shengchan/getCurShengchanguan", {"id": id})
                 .then((res) => {
-                this.titleData = res.data.baseItem;
-                this.tableData = res.data.yipintulist;
-                this.matterData = res.data.contextList;
-              })
+                  this.titleData = res.data.baseItem;
+                  this.tableData = res.data.yipintulist;
+                  this.matterData = res.data.contextList;
+                  this.step = res.data.maxstep;
+                  this.routerList = res.data.nodeLit;
+                })
                 .catch((err) => {
                   console.log(err)
                 })
@@ -180,11 +202,23 @@
       },
       startWork() {
         if (this.id) {
-
+          this.endWorkBtn = "1";
           axios.post(" " + url + "/shengchan/startWork", {"id": this.id})
             .then((res) => {
-              console.log(res.data)
+              if (res.data === "success") {
+                this.startWorkBtn = "-1";
+                this.message = "已经开始加工";
+                this.HideModal = false;
+                const that = this;
 
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                }
+
+                setTimeout(a, 2000);
+
+              }
             })
             .catch((err) => {
               console.log(err)
@@ -193,9 +227,23 @@
 
       },
       endWord() {
-        axios.post(" "+ url +"/shengchan/updateStatus", {"id": this.id})
+        this.startWorkBtn = "1";
+        axios.post(" " + url + "/shengchan/updateStatus", {"id": this.id})
           .then((res) => {
-            console.log(res.data)
+            if (res.data === "success") {
+              this.endWorkBtn = "-1";
+              this.message = "已经完成加工";
+              this.HideModal = false;
+              const that = this;
+
+              function a() {
+                that.message = "";
+                that.HideModal = true;
+              }
+
+              setTimeout(a, 2000);
+
+            }
 
           })
           .catch((err) => {
@@ -219,10 +267,10 @@
 
   .currentTask {
     width: 100%;
-    height: 100%;
+    margin-bottom: 80px;
     .currentTaskTitle {
-      height: 15%;
-      border-bottom: 1px solid@color-F0;
+      height: 100px;
+      border-bottom: 1px solid @color-F0;
       .titleDiv {
         width: 25%;
         height: 100%;
@@ -253,12 +301,10 @@
         }
       }
     }
-    .currentTaskTable{
-
-    }
-    .currentTaskDiv{
-      width: 90%;
-      margin: 10px auto;
+    .currentTaskDiv {
+      width: 95%;
+      margin: 30px auto;
+      background-color: orange;
       .text {
         font-size: 14px;
       }
@@ -268,16 +314,16 @@
       }
 
       .box-card {
-        width: 90%;
+        width: 100%;
         margin: 0 auto;
 
       }
     }
-    .currentTaskButton{
-      width: 80%;
+    .currentTaskButton {
+      width: 95%;
       margin: 20px auto;
       display: flex;
-      button{
+      button {
         width: 15%;
         height: 50px;
         display: flex;
@@ -285,10 +331,13 @@
         justify-content: center;
       }
     }
-
-
-
-
+    .currentTaskRouter {
+      width: 95%;
+      .currentTaskRouterTitle {
+        font-size: @font-size-large;
+        padding-left: 10%;
+      }
+    }
   }
 
   .loading-container {
@@ -304,30 +353,25 @@
       .currentTaskTitle {
 
         .titleDiv {
-
           .titleDivLeft {
             font-size: @font-size-medium-x;
 
           }
-
           .titleDivRight {
             font-size: @font-size-medium-x;
             width: 50%;
           }
         }
       }
-      .currentTaskButton{
-        button{
+      .currentTaskButton {
+        button {
           width: 15%;
           font-size: @font-size-medium;
-
         }
       }
     }
 
   }
-
-
 
   @media only screen and (max-width: 720px) {
     .currentTask {
@@ -345,9 +389,9 @@
           }
         }
       }
-      .currentTaskButton{
-         width: 95%;
-        button{
+      .currentTaskButton {
+        width: 95%;
+        button {
           width: 25%;
           font-size: @font-size-small-s;
 
@@ -364,7 +408,7 @@
       .currentTaskTitle {
 
         .titleDiv {
-           width: 30%;
+          width: 30%;
           .titleDivLeft {
             font-size: @font-size-small-s;
           }

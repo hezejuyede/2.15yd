@@ -2,42 +2,13 @@
   <div class="ProductionExecution">
     <header-nav></header-nav>
     <div class="ProductionExecutionDiv">
-      <!-- 公共头部-->
-      <div class="contentTop">
-        <div class="searchInput">
-          <div class="topDiv">
-            <div class="topInput">
-              <el-input v-model="inputWord" @input="goToPipePage(inputWord)" placeholder="请扫码或手工输入"></el-input>
-            </div>
-            <div class="topButton">
-              <el-button type="primary" icon="search" @click="workStart">加工开始</el-button>
-              <el-button type="success" icon="search" @click="workEnd">加工完成</el-button>
-            </div>
-          </div>
-        </div>
-        <div class="listSearch">
-          <div class="listSearchInput">
-            <el-input v-model="searchWord" placeholder="检索管子"></el-input>
-          </div>
-          <div class="listSearchBtn">
-            <el-button type="primary" icon="search" @click="materialSummary">物料汇总</el-button>
-            <el-button type="success" icon="search" @click="taskList">任务清单</el-button>
-          </div>
-        </div>
-      </div>
       <!--公共管-->
       <div class="publicPage" v-if="this.listType ==1">
         <el-table
           :data="tables"
-          :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+          :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'14px'}"
           border
-          @select="selectList"
-          @row-click="goToCurrentTask"
           style="width: 95%;margin: 0 auto">
-          <el-table-column
-            type="selection"
-            width="30">
-          </el-table-column>
           <el-table-column
             prop="shipcode"
             label="船号"
@@ -68,6 +39,12 @@
             align="center"
             min-width="20%">
           </el-table-column>
+          <el-table-column
+            prop="statusStr"
+            label="当前状态"
+            align="center"
+            min-width="20%">
+          </el-table-column>
         </el-table>
       </div>
       <!--小组立-->
@@ -82,12 +59,7 @@
               :data="tables"
               :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               border
-              @row-click="goToCurrentTask"
               style="width: 95%;margin: 0 auto;overflow: auto">
-              <el-table-column
-                type="selection"
-                width="30">
-              </el-table-column>
               <el-table-column
                 prop="chuanhao"
                 label="船番"
@@ -178,6 +150,12 @@
                 align="center"
                 width="100">
               </el-table-column>
+              <el-table-column
+                prop="statusStr"
+                label="当前状态"
+                align="center"
+                width="100">
+              </el-table-column>
             </el-table>
           </div>
           <div class="account" v-if="right === true">
@@ -187,10 +165,6 @@
               border
               @row-click="goToCurrentTask"
               style="width: 95%;margin: 0 auto">
-              <el-table-column
-                type="selection"
-                width="30">
-              </el-table-column>
               <el-table-column
                 prop="chuanhao"
                 label="船番"
@@ -239,6 +213,12 @@
                 align="center"
                 min-width="20%">
               </el-table-column>
+              <el-table-column
+                prop="statusStr"
+                label="当前状态"
+                align="center"
+                min-width="20%">
+              </el-table-column>
 
             </el-table>
           </div>
@@ -250,12 +230,7 @@
           :data="tables"
           :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           border
-          @row-click="goToCurrentTask"
           style="width: 95%;margin: 0 auto">
-          <el-table-column
-            type="selection"
-            width="30">
-          </el-table-column>
           <el-table-column
             prop="koujing"
             label="口径"
@@ -286,6 +261,12 @@
             align="center"
             min-width="10%">
           </el-table-column>
+          <el-table-column
+            prop="statusStr"
+            label="当前状态"
+            align="center"
+            min-width="10%">
+          </el-table-column>
         </el-table>
       </div>
       <!-- 枝管切断-->
@@ -294,12 +275,7 @@
           :data="tables"
           :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           border
-          @row-click="goToCurrentTask"
           style="width: 95%;margin: 0 auto;">
-          <el-table-column
-            type="selection"
-            width="30">
-          </el-table-column>
           <el-table-column
             prop="type"
             label="类型"
@@ -444,11 +420,15 @@
             align="center"
             width="100">
           </el-table-column>
+          <el-table-column
+            prop="statusStr"
+            label="当前状态"
+            align="center"
+            width="100">
+          </el-table-column>
         </el-table>
       </div>
     </div>
-    <Modal :msg="message"
-           :isHideModal="HideModal"></Modal>
     <div class="loading-container" v-show="!img">
       <loading></loading>
     </div>
@@ -457,42 +437,26 @@
 </template>
 <script type="text/ecmascript-6">
   import axios from 'axios'
-  import url from '../assets/js/URL'
-  import headerNav from '../common/header'
-  import footerNav from '../common/footer'
-  import Loading from '../common/loading'
-  import Modal from '../common/modal'
+  import url from '../../assets/js/URL'
+  import headerNav from '../../common/header'
+  import footerNav from '../../common/footer'
+  import Loading from '../../common/loading'
 
   export default {
     name: 'ProductionExecution',
     data() {
       return {
         img: "",
-
-
-        listData: [],
-
         listType: "",
 
-
         tableData: [],
-
-        inputWord: '',
-
-        searchWord: '',
-        is_search: false,
-
-        message: '',
-        HideModal: true,
-
-
         left: true,
         right: false,
 
       }
 
     },
-    components: {Loading, footerNav, Modal, headerNav},
+    components: {Loading, footerNav,headerNav},
     mounted() {
 
 
@@ -581,7 +545,7 @@
           else {
             this.listType = "1";
             setTimeout(() => {
-              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": info.GW})
+              axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": info.GW})
                 .then((res) => {
                   this.tableData = res.data;
                 })
@@ -592,116 +556,6 @@
           }
         }
       },
-
-      //扫码直接前往任务页面
-      goToPipePage(inputWord) {
-        var n = Number(inputWord.length);
-        if (n = 13) {
-          localStorage.setItem("pipeId", "653");
-          localStorage.setItem("IndexUrl", 2);
-          this.$router.push("/CurrentTask");
-        }
-      },
-
-      //通过手工输入前往任务页面
-      workStart() {
-        if (this.inputWord) {
-          axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": info.GW})
-            .then((res) => {
-              if (res.data === "1") {
-                localStorage.setItem("pipeId", 95);
-                localStorage.setItem("IndexUrl", 2);
-                this.$router.push("/CurrentTask");
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-        }
-        else {
-          this.message = "请输入管子号";
-          this.HideModal = false;
-          const that = this;
-
-          function a() {
-            that.message = "";
-            that.HideModal = true;
-          }
-
-          setTimeout(a, 2000);
-        }
-
-      },
-      //加工完成
-      workEnd() {
-        if (this.listData.length) {
-          axios.post(" " + url + "/shengchan/updateStatusBatch", {"ids": this.listData})
-            .then((res) => {
-              if (res.data === "1") {
-                this.message = "已经完成";
-                this.HideModal = false;
-                const that = this;
-
-                function a() {
-                  that.message = "";
-                  that.HideModal = true;
-                  window.location.reload();
-                }
-
-                setTimeout(a, 2000);
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-        }
-        else {
-          this.message = "请勾选完成的管子";
-          this.HideModal = false;
-          const that = this;
-
-          function a() {
-            that.message = "";
-            that.HideModal = true;
-          }
-
-          setTimeout(a, 2000);
-        }
-      },
-      //物料汇总
-      materialSummary() {
-        if (this.inputWord) {
-
-        }
-        else {
-          this.message = "请勾选要查看的管子";
-          this.HideModal = false;
-          const that = this;
-
-          function a() {
-            that.message = "";
-            that.HideModal = true;
-          }
-
-          setTimeout(a, 2000);
-        }
-      },
-      //任务清单
-      taskList() {
-        this.$router.push("/taskList");
-        localStorage.setItem("IndexUrl", 1);
-
-      },
-
-      //点击列表前往任务页面
-      goToCurrentTask(row, event, column) {
-        if (row.id) {
-          localStorage.setItem("pipeId", row.id);
-          localStorage.setItem("IndexUrl", 2);
-          this.$router.push("/CurrentTask");
-        }
-      },
-
 
       //小组立显示左边
       showLeft() {
@@ -732,68 +586,11 @@
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
-  @import "../assets/less/base";
+  @import "../../assets/less/base";
 
   .ProductionExecutionDiv {
+    margin-top: 20px;
     margin-bottom: 80px;
-    .contentTop {
-      margin-bottom: 10px;
-      border-bottom: 1px solid @color-bg-hei;
-      .searchInput {
-        width: 100%;
-        border-bottom: 1px solid @color-bg-hei;
-        .topDiv {
-          width: 80%;
-          margin: 20px auto;
-          display: flex;
-          .topInput {
-            flex: 2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-          .topButton {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            .el-button {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              width: 45%;
-              height: 35px;
-            }
-
-          }
-        }
-      }
-      .listSearch {
-        width: 80%;
-        margin: 20px auto;
-        display: flex;
-        .listSearchInput {
-          flex: 2;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .listSearchBtn {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          .el-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 45%;
-            height: 35px;
-          }
-        }
-
-      }
-    }
     .publicPage {
 
     }

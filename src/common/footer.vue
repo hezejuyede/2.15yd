@@ -14,6 +14,7 @@
       num: Number,
       navBar: [
         {"icon": "iconfont icon-gongcheng-", "text": "工程", "url": "/"},
+        {"icon": "iconfont icon-renwuqingdan", "text": "清单", "url": "/TaskList"},
         {"icon": "iconfont icon-renwucaiji", "text": "任务", "url": "/CurrentTask"},
         {"icon": "iconfont icon-gongweiguanli", "text": "物料", "url": "/Materiel"},
         {"icon": "iconfont icon-shebeizuhe", "text": "设备", "url": "/Equipment"},
@@ -58,7 +59,7 @@
     z-index: 999;
     left: auto;
     bottom: 0;
-    height: 55px;
+    height: 70px;
     display: flex;
     border-top: 5px solid @color-F0;
     background-color: @color-white;
@@ -68,17 +69,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      .icon-shuidian {
-        font-size: 20px;
-      }
-      .icon-shuju {
-        font-size: 20px;
-      }
-      .icon-youjian {
-        font-size: 22px;
-      }
-      .icon-iconfonticonfontwode1 {
+      font-size: 14px;
+      .icon-shebeizuhe,.icon-tuzhi, .icon-renwuqingdan,.icon-anquan, .icon-zhilianganquan, .icon-gongweiguanli, .icon-renwucaiji, .icon-gongcheng- {
         font-size: 20px;
       }
     }
@@ -86,5 +78,16 @@
       color: @color-blue;
     }
   }
+
+  @media only screen and (max-width:410px) {
+
+    #footer {
+      .footer-div {
+        font-size: 12px;
+      }
+    }
+  }
+
+
 
 </style>

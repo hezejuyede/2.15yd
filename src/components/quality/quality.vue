@@ -1,7 +1,18 @@
 <template>
   <div class="quality">
     <header-nav></header-nav>
+
     <div class="qualityDiv">
+      <div class="currentTaskTitle">
+        <div class="titleDiv fl"  v-for="(item,index) in titleData">
+          <div class="titleDivLeft">
+            {{item.name}}
+          </div>
+          <div class="titleDivRight">
+            {{item.text}}
+          </div>
+        </div>
+      </div>
       <div class="qualityDivTitle">
         <el-select v-model="indexno" placeholder="请选择异常原因">
           <el-option
@@ -13,10 +24,15 @@
         </el-select>
       </div>
       <div class="qualityDivContent">
-        <textarea placeholder="请出入异常备注" v-model="remarks"></textarea>
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 6, maxRows: 6 }"
+          placeholder="请出入异常备注"
+          v-model="remarks">
+        </el-input>
       </div>
       <div class="qualityDivBtn">
-        <el-button type="primary" icon="search" @click="submitAbnormal">提交异常原因</el-button>
+        <button  @click="submitAbnormal">提交异常原因</button>
       </div>
     </div>
     <div class="loading-container" v-show="!options.length">
@@ -39,12 +55,15 @@
     name: 'quality',
     data() {
       return {
+        itleData: "",
         img: "",
+        id:"",
         options: [],
         indexno: '',
-        remarks:"",
+        remarks: "",
         message: '',
-        HideModal: true
+        HideModal: true,
+        titleData: []
       }
 
     },
@@ -69,19 +88,30 @@
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
-          setTimeout(() => {
-            axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
+          const id = localStorage.getItem("pipeId");
+          this.id = id;
+          if (id === null) {
+            localStorage.setItem("IndexUrl", 0);
+            this.$router.push("/")
+          }
+          else {
+            axios.post(" " + url + "/shengchan/getCurShengchanguan", {"id": id})
               .then((res) => {
-                this.options = res.data;
+                this.titleData = res.data.baseItem;
               })
               .catch((err) => {
                 console.log(err)
-              })
-          }, 1000);
-
-
-
-
+              });
+            setTimeout(() => {
+              axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
+                .then((res) => {
+                  this.options = res.data;
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }, 1000);
+          }
         }
       },
       submitAbnormal() {
@@ -151,7 +181,6 @@
           setTimeout(b, 2000);
         }
       }
-
     }
   }
 </script>
@@ -160,10 +189,42 @@
 
   .quality {
     width: 100%;
-    height: 100%;
+    height: 85%;
     .qualityDiv {
       width: 100%;
       height: 100%;
+      .currentTaskTitle {
+        height: 15%;
+        border-bottom: 1px solid @color-F0;
+        .titleDiv {
+          width: 25%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 1%;
+          .titleDivLeft {
+            width: 40%;
+            height: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: @font-size-large-xx;
+            overflow: hidden;
+          }
+          .titleDivRight {
+            width: 40%;
+            height: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 2%;
+            background-color: @color-F0;
+            border-radius: 5%;
+            font-size: @font-size-large-xx;
+          }
+        }
+      }
       .qualityDivTitle {
         height: 15%;
         display: flex;
@@ -171,17 +232,12 @@
         justify-content: center;
       }
       .qualityDivContent {
-        height: 40%;
+        width: 80%;
+        margin: 0 auto;
+        height: 35%;
         display: flex;
         align-items: center;
         justify-content: center;
-        textarea {
-          width: 90%;
-          height: 90%;
-          border: 1px solid @color-bg-hei;
-          border-radius: 2%;
-          padding: 5%;
-        }
 
       }
       .qualityDivBtn {
@@ -191,9 +247,15 @@
         justify-content: center;
         button {
           width: 150px;
-          height: 40px;
+          height: 50px;
           text-align: center;
-          line-height: 40px;
+          line-height: 50px;
+          background-color: @color-blue;
+          color: @color-white;
+          font-size: @font-size-medium-x;
+          border-radius: 10%;
+          border: none;
+
         }
       }
     }
@@ -206,5 +268,60 @@
     transform: translateY(-50%);
   }
 
+  @media only screen and (max-width: 1200px) {
+    .quality {
+      .qualityDiv {
+        .currentTaskTitle {
+          .titleDiv {
+            .titleDivLeft {
+              font-size: @font-size-medium-x;
+            }
+            .titleDivRight {
+              font-size: @font-size-medium-x;
+              width: 50%;
+            }
+          }
+        }
+      }
 
+    }
+
+  }
+
+  @media only screen and (max-width: 720px) {
+    .quality {
+      .qualityDiv {
+        .currentTaskTitle {
+          .titleDiv {
+            .titleDivLeft {
+              font-size: @font-size-medium;
+            }
+            .titleDivRight {
+              font-size: @font-size-medium;
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+  @media only screen and (max-width: 480px) {
+    .quality {
+      .qualityDiv {
+        .currentTaskTitle {
+          .titleDiv {
+            width: 30%;
+            .titleDivLeft {
+              font-size: @font-size-small-s;
+            }
+            .titleDivRight {
+              font-size: @font-size-small-s;;
+            }
+          }
+        }
+      }
+    }
+
+  }
 </style>

@@ -3,7 +3,7 @@
         <header-nav></header-nav>
         <div class="ProductionExecutionDiv">
             <div class="IconTemplate" v-for="(item , index) in iconData" @click="goToPage(index,item.url)">
-                <i :class=" item.icon"></i>
+                <i :class="item.icon"></i>
                 <span>{{item.text}}</span>
             </div>
         </div>
