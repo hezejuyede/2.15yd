@@ -113,7 +113,7 @@
       </div>
       <div class="currentTaskRouterList">
         <el-steps align-center :active="step">
-          <el-step v-for="(item,index) in routerList" :title="item.stationname"></el-step>
+          <el-step v-for="(item,index) in routerList" :keys="index" :title="item.stationname"></el-step>
         </el-steps>
       </div>
     </div>

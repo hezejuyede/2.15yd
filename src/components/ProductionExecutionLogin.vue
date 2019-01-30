@@ -184,7 +184,14 @@
         }
         else {
           this.userNameErrText = "";
-          this.userNameState = true
+          this.userNameState = true;
+          axios.post(" " + url + "/api/getProcessList.html", {"name": this.username})
+            .then((res) => {
+              this.selectList = res.data;
+            })
+            .catch((err) => {
+              console.log(err)
+            })
         }
       },
       userNameFocus(username) {
@@ -416,9 +423,9 @@
       showRight() {
         this.left = false;
         this.right = true;
-        axios.post(" " + url + "/api/getProcessList.html").then((res)=>{
+        /*axios.post(" " + url + "/api/getProcessList.html").then((res) => {
           this.selectList = res.data;
-        }).catch()
+        }).catch()*/
       }
     },
   }

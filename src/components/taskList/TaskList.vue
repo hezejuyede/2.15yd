@@ -8,6 +8,7 @@
           :data="tables"
           :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'14px'}"
           border
+          :row-class-name="tableRowClassName"
           style="width: 95%;margin: 0 auto">
           <el-table-column
             prop="shipcode"
@@ -581,6 +582,16 @@
           .catch((err) => {
             console.log(err)
           })
+      },
+
+      //颜色
+      tableRowClassName({row, rowIndex}) {
+        if (row.status === 3) {
+          return 'warning-row';
+        }
+        else if (row.status === 2) {
+          return 'success-row';
+        }
       }
     }
   }

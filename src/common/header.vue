@@ -31,6 +31,7 @@
 </template>
 <script type="text/ecmascript-6">
   import axios from 'axios'
+  import url from '../assets/js/URL'
 
   import timer from './timer'
 
@@ -81,7 +82,7 @@
           type: 'warning'
         })
           .then(() => {
-            axios.post("/api/LeavePost", {"username": "习近平"})
+            axios.post("  " + url + "/api/LeavePost", {"username": this.userName})
               .then((res) => {
                 if (res.data === "1") {
                   this.$message({

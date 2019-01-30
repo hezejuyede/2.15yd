@@ -60,7 +60,7 @@
     </div>
     <div class="drawingBottom">
       <div class="drawingImg">
-        <img :src="imgUrl" alt="">
+        <img src="../../assets/img/ypt.jpg" alt="">
       </div>
     </div>
     <div class="loading-container" v-show="!img.length">
@@ -183,7 +183,7 @@
         value3: '',
         value4: '',
 
-        imgUrl: "http://localhost:3000/ypt.jpg"
+        imgUrl: ""
       }
 
     },
