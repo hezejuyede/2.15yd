@@ -29,7 +29,7 @@
     name: 'promptBox',
     data() {
       return {
-        time: 10,
+        time: 1,
         stopTimer: true
       }
     },

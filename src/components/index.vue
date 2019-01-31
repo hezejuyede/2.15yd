@@ -4,24 +4,16 @@
     <div class="ProductionExecutionDiv">
       <!-- 公共头部-->
       <div class="contentTop" ref="contentTop">
-        <div class="searchInput">
-          <div class="topDiv">
-            <div class="topInput">
-              <el-input v-model="inputWord" @input="goToPipePage(inputWord)" placeholder="请扫码或手工输入"></el-input>
-            </div>
-            <div class="topButton">
-              <el-button type="primary" icon="search" @click="workStart">加工开始</el-button>
-              <el-button type="success" icon="search" @click="workEnd">加工完成</el-button>
-            </div>
-          </div>
-        </div>
         <div class="listSearch">
           <div class="listSearchInput">
-            <el-input v-model="searchWord" placeholder="检索管子"></el-input>
+            <el-input v-model="searchWord"
+                      placeholder="检索管子或扫码或手工输入"
+                      @keyup.enter.native="goToPipePage(searchWord)"></el-input>
           </div>
           <div class="listSearchBtn">
             <el-button type="primary" icon="search" @click="materialSummary">物料汇总</el-button>
             <el-button type="success" icon="search" @click="taskList">任务清单</el-button>
+            <el-button type="warning" icon="search" @click="workEnd">加工完成</el-button>
           </div>
         </div>
       </div>
@@ -30,7 +22,6 @@
         <el-table
           :data="tables"
           :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-          border
           :row-class-name="tableRowClassName"
           @select="selectList"
           @select-all="selectAll"
@@ -90,6 +81,7 @@
               :data="tables"
               :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               border
+              height="350"
               @row-click="goToCurrentTask"
               @select="selectList"
               @select-all="selectAll"
@@ -100,32 +92,36 @@
                 width="30">
               </el-table-column>
               <el-table-column
+                fixed
                 prop="chuanhao"
                 label="船番"
                 align="center"
                 width="100">
               </el-table-column>
               <el-table-column
+                fixed
                 prop="jiagongxilie"
                 label="加工系列"
                 align="center"
                 width="100">
               </el-table-column>
               <el-table-column
+                fixed
                 prop="yiguanhao"
                 label="一贯号"
                 align="center"
                 width="100">
               </el-table-column>
               <el-table-column
-                prop="daihao"
-                label="代号"
+                fixed
+                prop="pno"
+                label="pNo"
                 align="center"
                 width="100">
               </el-table-column>
               <el-table-column
-                prop="pno"
-                label="pNo"
+                prop="daihao"
+                label="代号"
                 align="center"
                 width="100">
               </el-table-column>
@@ -263,7 +259,7 @@
                 prop="levelStr"
                 label="优先级"
                 align="center"
-                width="100">
+                min-width="20%">
               </el-table-column>
             </el-table>
           </div>
@@ -328,6 +324,7 @@
           :data="tables"
           :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           border
+          height="430"
           :row-class-name="tableRowClassName"
           @select="selectList"
           @select-all="selectAll"
@@ -338,24 +335,28 @@
             width="30">
           </el-table-column>
           <el-table-column
+            fixed
             prop="type"
             label="类型"
             align="center"
             width="100">
           </el-table-column>
           <el-table-column
+            fixed
             prop="chuanfan"
             label="船番"
             align="center"
             width="100">
           </el-table-column>
           <el-table-column
+            fixed
             prop="jiagongxilie"
             label="加工系列"
             align="center"
             width="100">
           </el-table-column>
           <el-table-column
+            fixed
             prop="fanhao"
             label="一贯号"
             align="center"
@@ -516,6 +517,7 @@
     data() {
       return {
         img: "",
+        k:"200",
 
 
         listData: [],
@@ -574,6 +576,7 @@
         this.img = ["1"]
       },
 
+      //选择
       selectList(val) {
         if (val.length) {
           let data = [];
@@ -584,6 +587,8 @@
           this.listData = data;
         }
       },
+
+      //全选
       selectAll(val){
         if (val.length) {
           let data = [];
@@ -667,44 +672,18 @@
       },
 
       //扫码直接前往任务页面
-      goToPipePage(inputWord) {
-        var n = Number(inputWord.length);
-        if (n = 13) {
+      goToPipePage(searchWord) {
+        if(searchWord){
           localStorage.setItem("pipeId", "653");
           localStorage.setItem("IndexUrl", 2);
           this.$router.push("/CurrentTask");
         }
-      },
-
-      //通过手工输入前往任务页面
-      workStart() {
-        if (this.inputWord) {
-          axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": info.GW})
-            .then((res) => {
-              if (res.data === "1") {
-                localStorage.setItem("pipeId", 95);
-                localStorage.setItem("IndexUrl", 2);
-                this.$router.push("/CurrentTask");
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-        }
         else {
-          this.message = "请输入管子号";
-          this.HideModal = false;
-          const that = this;
 
-          function a() {
-            that.message = "";
-            that.HideModal = true;
-          }
-
-          setTimeout(a, 2000);
         }
 
       },
+
       //加工完成
       workEnd() {
         if (this.listData.length) {
@@ -741,6 +720,7 @@
           setTimeout(a, 2000);
         }
       },
+
       //物料汇总
       materialSummary() {
         if (this.inputWord) {
@@ -759,6 +739,7 @@
           setTimeout(a, 2000);
         }
       },
+
       //任务清单
       taskList() {
         this.$router.push("/taskList");
@@ -803,7 +784,7 @@
       },
 
 
-
+      //移动显示搜索框
       showSearch() {
         let search = this.$refs.contentTop;
         let searchHight = this.$refs.contentTop.offsetHeight;
@@ -819,6 +800,7 @@
           }
         })
       },
+      //搜索框变色
       bianse() {
         let search = this.$refs.contentTop;
         let searchHight = this.$refs.contentTop.offsetHeight;
@@ -833,9 +815,6 @@
         })
 
       },
-
-
-
 
       //显示向上按钮
       showUp() {
@@ -858,8 +837,6 @@
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
       },
-
-
     }
   }
 </script>
@@ -871,35 +848,6 @@
     .contentTop {
       margin-bottom: 10px;
       border-bottom: 1px solid @color-bg-hei;
-      .searchInput {
-        width: 100%;
-        border-bottom: 1px solid @color-bg-hei;
-        .topDiv {
-          width: 80%;
-          margin: 20px auto;
-          display: flex;
-          .topInput {
-            flex: 2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-          .topButton {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            .el-button {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              width: 45%;
-              height: 35px;
-            }
-
-          }
-        }
-      }
       .listSearch {
         width: 80%;
         margin: 20px auto;
@@ -921,6 +869,7 @@
             justify-content: center;
             width: 45%;
             height: 35px;
+            margin-left: 2%;
           }
         }
 

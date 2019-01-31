@@ -116,8 +116,8 @@
         needKnown: "",
         contentText: "",
 
-        left: true,
-        right: false,
+        left: false,
+        right: true,
 
 
         grm: "",
@@ -185,7 +185,7 @@
         else {
           this.userNameErrText = "";
           this.userNameState = true;
-          axios.post(" " + url + "/api/getProcessList.html", {"name": this.username})
+          axios.post(" " + url + "/api/getPersonProcessList", {"name": this.username})
             .then((res) => {
               this.selectList = res.data;
             })
