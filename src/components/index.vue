@@ -3,7 +3,7 @@
     <header-nav></header-nav>
     <div class="ProductionExecutionDiv">
       <!-- 公共头部-->
-      <div class="contentTop">
+      <div class="contentTop" ref="contentTop">
         <div class="searchInput">
           <div class="topDiv">
             <div class="topInput">
@@ -31,7 +31,9 @@
           :data="tables"
           :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           border
+          :row-class-name="tableRowClassName"
           @select="selectList"
+          @select-all="selectAll"
           @row-click="goToCurrentTask"
           style="width: 95%;margin: 0 auto">
           <el-table-column
@@ -68,6 +70,12 @@
             align="center"
             min-width="20%">
           </el-table-column>
+          <el-table-column
+            prop="levelStr"
+            label="优先级"
+            align="center"
+            min-width="20%">
+          </el-table-column>
         </el-table>
       </div>
       <!--小组立-->
@@ -83,6 +91,9 @@
               :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               border
               @row-click="goToCurrentTask"
+              @select="selectList"
+              @select-all="selectAll"
+              :row-class-name="tableRowClassName"
               style="width: 95%;margin: 0 auto;overflow: auto">
               <el-table-column
                 type="selection"
@@ -178,6 +189,12 @@
                 align="center"
                 width="100">
               </el-table-column>
+              <el-table-column
+                prop="levelStr"
+                label="优先级"
+                align="center"
+                width="100">
+              </el-table-column>
             </el-table>
           </div>
           <div class="account" v-if="right === true">
@@ -185,6 +202,9 @@
               :data="tables"
               :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               border
+              @select="selectList"
+              @select-all="selectAll"
+              :row-class-name="tableRowClassName"
               @row-click="goToCurrentTask"
               style="width: 95%;margin: 0 auto">
               <el-table-column
@@ -239,7 +259,12 @@
                 align="center"
                 min-width="20%">
               </el-table-column>
-
+              <el-table-column
+                prop="levelStr"
+                label="优先级"
+                align="center"
+                width="100">
+              </el-table-column>
             </el-table>
           </div>
         </div>
@@ -250,6 +275,9 @@
           :data="tables"
           :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           border
+          :row-class-name="tableRowClassName"
+          @select="selectList"
+          @select-all="selectAll"
           @row-click="goToCurrentTask"
           style="width: 95%;margin: 0 auto">
           <el-table-column
@@ -286,6 +314,12 @@
             align="center"
             min-width="10%">
           </el-table-column>
+          <el-table-column
+            prop="levelStr"
+            label="优先级"
+            align="center"
+            min-width="10%">
+          </el-table-column>
         </el-table>
       </div>
       <!-- 枝管切断-->
@@ -294,6 +328,9 @@
           :data="tables"
           :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           border
+          :row-class-name="tableRowClassName"
+          @select="selectList"
+          @select-all="selectAll"
           @row-click="goToCurrentTask"
           style="width: 95%;margin: 0 auto;">
           <el-table-column
@@ -444,8 +481,19 @@
             align="center"
             width="100">
           </el-table-column>
+          <el-table-column
+            prop="levelStr"
+            label="优先级"
+            align="center"
+            width="100">
+          </el-table-column>
         </el-table>
       </div>
+
+
+    </div>
+    <div class="upTop" ref="upTop" @click="upToTop">
+      <i class="iconfont icon-xiangshang1"></i>
     </div>
     <Modal :msg="message"
            :isHideModal="HideModal"></Modal>
@@ -494,7 +542,9 @@
     },
     components: {Loading, footerNav, Modal, headerNav},
     mounted() {
-
+      this.showUp();
+      this.showSearch();
+      this.bianse();
 
     },
     computed: {
@@ -534,6 +584,29 @@
           this.listData = data;
         }
       },
+      selectAll(val){
+        if (val.length) {
+          let data = [];
+          for (let i = 0; i < val.length; i++) {
+            let a = val[i].id;
+            data.push(a)
+          }
+          this.listData = data;
+        }
+
+      },
+
+      //颜色
+      tableRowClassName({row, rowIndex}) {
+        if (row.level === 2) {
+          return 'warning-row';
+        }
+        else if (row.level === 1) {
+          return 'success-row';
+        }
+      },
+
+
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
         const userInfo = sessionStorage.getItem("userInfo");
@@ -727,7 +800,66 @@
           .catch((err) => {
             console.log(err)
           })
-      }
+      },
+
+
+
+      showSearch() {
+        let search = this.$refs.contentTop;
+        let searchHight = this.$refs.contentTop.offsetHeight;
+        window.addEventListener('scroll', () => {
+          let top = window.scrollY;
+          if (top > searchHight) {
+            search.style.width = "100%";
+            search.style.position = "fixed";
+            search.style.top = 0;
+            search.style.zIndex = 999;
+          } else if (top <= searchHight) {
+            search.style.position = "";
+          }
+        })
+      },
+      bianse() {
+        let search = this.$refs.contentTop;
+        let searchHight = this.$refs.contentTop.offsetHeight;
+        window.addEventListener('scroll', () => {
+          let top = window.scrollY;
+          if (top > searchHight) {
+            search.style.background = "rgba(240,240,240,1)"
+          } else {
+            let op = (top / searchHight) * 0.85;
+            search.style.background = "rgba(240,240,240," + op + ")";
+          }
+        })
+
+      },
+
+
+
+
+      //显示向上按钮
+      showUp() {
+        let height = this.$refs.contentTop.offsetHeight;
+        let upTop = this.$refs.upTop;
+        window.addEventListener('scroll', () => {
+          let top = window.scrollY;
+          if (top >= height) {
+            upTop.style.display = "block"
+          }
+          else if (top < height) {
+            upTop.style.display = "none"
+          }
+        });
+
+      },
+
+      //点击向上
+      upToTop() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      },
+
+
     }
   }
 </script>
@@ -823,8 +955,27 @@
 
     }
 
-  }
 
+  }
+  .upTop {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border-radius: 50%;
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 999;
+    background-color: @color-background-d;
+    cursor: pointer;
+    color: @color-white;
+    i {
+      font-size: @font-size-large-xxx;
+    }
+
+  }
   .loading-container {
     position: absolute;
     width: 100%;

@@ -1,7 +1,7 @@
 <template>
   <div class="ProductionExecution">
     <header-nav></header-nav>
-    <div class="ProductionExecutionDiv">
+    <div class="ProductionExecutionDiv" ref="contentTop">
       <!--公共管-->
       <div class="publicPage" v-if="this.listType ==1">
         <el-table
@@ -58,6 +58,7 @@
           <div class="saoMa" v-if="left === true">
             <el-table
               :data="tables"
+              :row-class-name="tableRowClassName"
               :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               border
               style="width: 95%;margin: 0 auto;overflow: auto">
@@ -164,6 +165,7 @@
               :data="tables"
               :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               border
+              :row-class-name="tableRowClassName"
               @row-click="goToCurrentTask"
               style="width: 95%;margin: 0 auto">
               <el-table-column
@@ -231,6 +233,7 @@
           :data="tables"
           :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           border
+          :row-class-name="tableRowClassName"
           style="width: 95%;margin: 0 auto">
           <el-table-column
             prop="koujing"
@@ -276,6 +279,7 @@
           :data="tables"
           :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           border
+          :row-class-name="tableRowClassName"
           style="width: 95%;margin: 0 auto;">
           <el-table-column
             prop="type"
@@ -430,6 +434,10 @@
         </el-table>
       </div>
     </div>
+
+    <div class="upTop" ref="upTop" @click="upToTop">
+      <i class="iconfont icon-xiangshang1"></i>
+    </div>
     <div class="loading-container" v-show="!img">
       <loading></loading>
     </div>
@@ -457,10 +465,9 @@
       }
 
     },
-    components: {Loading, footerNav,headerNav},
+    components: {Loading, footerNav, headerNav},
     mounted() {
-
-
+      this.showUp();
     },
     computed: {
       //模糊检索
@@ -592,7 +599,31 @@
         else if (row.status === 2) {
           return 'success-row';
         }
-      }
+      },
+
+
+
+      //显示向上按钮
+      showUp() {
+        let height = this.$refs.contentTop.offsetHeight;
+        let upTop = this.$refs.upTop;
+        window.addEventListener('scroll', () => {
+          let top = window.scrollY;
+          if (top >= height) {
+            upTop.style.display = "block"
+          }
+          else if (top < height) {
+            upTop.style.display = "none"
+          }
+        });
+
+      },
+
+      //点击向上
+      upToTop() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      },
     }
   }
 </script>
@@ -633,6 +664,26 @@
 
   }
 
+
+  .upTop {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border-radius: 50%;
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 999;
+    background-color: @color-background-d;
+    cursor: pointer;
+    color: @color-white;
+    i {
+      font-size: @font-size-large-xxx;
+    }
+
+  }
   .loading-container {
     position: absolute;
     width: 100%;
