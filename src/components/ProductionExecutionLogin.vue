@@ -423,9 +423,6 @@
       showRight() {
         this.left = false;
         this.right = true;
-        /*axios.post(" " + url + "/api/getProcessList.html").then((res) => {
-          this.selectList = res.data;
-        }).catch()*/
       }
     },
   }

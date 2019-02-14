@@ -11,9 +11,10 @@
                       @keyup.enter.native="goToPipePage(searchWord)"></el-input>
           </div>
           <div class="listSearchBtn">
+            <el-button type="success" icon="search" @click="showScreening">条件筛选</el-button>
             <el-button type="primary" icon="search" @click="materialSummary">物料汇总</el-button>
-            <el-button type="success" icon="search" @click="taskList">任务清单</el-button>
             <el-button type="warning" icon="search" @click="workEnd">加工完成</el-button>
+
           </div>
         </div>
       </div>
@@ -491,7 +492,6 @@
         </el-table>
       </div>
 
-
     </div>
     <div class="upTop" ref="upTop" @click="upToTop">
       <i class="iconfont icon-xiangshang1"></i>
@@ -501,6 +501,114 @@
     <div class="loading-container" v-show="!img">
       <loading></loading>
     </div>
+
+    <!--导入文件详情 -->
+    <el-dialog title="筛选条件" :visible.sync="screenVisible" width="90%">
+      <div class="container" style="height:250px;overflow:auto">
+        <div class="containerDiv">
+          <div class="select fl">
+            <el-select
+              v-model="gw"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="工位">
+              <el-option
+                v-for="item in gwOptions"
+                :key="item.indexno"
+                :label="item.name"
+                :value="item.indexno">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl">
+            <el-select
+              v-model="batch"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="批次">
+              <el-option
+                v-for="item in batchOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl">
+            <el-select
+              v-model="scx"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="生产线">
+              <el-option
+                v-for="item in scxOptions"
+                :key="item.indexno"
+                :label="item.name"
+                :value="item.indexno">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl">
+            <el-select
+              v-model="zyz"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="作业者">
+              <el-option
+                v-for="item in zyzOptions"
+                :key="item.indexno"
+                :label="item.name"
+                :value="item.indexno">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl">
+            <el-select
+              v-model="xl"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="系列">
+              <el-option
+                v-for="item in xlOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl">
+            <el-select
+              v-model="ch"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="船号">
+              <el-option
+                v-for="item in chOptions"
+                :key="item.indexno"
+                :label="item.name"
+                :value="item.indexno">
+              </el-option>
+            </el-select>
+          </div>
+        </div>
+        <div class="containerBtn">
+          <el-button type="success" icon="search" @click="validationScreening">确认筛选</el-button>
+        </div>
+      </div>
+    </el-dialog>
+
     <footer-nav></footer-nav>
   </div>
 </template>
@@ -538,6 +646,31 @@
 
         left: true,
         right: false,
+
+        screenVisible:false,
+
+
+        batch: "",
+        batchOptions: [],
+
+
+        xl: "",
+        xlOptions: [],
+
+
+        scx: "",
+        scxOptions: [],
+
+        gw: "",
+        gwOptions: [],
+
+        zyz: "",
+        zyzOptions: [],
+
+        ch: "",
+        chOptions: [],
+
+
 
       }
 
@@ -740,12 +873,7 @@
         }
       },
 
-      //任务清单
-      taskList() {
-        this.$router.push("/taskList");
-        localStorage.setItem("IndexUrl", 1);
 
-      },
 
       //点击列表前往任务页面
       goToCurrentTask(row, event, column) {
@@ -782,7 +910,6 @@
             console.log(err)
           })
       },
-
 
       //移动显示搜索框
       showSearch() {
@@ -837,6 +964,39 @@
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
       },
+
+
+      //任务清单
+      showScreening() {
+        this.screenVisible= true;
+        let that = this;
+        axios.all([
+          axios.post(" " + url + "/sys/getPiciList"),
+          axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
+          axios.post(" " + url + "/api/getPersonProcessList", {"name": ""}),
+          axios.post(" " + url + "/sys/dictionaryList", {"id": "11"}),
+        ])
+          .then(axios.spread(function (pici, scx, gw,xl) {
+            that.batchOptions = pici.data;
+            that.scxOptions = scx.data;
+            that.gwOptions = gw.data;
+            that.xlOptions = xl.data;
+          }));
+
+      },
+
+
+      //筛选查询
+      validationScreening() {
+        axios.post(" " + url + "/importother/showXiaozuliExcel", {"gongxu": this.ccc})
+          .then((res) => {
+            this.tableData = res.data;
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+        this.screenVisible = false;
+      }
     }
   }
 </script>
@@ -849,7 +1009,7 @@
       margin-bottom: 10px;
       border-bottom: 1px solid @color-bg-hei;
       .listSearch {
-        width: 80%;
+        width: 95%;
         margin: 20px auto;
         display: flex;
         .listSearchInput {
@@ -857,9 +1017,10 @@
           display: flex;
           align-items: center;
           justify-content: center;
+
         }
         .listSearchBtn {
-          flex: 1;
+          flex: 1.5;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -867,16 +1028,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 45%;
+            width: 30%;
             height: 35px;
             margin-left: 2%;
           }
         }
 
       }
-    }
-    .publicPage {
-
     }
     .xzlDiv {
       .xzl-change {
@@ -899,13 +1057,13 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+
         }
       }
 
     }
-
-
   }
+
   .upTop {
     width: 50px;
     height: 50px;
@@ -925,25 +1083,90 @@
     }
 
   }
+  .container{
+    .containerDiv{
+      width: 95%;
+      height: 70%;
+      margin: 0 auto;
+      .select{
+        width: 16%;
+        height: 50px;
+        margin-left: 0.6%;
+        .el-select{
+          width: 100%;
+          font-size: 12px;
+        }
+
+
+      }
+    }
+    .containerBtn{
+      height: 20%;
+      width: 95%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .el-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20%;
+        height: 35px;
+      }
+    }
+
+  }
+
   .loading-container {
     position: absolute;
     width: 100%;
     top: 50%;
     transform: translateY(-50%);
   }
+  @media only screen and (max-width: 900px) {
+    .container{
+      .containerDiv{
+        .select{
+          width: 30%;
+        }
+      }
+      .containerBtn{
+        .el-button {
+          width: 35%;
+        }
+      }
+
+    }
+  }
+
+  @media only screen and (max-width:400px) {
+    .container{
+      .containerDiv{
+        height: 80%;
+        .select{
+          width: 40%;
+          margin-left: 0.5%;
+        }
+      }
+      .containerBtn{
+        .el-button {
+          width: 50%;
+        }
+      }
+
+    }
+  }
 
   @media only screen and (max-width: 800px) {
     .ProductionExecutionDiv {
-      .contentTop {
-        .topButton {
-          margin-left: 2%;
-          font-size: @font-size-small-s;
-        }
-      }
       .listSearch {
         .listSearchBtn {
-          margin-left: 2%;
-          font-size: @font-size-small-s;
+          flex: 2;
+          .el-button {
+            width: 40%;
+            font-size: @font-size-small-s;
+          }
         }
 
       }
