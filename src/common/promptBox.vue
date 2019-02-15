@@ -13,9 +13,9 @@
       </div>
       <div class="promptBoxDivBottom">
         <div class="CountDown">
-          <div class="">剩余</div>
+        <!--  <div class="">剩余</div>
           <div class="">{{time}}</div>
-          <div class="">秒</div>
+          <div class="">秒</div>-->
         </div>
         <div class="readEnd">
           <button disabled @click="readText" id="readEnd">阅读完成</button>
