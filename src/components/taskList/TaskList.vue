@@ -1,7 +1,26 @@
 <template>
-  <div class="ProductionExecution">
+  <div class="TaskList">
     <header-nav></header-nav>
-    <div class="ProductionExecutionDiv" ref="contentTop">
+    <div class="TaskList" ref="TaskList">
+      <!-- 公共头部-->
+      <div class="contentTop" ref="contentTop">
+        <el-select
+          v-model="batch"
+          clearable
+          filterable
+          allow-create
+          default-first-option
+          placeholder="批次">
+          <el-option
+            v-for="item in batchOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+        <el-button type="primary" icon="search" @click="doSearch">查询</el-button>
+      </div>
+
       <!--公共管-->
       <div class="publicPage" v-if="this.listType ==1">
         <el-table
@@ -441,6 +460,10 @@
     <div class="loading-container" v-show="!img">
       <loading></loading>
     </div>
+
+    <Modal :msg="message"
+           :isHideModal="HideModal"></Modal>
+
     <footer-nav></footer-nav>
   </div>
 </template>
@@ -450,11 +473,17 @@
   import headerNav from '../../common/header'
   import footerNav from '../../common/footer'
   import Loading from '../../common/loading'
+  import Modal from '../../common/modal'
+
 
   export default {
     name: 'ProductionExecution',
     data() {
       return {
+        message: '',
+        HideModal: true,
+
+
         img: "",
         listType: "",
 
@@ -462,12 +491,18 @@
         left: true,
         right: false,
 
+
+        batch: "",
+        batchOptions: [],
+
       }
 
     },
-    components: {Loading, footerNav, headerNav},
+    components: {Loading, footerNav,Modal, headerNav},
     mounted() {
       this.showUp();
+      this.showSearch();
+      this.bianse();
     },
     computed: {
       //模糊检索
@@ -513,6 +548,15 @@
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
+          axios.post(" " + url + "/sys/getPiciList")
+            .then((res) => {
+              this.batchOptions = res.data;
+            })
+            .catch((err) => {
+              console.log(err)
+            });
+
+
           const info = JSON.parse(userInfo);
           if (info.GW === "小组立") {
             this.listType = "2";
@@ -601,11 +645,42 @@
         }
       },
 
+      //移动显示搜索框
+      showSearch() {
+        let search = this.$refs.contentTop;
+        let searchHeight = this.$refs.contentTop.offsetHeight;
+        window.addEventListener('scroll', () => {
+          let top = window.scrollY;
+          if (top > searchHeight) {
+            search.style.width = "100%";
+            search.style.position = "fixed";
+            search.style.top = 0;
+            search.style.zIndex = 999;
+          }
+          else if (top <= searchHeight) {
+            search.style.position = "";
+          }
+        })
+      },
+      //搜索框变色
+      bianse() {
+        let search = this.$refs.contentTop;
+        let searchHight = this.$refs.contentTop.offsetHeight;
+        window.addEventListener('scroll', () => {
+          let top = window.scrollY;
+          if (top > searchHight) {
+            search.style.background = "rgba(240,240,240,1)"
+          } else {
+            let op = (top / searchHight) * 0.85;
+            search.style.background = "rgba(240,240,240," + op + ")";
+          }
+        })
 
+      },
 
       //显示向上按钮
       showUp() {
-        let height = this.$refs.contentTop.offsetHeight;
+        let height = this.$refs.TaskList.offsetHeight;
         let upTop = this.$refs.upTop;
         window.addEventListener('scroll', () => {
           let top = window.scrollY;
@@ -624,16 +699,102 @@
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
       },
+
+
+      doSearch() {
+        if (this.batch) {
+          const userInfo = sessionStorage.getItem("userInfo");
+          if (userInfo === null) {
+            this.$router.push("/ProductionExecutionLogin")
+          }
+          else {
+            const info = JSON.parse(userInfo);
+            if (info.GW === "小组立") {
+              this.listType = "2";
+              setTimeout(() => {
+                axios.post(" " + url + "/importother/showXiaozuliExcel", {"gongxu": info.GW, "pici": this.batch})
+                  .then((res) => {
+                    this.tableData = res.data;
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  })
+              }, 1000);
+            }
+            else if (info.GW === "弯头切断") {
+              this.listType = "3";
+              setTimeout(() => {
+                axios.post(" " + url + "/importother/showWtqieduanExcel", {"gongxu": info.GW, "pici": this.batch})
+                  .then((res) => {
+                    this.tableData = res.data;
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  })
+              }, 1000);
+            }
+            else if (info.GW === "枝管切断") {
+              this.listType = "4";
+              setTimeout(() => {
+                axios.post(" " + url + "/importother/showOtherZgbExcel", {"gongxu": info.GW, "pici": this.batch})
+                  .then((res) => {
+                    this.tableData = res.data;
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  })
+              }, 1000);
+            }
+            else {
+              this.listType = "1";
+              setTimeout(() => {
+                axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": info.GW, "pici": this.batch})
+                  .then((res) => {
+                    this.tableData = res.data;
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  })
+              }, 1000);
+            }
+          }
+        }
+        else {
+          this.message = "请选择批次";
+          this.HideModal = false;
+          const that = this;
+
+          function a() {
+            that.message = "";
+            that.HideModal = true;
+          }
+
+          setTimeout(a, 2000);
+        }
+      }
     }
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
   @import "../../assets/less/base";
 
-  .ProductionExecutionDiv {
-    margin-top: 20px;
+  .TaskList {
     margin-bottom: 80px;
-    .publicPage {
+    .contentTop {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      border-bottom: 1px solid @color-bg-hei;
+      .el-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 10%;
+        height: 35px;
+        margin-left: 2%;
+      }
 
     }
     .xzlDiv {
@@ -664,7 +825,6 @@
 
   }
 
-
   .upTop {
     width: 50px;
     height: 50px;
@@ -684,6 +844,7 @@
     }
 
   }
+
   .loading-container {
     position: absolute;
     width: 100%;

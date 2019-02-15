@@ -33,6 +33,24 @@
             width="30">
           </el-table-column>
           <el-table-column
+            prop="jiagongxian"
+            label="加工线"
+            align="center"
+            min-width="20%">
+          </el-table-column>
+          <el-table-column
+            prop="pici"
+            label="批次"
+            align="center"
+            min-width="20%">
+          </el-table-column>
+          <el-table-column
+            prop="jiagongxilie"
+            label="加工系列"
+            align="center"
+            min-width="20%">
+          </el-table-column>
+          <el-table-column
             prop="shipcode"
             label="船号"
             align="center"
@@ -56,12 +74,24 @@
             align="center"
             min-width="20%">
           </el-table-column>
+
+
           <el-table-column
-            prop="jiagongxilie"
-            label="加工系列"
+            prop="pregongweiname"
+            label="上道工位"
             align="center"
             min-width="20%">
           </el-table-column>
+          <el-table-column
+            prop="prepersonname"
+            label="作业者"
+            align="center"
+            min-width="20%">
+          </el-table-column>
+
+
+
+
           <el-table-column
             prop="levelStr"
             label="优先级"
@@ -502,7 +532,7 @@
       <loading></loading>
     </div>
 
-    <!--导入文件详情 -->
+    <!--筛选条件 -->
     <el-dialog title="筛选条件" :visible.sync="screenVisible" width="90%">
       <div class="container" style="height:250px;overflow:auto">
         <div class="containerDiv">
@@ -516,9 +546,9 @@
               placeholder="工位">
               <el-option
                 v-for="item in gwOptions"
-                :key="item.indexno"
+                :key="item.id"
                 :label="item.name"
-                :value="item.indexno">
+                :value="item.id">
               </el-option>
             </el-select>
           </div>
@@ -580,9 +610,9 @@
               placeholder="系列">
               <el-option
                 v-for="item in xlOptions"
-                :key="item.id"
+                :key="item.name"
                 :label="item.name"
-                :value="item.id">
+                :value="item.name">
               </el-option>
             </el-select>
           </div>
@@ -671,6 +701,10 @@
         chOptions: [],
 
 
+        zuoyezhe:"",
+        dqgw:""
+
+
 
       }
 
@@ -753,6 +787,8 @@
         }
         else {
           const info = JSON.parse(userInfo);
+          this.zuoyezhe = info.username;
+          this.dqgw = info.GW;
           if (info.GW === "小组立") {
             this.listType = "2";
             setTimeout(() => {
@@ -820,7 +856,9 @@
       //加工完成
       workEnd() {
         if (this.listData.length) {
-          axios.post(" " + url + "/shengchan/updateStatusBatch", {"ids": this.listData})
+
+
+          axios.post(" " + url + "/shengchan/updateStatusBatch", {"ids": this.listData,"zuoyezhe":this.zuoyezhe})
             .then((res) => {
               if (res.data === "1") {
                 this.message = "已经完成";
@@ -884,7 +922,6 @@
         }
       },
 
-
       //小组立显示左边
       showLeft() {
         this.left = true;
@@ -927,6 +964,7 @@
           }
         })
       },
+
       //搜索框变色
       bianse() {
         let search = this.$refs.contentTop;
@@ -965,7 +1003,6 @@
         document.documentElement.scrollTop = 0;
       },
 
-
       //任务清单
       showScreening() {
         this.screenVisible= true;
@@ -985,17 +1022,25 @@
 
       },
 
-
       //筛选查询
       validationScreening() {
-        axios.post(" " + url + "/importother/showXiaozuliExcel", {"gongxu": this.ccc})
+        axios.post(" " + url + "/shengchan/shengchanList.html",
+          {
+            "gongxu": this.dqgw,
+            "jiagongxian": this.scx,
+            "pici": this.batch,
+            "preGongxu": this.gw,
+            "jiagongxilie": this.xl,
+            "chuanhao": this.ch,
+            "zuoyezhe": this.zyz
+          })
           .then((res) => {
+            this.screenVisible = false;
             this.tableData = res.data;
           })
           .catch((err) => {
             console.log(err)
           })
-        this.screenVisible = false;
       }
     }
   }

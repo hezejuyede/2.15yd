@@ -101,18 +101,23 @@
         </div>
       </el-card>
     </div>
-    <div class="currentTaskButton">
+    <div class="currentTaskButton" v-if="this.wt == 1">
       <el-button type="primary" @click="startWork" :disabled="startWorkBtn == -1">开始</el-button>
       <el-button type="success" @click="endWord" :disabled="endWorkBtn == -1">完成</el-button>
       <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
-      <el-button type="warning" @click="straightPipeState">直管完成状态</el-button>
+      <el-button type="danger" @click="showReportAbnormal">上传异常</el-button>
+      <el-button type="success" @click="viewDrawings">查看图纸</el-button>
+    </div  >
+
+    <div class="currentTaskButton" v-if="this.wt == -1">
+      <el-button type="success" @click="wtEndWord">完成</el-button>
+      <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
+      <el-button type="danger" @click="showReportAbnormal">上传异常</el-button>
+      <el-button type="success" @click="viewDrawings">查看图纸</el-button>
     </div>
     <div class="currentTaskRouter">
-      <div class="currentTaskRouterTitle">
-        <h2>当前工位</h2>
-      </div>
       <div class="currentTaskRouterList">
-        <el-steps align-center :active="step">
+        <el-steps align-center :active="step" finish-status="success">
           <el-step v-for="(item,index) in routerList" :keys="index" :title="item.stationname"></el-step>
         </el-steps>
       </div>
@@ -122,6 +127,48 @@
     <div class="loading-container" v-show="!img.length">
       <loading></loading>
     </div>
+
+
+    <!--上报异常 -->
+    <el-dialog title="上报异常" :visible.sync="abnormalVisible" width="90%">
+      <div class="container" style="height:350px;overflow:auto">
+        <div class="qualityDiv">
+          <div class="qualityDivTitle">
+            <el-select v-model="indexno" placeholder="请选择异常原因">
+              <el-option
+                v-for="item in options"
+                :key="item.indexno"
+                :label="item.name"
+                :value="item.indexno">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="qualityDivContent">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 6, maxRows: 6 }"
+              placeholder="请出入异常备注"
+              v-model="remarks">
+            </el-input>
+          </div>
+          <div class="qualityDivBtn">
+            <button @click="submitAbnormal">提交异常原因</button>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+
+    <!--查看图纸 -->
+    <el-dialog title="一品图查看" :visible.sync="drawingVisible" width="95%">
+      <div class="container" style="height:400px;overflow:auto">
+        <div class="drawingImg" style="width: 100%;height: 100%">
+          <img src="../../assets/img/ypt.jpg" alt="" style="display:block;width: 100%">
+        </div>
+      </div>
+    </el-dialog>
+
+
+
     <footer-nav></footer-nav>
   </div>
 </template>
@@ -148,7 +195,20 @@
         endWorkBtn: "-1",
         titleData: [],
         tableData: [],
-        matterData: []
+        matterData: [],
+
+        abnormalVisible: false,
+        drawingVisible: false,
+
+
+        options: [],
+        indexno: '',
+        remarks:"",
+
+        zuoyezhe:"",
+
+        wt:"1"
+
       }
 
     },
@@ -173,10 +233,15 @@
       getAdminState() {
         const userInfo = sessionStorage.getItem("userInfo");
         const info = JSON.parse(userInfo);
+
         if (info === null) {
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
+          this.zuoyezhe = info.username;
+          if (info.GW === "弯头切断") {
+            this.wt = "-1"
+          }
           const id = localStorage.getItem("pipeId");
           this.id = id;
           if (id === null) {
@@ -200,6 +265,7 @@
           }
         }
       },
+      //加工开始
       startWork() {
         if (this.id) {
           this.endWorkBtn = "1";
@@ -226,9 +292,11 @@
         }
 
       },
+
+      //加工结束
       endWord() {
         this.startWorkBtn = "1";
-        axios.post(" " + url + "/shengchan/updateStatus", {"id": this.id})
+        axios.post(" " + url + "/shengchan/updateStatus", {"id": this.id, "zuoyezhe": this.zuoyezhe})
           .then((res) => {
             if (res.data === "success") {
               this.endWorkBtn = "-1";
@@ -250,14 +318,109 @@
             console.log(err)
           })
       },
+
+      //弯头结束
+      wtEndWord() {
+        axios.post(" " + url + "/shengchan/updateStatus", {"id": this.id, "zuoyezhe": this.zuoyezhe})
+          .then((res) => {
+            if (res.data === "success") {
+              this.endWorkBtn = "-1";
+              this.message = "已经完成加工";
+              this.HideModal = false;
+              const that = this;
+
+              function a() {
+                that.message = "";
+                that.HideModal = true;
+              }
+
+              setTimeout(a, 2000);
+
+            }
+
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+
       curvedPipeState() {
 
       },
-      straightPipeState() {
 
+      //显示上报异常
+      showReportAbnormal() {
+        this.abnormalVisible = true;
+        axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
+          .then((res) => {
+            this.options = res.data;
+          })
+          .catch((err) => {
+            console.log(err)
+          })
 
       },
+      //上报异常
+      submitAbnormal() {
+        if (this.indexno && this.remarks) {
+          const userInfo = sessionStorage.getItem("userInfo");
+          const id = localStorage.getItem("pipeId");
+          const info = JSON.parse(userInfo);
+          const userId = info.username;
+          axios.post(" " + url + "/shengchanError/errorEvent",
+            {
+              "userId": userId,
+              "errorId": this.indexno,
+              "context": this.remarks,
+              "id": id
+            })
+            .then((res) => {
+              if (res.data === "1") {
+                this.$message({
+                  message: '提交成功',
+                  type: 'success'
+                });
+                let that = this;
+                setTimeout(function () {
+                  that.abnormalVisible = false;
+                }, 2000)
+              }
+              else {
+                this.$message({
+                  message: '提交失败因',
+                  type: 'warning'
+                });
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+        else if (!this.indexno) {
+          this.$message({
+            message: '请选择异常原因',
+            type: 'warning'
+          });
+        }
+        else if (!this.remarks) {
+          this.$message({
+            message: '请输入异常备注',
+            type: 'warning'
+          });
+        }
+      },
 
+      //显示查看当前图纸
+      viewDrawings() {
+        this.drawingVisible = true;
+        axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
+          .then((res) => {
+            this.options = res.data;
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
 
     }
   }
@@ -332,6 +495,7 @@
       }
     }
     .currentTaskRouter {
+      margin-top: 50px;
       width: 95%;
       .currentTaskRouterTitle {
         font-size: @font-size-large;
@@ -339,7 +503,43 @@
       }
     }
   }
+  .qualityDiv {
+    width: 100%;
+    height: 100%;
+    .qualityDivTitle {
+      height: 25%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qualityDivContent {
+      width: 80%;
+      margin: 0 auto;
+      height: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
+    }
+    .qualityDivBtn {
+      height: 25%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      button {
+        width: 150px;
+        height: 50px;
+        text-align: center;
+        line-height: 50px;
+        background-color: @color-blue;
+        color: @color-white;
+        font-size: @font-size-medium-x;
+        border-radius: 10%;
+        border: none;
+
+      }
+    }
+  }
   .loading-container {
     position: absolute;
     width: 100%;

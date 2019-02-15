@@ -72,8 +72,8 @@
               @blur="selectWorkstationBlur(selectWorkstation)"
               @focus="selectWorkstationFocus(selectWorkstation)"
               v-model="selectWorkstation">
-              <option value="" style="display: none;" disabled selected>请选择工位</option>
-              <option v-for="(item,index) in selectList" :value="item.id">{{item.name}}</option>
+              <option value="" style="display: none;" disabled selected>{{selectWorkstationName}}</option>
+              <option v-for="(item,index) in selectList" :value="item.id"  >{{item.name}}</option>
             </select>
             <div class="selectWorkstationText">
               <span>{{ selectWorkstationErrText}}</span>
@@ -137,7 +137,8 @@
         userNameState: false,
         passwordState: false,
         selectWorkstationState: false,
-
+        selectWorkstationName:"请选择工位",
+        selectWorkstationId:"",
         message: '',
         HideModal: true
       }
@@ -188,6 +189,9 @@
           axios.post(" " + url + "/api/getPersonProcessList", {"name": this.username})
             .then((res) => {
               this.selectList = res.data;
+              this.selectWorkstationName = this.selectList[0].name;
+              this.selectWorkstationId = this.selectList[0].id;
+              this.selectWorkstationState = true
             })
             .catch((err) => {
               console.log(err)
@@ -234,86 +238,166 @@
 
       login() {
         if (this.userNameState === true && this.passwordState === true && this.selectWorkstationState === true) {
-
           var params = new URLSearchParams();
-          params.append('username', this.username);
-          params.append('password', this.password);
-          params.append('stationid', this.selectWorkstation);
-
-          axios({
-            method: "post",
-            url: " " + url + "/api/stationLogin.html",
-            data: params
-          })
-            .then((res) => {
-              if (res.data.state === "1") {
-
-                let userInfo = res.data;
-                userInfo = JSON.stringify(userInfo);
-                sessionStorage.setItem("userInfo", userInfo);
-                this.message = "登录成功";
-                this.HideModal = false;
-                const that = this;
-
-                function a() {
-                  that.message = "";
-                  that.HideModal = true;
-                }
-
-                function showPromptBox() {
-                  that.openPromptBox = false;
-                  that.needKnown = res.data.needKnown;
-                  that.contentText = res.data.contentText;
-                }
-
-                setTimeout(showPromptBox, 3000);
-                setTimeout(a, 2000);
-
-              }
-              else if (res.data === "2") {
-                this.message = "该用户没有注册";
-                this.HideModal = false;
-                const that = this;
-
-                function b() {
-                  that.message = "";
-                  that.HideModal = true;
-                  that.username = '';
-                  that.password = '';
-                }
-
-                setTimeout(b, 2000);
-              }
-              else if (res.data === "-1") {
-                this.message = "密码错误";
-                this.HideModal = false;
-                const that = this;
-
-                function c() {
-                  that.message = "";
-                  that.HideModal = true;
-                  that.password = '';
-                }
-
-                setTimeout(c, 2000);
-              }
-              else if (res.data === "3") {
-                this.message = "岗位不合符";
-                this.HideModal = false;
-                const that = this;
-
-                function d() {
-                  that.message = "";
-                  that.HideModal = true;
-                  that.password = '';
-                }
-
-                setTimeout(d, 2000);
-              }
+          if (this.selectWorkstation) {
+            params.append('username', this.username);
+            params.append('password', this.password);
+            params.append('stationid', this.selectWorkstation);
+            axios({
+              method: "post",
+              url: " " + url + "/api/stationLogin.html",
+              data: params
             })
-            .catch((err) => {
-              console.log(err)
-            });
+              .then((res) => {
+                if (res.data.state === "1") {
+
+                  let userInfo = res.data;
+                  userInfo = JSON.stringify(userInfo);
+                  sessionStorage.setItem("userInfo", userInfo);
+                  this.message = "登录成功";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function a() {
+                    that.message = "";
+                    that.HideModal = true;
+                  }
+
+                  function showPromptBox() {
+                    that.openPromptBox = false;
+                    that.needKnown = res.data.needKnown;
+                    that.contentText = res.data.contentText;
+                  }
+
+                  setTimeout(showPromptBox, 3000);
+                  setTimeout(a, 2000);
+
+                }
+                else if (res.data === "2") {
+                  this.message = "该用户没有注册";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function b() {
+                    that.message = "";
+                    that.HideModal = true;
+                    that.username = '';
+                    that.password = '';
+                  }
+
+                  setTimeout(b, 2000);
+                }
+                else if (res.data === "-1") {
+                  this.message = "密码错误";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function c() {
+                    that.message = "";
+                    that.HideModal = true;
+                    that.password = '';
+                  }
+
+                  setTimeout(c, 2000);
+                }
+                else if (res.data === "3") {
+                  this.message = "岗位不合符";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function d() {
+                    that.message = "";
+                    that.HideModal = true;
+                    that.password = '';
+                  }
+
+                  setTimeout(d, 2000);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              });
+          }
+          else {
+            params.append('username', this.username);
+            params.append('password', this.password);
+            params.append('stationid', this.selectWorkstationId);
+
+            axios({
+              method: "post",
+              url: " " + url + "/api/stationLogin.html",
+              data: params
+            })
+              .then((res) => {
+                if (res.data.state === "1") {
+
+                  let userInfo = res.data;
+                  userInfo = JSON.stringify(userInfo);
+                  sessionStorage.setItem("userInfo", userInfo);
+                  this.message = "登录成功";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function a() {
+                    that.message = "";
+                    that.HideModal = true;
+                  }
+
+                  function showPromptBox() {
+                    that.openPromptBox = false;
+                    that.needKnown = res.data.needKnown;
+                    that.contentText = res.data.contentText;
+                  }
+
+                  setTimeout(showPromptBox, 3000);
+                  setTimeout(a, 2000);
+
+                }
+                else if (res.data === "2") {
+                  this.message = "该用户没有注册";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function b() {
+                    that.message = "";
+                    that.HideModal = true;
+                    that.username = '';
+                    that.password = '';
+                  }
+
+                  setTimeout(b, 2000);
+                }
+                else if (res.data === "-1") {
+                  this.message = "密码错误";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function c() {
+                    that.message = "";
+                    that.HideModal = true;
+                    that.password = '';
+                  }
+
+                  setTimeout(c, 2000);
+                }
+                else if (res.data === "3") {
+                  this.message = "岗位不合符";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function d() {
+                    that.message = "";
+                    that.HideModal = true;
+                    that.password = '';
+                  }
+
+                  setTimeout(d, 2000);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              });
+          }
         }
         else {
           this.message = "请正确填写信息";
