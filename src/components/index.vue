@@ -84,7 +84,7 @@
           </el-table-column>
           <el-table-column
             prop="prepersonname"
-            label="作业者"
+            label="前作业者"
             align="center"
             min-width="20%">
           </el-table-column>
@@ -775,6 +775,9 @@
         }
         else if (row.level === 1) {
           return 'success-row';
+        }
+        else if (row.level === 0) {
+          return 'info-row';
         }
       },
 

@@ -54,6 +54,18 @@
             min-width="20%">
           </el-table-column>
           <el-table-column
+            prop="curstationname"
+            label="当前工位"
+            align="center"
+            min-width="20%">
+          </el-table-column>
+          <el-table-column
+            prop="jiagongxian"
+            label="加工线"
+            align="center"
+            min-width="20%">
+          </el-table-column>
+          <el-table-column
             prop="jiagongxilie"
             label="加工系列"
             align="center"
@@ -642,6 +654,9 @@
         }
         else if (row.status === 2) {
           return 'success-row';
+        }
+        else if (row.level === 0) {
+          return 'info-row';
         }
       },
 
