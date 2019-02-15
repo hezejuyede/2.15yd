@@ -655,7 +655,7 @@
         else if (row.status === 2) {
           return 'success-row';
         }
-        else if (row.level === 0) {
+        else if (row.status  === 0) {
           return 'info-row';
         }
       },

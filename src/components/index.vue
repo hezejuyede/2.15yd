@@ -776,9 +776,6 @@
         else if (row.level === 1) {
           return 'success-row';
         }
-        else if (row.level === 0) {
-          return 'info-row';
-        }
       },
 
 
