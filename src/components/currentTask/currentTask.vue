@@ -108,7 +108,6 @@
       <el-button type="danger" @click="showReportAbnormal">上传异常</el-button>
       <el-button type="success" @click="viewDrawings">查看图纸</el-button>
     </div  >
-
     <div class="currentTaskButton" v-if="this.wt == -1">
       <el-button type="success" @click="wtEndWord">完成</el-button>
       <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
@@ -167,6 +166,52 @@
       </div>
     </el-dialog>
 
+    <!--作业记录 -->
+    <el-dialog title="作业记录" :visible.sync="jobLogVisible" width="95%">
+      <div class="container" style="height:400px;overflow:auto">
+
+      </div>
+    </el-dialog>
+
+    <!--弯管状态 -->
+    <el-dialog title="弯管完成状态" :visible.sync="elbowVisible" width="95%"
+    >
+      <div class="container" style="height:400px;overflow:auto">
+        <div class="elbowDiv">
+          <div class="elbowTop">
+            <el-select
+              v-model="batch"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="批次">
+              <el-option
+                v-for="item in batchOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+            <el-button type="primary" icon="search" @click="doSearch">查询</el-button>
+          </div>
+          <div class="elbowBottom">
+            <el-table class="tb-edit"
+                      :data="wtTableData"
+                      :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'14px'}"
+                      border
+                      height="350"
+                      highlight-current-row
+                      style="width: 98%;margin: auto">
+              <template v-for="(col ,index) in cols">
+                <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
+              </template>
+            </el-table>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+
 
 
     <footer-nav></footer-nav>
@@ -199,7 +244,8 @@
 
         abnormalVisible: false,
         drawingVisible: false,
-
+        jobLogVisible: false,
+        elbowVisible: false,
 
         options: [],
         indexno: '',
@@ -207,7 +253,14 @@
 
         zuoyezhe:"",
 
-        wt:"1"
+        wt:"1",
+
+
+        batch: "",
+        batchOptions: [],
+
+        cols: [],
+        wtTableData: []
 
       }
 
@@ -298,7 +351,7 @@
         this.startWorkBtn = "1";
         axios.post(" " + url + "/shengchan/updateStatus", {"id": this.id, "zuoyezhe": this.zuoyezhe})
           .then((res) => {
-            if (res.data === "success") {
+            if (res.data === "1") {
               this.endWorkBtn = "-1";
               this.message = "已经完成加工";
               this.HideModal = false;
@@ -312,7 +365,25 @@
               setTimeout(a, 2000);
 
             }
+            else if (res.data === "-1") {
+              this.endWorkBtn = "-1";
+              this.message = "完成失败";
+              this.HideModal = false;
+              const that = this;
 
+              function a() {
+                that.message = "";
+                that.HideModal = true;
+              }
+
+              setTimeout(a, 2000);
+
+            }
+            else if (res.data === "2") {
+              this.jobLogVisible = true
+
+
+            }
           })
           .catch((err) => {
             console.log(err)
@@ -344,10 +415,57 @@
           })
       },
 
+      //显示弯头查询
       curvedPipeState() {
+        this.elbowVisible = true;
+        axios.post(" " + url + "/sys/getPiciList")
+          .then((res) => {
+            this.batchOptions = res.data;
+            let that = this;
+            axios.all([
+              axios.post(" "+ url +"/sys/showTableTitle", {"pici":this.batch}),
+              axios.post(" "+ url +"/importother/publicData", {"pici": this.batch})
+            ])
+              .then(axios.spread(function (title, table) {
+                that.cols = title.data;
+                that.tableData = table.data;
+              }));
+
+
+
+          })
+          .catch((err) => {
+            console.log(err)
+          });
+
+
 
       },
+      //弯头完成状态查询
+      doSearch() {
+        if (this.batch) {
+          axios.all([
+            axios.post(" "+ url +"/sys/showTableTitle", {"pici":this.batch}),
+            axios.post(" "+ url +"/importother/publicData", {"pici": this.batch})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data;
+              that.tableData = table.data;
+            }));
+        }
+        else {
+          this.message = "请选择批次";
+          this.HideModal = false;
+          const that = this;
 
+          function a() {
+            that.message = "";
+            that.HideModal = true;
+          }
+
+          setTimeout(a, 2000);
+        }
+      },
       //显示上报异常
       showReportAbnormal() {
         this.abnormalVisible = true;
@@ -409,7 +527,6 @@
           });
         }
       },
-
       //显示查看当前图纸
       viewDrawings() {
         this.drawingVisible = true;
@@ -420,7 +537,9 @@
           .catch((err) => {
             console.log(err)
           })
-      }
+      },
+
+
 
     }
   }
@@ -540,6 +659,37 @@
       }
     }
   }
+
+  .container{
+    width: 100%;
+    height: 100%;
+    .elbowDiv{
+      width: 100%;
+      height: 100%;
+      .elbowTop{
+        height:15%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom:1px solid@color-bg-hei ;
+        .el-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 10%;
+          height: 35px;
+          margin-left: 2%;
+        }
+      }
+      .elbowBottom{
+        padding-top: 10px;
+        height:85%;
+        overflow: auto;
+      }
+    }
+
+  }
+
   .loading-container {
     position: absolute;
     width: 100%;

@@ -66,11 +66,17 @@
             min-width="20%">
           </el-table-column>
           <el-table-column
-            prop="jiagongxilie"
-            label="加工系列"
+            prop="pici"
+            label="批次"
             align="center"
             min-width="20%">
           </el-table-column>
+          <el-table-column
+          prop="jiagongxilie"
+          label="加工系列"
+          align="center"
+          min-width="20%">
+        </el-table-column>
           <el-table-column
             prop="statusStr"
             label="当前状态"
@@ -184,6 +190,12 @@
                 width="100">
               </el-table-column>
               <el-table-column
+                prop="pici"
+                label="批次"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+              <el-table-column
                 prop="statusStr"
                 label="当前状态"
                 align="center"
@@ -242,6 +254,12 @@
                 min-width="20%">
               </el-table-column>
               <el-table-column
+                prop="pici"
+                label="批次"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+              <el-table-column
                 prop="beizhu"
                 label="备注"
                 align="center"
@@ -295,6 +313,12 @@
             label="数量"
             align="center"
             min-width="10%">
+          </el-table-column>
+          <el-table-column
+            prop="pici"
+            label="批次"
+            align="center"
+            min-width="20%">
           </el-table-column>
           <el-table-column
             prop="statusStr"
@@ -451,6 +475,12 @@
             width="100">
           </el-table-column>
           <el-table-column
+            prop="pici"
+            label="批次"
+            align="center"
+            min-width="20%">
+          </el-table-column>
+          <el-table-column
             prop="beizhu"
             label="备注"
             align="center"
@@ -543,6 +573,7 @@
         this.img = ["1"]
       },
 
+      //选择哪一个
       selectList(val) {
         if (val.length) {
           let data = [];
@@ -553,6 +584,7 @@
           this.listData = data;
         }
       },
+
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
         const userInfo = sessionStorage.getItem("userInfo");
@@ -716,6 +748,7 @@
       },
 
 
+      //查询
       doSearch() {
         if (this.batch) {
           const userInfo = sessionStorage.getItem("userInfo");
