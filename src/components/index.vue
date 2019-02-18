@@ -22,7 +22,7 @@
       <div class="publicPage" v-if="this.listType ==1">
         <el-table
           :data="tables"
-          :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+          :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           :row-class-name="tableRowClassName"
           @select="selectList"
           @select-all="selectAll"
@@ -110,7 +110,7 @@
           <div class="saoMa" v-if="left === true">
             <el-table
               :data="tables"
-              :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               border
               height="350"
               @row-click="goToCurrentTask"
@@ -227,7 +227,7 @@
           <div class="account" v-if="right === true">
             <el-table
               :data="tables"
-              :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               border
               @select="selectList"
               @select-all="selectAll"
@@ -300,7 +300,7 @@
       <div class="" v-if="this.listType ==3">
         <el-table
           :data="tables"
-          :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+          :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           border
           :row-class-name="tableRowClassName"
           @select="selectList"
@@ -353,7 +353,7 @@
       <div class="zgDiv" v-if="this.listType ==4">
         <el-table
           :data="tables"
-          :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+          :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           border
           height="430"
           :row-class-name="tableRowClassName"
@@ -972,10 +972,16 @@
         window.addEventListener('scroll', () => {
           let top = window.scrollY;
           if (top > searchHight) {
-            search.style.background = "rgba(240,240,240,1)"
-          } else {
+            search.style.background = "rgba(216, 229, 246,1)"
+          }
+          else {
             let op = (top / searchHight) * 0.85;
-            search.style.background = "rgba(240,240,240," + op + ")";
+            if(op>0){
+              search.style.background = "rgba(216, 229, 246," + op + ")";
+            }
+            else {
+              search.style.background = "rgba(216, 229, 246,1)"
+            }
           }
         })
 
@@ -1049,13 +1055,16 @@
   @import "../assets/less/base";
 
   .ProductionExecutionDiv {
-    margin-bottom: 80px;
     .contentTop {
-      margin-bottom: 10px;
-      border-bottom: 1px solid @color-bg-hei;
+      height: 80px;
+      width: 100%;
+      background-color: #D8E5F6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
       .listSearch {
         width: 95%;
-        margin: 20px auto;
         display: flex;
         .listSearchInput {
           flex: 2;

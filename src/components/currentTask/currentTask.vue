@@ -14,7 +14,7 @@
     <div class="currentTaskTable">
       <el-table
         :data="tableData"
-        :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'12px'}"
+        :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'12px'}"
         border
         style="width: 95%;margin: 0 auto">
         <el-table-column
@@ -94,12 +94,11 @@
 
     </div>
     <div class="currentTaskDiv">
-      <el-card class="box-card">
-        <div class="">注意事项</div>
-        <div class="" v-for="(item,index) in matterData">
-          {{item.context}}
-        </div>
-      </el-card>
+      <div class="currentTaskDivLeft">
+        <i class="iconfont icon-unie62b"></i>
+        <span>注意事项</span>
+      </div>
+      <div class="currentTaskDivRight" v-html="matterData"></div>
     </div>
     <div class="currentTaskButton" v-if="this.wt == 1">
       <el-button type="primary" @click="startWork" :disabled="startWorkBtn == -1">开始</el-button>
@@ -112,7 +111,7 @@
       <el-button type="success" @click="wtEndWord">完成</el-button>
       <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
       <el-button type="danger" @click="showReportAbnormal">上传异常</el-button>
-      <el-button type="success" @click="viewDrawings">查看图纸</el-button>
+      <el-button type="primary" @click="viewDrawings">查看图纸</el-button>
     </div>
     <div class="currentTaskRouter">
       <div class="currentTaskRouterList">
@@ -174,9 +173,8 @@
     </el-dialog>
 
     <!--弯管状态 -->
-    <el-dialog title="弯管完成状态" :visible.sync="elbowVisible" width="95%"
-    >
-      <div class="container" style="height:400px;overflow:auto">
+    <el-dialog title="弯管完成状态" :visible.sync="elbowVisible" width="95%">
+      <div class="container" style="height:450px;overflow:auto">
         <div class="elbowDiv">
           <div class="elbowTop">
             <el-select
@@ -240,7 +238,7 @@
         endWorkBtn: "-1",
         titleData: [],
         tableData: [],
-        matterData: [],
+        matterData: "",
 
         abnormalVisible: false,
         drawingVisible: false,
@@ -260,7 +258,8 @@
         batchOptions: [],
 
         cols: [],
-        wtTableData: []
+        wtTableData: [],
+        gongwei:""
 
       }
 
@@ -292,6 +291,8 @@
         }
         else {
           this.zuoyezhe = info.username;
+          this.gongwei =info.GH;
+
           if (info.GW === "弯头切断") {
             this.wt = "-1"
           }
@@ -307,7 +308,7 @@
                 .then((res) => {
                   this.titleData = res.data.baseItem;
                   this.tableData = res.data.yipintulist;
-                  this.matterData = res.data.contextList;
+                  this.matterData = res.data.contextList[0].noticehtml;
                   this.step = res.data.maxstep;
                   this.routerList = res.data.nodeLit;
                 })
@@ -349,7 +350,7 @@
       //加工结束
       endWord() {
         this.startWorkBtn = "1";
-        axios.post(" " + url + "/shengchan/updateStatus", {"id": this.id, "zuoyezhe": this.zuoyezhe})
+        axios.post(" " + url + "/shengchan/updateStatus", {"id": this.id, "zuoyezhe": this.zuoyezhe,"stationid":this.gongwei})
           .then((res) => {
             if (res.data === "1") {
               this.endWorkBtn = "-1";
@@ -392,9 +393,10 @@
 
       //弯头结束
       wtEndWord() {
-        axios.post(" " + url + "/shengchan/updateStatus", {"id": this.id, "zuoyezhe": this.zuoyezhe})
+
+        axios.post(" " + url + "/shengchan/updateStatus", {"id": this.id, "zuoyezhe": this.zuoyezhe,"stationid":this.gongwei})
           .then((res) => {
-            if (res.data === "success") {
+            if (res.data === "1") {
               this.endWorkBtn = "-1";
               this.message = "已经完成加工";
               this.HideModal = false;
@@ -408,11 +410,31 @@
               setTimeout(a, 2000);
 
             }
+            else if (res.data === "-1") {
+              this.endWorkBtn = "-1";
+              this.message = "完成失败";
+              this.HideModal = false;
+              const that = this;
 
+              function a() {
+                that.message = "";
+                that.HideModal = true;
+              }
+
+              setTimeout(a, 2000);
+
+            }
+            else if (res.data === "2") {
+              this.jobLogVisible = true
+
+
+            }
           })
           .catch((err) => {
             console.log(err)
           })
+
+        alert("hahahahah")
       },
 
       //显示弯头查询
@@ -423,12 +445,12 @@
             this.batchOptions = res.data;
             let that = this;
             axios.all([
-              axios.post(" "+ url +"/sys/showTableTitle", {"pici":this.batch}),
-              axios.post(" "+ url +"/importother/publicData", {"pici": this.batch})
+              axios.post(" "+ url +"/sys/showTableTitle", {"name":"wtqdb"}),
+              axios.post(" "+ url +"/importother/showWtqieduanExcel", {"pici": this.batchOptions[0].id})
             ])
               .then(axios.spread(function (title, table) {
                 that.cols = title.data;
-                that.tableData = table.data;
+                that.wtTableData = table.data;
               }));
 
 
@@ -444,13 +466,14 @@
       //弯头完成状态查询
       doSearch() {
         if (this.batch) {
+          let that = this;
           axios.all([
-            axios.post(" "+ url +"/sys/showTableTitle", {"pici":this.batch}),
-            axios.post(" "+ url +"/importother/publicData", {"pici": this.batch})
+            axios.post(" "+ url +"/sys/showTableTitle", {"name":"wtqdb"}),
+            axios.post(" "+ url +"/importother/showWtqieduanExcel", {"pici": this.batch})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data;
-              that.tableData = table.data;
+              that.wtTableData = table.data;
             }));
         }
         else {
@@ -552,7 +575,9 @@
     margin-bottom: 80px;
     .currentTaskTitle {
       height: 100px;
+      margin-bottom: 20px;
       border-bottom: 1px solid @color-F0;
+      background-color:#D8E5F6;
       .titleDiv {
         width: 25%;
         height: 100%;
@@ -569,7 +594,6 @@
           font-size: @font-size-large-xx;
           overflow: hidden;
         }
-
         .titleDivRight {
           width: 40%;
           height: 30%;
@@ -587,24 +611,38 @@
       width: 95%;
       margin: 30px auto;
       background-color: orange;
-      .text {
-        font-size: 14px;
+      display: flex;
+      .currentTaskDivLeft {
+        flex: 1;
+        background-color: #ED6942;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        .icon-unie62b {
+          font-size:400%;
+          color: @color-white;
+        }
+        span {
+          margin-top: 10px;
+          font-size: @font-size-large;
+          color: @color-white;
+        }
       }
-
-      .item {
-        padding: 18px 0;
-      }
-
-      .box-card {
-        width: 100%;
-        margin: 0 auto;
-
+      .currentTaskDivRight {
+        flex: 9;
+        height: 100px;
+        background-color: #F6F7FB;
+        overflow: auto;
+        padding: 2%;
       }
     }
     .currentTaskButton {
       width: 95%;
       margin: 20px auto;
       display: flex;
+      align-items: center;
+      justify-content: center;
       button {
         width: 15%;
         height: 50px;
@@ -699,7 +737,23 @@
 
   @media only screen and (max-width: 1200px) {
     .currentTask {
-
+      .currentTaskDiv {
+        .currentTaskDivLeft {
+          flex:2;
+          .icon-unie62b {
+            font-size:400%;
+            color: @color-white;
+          }
+          span {
+            margin-top: 10px;
+            font-size: @font-size-large;
+            color: @color-white;
+          }
+        }
+        .currentTaskDivRight {
+          flex: 8;
+        }
+      }
       .currentTaskTitle {
 
         .titleDiv {
@@ -754,7 +808,23 @@
 
   @media only screen and (max-width: 480px) {
     .currentTask {
-
+      .currentTaskDiv {
+        .currentTaskDivLeft {
+          flex:3;
+          .icon-unie62b {
+            font-size:400%;
+            color: @color-white;
+          }
+          span {
+            margin-top: 10px;
+            font-size: @font-size-large;
+            color: @color-white;
+          }
+        }
+        .currentTaskDivRight {
+          flex: 7;
+        }
+      }
       .currentTaskTitle {
 
         .titleDiv {

@@ -5,10 +5,8 @@
         {{needKnown}}
       </div>
       <div class="promptBoxDivContent">
-        <div class="" v-for="(item,index) in contentText ">
-          <div class="">
-            {{item.notice}}
-          </div>
+        <div class="" v-if="contentText.length>0">
+          <div class="" v-html="contentText[0].contexthtml"></div>
         </div>
       </div>
       <div class="promptBoxDivBottom">
