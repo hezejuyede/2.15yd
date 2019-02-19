@@ -1309,7 +1309,7 @@
                 function a() {
                   that.message = "";
                   that.HideModal = true;
-                  window.location.reload();
+                  /*window.location.reload();*/
                 }
 
                 setTimeout(a, 2000);
@@ -1368,7 +1368,7 @@
       showLeft() {
         this.left = true;
         this.right = false;
-        axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立"})
+        axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立","type":"1"})
           .then((res) => {
             this.tableData = res.data;
           })
@@ -1381,7 +1381,8 @@
       showRight() {
         this.left = false;
         this.right = true;
-        axios.post(" " + url + "/importother/showOtherPfbExcel", {"gongxu": "小组立"})
+        this.gwListType ="2";
+        axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立","type":"2"})
           .then((res) => {
             this.tableData = res.data;
           })
@@ -1396,6 +1397,7 @@
         this.left = true;
         this.right = false;
         this.zgCenter = false;
+        this.gwListType ="3";
         axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断","type":"3"})
           .then((res) => {
             this.tableData = res.data;
@@ -1410,6 +1412,7 @@
         this.left = false;
         this.right = false;
         this.zgCenter = true;
+        this.gwListType ="4";
         axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断","type":"4"})
           .then((res) => {
             this.tableData = res.data;
@@ -1424,6 +1427,7 @@
         this.left = false;
         this.zgCenter = false;
         this.right = true;
+        this.gwListType ="5";
         axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断","type":"5"})
           .then((res) => {
             this.tableData = res.data;
@@ -1513,7 +1517,6 @@
             that.gwOptions = gw.data;
             that.xlOptions = xl.data;
           }));
-
       },
 
       //筛选查询

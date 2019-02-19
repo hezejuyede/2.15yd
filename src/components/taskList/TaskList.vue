@@ -199,7 +199,7 @@
                 prop="pici"
                 label="批次"
                 align="center"
-                min-width="20%">
+                width="100">
               </el-table-column>
               <el-table-column
                 prop="statusStr"
@@ -212,7 +212,7 @@
           <div class="account" v-if="right === true">
             <el-table
               :data="tables"
-              :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               border
               :row-class-name="tableRowClassName"
               style="width: 95%;margin: 0 auto">
@@ -276,6 +276,18 @@
                 align="center"
                 min-width="20%">
               </el-table-column>
+              <el-table-column
+                prop="pici"
+                label="批次"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+              <el-table-column
+                prop="statusStr"
+                label="当前状态"
+                align="center"
+                min-width="20%">
+              </el-table-column>
 
             </el-table>
           </div>
@@ -285,7 +297,7 @@
       <div class="" v-if="this.listType ==3">
         <el-table
           :data="tables"
-          :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+          :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           border
           :row-class-name="tableRowClassName"
           style="width: 95%;margin: 0 auto">
@@ -994,7 +1006,7 @@
           if (info.GW === "小组立") {
             this.listType = "2";
             setTimeout(() => {
-              axios.post(" " + url + "/importother/showXiaozuliExcel", {"gongxu": info.GW})
+              axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立","type":"1"})
                 .then((res) => {
                   this.tableData = res.data;
                 })
@@ -1046,7 +1058,7 @@
       showLeft() {
         this.left = true;
         this.right = false;
-        axios.post(" " + url + "/importother/showXiaozuliExcel", {"gongxu": "小组立"})
+        axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立","type":"1"})
           .then((res) => {
             this.tableData = res.data;
           })
@@ -1059,7 +1071,7 @@
       showRight() {
         this.left = false;
         this.right = true;
-        axios.post(" " + url + "/importother/showOtherPfbExcel", {"gongxu": "小组立"})
+        axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立","type":"2"})
           .then((res) => {
             this.tableData = res.data;
           })
