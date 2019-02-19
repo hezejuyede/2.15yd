@@ -78,6 +78,12 @@
           min-width="20%">
         </el-table-column>
           <el-table-column
+            prop="pici"
+            label="批次"
+            align="center"
+            min-width="20%">
+          </el-table-column>
+          <el-table-column
             prop="statusStr"
             label="当前状态"
             align="center"
@@ -209,7 +215,6 @@
               :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               border
               :row-class-name="tableRowClassName"
-              @row-click="goToCurrentTask"
               style="width: 95%;margin: 0 auto">
               <el-table-column
                 prop="chuanhao"
@@ -330,169 +335,553 @@
       </div>
       <!-- 枝管切断-->
       <div class="zgDiv" v-if="this.listType ==4">
-        <el-table
-          :data="tables"
-          :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-          border
-          :row-class-name="tableRowClassName"
-          style="width: 95%;margin: 0 auto;">
-          <el-table-column
-            prop="type"
-            label="类型"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="chuanfan"
-            label="船番"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="jiagongxilie"
-            label="加工系列"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="fanhao"
-            label="一贯号"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="daihao"
-            label="代号"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="pno"
-            label="pNo"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="guige"
-            label="规格"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="waijing"
-            label="外径"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="bihou"
-            label="壁厚"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="neijing"
-            label="内径"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="changdu"
-            label="长度"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="pianxinliang"
-            label="偏心量"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="muguanwaijing"
-            label="母管外径"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="quanchang"
-            label="全长"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="denglizi"
-            label="等离子"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="qieduan"
-            label="切断"
-            align="center"
-            width="400">
-          </el-table-column>
-          <el-table-column
-            prop="jiancha"
-            label="检查"
-            align="center"
-            width="150">
-          </el-table-column>
-          <el-table-column
-            prop="jinwu"
-            label="金物"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="zuox"
-            label="左X°"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="wjuhao"
-            label="ω°"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="atext"
-            label="A"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="btext"
-            label="B"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="ktext"
-            label="K"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="pici"
-            label="批次"
-            align="center"
-            min-width="20%">
-          </el-table-column>
-          <el-table-column
-            prop="beizhu"
-            label="备注"
-            align="center"
-            width="100">
-          </el-table-column>
-          <el-table-column
-            prop="statusStr"
-            label="当前状态"
-            align="center"
-            width="100">
-          </el-table-column>
-        </el-table>
+        <div class="zg-change">
+          <div class="change-left" @click="zgShowLeft" :style="{'color':this.left ? 'red':''}">中二正枝</div>
+          <div class="change-center" @click="zgShowCenter" :style="{'color':this.zgCenter ? 'red':''}">中二斜枝</div>
+          <div class="change-right" @click="zgShowRight" :style="{'color':this.right ? 'red':''}">直枝偏心</div>
+        </div>
+        <div class="zg-list">
+          <div class="saoMa" v-if="left === true">
+            <el-table
+              :data="tables"
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              border
+              height="430"
+              :row-class-name="tableRowClassName"
+              style="width: 95%;margin: 0 auto;">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="type"
+                label="类型"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="chuanfan"
+                label="船番"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="jiagongxilie"
+                label="加工系列"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="fanhao"
+                label="一贯号"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="daihao"
+                label="代号"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="pno"
+                label="pNo"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="guige"
+                label="规格"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="waijing"
+                label="外径"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="bihou"
+                label="壁厚"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="neijing"
+                label="内径"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="changdu"
+                label="长度"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="pianxinliang"
+                label="偏心量"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="muguanwaijing"
+                label="母管外径"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="quanchang"
+                label="全长"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="denglizi"
+                label="等离子"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="qieduan"
+                label="切断"
+                align="center"
+                width="400">
+              </el-table-column>
+              <el-table-column
+                prop="jiancha"
+                label="检查"
+                align="center"
+                width="150">
+              </el-table-column>
+              <el-table-column
+                prop="jinwu"
+                label="金物"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="zuox"
+                label="左X°"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="wjuhao"
+                label="ω°"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="atext"
+                label="A"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="btext"
+                label="B"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="ktext"
+                label="K"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="beizhu"
+                label="备注"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="levelStr"
+                label="优先级"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="pici"
+                label="批次"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="statusStr"
+                label="当前状态"
+                align="center"
+                width="100">
+              </el-table-column>
+            </el-table>
+          </div>
+          <div class="account" v-if="zgCenter === true">
+            <el-table
+              :data="tables"
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              border
+              height="430"
+              :row-class-name="tableRowClassName"
+              style="width: 95%;margin: 0 auto;">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="type"
+                label="类型"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="chuanfan"
+                label="船番"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="jiagongxilie"
+                label="加工系列"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="fanhao"
+                label="一贯号"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="daihao"
+                label="代号"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="pno"
+                label="pNo"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="guige"
+                label="规格"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="waijing"
+                label="外径"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="bihou"
+                label="壁厚"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="neijing"
+                label="内径"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="changdu"
+                label="长度"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="pianxinliang"
+                label="偏心量"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="muguanwaijing"
+                label="母管外径"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="quanchang"
+                label="全长"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="denglizi"
+                label="等离子"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="qieduan"
+                label="切断"
+                align="center"
+                width="400">
+              </el-table-column>
+              <el-table-column
+                prop="jiancha"
+                label="检查"
+                align="center"
+                width="150">
+              </el-table-column>
+              <el-table-column
+                prop="jinwu"
+                label="金物"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="zuox"
+                label="左X°"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="wjuhao"
+                label="ω°"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="atext"
+                label="A"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="btext"
+                label="B"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="ktext"
+                label="K"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="beizhu"
+                label="备注"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="levelStr"
+                label="优先级"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="pici"
+                label="批次"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="statusStr"
+                label="当前状态"
+                align="center"
+                width="100">
+              </el-table-column>
+            </el-table>
+          </div>
+          <div class="account" v-if="right === true">
+            <el-table
+              :data="tables"
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              border
+              height="430"
+              :row-class-name="tableRowClassName"
+              style="width: 95%;margin: 0 auto;">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="type"
+                label="类型"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="chuanfan"
+                label="船番"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="jiagongxilie"
+                label="加工系列"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                fixed
+                prop="fanhao"
+                label="一贯号"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="daihao"
+                label="代号"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="pno"
+                label="pNo"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="guige"
+                label="规格"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="waijing"
+                label="外径"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="bihou"
+                label="壁厚"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="neijing"
+                label="内径"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="changdu"
+                label="长度"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="pianxinliang"
+                label="偏心量"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="muguanwaijing"
+                label="母管外径"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="quanchang"
+                label="全长"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="denglizi"
+                label="等离子"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="qieduan"
+                label="切断"
+                align="center"
+                width="400">
+              </el-table-column>
+              <el-table-column
+                prop="jiancha"
+                label="检查"
+                align="center"
+                width="150">
+              </el-table-column>
+              <el-table-column
+                prop="jinwu"
+                label="金物"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="zuox"
+                label="左X°"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="wjuhao"
+                label="ω°"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="atext"
+                label="A"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="btext"
+                label="B"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="ktext"
+                label="K"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="beizhu"
+                label="备注"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="levelStr"
+                label="优先级"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="pici"
+                label="批次"
+                align="center"
+                width="100">
+              </el-table-column>
+              <el-table-column
+                prop="statusStr"
+                label="当前状态"
+                align="center"
+                width="100">
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -531,8 +920,8 @@
 
         tableData: [],
         left: true,
+        zgCenter:false,
         right: false,
-
 
         batch: "",
         batchOptions: [],
@@ -629,7 +1018,7 @@
           else if (info.GW === "枝管切断") {
             this.listType = "4";
             setTimeout(() => {
-              axios.post(" " + url + "/importother/showOtherZgbExcel", {"gongxu": info.GW})
+              axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": info.GW,"type":"3"})
                 .then((res) => {
                   this.tableData = res.data;
                 })
@@ -678,6 +1067,52 @@
             console.log(err)
           })
       },
+
+
+
+      //支管显示中二正枝左边
+      zgShowLeft() {
+        this.left = true;
+        this.right = false;
+        this.zgCenter = false;
+        axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断","type":"3"})
+          .then((res) => {
+            this.tableData = res.data;
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+
+      //支管显示中二斜枝中间
+      zgShowCenter() {
+        this.left = false;
+        this.right = false;
+        this.zgCenter = true;
+        axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断","type":"4"})
+          .then((res) => {
+            this.tableData = res.data;
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+
+      //支管显示直枝偏心中间
+      zgShowRight() {
+        this.left = false;
+        this.zgCenter = false;
+        this.right = true;
+        axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断","type":"5"})
+          .then((res) => {
+            this.tableData = res.data;
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+
+
 
       //颜色
       tableRowClassName({row, rowIndex}) {
@@ -869,6 +1304,40 @@
         }
       }
 
+    }
+    .zgDiv{
+      .zg-change {
+        height: 50px;
+        display: flex;
+        .change-left {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: @font-size-large;
+          color: @color-background-dd;
+          cursor: pointer;
+        }
+        .change-center {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: @font-size-large;
+          color: @color-background-dd;
+          cursor: pointer;
+        }
+        .change-right {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: @font-size-large;
+          color: @color-background-dd;
+          cursor: pointer;
+
+        }
+      }
     }
 
   }

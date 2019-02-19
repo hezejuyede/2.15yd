@@ -24,6 +24,12 @@
           min-width="10%">
         </el-table-column>
         <el-table-column
+          prop="pici"
+          label="批次"
+          align="center"
+          min-width="10%">
+        </el-table-column>
+        <el-table-column
           prop="guanruijin"
           label="管端金"
           align="center"
@@ -106,7 +112,7 @@
       <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
       <el-button type="danger" @click="showReportAbnormal">上传异常</el-button>
       <el-button type="success" @click="viewDrawings">查看图纸</el-button>
-    </div  >
+    </div>
     <div class="currentTaskButton" v-if="this.wt == -1">
       <el-button type="success" @click="wtEndWord">完成</el-button>
       <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
@@ -211,7 +217,6 @@
     </el-dialog>
 
 
-
     <footer-nav></footer-nav>
   </div>
 </template>
@@ -247,11 +252,11 @@
 
         options: [],
         indexno: '',
-        remarks:"",
+        remarks: "",
 
-        zuoyezhe:"",
+        zuoyezhe: "",
 
-        wt:"1",
+        wt: "1",
 
 
         batch: "",
@@ -259,7 +264,7 @@
 
         cols: [],
         wtTableData: [],
-        gongwei:""
+        gongwei: ""
 
       }
 
@@ -291,7 +296,7 @@
         }
         else {
           this.zuoyezhe = info.username;
-          this.gongwei =info.GH;
+          this.gongwei = info.GH;
 
           if (info.GW === "弯头切断") {
             this.wt = "-1"
@@ -308,9 +313,11 @@
                 .then((res) => {
                   this.titleData = res.data.baseItem;
                   this.tableData = res.data.yipintulist;
-                  this.matterData = res.data.contextList[0].noticehtml;
                   this.step = res.data.maxstep;
                   this.routerList = res.data.nodeLit;
+                  if (res.data.contextList.length > 0) {
+                    this.matterData = res.data.contextList[0].noticehtml;
+                  }
                 })
                 .catch((err) => {
                   console.log(err)
@@ -350,9 +357,13 @@
       //加工结束
       endWord() {
         this.startWorkBtn = "1";
-        axios.post(" " + url + "/shengchan/updateStatus", {"id": this.id, "zuoyezhe": this.zuoyezhe,"stationid":this.gongwei})
+        axios.post(" " + url + "/shengchan/updateStatus", {
+          "id": this.id,
+          "zuoyezhe": this.zuoyezhe,
+          "stationid": this.gongwei
+        })
           .then((res) => {
-            if (res.data === "1") {
+            if (res.data === "success") {
               this.endWorkBtn = "-1";
               this.message = "已经完成加工";
               this.HideModal = false;
@@ -394,7 +405,11 @@
       //弯头结束
       wtEndWord() {
 
-        axios.post(" " + url + "/shengchan/updateStatus", {"id": this.id, "zuoyezhe": this.zuoyezhe,"stationid":this.gongwei})
+        axios.post(" " + url + "/shengchan/updateStatus", {
+          "id": this.id,
+          "zuoyezhe": this.zuoyezhe,
+          "stationid": this.gongwei
+        })
           .then((res) => {
             if (res.data === "1") {
               this.endWorkBtn = "-1";
@@ -432,9 +447,7 @@
           })
           .catch((err) => {
             console.log(err)
-          })
-
-        alert("hahahahah")
+          });
       },
 
       //显示弯头查询
@@ -445,21 +458,17 @@
             this.batchOptions = res.data;
             let that = this;
             axios.all([
-              axios.post(" "+ url +"/sys/showTableTitle", {"name":"wtqdb"}),
-              axios.post(" "+ url +"/importother/showWtqieduanExcel", {"pici": this.batchOptions[0].id})
+              axios.post(" " + url + "/sys/showTableTitle", {"name": "wtqdb"}),
+              axios.post(" " + url + "/importother/showWtqieduanExcelAll", {"pici": this.batchOptions[0].id})
             ])
               .then(axios.spread(function (title, table) {
                 that.cols = title.data;
                 that.wtTableData = table.data;
               }));
-
-
-
           })
           .catch((err) => {
             console.log(err)
           });
-
 
 
       },
@@ -468,8 +477,8 @@
         if (this.batch) {
           let that = this;
           axios.all([
-            axios.post(" "+ url +"/sys/showTableTitle", {"name":"wtqdb"}),
-            axios.post(" "+ url +"/importother/showWtqieduanExcel", {"pici": this.batch})
+            axios.post(" " + url + "/sys/showTableTitle", {"name": "wtqdb"}),
+            axios.post(" " + url + "/importother/showWtqieduanExcelAll", {"pici": this.batch})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data;
@@ -563,7 +572,6 @@
       },
 
 
-
     }
   }
 </script>
@@ -577,7 +585,7 @@
       height: 100px;
       margin-bottom: 20px;
       border-bottom: 1px solid @color-F0;
-      background-color:#D8E5F6;
+      background-color: #D8E5F6;
       .titleDiv {
         width: 25%;
         height: 100%;
@@ -620,7 +628,7 @@
         justify-content: center;
         flex-direction: column;
         .icon-unie62b {
-          font-size:400%;
+          font-size: 400%;
           color: @color-white;
         }
         span {
@@ -660,6 +668,7 @@
       }
     }
   }
+
   .qualityDiv {
     width: 100%;
     height: 100%;
@@ -698,18 +707,18 @@
     }
   }
 
-  .container{
+  .container {
     width: 100%;
     height: 100%;
-    .elbowDiv{
+    .elbowDiv {
       width: 100%;
       height: 100%;
-      .elbowTop{
-        height:15%;
+      .elbowTop {
+        height: 15%;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-bottom:1px solid@color-bg-hei ;
+        border-bottom: 1px solid @color-bg-hei;
         .el-button {
           display: flex;
           align-items: center;
@@ -719,9 +728,9 @@
           margin-left: 2%;
         }
       }
-      .elbowBottom{
+      .elbowBottom {
         padding-top: 10px;
-        height:85%;
+        height: 85%;
         overflow: auto;
       }
     }
@@ -739,9 +748,9 @@
     .currentTask {
       .currentTaskDiv {
         .currentTaskDivLeft {
-          flex:2;
+          flex: 2;
           .icon-unie62b {
-            font-size:400%;
+            font-size: 400%;
             color: @color-white;
           }
           span {
@@ -810,9 +819,9 @@
     .currentTask {
       .currentTaskDiv {
         .currentTaskDivLeft {
-          flex:3;
+          flex: 3;
           .icon-unie62b {
-            font-size:400%;
+            font-size: 400%;
             color: @color-white;
           }
           span {
