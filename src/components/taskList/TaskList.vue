@@ -1006,7 +1006,7 @@
           else if (info.GW === "弯头切断") {
             this.listType = "3";
             setTimeout(() => {
-              axios.post(" " + url + "/importother/showWtqieduanExcel", {"gongxu": info.GW})
+              axios.post(" " + url + "/importother/showWtqieduanExcelAll", {"gongxu": info.GW})
                 .then((res) => {
                   this.tableData = res.data;
                 })
