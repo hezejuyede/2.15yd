@@ -30,6 +30,12 @@
           :row-class-name="tableRowClassName"
           style="width: 95%;margin: 0 auto">
           <el-table-column
+            prop="pici"
+            label="批次"
+            align="center"
+            min-width="20%">
+          </el-table-column>
+          <el-table-column
             prop="shipcode"
             label="船号"
             align="center"
@@ -65,24 +71,13 @@
             align="center"
             min-width="20%">
           </el-table-column>
-          <el-table-column
-            prop="pici"
-            label="批次"
-            align="center"
-            min-width="20%">
-          </el-table-column>
+
           <el-table-column
           prop="jiagongxilie"
           label="加工系列"
           align="center"
           min-width="20%">
         </el-table-column>
-          <el-table-column
-            prop="pici"
-            label="批次"
-            align="center"
-            min-width="20%">
-          </el-table-column>
           <el-table-column
             prop="statusStr"
             label="当前状态"
@@ -101,111 +96,97 @@
           <div class="saoMa" v-if="left === true">
             <el-table
               :data="tables"
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
-              :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-              border
-              style="width: 95%;margin: 0 auto;overflow: auto">
+              style="width: 95%;margin: 0 auto">
               <el-table-column
-                prop="chuanhao"
-                label="船番"
-                align="center"
-                width="100">
+                type="selection"
+                width="30">
               </el-table-column>
               <el-table-column
-                prop="jiagongxilie"
-                label="加工系列"
+                prop="jiagongxian"
+                label="加工线"
                 align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="yiguanhao"
-                label="一贯号"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="daihao"
-                label="代号"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pno"
-                label="pNo"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="guige"
-                label="规格"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="hujing"
-                label="呼径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="houdu"
-                label="厚度"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="qieduanchang"
-                label="切断长"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="guanduan"
-                label="管端"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="jiaodu"
-                label="角度"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="lianjiexinxi"
-                label="连接"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pinming"
-                label="金物"
-                align="center"
-                width="200">
-              </el-table-column>
-              <el-table-column
-                prop="guanduan"
-                label="管端"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="beizhu"
-                label="备注"
-                align="center"
-                width="100">
+                min-width="20%">
               </el-table-column>
               <el-table-column
                 prop="pici"
                 label="批次"
                 align="center"
-                width="100">
+                min-width="20%">
+              </el-table-column>
+              <el-table-column
+                prop="jiagongxilie"
+                label="加工系列"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+              <el-table-column
+                prop="shipcode"
+                label="船号"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+              <el-table-column
+                prop="yiguanno"
+                label="一贯号"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+              <el-table-column
+                prop="xitong"
+                label="Code号"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+              <el-table-column
+                prop="hou"
+                label="PIENO"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+
+
+              <el-table-column
+                prop="pregongweiname"
+                label="上道工位"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+              <el-table-column
+                prop="prepersonname"
+                label="前作业者"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+
+
+
+
+              <el-table-column
+                prop="levelStr"
+                label="优先级"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+              <el-table-column
+                prop="jiagongxian"
+                label="加工线"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+
+              <el-table-column
+                prop="jiagongxilie"
+                label="加工系列"
+                align="center"
+                min-width="20%">
               </el-table-column>
               <el-table-column
                 prop="statusStr"
                 label="当前状态"
                 align="center"
-                width="100">
+                min-width="20%">
               </el-table-column>
             </el-table>
           </div>
@@ -216,6 +197,10 @@
               border
               :row-class-name="tableRowClassName"
               style="width: 95%;margin: 0 auto">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
               <el-table-column
                 prop="chuanhao"
                 label="船番"
@@ -259,36 +244,36 @@
                 min-width="20%">
               </el-table-column>
               <el-table-column
-                prop="pici"
-                label="批次"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
                 prop="beizhu"
                 label="备注"
                 align="center"
                 min-width="20%">
               </el-table-column>
               <el-table-column
-                prop="statusStr"
-                label="当前状态"
+                prop="levelStr"
+                label="优先级"
                 align="center"
                 min-width="20%">
               </el-table-column>
               <el-table-column
-                prop="pici"
-                label="批次"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="statusStr"
-                label="当前状态"
+                prop="jiagongxian"
+                label="加工线"
                 align="center"
                 min-width="20%">
               </el-table-column>
 
+              <el-table-column
+                prop="jiagongxilie"
+                label="加工系列"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+              <el-table-column
+                prop="statusStr"
+                label="当前状态"
+                align="center"
+                min-width="20%">
+              </el-table-column>
             </el-table>
           </div>
         </div>
@@ -637,7 +622,7 @@
                 prop="denglizi"
                 label="等离子"
                 align="center"
-                width="100">
+                width="500">
               </el-table-column>
               <el-table-column
                 prop="qieduan"
@@ -673,13 +658,13 @@
                 prop="atext"
                 label="A"
                 align="center"
-                width="100">
+                width="1500">
               </el-table-column>
               <el-table-column
                 prop="btext"
                 label="B"
                 align="center"
-                width="100">
+                width="300">
               </el-table-column>
               <el-table-column
                 prop="ktext"
@@ -817,7 +802,7 @@
                 prop="denglizi"
                 label="等离子"
                 align="center"
-                width="100">
+                width="500">
               </el-table-column>
               <el-table-column
                 prop="qieduan"
@@ -853,13 +838,13 @@
                 prop="atext"
                 label="A"
                 align="center"
-                width="100">
+                width="1500">
               </el-table-column>
               <el-table-column
                 prop="btext"
                 label="B"
                 align="center"
-                width="100">
+                width="500">
               </el-table-column>
               <el-table-column
                 prop="ktext"
@@ -1136,6 +1121,12 @@
         }
         else if (row.status  === 0) {
           return 'info-row';
+        }
+        else if (row.statusStr === "已完成") {
+          return 'success-row';
+        }
+        else if (row.statusStr === "未开时") {
+          return 'warning-row';
         }
       },
 

@@ -5,39 +5,53 @@
       <h1>中二线管加工生产执行系统</h1>
     </header>
     <div class="loginIndex">
-      <div class="loginIndex-top"><i class="iconfont icon-mima"></i></div>
       <div class="loginIndex-change">
-        <div class="change-left" @click="showLeft" :style="{'color':this.left ? 'red':''}">扫码登陆</div>
-        <div class="change-right" @click="showRight" :style="{'color':this.right ? 'red':''}">账户登陆</div>
+        <div class="change-left"
+             @click="showLeft"
+             ref="changeLeft"
+             :style="{
+             'background-color':this.left ? '#2A437B':'',
+             'color':this.left ? '#ffffff':''}">
+          扫码登陆
+        </div>
+        <div class="change-right"
+             @click="showRight"
+             :style="{
+             'background-color':this.right ? '#2A437B':'',
+             'color':this.right  ? '#ffffff':''}">
+          账户登陆
+        </div>
       </div>
       <div class="loginIndex-content">
         <div class="saoMa" v-show="left === true">
-          <div class="loginIndex-grm">
-            <i class="iconfont icon-iconset0256"></i>
-            <input
-              @blur="grmBlur(grm)"
-              @focus="grmFocus(grm)"
-              v-model="grm"
-              type="password"
-              placeholder="请扫描工牌条形码"/>
-            <div class="grmErrText">
-              <span>{{grmErrText}}</span>
+          <div class="saoMaDiv">
+            <div class="loginIndex-grm">
+              <i class="iconfont icon-iconset0256"></i>
+              <input
+                @blur="grmBlur(grm)"
+                @focus="grmFocus(grm)"
+                v-model="grm"
+                type="password"
+                placeholder="请扫描工牌条形码"/>
+              <div class="grmErrText">
+                <span>{{grmErrText}}</span>
+              </div>
             </div>
-          </div>
-          <div class="loginIndex-gwm">
-            <i class="iconfont icon-gongweiguanli"></i>
-            <input
-              @blur="gwmBlur(gwm)"
-              @focus="gwmFocus(gwm)"
-              v-model="gwm"
-              type="password"
-              placeholder="请扫描工位条形码"/>
-            <div class="gwmText">
-              <span>{{gwmErrText}}</span>
+            <div class="loginIndex-gwm">
+              <i class="iconfont icon-gongweiguanli"></i>
+              <input
+                @blur="gwmBlur(gwm)"
+                @focus="gwmFocus(gwm)"
+                v-model="gwm"
+                type="password"
+                placeholder="请扫描工位条形码"/>
+              <div class="gwmText">
+                <span>{{gwmErrText}}</span>
+              </div>
             </div>
-          </div>
-          <div class="loginIndex-mLogin">
-            <button @click="mLogin">登录</button>
+            <div class="loginIndex-mLogin">
+              <button @click="mLogin">登录</button>
+            </div>
           </div>
         </div>
         <div class="account" v-show="right === true">
@@ -73,7 +87,7 @@
               @focus="selectWorkstationFocus(selectWorkstation)"
               v-model="selectWorkstation">
               <option value="" style="display: none;" disabled selected>{{selectWorkstationName}}</option>
-              <option v-for="(item,index) in selectList" :value="item.id"  >{{item.name}}</option>
+              <option v-for="(item,index) in selectList" :value="item.id">{{item.name}}</option>
             </select>
             <div class="selectWorkstationText">
               <span>{{ selectWorkstationErrText}}</span>
@@ -85,13 +99,14 @@
         </div>
       </div>
     </div>
-    <footer class=""> ©2018 南通中远海运川崎船舶工程有限公司</footer>
+    <footer class=""> ©2019 南通中远海运川崎船舶工程有限公司</footer>
     <Modal :msg="message"
            :isHideModal="HideModal"></Modal>
     <prompt-box
       :openPromptBox="openPromptBox"
       :needKnown="needKnown"
-      :contentText="contentText">
+      :contentText="contentText"
+      :username="username">
     </prompt-box>
 
   </div>
@@ -137,17 +152,24 @@
         userNameState: false,
         passwordState: false,
         selectWorkstationState: false,
-        selectWorkstationName:"请选择工位",
-        selectWorkstationId:"",
+        selectWorkstationName: "请选择工位",
+        selectWorkstationId: "",
         message: '',
         HideModal: true
       }
     },
     components: {Modal, promptBox},
     created() {
+
+    },
+    mounted() {
+      this.getState()
     },
     methods: {
-
+      getState() {
+        let changeLeft = this.$refs.changeLeft;
+        changeLeft.style.borderTopRightRadius = "20px"
+      },
 
       grmBlur(grm) {
         if (grm.length === 0) {
@@ -415,7 +437,7 @@
 
       mLogin() {
         if (this.grmState === true && this.gwmState === true) {
-          axios.post(" "+url+"/api/MUserLogin", {
+          axios.post(" " + url + "/api/MUserLogin", {
             ghm: this.grm,
             gwm: this.gwm
           })
@@ -507,6 +529,8 @@
       showRight() {
         this.left = false;
         this.right = true;
+        let changeLeft = this.$refs.changeLeft;
+        changeLeft.style.borderTopRightRadius = "20px"
       }
     },
   }
@@ -539,29 +563,16 @@
     .loginIndex {
       width: 400px;
       height: 380px;
-      border-radius: 5%;
-      background-color: rgba(184, 202, 219, 0.6);
+      border-radius: 20px;
+      background-color: #E7EBEE;
       position: relative;
       padding-top: 1px;
-      .loginIndex-top {
-        width: 50px;
-        height: 50px;
-        background-color: rgba(19, 179, 210, 1);
-        border-radius: 40%;
-        text-align: center;
-        line-height: 50px;
-        color: #ffffff;
-        position: absolute;
-        top: -25px;
-        left: 45%;
-        .icon-mima {
-          font-size: @font-size-large-xx;
-        }
-      }
       .loginIndex-change {
-        margin-top: 30px;
-        height: 50px;
+        height: 60px;
         display: flex;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        background-color: #2A437B;
         .change-left {
           flex: 1;
           display: flex;
@@ -570,6 +581,8 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          background-color: @color-white;
+          border-top-left-radius: 20px;
         }
         .change-right {
           flex: 1;
@@ -579,6 +592,9 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          background-color: @color-white;
+          border-top-right-radius: 20px;
+          border-top-left-radius: 20px;
         }
       }
       .saoMa {
@@ -588,73 +604,75 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
-
       }
       .account {
 
       }
-      .loginIndex-grm {
-        width: 90%;
-        margin: 10px auto 0 auto;
-        height: 50px;
-        background-color: @color-white;
-        padding-left: 2%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 5%;
-        font-size: @font-size-medium-x;
-        position: relative;
-        input {
-          width: 80%;
+      .saoMaDiv {
+        margin-top: 80px;
+        width: 100%;
+        .loginIndex-grm {
+          width: 90%;
+          margin: 0 auto 0 auto;
           height: 50px;
-          padding-left: 20px;
           background-color: @color-white;
-        }
-        .icon-iconset0256 {
-          font-size: 200%;
-        }
-      }
-      .loginIndex-gwm {
-        width: 90%;
-        margin: 25px auto;
-        height: 50px;
-        background-color: @color-white;
-        padding-left: 2%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 5%;
-        position: relative;
-        input {
-          width: 80%;
-          height: 50px;
-          padding-left: 20px;
+          padding-left: 2%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 10px;
           font-size: @font-size-medium-x;
-          background-color: @color-white;
+          position: relative;
+          input {
+            width: 80%;
+            height: 50px;
+            padding-left: 20px;
+            background-color: @color-white;
+          }
+          .icon-iconset0256 {
+            font-size: 200%;
+          }
         }
-        .icon-gongweiguanli {
-          font-size: 200%;
-        }
-      }
-      .loginIndex-mLogin {
-        width: 90%;
-        margin: 0 auto;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        button {
-          background-color: rgba(19, 179, 210, 1);
-          border: 0;
-          width: 100%;
+        .loginIndex-gwm {
+          width: 90%;
+          margin: 25px auto;
           height: 50px;
-          color: #ffffff;
-          font-size: @font-size-large;
-          border-radius: 5%;
-
+          background-color: @color-white;
+          padding-left: 2%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 10px;
+          position: relative;
+          input {
+            width: 80%;
+            height: 50px;
+            padding-left: 20px;
+            font-size: @font-size-medium-x;
+            background-color: @color-white;
+          }
+          .icon-gongweiguanli {
+            font-size: 200%;
+          }
         }
-      ;
+        .loginIndex-mLogin {
+          width: 90%;
+          margin: 0 auto;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          button {
+            background-color: #2A437B;
+            border: 0;
+            width: 100%;
+            height: 50px;
+            color: #ffffff;
+            font-size: @font-size-large;
+            border-radius: 10px;
+
+          }
+        }
       }
 
       .loginIndex-selectWorkstation {
@@ -666,7 +684,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 5%;
+        border-radius: 10px;
         position: relative;
         select {
           width: 80%;
@@ -681,16 +699,16 @@
       }
       .loginIndex-username {
         width: 90%;
-        margin: 10px auto 0 auto;
+        margin: 25px auto 0 auto;
         height: 50px;
         background-color: @color-white;
         padding-left: 2%;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 5%;
         font-size: @font-size-medium-x;
         position: relative;
+        border-radius: 10px;
         input {
           width: 80%;
           height: 50px;
@@ -703,11 +721,11 @@
         margin: 25px auto;
         height: 50px;
         background-color: @color-white;
+        border-radius: 10px;
         padding-left: 2%;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 5%;
         position: relative;
         input {
           width: 80%;
@@ -725,16 +743,14 @@
         align-items: center;
         justify-content: center;
         button {
-          background-color: rgba(19, 179, 210, 1);
+          background-color: #2A437B;
           border: 0;
           width: 100%;
           height: 50px;
           color: #ffffff;
           font-size: @font-size-large;
-          border-radius: 5%;
-
+          border-radius: 10px;
         }
-      ;
       }
 
       .grmErrText {

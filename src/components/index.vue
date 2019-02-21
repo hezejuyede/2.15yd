@@ -713,7 +713,7 @@
                        prop="denglizi"
                        label="等离子"
                        align="center"
-                       width="100">
+                       width="500">
                      </el-table-column>
                      <el-table-column
                        prop="qieduan"
@@ -749,13 +749,13 @@
                        prop="atext"
                        label="A"
                        align="center"
-                       width="100">
+                       width="1500">
                      </el-table-column>
                      <el-table-column
                        prop="btext"
                        label="B"
                        align="center"
-                       width="100">
+                       width="500">
                      </el-table-column>
                      <el-table-column
                        prop="ktext"
@@ -884,7 +884,7 @@
                        prop="denglizi"
                        label="等离子"
                        align="center"
-                       width="100">
+                       width="500">
                      </el-table-column>
                      <el-table-column
                        prop="qieduan"
@@ -920,13 +920,13 @@
                        prop="atext"
                        label="A"
                        align="center"
-                       width="100">
+                       width="1500">
                      </el-table-column>
                      <el-table-column
                        prop="btext"
                        label="B"
                        align="center"
-                       width="100">
+                       width="500">
                      </el-table-column>
                      <el-table-column
                        prop="ktext"
