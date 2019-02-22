@@ -542,7 +542,7 @@
   .login {
     width: 100%;
     height: 100%;
-    background: url("../assets/img/logoin.png") center center;
+    background: url("../assets/img/Winlogon-bg.png") center center;
     background-size: cover;
     display: flex;
     align-items: center;
