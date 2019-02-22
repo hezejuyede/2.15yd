@@ -12,90 +12,15 @@
       </div>
     </div>
     <div class="currentTaskTable">
-      <el-table
-        :data="tableData"
-        :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'12px'}"
-        border
-        style="width: 95%;margin: 0 auto">
-        <el-table-column
-          prop="PIE"
-          label="PIE"
-          align="center"
-          min-width="10%">
-        </el-table-column>
-        <el-table-column
-          prop="pici"
-          label="批次"
-          align="center"
-          min-width="10%">
-        </el-table-column>
-        <el-table-column
-          prop="guanruijin"
-          label="管端金"
-          align="center"
-          min-width="10%">
-        </el-table-column>
-        <el-table-column
-          prop="neimianV"
-          label="内面V"
-          align="center"
-          min-width="10%">
-        </el-table-column>
-        <el-table-column
-          prop="guige"
-          label="规格"
-          align="center"
-          min-width="25%">
-        </el-table-column>
-        <el-table-column
-          prop="guanduan"
-          label="管端"
-          align="center"
-          min-width="10%">
-        </el-table-column>
-        <el-table-column
-          prop="qieduanchang"
-          label="切断长"
-          align="center"
-          min-width="10%">
-        </el-table-column>
-        <el-table-column
-          prop="quanchang"
-          label="全长"
-          align="center"
-          min-width="10%">
-        </el-table-column>
-        <el-table-column
-          prop="qu"
-          label="曲长"
-          align="center"
-          min-width="10%">
-        </el-table-column>
-        <el-table-column
-          prop="songxian"
-          label="送先"
-          align="center"
-          min-width="10%">
-        </el-table-column>
-        <el-table-column
-          prop="shuliang"
-          label="数量"
-          align="center"
-          min-width="10%">
-        </el-table-column>
-        <el-table-column
-          prop="guanliqufen"
-          label="行番"
-          align="center"
-          min-width="10%">
-        </el-table-column>
-        <el-table-column
-          prop="teshu"
-          label="特仕"
-          align="center"
-          min-width="10%">
-        </el-table-column>
-
+      <el-table class="tb-edit"
+                :data="tableData"
+                :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'14px'}"
+                border
+                highlight-current-row
+                style="width: 98%;margin: auto">
+        <template v-for="(col ,index) in cols">
+          <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
+        </template>
       </el-table>
 
     </div>
@@ -110,14 +35,14 @@
       <el-button type="primary" @click="startWork" :disabled="startWorkBtn == -1">开始</el-button>
       <el-button type="success" @click="endWord" :disabled="endWorkBtn == -1">完成</el-button>
       <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
-      <el-button type="danger" @click="showReportAbnormal">上传异常</el-button>
+      <el-button type="danger" @click="showReportAbnormal">上报异常</el-button>
       <el-button type="success" @click="viewDrawings">查看图纸</el-button>
     </div>
     <div class="currentTaskButton" v-if="this.wt == -1">
       <el-button type="success" @click="wtEndWord">完成</el-button>
       <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
-      <el-button type="danger" @click="showReportAbnormal">上传异常</el-button>
-      <el-button type="primary" @click="viewDrawings">查看图纸</el-button>
+      <el-button type="danger" @click="showReportAbnormal">上报异常</el-button>
+      <el-button type="primary" @click="viewDrawings">查看一品图</el-button>
     </div>
     <div class="currentTaskRouter">
       <div class="currentTaskRouterList">
@@ -138,12 +63,19 @@
       <div class="container" style="height:350px;overflow:auto">
         <div class="qualityDiv">
           <div class="qualityDivTitle">
-            <el-select v-model="indexno" placeholder="请选择异常原因">
+            <el-select
+              v-model="indexno"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="请选择异常原因">
               <el-option
                 v-for="item in options"
                 :key="item.indexno"
                 :label="item.name"
-                :value="item.indexno">
+                :value="item.indexno"
+                :disabled="item.disabled">
               </el-option>
             </el-select>
           </div>
@@ -163,10 +95,10 @@
     </el-dialog>
 
     <!--查看图纸 -->
-    <el-dialog title="一品图查看" :visible.sync="drawingVisible" width="95%">
-      <div class="container" style="height:400px;overflow:auto">
+    <el-dialog title="一品图查看" :visible.sync="drawingVisible" width="95%" top="0">
+      <div class="container" :style="aaa">
         <div class="drawingImg" style="width: 100%;height: 100%">
-          <img src="../../assets/img/ypt.jpg" alt="" style="display:block;width: 100%">
+          <img :src="url" alt="" style="display:block;width: 100%">
         </div>
       </div>
     </el-dialog>
@@ -202,12 +134,12 @@
           <div class="elbowBottom">
             <el-table class="tb-edit"
                       :data="wtTableData"
-                      :header-cell-style="{background:'#f7f7f7',color:'rgba(0, 0, 0, 1)',fontSize:'14px'}"
+                      :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'14px'}"
                       border
                       height="350"
                       highlight-current-row
                       style="width: 98%;margin: auto">
-              <template v-for="(col ,index) in cols">
+              <template v-for="(col ,index) in wtCols">
                 <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
               </template>
             </el-table>
@@ -232,6 +164,9 @@
     name: 'drawing',
     data() {
       return {
+        aaa:{},
+
+
         message: '',
         HideModal: true,
         step: 3,
@@ -242,7 +177,10 @@
         startWorkBtn: "1",
         endWorkBtn: "-1",
         titleData: [],
+
         tableData: [],
+        cols:[],
+
         matterData: "",
 
         abnormalVisible: false,
@@ -262,9 +200,13 @@
         batch: "",
         batchOptions: [],
 
-        cols: [],
+
         wtTableData: [],
-        gongwei: ""
+        wtCols: [],
+
+
+        gongwei: "",
+        url:"",
 
       }
 
@@ -288,6 +230,9 @@
       },
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
+        let h = document.body.scrollHeight;
+        this.aaa.height= h;
+        this.aaa.overflow="auto";
         const userInfo = sessionStorage.getItem("userInfo");
         const info = JSON.parse(userInfo);
 
@@ -309,20 +254,27 @@
           }
           else {
             setTimeout(() => {
-              axios.post(" " + url + "/shengchan/getCurShengchanguan", {"id": id})
-                .then((res) => {
-                  this.titleData = res.data.baseItem;
-                  this.tableData = res.data.yipintulist;
-                  this.step = res.data.maxstep;
-                  this.routerList = res.data.nodeLit;
-                  if (res.data.contextList.length > 0) {
-                    this.matterData = res.data.contextList[0].noticehtml;
+              let that = this;
+              axios.all([
+                axios.post(" " + url + "/sys/showTableTitle", {"name": "yipintu"}),
+                axios.post(" " + url + "/shengchan/getCurShengchanguan", {"id": id})
+              ])
+                .then(axios.spread(function (title, table) {
+                  that.cols = title.data;
+                  that.wtTableData = table.data;
+                  that.titleData = table.data.baseItem;
+                  that.tableData = table.data.yipintulist;
+                  that.step = table.data.maxstep;
+                  that.routerList = table.data.nodeLit;
+                  if (table.data.contextList.length > 0) {
+                    that.matterData = table.data.contextList[0].noticehtml;
                   }
-                })
-                .catch((err) => {
-                  console.log(err)
-                })
-            }, 1000);
+                }))
+
+            },100);
+
+
+
           }
         }
       },
@@ -452,19 +404,25 @@
 
       //显示弯头查询
       curvedPipeState() {
-        this.elbowVisible = true;
+
         axios.post(" " + url + "/sys/getPiciList")
           .then((res) => {
             this.batchOptions = res.data;
-            let that = this;
+            this.batch = this.batchOptions[0].id
+            const that = this;
             axios.all([
               axios.post(" " + url + "/sys/showTableTitle", {"name": "wtqdb"}),
               axios.post(" " + url + "/importother/showWtqieduanExcelAll", {"pici": this.batchOptions[0].id})
             ])
               .then(axios.spread(function (title, table) {
-                that.cols = title.data;
+                that.wtCols = title.data;
                 that.wtTableData = table.data;
+
               }));
+            setTimeout(()=>{
+              this.elbowVisible = true;
+            },400)
+
           })
           .catch((err) => {
             console.log(err)
@@ -481,21 +439,15 @@
             axios.post(" " + url + "/importother/showWtqieduanExcelAll", {"pici": this.batch})
           ])
             .then(axios.spread(function (title, table) {
-              that.cols = title.data;
+              that.wtCols = title.data;
               that.wtTableData = table.data;
             }));
         }
         else {
-          this.message = "请选择批次";
-          this.HideModal = false;
-          const that = this;
-
-          function a() {
-            that.message = "";
-            that.HideModal = true;
-          }
-
-          setTimeout(a, 2000);
+          this.$message({
+            type: 'warning',
+            message: '查询请选择批次'
+          });
         }
       },
       //显示上报异常
@@ -503,6 +455,10 @@
         this.abnormalVisible = true;
         axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
           .then((res) => {
+            //删除所有
+            res.data.splice(0, 1);
+            //第一个禁用
+            /*res.data[0].disabled =true;*/
             this.options = res.data;
           })
           .catch((err) => {
@@ -561,14 +517,32 @@
       },
       //显示查看当前图纸
       viewDrawings() {
-        this.drawingVisible = true;
-        axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
+        let pici = this.titleData[0].text;
+        let yiguanhao = this.titleData[2].text;
+        let code = this.titleData[3].text;
+        axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici":pici,"yiguanhao":yiguanhao,"code":code})
           .then((res) => {
-            this.options = res.data;
+            if(res.data.imgurl){
+              this.url =res.data.imgurl;
+              this.drawingVisible = true;
+            }
+            else {
+              this.message = "没有查到一品图";
+              this.HideModal = false;
+              const that = this;
+
+              function a() {
+                that.message = "";
+                that.HideModal = true;
+              }
+
+              setTimeout(a, 2000);
+            }
           })
           .catch((err) => {
             console.log(err)
           })
+
       },
 
 
@@ -587,12 +561,13 @@
       border-bottom: 1px solid @color-F0;
       background-color: #D8E5F6;
       .titleDiv {
-        width: 25%;
+        width: 24%;
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         margin-right: 1%;
+
         .titleDivLeft {
           width: 40%;
           height: 30%;
@@ -600,7 +575,11 @@
           align-items: center;
           justify-content: center;
           font-size: @font-size-large-xx;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+          display: -webkit-box;
           overflow: hidden;
+          text-overflow: ellipsis;
         }
         .titleDivRight {
           width: 40%;
@@ -612,6 +591,10 @@
           background-color: @color-F0;
           border-radius: 5%;
           font-size: @font-size-large-xx;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+          display: -webkit-box;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -815,29 +798,121 @@
 
   }
 
-  @media only screen and (max-width: 480px) {
+
+  @media only screen and (max-width: 490px) {
+    .currentTask {
+      .currentTaskTitle {
+        .currentTaskDiv {
+          .currentTaskDivLeft {
+            flex: 3;
+            .icon-unie62b {
+              font-size: 400%;
+              color: @color-white;
+            }
+            span {
+              margin-top: 10px;
+              font-size: @font-size-large;
+              color: @color-white;
+            }
+          }
+          .currentTaskDivRight {
+            flex: 7;
+          }
+        }
+        .titleDiv {
+          width: 20%;
+          .titleDivLeft {
+            font-size: @font-size-small-s;
+          }
+
+          .titleDivRight {
+            font-size: @font-size-small-s;;
+          }
+        }
+      }
+
+    }
+
+  }
+
+
+
+  @media only screen and (max-width: 490px) {
+    .currentTask {
+      .currentTaskTitle {
+        .currentTaskDiv {
+          .currentTaskDivLeft {
+            flex: 3;
+            .icon-unie62b {
+              font-size: 400%;
+              color: @color-white;
+            }
+            span {
+              margin-top: 10px;
+              font-size: @font-size-large;
+              color: @color-white;
+            }
+          }
+          .currentTaskDivRight {
+            flex: 7;
+          }
+        }
+        .titleDiv {
+          width: 24%;
+          .titleDivLeft {
+            font-size: @font-size-small-s;
+          }
+
+          .titleDivRight {
+            font-size: @font-size-small-s;;
+          }
+        }
+      }
+
+    }
+
+  }
+
+  @media only screen and (max-width: 400px) {
     .currentTask {
       .currentTaskDiv {
         .currentTaskDivLeft {
-          flex: 3;
           .icon-unie62b {
-            font-size: 400%;
-            color: @color-white;
+            font-size: 200%;
           }
           span {
             margin-top: 10px;
-            font-size: @font-size-large;
-            color: @color-white;
+            font-size: @font-size-small;
           }
         }
         .currentTaskDivRight {
-          flex: 7;
+          flex: 9;
+          height: 100px;
+          background-color: #F6F7FB;
+          overflow: auto;
+          padding: 2%;
         }
       }
       .currentTaskTitle {
-
+        .currentTaskDiv {
+          .currentTaskDivLeft {
+            flex: 3;
+            .icon-unie62b {
+              font-size: 200%;
+              color: @color-white;
+            }
+            span {
+              margin-top: 10px;
+              font-size: @font-size-small-s;
+              color: @color-white;
+            }
+          }
+          .currentTaskDivRight {
+            flex: 7;
+          }
+        }
         .titleDiv {
-          width: 30%;
+          width: 24%;
           .titleDivLeft {
             font-size: @font-size-small-s;
           }
