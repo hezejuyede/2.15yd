@@ -351,14 +351,31 @@
                 this.message = "已经开始加工";
                 this.HideModal = false;
                 const that = this;
+
                 function a() {
                   that.message = "";
                   that.HideModal = true;
                 }
 
+
                 setTimeout(a, 2000);
 
               }
+              else if (res.data === "-1") {
+                this.startWorkBtn = "-1";
+                this.endWorkBtn ="-1";
+                this.message = "已经完成，无法开始";
+                this.HideModal = false;
+                const that = this;
+
+                function b() {
+                  that.message = "";
+                  that.HideModal = true;
+                }
+
+                setTimeout(b, 2000);
+              }
+
             })
             .catch((err) => {
               console.log(err)
@@ -462,11 +479,12 @@
 
 
       //作业记录单选择
-      selectJlList(val) {
+      selectJlList(val,index) {
+
         if (val.length) {
           let data = [];
           for (let i = 0; i < val.length; i++) {
-            let a = val[i].id;
+            let a = val[i].cindex;
             data.push(a)
           }
           this.listData = data;
@@ -478,7 +496,7 @@
         if (val.length) {
           let data = [];
           for (let i = 0; i < val.length; i++) {
-            let a = val[i].id;
+            let a = val[i].cindex;
             data.push(a)
           }
           this.listData = data;
@@ -502,6 +520,7 @@
                    type: 'success'
                  });
                  this.endWorkBtn = "-1";
+                 this.startWorkBtn = "-1";
                  this.jobLogVisible=false;
                }
                else  {
