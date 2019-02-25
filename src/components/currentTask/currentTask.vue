@@ -106,7 +106,66 @@
     <!--作业记录 -->
     <el-dialog title="作业记录" :visible.sync="jobLogVisible" width="95%">
       <div class="container" style="height:400px;overflow:auto">
+        <div class="containerDiv">
+          <el-table
+            class="tb-edit"
+            :data="listTableData"
+            :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'20px'}"
+            border
+            highlight-current-row
+            @select="selectJlList"
+            @select-all="selectJlAll"
+            style="width: 98%;
+            margin: auto">
+            <el-table-column
+              type="selection"
+              align="center"
+              width="30">
+            </el-table-column>
+            <el-table-column
+              prop="cindex"
+              label="序号"
+              align="center"
+              min-width="20%">
+            </el-table-column>
+            <el-table-column
+              prop="oqtypename"
+              label="质量内容"
+              align="center"
+              min-width="20%">
+            </el-table-column>
+            <el-table-column
+              label="值"
+              align="center"
+              min-width="20%">
+              <template slot-scope="scope">
+                <div class="" v-if="scope.row.indexno==1">
+                  <el-input v-model="scope.row.oqmsg"></el-input>
+                </div>
+                <div class="" v-if="scope.row.indexno==2">
+                  <el-select
+                    v-model="scope.row.oqmsg"
+                    clearable
+                    filterable
+                    allow-create
+                    default-first-option
+                    placeholder="请选择表名">
+                    <el-option
+                      v-for="item in scope.row.relatableOptions"
+                      :key="item.code"
+                      :label="item.name"
+                      :value="item.code">
+                    </el-option>
+                  </el-select>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="btnDiv">
+            <el-button type="primary" icon="delete" class="handle-del mr10" @click="addJl">提交</el-button>
+          </div>
 
+        </div>
       </div>
     </el-dialog>
 
@@ -208,6 +267,12 @@
         gongwei: "",
         url:"",
 
+        listTableData:[],
+        selectTb:"",
+        selectTbOptions:[],
+        listData:[]
+
+
       }
 
     },
@@ -266,15 +331,12 @@
                   that.tableData = table.data.yipintulist;
                   that.step = table.data.maxstep;
                   that.routerList = table.data.nodeLit;
-                  if (table.data.contextList.length > 0) {
+                  if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
                     that.matterData = table.data.contextList[0].noticehtml;
                   }
                 }))
 
-            },100);
-
-
-
+            }, 100);
           }
         }
       },
@@ -289,7 +351,6 @@
                 this.message = "已经开始加工";
                 this.HideModal = false;
                 const that = this;
-
                 function a() {
                   that.message = "";
                   that.HideModal = true;
@@ -309,49 +370,45 @@
       //加工结束
       endWord() {
         this.startWorkBtn = "1";
-        axios.post(" " + url + "/shengchan/updateStatus", {
-          "id": this.id,
-          "zuoyezhe": this.zuoyezhe,
-          "stationid": this.gongwei
-        })
-          .then((res) => {
-            if (res.data === "success") {
-              this.endWorkBtn = "-1";
-              this.message = "已经完成加工";
-              this.HideModal = false;
-              const that = this;
+        this.jobLogVisible=true;
+        let that = this;
+        axios.all([
+          axios.post(" " + url + "/sysconfig/opreaRecordTypeList", {"station": that.gongwei}),
 
-              function a() {
-                that.message = "";
-                that.HideModal = true;
+        ])
+          .then(axios.spread(function (listData) {
+            let data = [];
+            for (let i = 0; i < listData.data.length; i++) {
+              if (listData.data[i].code == 2) {
+                axios.post(" " + url + "/sys/dictionaryList", {"id": listData.data[i].code})
+                  .then((res) => {
+                    var list = {
+                      id: listData.data[i].id,
+                      cindex: listData.data[i].cindex,
+                      oqtypename: listData.data[i].context,
+                      indexno: listData.data[i].ctype,
+                      oqmsg: listData.data[i].value,
+                      relatableOptions:res.data
+                    };
+                    data.push(list);
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  });
               }
-
-              setTimeout(a, 2000);
-
-            }
-            else if (res.data === "-1") {
-              this.endWorkBtn = "-1";
-              this.message = "完成失败";
-              this.HideModal = false;
-              const that = this;
-
-              function a() {
-                that.message = "";
-                that.HideModal = true;
+              else {
+                var list = {
+                  id: listData.data[i].id,
+                  cindex: listData.data[i].cindex,
+                  oqtypename: listData.data[i].context,
+                  indexno: listData.data[i].ctype,
+                  oqmsg: listData.data[i].value
+                };
+                data.push(list);
               }
-
-              setTimeout(a, 2000);
-
             }
-            else if (res.data === "2") {
-              this.jobLogVisible = true
-
-
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+            that.listTableData = data;
+          }));
       },
 
       //弯头结束
@@ -383,12 +440,12 @@
               this.HideModal = false;
               const that = this;
 
-              function a() {
+              function b() {
                 that.message = "";
                 that.HideModal = true;
               }
 
-              setTimeout(a, 2000);
+              setTimeout(b, 2000);
 
             }
             else if (res.data === "2") {
@@ -402,13 +459,72 @@
           });
       },
 
+
+
+      //作业记录单选择
+      selectJlList(val) {
+        if (val.length) {
+          let data = [];
+          for (let i = 0; i < val.length; i++) {
+            let a = val[i].id;
+            data.push(a)
+          }
+          this.listData = data;
+        }
+      },
+
+      //作业记录多全选
+      selectJlAll(val){
+        if (val.length) {
+          let data = [];
+          for (let i = 0; i < val.length; i++) {
+            let a = val[i].id;
+            data.push(a)
+          }
+          this.listData = data;
+        }
+
+      },
+
+      //提交记录
+      addJl(){
+           axios.post(" " + url + "/shengchan/updateStatus", {
+             "id": this.id,
+             "zuoyezhe": this.zuoyezhe,
+             "stationid": this.gongwei,
+             "ids": this.listData,
+             "list": this.listTableData
+           })
+             .then((res) => {
+               if (res.data ==="success") {
+                 this.$message({
+                   message: '提交成功',
+                   type: 'success'
+                 });
+                 this.endWorkBtn = "-1";
+                 this.jobLogVisible=false;
+               }
+               else  {
+                 this.$message({
+                   message: '提交失败',
+                   type: 'warning'
+                 });
+               }
+             })
+             .catch((err) => {
+               console.log(err)
+             });
+
+
+
+      },
       //显示弯头查询
       curvedPipeState() {
 
         axios.post(" " + url + "/sys/getPiciList")
           .then((res) => {
             this.batchOptions = res.data;
-            this.batch = this.batchOptions[0].id
+            this.batch = this.batchOptions[0].id;
             const that = this;
             axios.all([
               axios.post(" " + url + "/sys/showTableTitle", {"name": "wtqdb"}),
@@ -542,7 +658,6 @@
           .catch((err) => {
             console.log(err)
           })
-
       },
 
 
@@ -717,6 +832,22 @@
         overflow: auto;
       }
     }
+    .containerDiv{
+      width: 100%;
+      height: 100%;
+      .btnDiv{
+        height: 50px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .el-button {
+          width: 100px;
+          height: 30px;
+        }
+      }
+
+    }
 
   }
 
@@ -725,6 +856,11 @@
     width: 100%;
     top: 50%;
     transform: translateY(-50%);
+  }
+
+  .el-button {
+    width: 100px;
+    height: 30px;
   }
 
   @media only screen and (max-width: 1200px) {
@@ -834,8 +970,6 @@
     }
 
   }
-
-
 
   @media only screen and (max-width: 490px) {
     .currentTask {
