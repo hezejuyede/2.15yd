@@ -69,8 +69,11 @@
       justify-content: center;
       font-size: 14px;
       .icon-shebeizuhe,.icon-tuzhi, .icon-renwuqingdan,.icon-anquan, .icon-zhilianganquan, .icon-gongweiguanli, .icon-renwucaiji, .icon-gongcheng- {
-        font-size: 20px;
+        font-size: @font-size-large-xxxxxx;
       }
+       span{
+         font-size: @font-size-large;
+       }
     }
     .red {
       color: @color-blue;

@@ -12,7 +12,7 @@
           </div>
           <div class="listSearchBtn">
             <el-button type="success" icon="search" @click="showScreening">条件筛选</el-button>
-            <el-button type="primary" icon="search" @click="goGeneralListOfProcessing">加工清单</el-button>
+            <el-button type="primary" icon="search" @click="goGeneralListOfProcessing">总清单</el-button>
             <el-button type="warning" icon="search" @click="workEnd">加工完成</el-button>
           </div>
         </div>
@@ -25,7 +25,6 @@
           :row-class-name="tableRowClassName"
           @select="selectList"
           @select-all="selectAll"
-          @row-click="goToCurrentTask"
           style="width: 95%;margin: 0 auto">
           <el-table-column
             type="selection"
@@ -60,12 +59,22 @@
             label="一贯号"
             align="center"
             min-width="20%">
+            <template slot-scope="scope">
+              <div @click="goToCurrentTask(scope.row.id)">
+                {{scope.row.yiguanno}}
+              </div>
+            </template>
           </el-table-column>
           <el-table-column
             prop="xitong"
             label="Code号"
             align="center"
             min-width="20%">
+            <template slot-scope="scope">
+              <div @click="goToCurrentTask(scope.row.id)">
+                {{scope.row.xitong}}
+              </div>
+            </template>
           </el-table-column>
           <el-table-column
             prop="hou"
@@ -113,7 +122,6 @@
               :row-class-name="tableRowClassName"
               @select="selectList"
               @select-all="selectAll"
-              @row-click="goToCurrentTask"
               style="width: 95%;margin: 0 auto">
               <el-table-column
                 type="selection"
@@ -148,12 +156,22 @@
                 label="一贯号"
                 align="center"
                 min-width="20%">
+                <template slot-scope="scope">
+                  <div @click="goToCurrentTask(scope.row.id)">
+                    {{scope.row.yiguanno}}
+                  </div>
+                </template>
               </el-table-column>
               <el-table-column
                 prop="xitong"
                 label="Code号"
                 align="center"
                 min-width="20%">
+                <template slot-scope="scope">
+                  <div @click="goToCurrentTask(scope.row.id)">
+                    {{scope.row.yiguanno}}
+                  </div>
+                </template>
               </el-table-column>
               <el-table-column
                 prop="hou"
@@ -340,18 +358,6 @@
                 min-width="20%">
               </el-table-column>
               <el-table-column
-                prop="jinwuzhu"
-                label="注番"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="jinwu"
-                label="金物"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
                 prop="juaodu"
                 label="角度"
                 align="center"
@@ -366,6 +372,18 @@
               <el-table-column
                 prop="levelStr"
                 label="优先级"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+              <el-table-column
+                prop="jinwuzhu"
+                label="注番"
+                align="center"
+                min-width="20%">
+              </el-table-column>
+              <el-table-column
+                prop="jinwu"
+                label="金物"
                 align="center"
                 min-width="20%">
               </el-table-column>
@@ -444,7 +462,6 @@
                      :row-class-name="tableRowClassName"
                      @select="selectList"
                      @select-all="selectAll"
-                     @row-click="goToCurrentTask"
                      style="width: 95%;margin: 0 auto;">
                      <el-table-column
                        type="selection"
@@ -477,6 +494,11 @@
                        label="一贯号"
                        align="center"
                        width="100">
+                       <template slot-scope="scope">
+                         <div @click="goToCurrentTask(scope.row.id)">
+                           {{scope.row.fanhao}}
+                         </div>
+                       </template>
                      </el-table-column>
                      <el-table-column
                        prop="daihao"
@@ -648,6 +670,11 @@
                        label="一贯号"
                        align="center"
                        width="100">
+                       <template slot-scope="scope">
+                         <div @click="goToCurrentTask(scope.row.id)">
+                           {{scope.row.fanhao}}
+                         </div>
+                       </template>
                      </el-table-column>
                      <el-table-column
                        prop="daihao"
@@ -819,6 +846,11 @@
                        label="一贯号"
                        align="center"
                        width="100">
+                       <template slot-scope="scope">
+                         <div @click="goToCurrentTask(scope.row.id)">
+                           {{scope.row.fanhao}}
+                         </div>
+                       </template>
                      </el-table-column>
                      <el-table-column
                        prop="daihao"
@@ -1339,11 +1371,10 @@
       },
 
 
-
       //点击列表前往任务页面
-      goToCurrentTask(row, event, column) {
-        if (row.id) {
-          localStorage.setItem("pipeId", row.id);
+      goToCurrentTask(id) {
+        if (id) {
+          localStorage.setItem("pipeId", id);
           this.$router.push("/CurrentTask");
         }
       },
@@ -1361,19 +1392,21 @@
             console.log(err)
           })
       },
-
       //小组立显示右边
       showRight() {
-        this.left = false;
-        this.right = true;
-        this.gwListType ="2";
-        axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立","type":"2"})
+        this.gwListType = "2";
+        axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立", "type": "2"})
           .then((res) => {
             this.tableData = res.data;
           })
           .catch((err) => {
             console.log(err)
-          })
+          });
+        this.left = false;
+        setTimeout(() => {
+          this.right = true;
+        }, 200);
+
       },
 
 
