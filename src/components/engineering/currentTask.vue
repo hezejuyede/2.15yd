@@ -735,7 +735,6 @@
     .currentTaskDiv {
       width: 95%;
       margin: 30px auto;
-      background-color: orange;
       display: flex;
       .currentTaskDivLeft {
         flex: 1;

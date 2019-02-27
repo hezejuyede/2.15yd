@@ -2,16 +2,15 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 
-import Index from '../components/index'
-import CurrentTask from '../components/currentTask/currentTask'
-import ProductionExecutionLogin from '../components/ProductionExecutionLogin'
+import Index from '../components/engineering/waitingForHomework'
+import CurrentTask from '../components/engineering/currentTask'
+import ProductionExecutionLogin from '../components/login/ProductionExecutionLogin'
 import Drawing from '../components/drawing/drawing'
 import Safe from '../components/safe/safe'
 import Quality from '../components/quality/quality'
 import Equipment from '../components/equipment/equipment'
 import Materiel from '../components/materiel/materiel'
-import Security from '../components/security/security'
-import TaskList from '../components/taskList/TaskList'
+import TaskList from '../components/engineering/TaskList'
 
 
 Vue.use(Router);
@@ -63,11 +62,6 @@ export default new Router({
       path: '/Materiel',
       name: 'Materiel',
       component: Materiel
-    },
-    {
-      path: '/Security',
-      name: 'Security',
-      component: Security
     },
   ]
 })

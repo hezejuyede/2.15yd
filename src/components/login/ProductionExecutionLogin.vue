@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <header class="login-title">
-      <img src="../assets/img/logo.png"/>
+      <img src="../../assets/img/logo.png"/>
       <h1>中二线管加工生产执行系统</h1>
     </header>
     <div class="loginIndex">
@@ -114,10 +114,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import url from '../assets/js/URL'
+  import url from '../../assets/js/URL'
   import axios from 'axios'
-  import Modal from '../common/modal'
-  import promptBox from '../common/promptBox'
+  import Modal from '../../common/modal'
+  import promptBox from '../../common/promptBox'
 
   import Qs from 'qs'
 
@@ -537,12 +537,12 @@
 </script>
 
 <style scoped lang="less" rel="stylesheet/less">
-  @import "../assets/less/base";
+  @import "../../assets/less/base";
 
   .login {
     width: 100%;
     height: 100%;
-    background: url("../assets/img/Winlogon-bg.png") center center;
+    background: url("../../assets/img/Winlogon-bg.png") center center;
     background-size: cover;
     display: flex;
     align-items: center;

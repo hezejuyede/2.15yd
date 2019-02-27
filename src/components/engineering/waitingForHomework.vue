@@ -12,7 +12,7 @@
           </div>
           <div class="listSearchBtn">
             <el-button type="success" icon="search" @click="showScreening">条件筛选</el-button>
-            <el-button type="primary" icon="search" @click="materialSummary">物料汇总</el-button>
+            <el-button type="primary" icon="search" @click="goGeneralListOfProcessing">加工清单</el-button>
             <el-button type="warning" icon="search" @click="workEnd">加工完成</el-button>
           </div>
         </div>
@@ -1073,11 +1073,11 @@
 </template>
 <script type="text/ecmascript-6">
   import axios from 'axios'
-  import url from '../assets/js/URL'
-  import headerNav from '../common/header'
-  import footerNav from '../common/footer'
-  import Loading from '../common/loading'
-  import Modal from '../common/modal'
+  import url from '../../assets/js/URL'
+  import headerNav from '../../common/header'
+  import footerNav from '../../common/footer'
+  import Loading from '../../common/loading'
+  import Modal from '../../common/modal'
 
   export default {
     name: 'ProductionExecution',
@@ -1334,22 +1334,8 @@
       },
 
       //物料汇总
-      materialSummary() {
-        if (this.inputWord) {
-
-        }
-        else {
-          this.message = "请勾选要查看的管子";
-          this.HideModal = false;
-          const that = this;
-
-          function a() {
-            that.message = "";
-            that.HideModal = true;
-          }
-
-          setTimeout(a, 2000);
-        }
+      goGeneralListOfProcessing() {
+        this.$router.push("/taskList")
       },
 
 
@@ -1358,7 +1344,6 @@
       goToCurrentTask(row, event, column) {
         if (row.id) {
           localStorage.setItem("pipeId", row.id);
-          localStorage.setItem("IndexUrl", 2);
           this.$router.push("/CurrentTask");
         }
       },
@@ -1543,7 +1528,7 @@
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
-  @import "../assets/less/base";
+  @import "../../assets/less/base";
 
   .ProductionExecutionDiv {
     margin-bottom: 80px;

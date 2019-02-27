@@ -4,21 +4,27 @@
     <div class="TaskList" ref="TaskList">
       <!-- 公共头部-->
       <div class="contentTop" ref="contentTop">
-        <el-select
-          v-model="batch"
-          clearable
-          filterable
-          allow-create
-          default-first-option
-          placeholder="批次">
-          <el-option
-            v-for="item in batchOptions"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id">
-          </el-option>
-        </el-select>
-        <el-button type="primary" icon="search" @click="doSearch">查询</el-button>
+        <div class="contentTopLeft fl"
+             @click="goBackWaitingForHomework">
+          <i class="iconfont icon-54"></i>
+        </div>
+        <div class="contentTopRight fr">
+          <el-select
+            v-model="batch"
+            clearable
+            filterable
+            allow-create
+            default-first-option
+            placeholder="批次">
+            <el-option
+              v-for="item in batchOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+          <el-button type="primary" icon="search" @click="doSearch">查询</el-button>
+        </div>
       </div>
 
       <!--公共管-->
@@ -959,6 +965,10 @@
         this.img = ["1"]
       },
 
+      //返回待作业清单
+      goBackWaitingForHomework(){
+        this.$router.push("/")
+      },
       //选择哪一个
       selectList(val) {
         if (val.length) {
@@ -1268,20 +1278,34 @@
     margin-bottom: 80px;
     .contentTop {
       height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      line-height: 60px;
       margin-bottom: 10px;
       border-bottom: 1px solid @color-bg-hei;
-      .el-button {
+      .contentTopLeft{
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 10%;
-        height: 35px;
-        margin-left: 2%;
+        width: 20%;
+        .icon-54{
+          font-size: 300%;
+          color: #409EFF;
+        }
       }
-
+      .contentTopRight{
+        width: 80%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .el-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 10%;
+          height: 35px;
+          margin-left: 2%;
+          margin-right: 2%;
+        }
+      }
     }
     .xzlDiv {
       .xzl-change {
@@ -1342,7 +1366,6 @@
         }
       }
     }
-
   }
 
   .upTop {
@@ -1373,19 +1396,22 @@
   }
 
   @media only screen and (max-width: 800px) {
-    .ProductionExecutionDiv {
+    .TaskList {
+      margin-bottom: 80px;
       .contentTop {
-        .topButton {
-          margin-left: 2%;
-          font-size: @font-size-small-s;
-        }
-      }
-      .listSearch {
-        .listSearchBtn {
-          margin-left: 2%;
-          font-size: @font-size-small-s;
-        }
+        .contentTopLeft{
 
+        }
+        .contentTopRight{
+          .el-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20%;
+            height: 35px;
+            margin-left: 2%;
+          }
+        }
       }
     }
   }
