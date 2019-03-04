@@ -17,95 +17,74 @@
           </div>
         </div>
       </div>
-      <!--公共管-->
+
+      <!--切断，直管焊，大阻焊-->
       <div class="publicPage" v-if="this.listType ==1">
-        <el-table
-          :data="tables"
-          :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-          :row-class-name="tableRowClassName"
-          @select="selectList"
-          @select-all="selectAll"
-          style="width: 95%;margin: 0 auto">
+        <el-table class="tb-edit"
+                  :data="tableData"
+                  height="500"
+                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+                  :row-class-name="tableRowClassName"
+                  @select="selectList"
+                  @select-all="selectAll"
+                  @row-click="doSelect"
+                  @selection-change="selectChange"
+                  ref="moviesTable"
+                  style="width: 99%;margin: 0 auto">
           <el-table-column
             type="selection"
             width="30">
           </el-table-column>
-          <el-table-column
-            prop="jiagongxian"
-            label="加工线"
-            align="center"
-            min-width="20%">
-          </el-table-column>
-          <el-table-column
-            prop="pici"
-            label="批次"
-            align="center"
-            min-width="20%">
-          </el-table-column>
-          <el-table-column
-            prop="jiagongxilie"
-            label="加工系列"
-            align="center"
-            min-width="20%">
-          </el-table-column>
-          <el-table-column
-            prop="shipcode"
-            label="船号"
-            align="center"
-            min-width="20%">
-          </el-table-column>
-          <el-table-column
-            prop="yiguanno"
-            label="一贯号"
-            align="center"
-            min-width="20%">
-            <template slot-scope="scope">
-              <div @click="goToCurrentTask(scope.row.id)">
-                {{scope.row.yiguanno}}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="xitong"
-            label="Code号"
-            align="center"
-            min-width="20%">
-            <template slot-scope="scope">
-              <div @click="goToCurrentTask(scope.row.id)">
-                {{scope.row.xitong}}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="hou"
-            label="PIENO"
-            align="center"
-            min-width="20%">
-          </el-table-column>
-
-
-          <el-table-column
-            prop="pregongweiname"
-            label="上道工位"
-            align="center"
-            min-width="20%">
-          </el-table-column>
-          <el-table-column
-            prop="prepersonname"
-            label="前作业者"
-            align="center"
-            min-width="20%">
-          </el-table-column>
-
-
-
-
-          <el-table-column
-            prop="levelStr"
-            label="优先级"
-            align="center"
-            min-width="20%">
-          </el-table-column>
+          <template v-for="(col ,index) in cols">
+            <el-table-column
+              align="center"
+              v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+              :prop="col.prop"
+              :label="col.label">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yiguanno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 30px"
+                  @click="goToCurrentTask(scope.row.id)">
+                  {{ scope.row.yiguanno }}
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='codeno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 30px"
+                  @click="goToCurrentTask(scope.row.id)">
+                  {{ scope.row.codeno }}
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='qieduanbiao'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button type="success" style="width: 100%;height: 30px">{{ scope.row.qieduanbiao }}</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yipintu'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button type="success" style="width: 100%;height: 30px">{{ scope.row.levelStr }}</el-button>
+              </template>
+            </el-table-column>
+          </template>
         </el-table>
       </div>
       <!--小组立-->
@@ -983,37 +962,21 @@
         </div>
       </div>
 
-    </div>
-    <div class="upTop" ref="upTop" @click="upToTop">
-      <i class="iconfont icon-xiangshang1"></i>
-    </div>
-    <Modal :msg="message"
-           :isHideModal="HideModal"></Modal>
-    <div class="loading-container" v-show="!img">
-      <loading></loading>
+
+
+
+
+
+
+
+
     </div>
 
     <!--筛选条件 -->
     <el-dialog title="筛选条件" :visible.sync="screenVisible" width="90%">
-      <div class="container" style="height:250px;overflow:auto">
+      <div class="container" style="height:400px;overflow:auto">
         <div class="containerDiv">
-          <div class="select fl">
-            <el-select
-              v-model="gw"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              placeholder="工位">
-              <el-option
-                v-for="item in gwOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </div>
-          <div class="select fl">
+          <div class="select fl" v-if=" this.a==1">
             <el-select
               v-model="batch"
               clearable
@@ -1029,55 +992,7 @@
               </el-option>
             </el-select>
           </div>
-          <div class="select fl">
-            <el-select
-              v-model="scx"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              placeholder="生产线">
-              <el-option
-                v-for="item in scxOptions"
-                :key="item.indexno"
-                :label="item.name"
-                :value="item.indexno">
-              </el-option>
-            </el-select>
-          </div>
-          <div class="select fl">
-            <el-select
-              v-model="zyz"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              placeholder="作业者">
-              <el-option
-                v-for="item in zyzOptions"
-                :key="item.indexno"
-                :label="item.name"
-                :value="item.indexno">
-              </el-option>
-            </el-select>
-          </div>
-          <div class="select fl">
-            <el-select
-              v-model="xl"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              placeholder="系列">
-              <el-option
-                v-for="item in xlOptions"
-                :key="item.name"
-                :label="item.name"
-                :value="item.name">
-              </el-option>
-            </el-select>
-          </div>
-          <div class="select fl">
+          <div class="select fl" v-if=" this.b==1">
             <el-select
               v-model="ch"
               clearable
@@ -1093,6 +1008,134 @@
               </el-option>
             </el-select>
           </div>
+          <div class="select fl" v-if=" this.c==1">
+            <el-select
+              v-model="gw"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="工位">
+              <el-option
+                v-for="item in gwOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl" v-if=" this.d==1">
+            <el-select
+              v-model="xl"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="一贯号">
+              <el-option
+                v-for="item in xlOptions"
+                :key="item.name"
+                :label="item.name"
+                :value="item.name">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl" v-if=" this.e==1">
+            <el-select
+              v-model="scx"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="Code">
+              <el-option
+                v-for="item in scxOptions"
+                :key="item.indexno"
+                :label="item.name"
+                :value="item.indexno">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl" v-if=" this.f==1">
+            <el-select
+              v-model="xl"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="PNO">
+              <el-option
+                v-for="item in xlOptions"
+                :key="item.name"
+                :label="item.name"
+                :value="item.name">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl" v-if=" this.g==1">
+            <el-select
+              v-model="xl"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="加工系列">
+              <el-option
+                v-for="item in xlOptions"
+                :key="item.name"
+                :label="item.name"
+                :value="item.name">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl" v-if=" this.h==1">
+            <el-select
+              v-model="scx"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="类型">
+              <el-option
+                v-for="item in scxOptions"
+                :key="item.indexno"
+                :label="item.name"
+                :value="item.indexno">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl" v-if=" this.i==1">
+            <el-select
+              v-model="zyz"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder=" 优先级">
+              <el-option
+                v-for="item in zyzOptions"
+                :key="item.indexno"
+                :label="item.name"
+                :value="item.indexno">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl" v-if=" this.j==1">
+            <el-select
+              v-model="zyz"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="口径">
+              <el-option
+                v-for="item in zyzOptions"
+                :key="item.indexno"
+                :label="item.name"
+                :value="item.indexno">
+              </el-option>
+            </el-select>
+          </div>
         </div>
         <div class="containerBtn">
           <el-button type="success" icon="search" @click="validationScreening">确认筛选</el-button>
@@ -1100,6 +1143,15 @@
       </div>
     </el-dialog>
 
+
+    <div class="upTop" ref="upTop" @click="upToTop">
+      <i class="iconfont icon-xiangshang1"></i>
+    </div>
+    <Modal :msg="message"
+           :isHideModal="HideModal"></Modal>
+    <div class="loading-container" v-show="!img">
+      <loading></loading>
+    </div>
     <footer-nav></footer-nav>
   </div>
 </template>
@@ -1125,6 +1177,10 @@
 
 
         tableData: [],
+        cols: [],
+
+
+
 
         inputWord: '',
 
@@ -1142,13 +1198,42 @@
         screenVisible:false,
 
 
+        ooooo: [{"a":0},{"b":0},{"c":0},{"d":0},{"e":0},{"f":1},{"g":0},{"h":1},{"i":1},{"j":1}],
+
+        a:0,
+        b:0,
+        c:0,
+        d:0,
+        e:0,
+        f:0,
+        g:0,
+        h:0,
+        i:0,
+        j:0,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         batch: "",
         batchOptions: [],
 
-
         xl: "",
         xlOptions: [],
-
 
         scx: "",
         scxOptions: [],
@@ -1161,6 +1246,11 @@
 
         ch: "",
         chOptions: [],
+        kj:"",
+
+
+
+
 
 
         zuoyezhe:"",
@@ -1204,11 +1294,29 @@
       }, 1000);
     },
     methods: {
+
+      //公共方法显示根据不同工位显示不同的表头和表数据
+      showTableData(id,name){
+        let that = this;
+        axios.all([
+          axios.post(" "+ url +"/sys/showTableTitle",{"name":id}),
+          axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu":name})
+        ])
+          .then(axios.spread(function (title, table) {
+            that.cols = title.data;
+            that.tableData = table.data;
+          }));
+      },
+
+      //延迟一名隐藏旋转图
       getLoading() {
         this.img = ["1"]
       },
 
-      //选择
+
+      //数组的ID的增加
+
+      //列表单独选择
       selectList(val) {
         if (val.length) {
           let data = [];
@@ -1218,9 +1326,12 @@
           }
           this.listData = data;
         }
+        else {
+          this.listData = [];
+        }
       },
 
-      //全选
+      //列表全部选择
       selectAll(val){
         if (val.length) {
           let data = [];
@@ -1230,10 +1341,33 @@
           }
           this.listData = data;
         }
-
+        else {
+          this.listData = [];
+        }
       },
 
-      //颜色
+      //点击每行进行select的选择
+      doSelect(val, column, event) {
+        this.$refs.moviesTable.toggleRowSelection(val);
+      },
+
+      //当点击列表选择改变时对数组的增加和删除
+      selectChange(val) {
+        if (val.length) {
+          let data = [];
+          for (let i = 0; i < val.length; i++) {
+            let a = val[i].id;
+            data.push(a)
+          }
+          this.listData = data;
+        }
+        else {
+          this.listData = [];
+        }
+      },
+
+
+      //根据状态显示不同颜色
       tableRowClassName({row, rowIndex}) {
         if (row.level === 2) {
           return 'warning-row';
@@ -1242,6 +1376,7 @@
           return 'success-row';
         }
       },
+
 
 
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
@@ -1293,17 +1428,14 @@
                 })
             }, 1000);
           }
-          else {
+          else if (info.GW === "切断" || info.GW === "短管焊" || info.GW === "直管焊") {
             this.listType = "1";
             setTimeout(() => {
-              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": info.GW})
-                .then((res) => {
-                  this.tableData = res.data;
-                })
-                .catch((err) => {
-                  console.log(err)
-                })
+              this.showTableData('zxqieduan', this.dqgw)
             }, 1000);
+          }
+          else {
+
           }
         }
       },
@@ -1341,7 +1473,7 @@
                 function a() {
                   that.message = "";
                   that.HideModal = true;
-                  /*window.location.reload();*/
+                  that.showTableData('zxqieduan', this.dqgw)
                 }
 
                 setTimeout(a, 2000);
@@ -1365,19 +1497,109 @@
         }
       },
 
-      //物料汇总
+      //前往总清单
       goGeneralListOfProcessing() {
         this.$router.push("/taskList")
       },
 
+      //显示条件筛选
+      showScreening() {
+       /* this.screenVisible= true;
+        let that = this;
+        axios.all([
+          axios.post(" " + url + "/sys/getPiciList"),
+          axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
+          axios.post(" " + url + "/api/getPersonProcessList", {"name": ""}),
+          axios.post(" " + url + "/sys/dictionaryList", {"id": "11"}),
+        ])
+          .then(axios.spread(function (pici, scx, gw,xl) {
+            that.batchOptions = pici.data;
+            that.scxOptions = scx.data;
+            that.gwOptions = gw.data;
+            that.xlOptions = xl.data;
+          }));*/
 
-      //点击列表前往任务页面
+        let data = this.ooooo;
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].a == 1) {
+            this.a = 1;
+          }
+          if (data[i].b == 1) {
+            this.b = 1;
+          }
+          if (data[i].c == 1) {
+            this.c = 1;
+          }
+          if (data[i].d == 1) {
+            this.d = 1;
+          }
+          if (data[i].e == 1) {
+            this.e = 1;
+          }
+          if (data[i].f == 1) {
+            this.f = 1;
+          }
+          if (data[i].g == 1) {
+            this.g = 1;
+          }
+          if (data[i].h == 1) {
+            this.h = 1;
+          }
+          if (data[i].i == 1) {
+            this.i = 1;
+          }
+          if (data[i].j == 1) {
+            this.j = 1;
+          }
+        }
+        this.screenVisible = true;
+      },
+
+      //进行筛选查询
+      validationScreening() {
+        axios.post(" " + url + "/shengchan/shengchanList.html",
+          {
+            "gongxu": this.dqgw,
+            "jiagongxian": this.scx,
+            "pici": this.batch,
+            "preGongxu": this.gw,
+            "jiagongxilie": this.xl,
+            "chuanhao": this.ch,
+            "zuoyezhe": this.zyz
+          })
+          .then((res) => {
+            this.screenVisible = false;
+            this.tableData = res.data;
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+
+
+      //点击一贯号,Code号，前往前往任务页面
       goToCurrentTask(id) {
-        if (id) {
-          localStorage.setItem("pipeId", id);
-          this.$router.push("/CurrentTask");
+        //防止冒泡
+        if (event && event.stopPropagation) {
+          //W3C取消冒泡事件
+          event.stopPropagation();
+          if (id) {
+            localStorage.setItem("pipeId", id);
+            this.$router.push("/CurrentTask");
+          }
+        }
+        else {
+          //IE取消冒泡事件
+          window.event.cancelBubble = true;
+          if (id) {
+            localStorage.setItem("pipeId", id);
+            this.$router.push("/CurrentTask");
+          }
         }
       },
+
+
+
 
 
       //小组立显示左边
@@ -1392,6 +1614,7 @@
             console.log(err)
           })
       },
+
       //小组立显示右边
       showRight() {
         this.gwListType = "2";
@@ -1408,7 +1631,6 @@
         }, 200);
 
       },
-
 
       //支管显示中二正枝左边
       zgShowLeft() {
@@ -1519,44 +1741,7 @@
         document.documentElement.scrollTop = 0;
       },
 
-      //任务清单
-      showScreening() {
-        this.screenVisible= true;
-        let that = this;
-        axios.all([
-          axios.post(" " + url + "/sys/getPiciList"),
-          axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
-          axios.post(" " + url + "/api/getPersonProcessList", {"name": ""}),
-          axios.post(" " + url + "/sys/dictionaryList", {"id": "11"}),
-        ])
-          .then(axios.spread(function (pici, scx, gw,xl) {
-            that.batchOptions = pici.data;
-            that.scxOptions = scx.data;
-            that.gwOptions = gw.data;
-            that.xlOptions = xl.data;
-          }));
-      },
 
-      //筛选查询
-      validationScreening() {
-        axios.post(" " + url + "/shengchan/shengchanList.html",
-          {
-            "gongxu": this.dqgw,
-            "jiagongxian": this.scx,
-            "pici": this.batch,
-            "preGongxu": this.gw,
-            "jiagongxilie": this.xl,
-            "chuanhao": this.ch,
-            "zuoyezhe": this.zyz
-          })
-          .then((res) => {
-            this.screenVisible = false;
-            this.tableData = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      }
     }
   }
 </script>
