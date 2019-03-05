@@ -4,19 +4,23 @@
     <div class="ProductionExecutionDiv">
       <!-- 公共头部-->
       <div class="contentTop" ref="contentTop">
-        <div class="listSearch">
+        <div class="listSearch" v-if="this.listType ==1">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
                       placeholder="检索管子或扫码或手工输入"
                       @keyup.enter.native="goToPipePage(searchWord)"></el-input>
           </div>
           <div class="listSearchBtn">
-            <el-button type="success" icon="search" @click="showScreening">条件筛选</el-button>
-            <el-button type="primary" icon="search" @click="goGeneralListOfProcessing">总清单</el-button>
-            <el-button type="warning" icon="search" @click="workEnd">加工完成</el-button>
+            <el-button type="success" @click="showScreening">条件筛选</el-button>
+            <el-button type="warning" @click="zgMaterialStatistics">直管物料统计</el-button>
+            <el-button type="primary" @click="goGeneralListOfProcessing">总清单</el-button>
+            <el-button  type="danger" @click="workEnd">报完工</el-button>
           </div>
         </div>
+
       </div>
+
+
 
       <!--切断，直管焊，大阻焊-->
       <div class="publicPage" v-if="this.listType ==1">
@@ -73,7 +77,7 @@
               v-if="col.prop==='qieduanbiao'"
               :prop="col.prop" :label="col.label">
               <template scope="scope">
-                <el-button type="success" style="width: 100%;height: 30px">{{ scope.row.qieduanbiao }}</el-button>
+                <el-button type="success" style="width: 100%;height: 30px" @click="seeCutList">切断表</el-button>
               </template>
             </el-table-column>
             <el-table-column
@@ -81,7 +85,12 @@
               v-if="col.prop==='yipintu'"
               :prop="col.prop" :label="col.label">
               <template scope="scope">
-                <el-button type="success" style="width: 100%;height: 30px">{{ scope.row.levelStr }}</el-button>
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 30px"
+                  @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                  一品图
+                </el-button>
               </template>
             </el-table-column>
           </template>
@@ -970,6 +979,9 @@
 
 
 
+
+
+
     </div>
 
     <!--筛选条件 -->
@@ -1015,7 +1027,7 @@
               filterable
               allow-create
               default-first-option
-              placeholder="工位">
+              placeholder="前工位">
               <el-option
                 v-for="item in gwOptions"
                 :key="item.id"
@@ -1026,14 +1038,14 @@
           </div>
           <div class="select fl" v-if=" this.d==1">
             <el-select
-              v-model="xl"
+              v-model="ygh"
               clearable
               filterable
               allow-create
               default-first-option
               placeholder="一贯号">
               <el-option
-                v-for="item in xlOptions"
+                v-for="item in yghOptions"
                 :key="item.name"
                 :label="item.name"
                 :value="item.name">
@@ -1042,14 +1054,14 @@
           </div>
           <div class="select fl" v-if=" this.e==1">
             <el-select
-              v-model="scx"
+              v-model="codeN"
               clearable
               filterable
               allow-create
               default-first-option
               placeholder="Code">
               <el-option
-                v-for="item in scxOptions"
+                v-for="item in codeNOptions"
                 :key="item.indexno"
                 :label="item.name"
                 :value="item.indexno">
@@ -1058,14 +1070,14 @@
           </div>
           <div class="select fl" v-if=" this.f==1">
             <el-select
-              v-model="xl"
+              v-model="PNO"
               clearable
               filterable
               allow-create
               default-first-option
               placeholder="PNO">
               <el-option
-                v-for="item in xlOptions"
+                v-for="item in PNOOptions"
                 :key="item.name"
                 :label="item.name"
                 :value="item.name">
@@ -1090,14 +1102,14 @@
           </div>
           <div class="select fl" v-if=" this.h==1">
             <el-select
-              v-model="scx"
+              v-model="type"
               clearable
               filterable
               allow-create
               default-first-option
               placeholder="类型">
               <el-option
-                v-for="item in scxOptions"
+                v-for="item in typeOptions"
                 :key="item.indexno"
                 :label="item.name"
                 :value="item.indexno">
@@ -1106,14 +1118,14 @@
           </div>
           <div class="select fl" v-if=" this.i==1">
             <el-select
-              v-model="zyz"
+              v-model="yxj"
               clearable
               filterable
               allow-create
               default-first-option
               placeholder=" 优先级">
               <el-option
-                v-for="item in zyzOptions"
+                v-for="item in yxjOptions"
                 :key="item.indexno"
                 :label="item.name"
                 :value="item.indexno">
@@ -1122,14 +1134,30 @@
           </div>
           <div class="select fl" v-if=" this.j==1">
             <el-select
-              v-model="zyz"
+              v-model="kj"
               clearable
               filterable
               allow-create
               default-first-option
               placeholder="口径">
               <el-option
-                v-for="item in zyzOptions"
+                v-for="item in kjOptions"
+                :key="item.indexno"
+                :label="item.name"
+                :value="item.indexno">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl" v-if=" this.l==1">
+            <el-select
+              v-model="scx"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="生产线">
+              <el-option
+                v-for="item in scxOptions"
                 :key="item.indexno"
                 :label="item.name"
                 :value="item.indexno">
@@ -1143,13 +1171,26 @@
       </div>
     </el-dialog>
 
+    <!--查看图纸 -->
+    <el-dialog title="一品图查看" :visible.sync="drawingVisible" width="95%" top="0">
+      <div class="container" :style="aaa">
+        <div class="drawingImg" style="width: 100%;height: 100%">
+          <img :src="url" alt="" style="display:block;width: 100%">
+        </div>
+      </div>
+    </el-dialog>
+
+
+
+
+
 
     <div class="upTop" ref="upTop" @click="upToTop">
       <i class="iconfont icon-xiangshang1"></i>
     </div>
     <Modal :msg="message"
            :isHideModal="HideModal"></Modal>
-    <div class="loading-container" v-show="!img">
+    <div class="loading-container" v-show="!tableData.length">
       <loading></loading>
     </div>
     <footer-nav></footer-nav>
@@ -1167,9 +1208,10 @@
     name: 'ProductionExecution',
     data() {
       return {
-        img: "",
-        k:"200",
 
+        aaa:{},
+        k:"200",
+        url:"",
 
         listData: [],
 
@@ -1196,9 +1238,50 @@
         right: false,
 
         screenVisible:false,
+        drawingVisible:false,
 
 
-        ooooo: [{"a":0},{"b":0},{"c":0},{"d":0},{"e":0},{"f":1},{"g":0},{"h":1},{"i":1},{"j":1}],
+        zuoyezhe:"",
+        dqgw:"",
+
+        gwListType:0,
+        stationId:"",
+
+
+
+        batch: "",
+        batchOptions: [],
+
+        ch: "",
+        chOptions: [],
+
+        gw: "",
+        gwOptions: [],
+
+        ygh:"",
+        yghOptions: [],
+
+        codeN:"",
+        codeNOptions:[],
+
+        PNO:"",
+        PNOOptions:[],
+
+        xl: "",
+        xlOptions: [],
+
+        type:"",
+        typeOptions:[],
+
+
+        yxj: "",
+        yxjOptions: [],
+
+        kj:"",
+        kjOptions: [],
+
+        scx:"",
+        scxOptions:[],
 
         a:0,
         b:0,
@@ -1210,54 +1293,10 @@
         h:0,
         i:0,
         j:0,
+        l:0
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        batch: "",
-        batchOptions: [],
-
-        xl: "",
-        xlOptions: [],
-
-        scx: "",
-        scxOptions: [],
-
-        gw: "",
-        gwOptions: [],
-
-        zyz: "",
-        zyzOptions: [],
-
-        ch: "",
-        chOptions: [],
-        kj:"",
-
-
-
-
-
-
-        zuoyezhe:"",
-        dqgw:"",
-
-        gwListType:0,
-        stationId:""
 
 
 
@@ -1288,15 +1327,13 @@
     created() {
       //检索用户状态
       this.getAdminState();
-
-      setTimeout(() => {
-        this.getLoading();
-      }, 1000);
     },
     methods: {
 
       //公共方法显示根据不同工位显示不同的表头和表数据
       showTableData(id,name){
+
+
         let that = this;
         axios.all([
           axios.post(" "+ url +"/sys/showTableTitle",{"name":id}),
@@ -1307,14 +1344,6 @@
             that.tableData = table.data;
           }));
       },
-
-      //延迟一名隐藏旋转图
-      getLoading() {
-        this.img = ["1"]
-      },
-
-
-      //数组的ID的增加
 
       //列表单独选择
       selectList(val) {
@@ -1378,9 +1407,13 @@
       },
 
 
-
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
+        let h = document.body.scrollHeight;
+        this.aaa.height= h;
+        this.aaa.overflow="auto";
+
+
         const userInfo = sessionStorage.getItem("userInfo");
         if (userInfo === null) {
           this.$router.push("/ProductionExecutionLogin")
@@ -1497,62 +1530,200 @@
         }
       },
 
+      //直管物料统计
+      zgMaterialStatistics(){
+
+      },
+
       //前往总清单
       goGeneralListOfProcessing() {
         this.$router.push("/taskList")
       },
 
-      //显示条件筛选
-      showScreening() {
-       /* this.screenVisible= true;
-        let that = this;
-        axios.all([
-          axios.post(" " + url + "/sys/getPiciList"),
-          axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
-          axios.post(" " + url + "/api/getPersonProcessList", {"name": ""}),
-          axios.post(" " + url + "/sys/dictionaryList", {"id": "11"}),
-        ])
-          .then(axios.spread(function (pici, scx, gw,xl) {
-            that.batchOptions = pici.data;
-            that.scxOptions = scx.data;
-            that.gwOptions = gw.data;
-            that.xlOptions = xl.data;
-          }));*/
 
-        let data = this.ooooo;
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].a == 1) {
-            this.a = 1;
+      //查看一品图
+      seeYiPinTu(pici,yiguanhao,code) {
+        //防止冒泡
+        if (event && event.stopPropagation) {
+          //W3C取消冒泡事件
+          event.stopPropagation();
+          if (pici && yiguanhao && code) {
+            axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
+              .then((res) => {
+                if (res.data.imgurl) {
+                  this.url = res.data.imgurl;
+                  this.drawingVisible = true;
+                }
+                else {
+                  this.message = "没有查到一品图";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function a() {
+                    that.message = "";
+                    that.HideModal = true;
+                  }
+
+                  setTimeout(a, 2000);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
           }
-          if (data[i].b == 1) {
-            this.b = 1;
-          }
-          if (data[i].c == 1) {
-            this.c = 1;
-          }
-          if (data[i].d == 1) {
-            this.d = 1;
-          }
-          if (data[i].e == 1) {
-            this.e = 1;
-          }
-          if (data[i].f == 1) {
-            this.f = 1;
-          }
-          if (data[i].g == 1) {
-            this.g = 1;
-          }
-          if (data[i].h == 1) {
-            this.h = 1;
-          }
-          if (data[i].i == 1) {
-            this.i = 1;
-          }
-          if (data[i].j == 1) {
-            this.j = 1;
+          else {
+            this.message = "信息不全无法查询";
+            this.HideModal = false;
+            const that = this;
+
+            function b() {
+              that.message = "";
+              that.HideModal = true;
+            }
+
+            setTimeout(b, 2000);
           }
         }
+        else {
+          //IE取消冒泡事件
+          window.event.cancelBubble = true;
+          if (pici && yiguanhao && code) {
+            axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
+              .then((res) => {
+                if (res.data.imgurl) {
+                  this.url = res.data.imgurl;
+                  this.drawingVisible = true;
+                }
+                else {
+                  this.message = "没有查到一品图";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function a() {
+                    that.message = "";
+                    that.HideModal = true;
+                  }
+
+                  setTimeout(a, 2000);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
+          else {
+            this.message = "信息不全无法查询";
+            this.HideModal = false;
+            const that = this;
+
+            function b() {
+              that.message = "";
+              that.HideModal = true;
+            }
+
+            setTimeout(b, 2000);
+          }
+        }
+
+
+
+
+      },
+
+
+      //查看切断表
+      seeCutList() {
+        //防止冒泡
+        if (event && event.stopPropagation) {
+          //W3C取消冒泡事件
+          event.stopPropagation();
+
+        }
+        else {
+          //IE取消冒泡事件
+          window.event.cancelBubble = true;
+
+        }
+
+      },
+
+
+      //显示条件筛选
+      showScreening() {
         this.screenVisible = true;
+        axios.post(" " + url + "/show/showSelect",{"id":this.stationId})
+          .then((res) => {
+            let data = res.data;
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].a == 1) {
+                this.a = 1;
+              }
+              if (data[i].b == 1) {
+                this.b = 1;
+              }
+              if (data[i].c == 1) {
+                this.c = 1;
+              }
+              if (data[i].d == 1) {
+                this.d = 1;
+              }
+              if (data[i].e == 1) {
+                this.e = 1;
+              }
+              if (data[i].f == 1) {
+                this.f = 1;
+              }
+              if (data[i].g == 1) {
+                this.g = 1;
+              }
+              if (data[i].h == 1) {
+                this.h = 1;
+              }
+              if (data[i].i == 1) {
+                this.i = 1;
+              }
+              if (data[i].j == 1) {
+                this.j = 1;
+              }
+              if (data[i].l == 1) {
+                this.l = 1;
+              }
+            }
+
+            let that = this;
+            axios.all([
+              axios.post(" " + url + "/sys/getPiciList"),
+              axios.post(" " + url + "/api/getPersonProcessList", {"name": ""}),
+              axios.post(" " + url + "/sys/dictionaryList", {"id": "11"}),
+              axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
+
+              axios.post(" " + url + "/sysconfig/getShipTypeSelect"),
+
+              axios.post(" " + url + "/sys/dictionaryList", {"id": ""}),
+              axios.post(" " + url + "/sys/dictionaryList", {"id": ""}),
+              axios.post(" " + url + "/sys/dictionaryList", {"id": ""}),
+
+              axios.post(" " + url + "/sys/dictionaryList", {"id": "22"}),
+              axios.post(" " + url + "/sys/dictionaryList", {"id": "4"}),
+              axios.post(" " + url + "/sys/dictionaryList", {"id": "21"})
+            ])
+              .then(axios.spread(function (pici, gw, xl, scx,ch, ygh, codeN, PNO, type, yxj, kj) {
+                that.batchOptions = pici.data;
+                that.gwOptions = gw.data;
+                that.xlOptions = xl.data;
+                that.chOptions = ch.data;
+                that.yghOptions = ygh.data;
+                that.codeNOptions = codeN.data;
+                that.PNOOptions = PNO.data;
+                that.typeOptions = type.data;
+                that.yxjOptions = yxj.data;
+                that.kjOptions = kj.data;
+              }));
+          })
+          .catch((err) => {
+            console.log(err)
+
+          });
       },
 
       //进行筛选查询
@@ -1597,9 +1768,6 @@
           }
         }
       },
-
-
-
 
 
       //小组立显示左边
@@ -1762,14 +1930,14 @@
         width: 95%;
         display: flex;
         .listSearchInput {
-          flex: 2;
+          flex: 1;
           display: flex;
           align-items: center;
           justify-content: center;
 
         }
         .listSearchBtn {
-          flex: 1.5;
+          flex: 1;
           display: flex;
           align-items: center;
           justify-content: center;

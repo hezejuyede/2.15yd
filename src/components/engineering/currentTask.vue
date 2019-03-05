@@ -1,60 +1,98 @@
 <template>
   <div class="currentTask">
     <header-nav></header-nav>
-    <div class="currentTaskTitle">
-      <div class="titleDiv fl" v-for="(item,index) in titleData">
-        <div class="titleDivLeft">
-          {{item.name}}
-        </div>
-        <div class="titleDivRight">
-          {{item.text}}
+    <div class="currentTaskTemplate" v-if="station==1">
+      <div class="currentTaskTitle">
+        <div class="titleDiv" v-for="(item,index) in titleData" :style="{'width':item.width}">
+          <div class="titleDivLeft">
+            {{item.name}}
+          </div>
+          <div class="titleDivRight">
+            {{item.text}}
+          </div>
         </div>
       </div>
-    </div>
-    <div class="currentTaskTable">
-      <el-table class="tb-edit"
-                :data="tableData"
-                :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'14px'}"
-                border
-                highlight-current-row
-                style="width: 98%;margin: auto">
-        <template v-for="(col ,index) in cols">
-          <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
-        </template>
-      </el-table>
+      <div class="currentTaskDiv">
+        <div class="currentTaskDivLeft">
+          <i class="iconfont icon-unie62b"></i>
+          <span>当前工位注意事项</span>
+        </div>
+        <div class="currentTaskDivRight" v-html="matterData"></div>
+      </div>
+      <div class="currentTaskDiv">
+        <div class="currentTaskDivLeft">
+          <i class="iconfont icon-unie62b"></i>
+          <span>当前加工管注意事项</span>
+        </div>
+        <div class="currentTaskDivRight" v-html="matterData"></div>
+      </div>
+      <div class="currentTaskBtn">
+        <el-button type="primary" @click="startWork" :disabled="startWorkBtn == -1">开始</el-button>
+        <el-button type="success" @click="endWord" :disabled="endWorkBtn == -1">报完工</el-button>
+        <el-button type="warning" @click="showQdList">切断表</el-button>
+        <el-button type="danger" @click="showReportAbnormal">上报异常</el-button>
+        <el-button type="success" @click="viewDrawings">查看图纸</el-button>
+      </div>
 
-    </div>
-    <div class="currentTaskDiv">
-      <div class="currentTaskDivLeft">
-        <i class="iconfont icon-unie62b"></i>
-        <span>注意事项</span>
-      </div>
-      <div class="currentTaskDivRight" v-html="matterData"></div>
-    </div>
-    <div class="currentTaskButton" v-if="this.wt == 1">
-      <el-button type="primary" @click="startWork" :disabled="startWorkBtn == -1">开始</el-button>
-      <el-button type="success" @click="endWord" :disabled="endWorkBtn == -1">完成</el-button>
-      <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
-      <el-button type="danger" @click="showReportAbnormal">上报异常</el-button>
-      <el-button type="success" @click="viewDrawings">查看图纸</el-button>
-    </div>
-    <div class="currentTaskButton" v-if="this.wt == -1">
-      <el-button type="success" @click="wtEndWord">完成</el-button>
-      <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
-      <el-button type="danger" @click="showReportAbnormal">上报异常</el-button>
-      <el-button type="primary" @click="viewDrawings">查看一品图</el-button>
-    </div>
-    <div class="currentTaskRouter">
-      <div class="currentTaskRouterList">
-        <el-steps align-center :active="step" finish-status="success">
-          <el-step v-for="(item,index) in routerList" :keys="index" :title="item.stationname"></el-step>
-        </el-steps>
+      <div class="currentTaskRouter">
+        <div class="currentTaskRouterList">
+          <el-steps align-center :active="step" finish-status="success">
+            <el-step v-for="(item,index) in routerList" :keys="index" :title="item.stationname"></el-step>
+          </el-steps>
+        </div>
       </div>
     </div>
-    <Modal :msg="message"
-           :isHideModal="HideModal"></Modal>
-    <div class="loading-container" v-show="!img.length">
-      <loading></loading>
+    <div class="currentTaskDiv" v-if="station==2">
+      <div class="currentTaskTitle">
+        <div class="titleDiv fl" v-for="(item,index) in titleData">
+          <div class="titleDivLeft">
+            {{item.name}}
+          </div>
+          <div class="titleDivRight">
+            {{item.text}}
+          </div>
+        </div>
+      </div>
+      <div class="currentTaskTable">
+        <el-table class="tb-edit"
+                  :data="tableData"
+                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'14px'}"
+                  border
+                  highlight-current-row
+                  style="width: 98%;margin: auto">
+          <template v-for="(col ,index) in cols">
+            <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
+          </template>
+        </el-table>
+
+      </div>
+      <div class="currentTaskDiv">
+        <div class="currentTaskDivLeft">
+          <i class="iconfont icon-unie62b"></i>
+          <span>注意事项</span>
+        </div>
+        <div class="currentTaskDivRight" v-html="matterData"></div>
+      </div>
+      <div class="currentTaskButton" v-if="this.wt == 1">
+        <el-button type="primary" @click="startWork" :disabled="startWorkBtn == -1">开始</el-button>
+        <el-button type="success" @click="endWord" :disabled="endWorkBtn == -1">完成</el-button>
+        <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
+        <el-button type="danger" @click="showReportAbnormal">上报异常</el-button>
+        <el-button type="success" @click="viewDrawings">查看图纸</el-button>
+      </div>
+      <div class="currentTaskButton" v-if="this.wt == -1">
+        <el-button type="success" @click="wtEndWord">完成</el-button>
+        <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
+        <el-button type="danger" @click="showReportAbnormal">上报异常</el-button>
+        <el-button type="primary" @click="viewDrawings">查看一品图</el-button>
+      </div>
+      <div class="currentTaskRouter">
+        <div class="currentTaskRouterList">
+          <el-steps align-center :active="step" finish-status="success">
+            <el-step v-for="(item,index) in routerList" :keys="index" :title="item.stationname"></el-step>
+          </el-steps>
+        </div>
+      </div>
     </div>
 
 
@@ -207,6 +245,11 @@
       </div>
     </el-dialog>
 
+    <Modal :msg="message"
+           :isHideModal="HideModal"></Modal>
+    <div class="loading-container" v-show="!img.length">
+      <loading></loading>
+    </div>
 
     <footer-nav></footer-nav>
   </div>
@@ -224,6 +267,7 @@
     data() {
       return {
         aaa:{},
+        station:1,
 
 
         message: '',
@@ -475,7 +519,9 @@
             console.log(err)
           });
       },
+      showQdList(){
 
+      },
 
 
       //作业记录单选择
@@ -689,100 +735,104 @@
   .currentTask {
     width: 100%;
     margin-bottom: 80px;
-    .currentTaskTitle {
-      height: 100px;
-      margin-bottom: 20px;
-      border-bottom: 1px solid @color-F0;
-      background-color: #D8E5F6;
-      .titleDiv {
-        width: 24%;
-        height: 100%;
+    .currentTaskTemplate {
+      width: 100%;
+      .currentTaskTitle {
+        background-color: #D8E5F6;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 1%;
-
-        .titleDivLeft {
-          width: 40%;
-          height: 30%;
+        flex-flow: row wrap;
+        .titleDiv {
+          width: 20%;
+          height: 80px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: @font-size-large-xx;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 3;
-          display: -webkit-box;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        .titleDivRight {
-          width: 40%;
-          height: 30%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-left: 2%;
-          background-color: @color-F0;
-          border-radius: 5%;
-          font-size: @font-size-large-xx;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 3;
-          display: -webkit-box;
-          text-overflow: ellipsis;
+          background-color: #D8E5F6;
+          .titleDivLeft {
+            width: 40%;
+            height: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-flow: row wrap;
+            font-size: @font-size-large-xx;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            display: -webkit-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .titleDivRight {
+            width: 50%;
+            height: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-flow: row wrap;
+            margin-left: 2%;
+            background-color: @color-F0;
+            border-radius: 5%;
+            font-size: @font-size-large-xx;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            display: -webkit-box;
+            text-overflow: ellipsis;
+          }
         }
       }
-    }
-    .currentTaskDiv {
-      width: 95%;
-      margin: 30px auto;
-      display: flex;
-      .currentTaskDivLeft {
-        flex: 1;
-        background-color: #ED6942;
+      .currentTaskDiv {
+        width: 95%;
+        margin: 30px auto;
+        display: flex;
+        .currentTaskDivLeft {
+          flex: 2;
+          background-color: #ED6942;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          .icon-unie62b {
+            font-size: 400%;
+            color: @color-white;
+          }
+          span {
+            margin-top: 10px;
+            font-size: @font-size-large;
+            color: @color-white;
+          }
+        }
+        .currentTaskDivRight {
+          flex: 8;
+          height: 100px;
+          background-color: #F6F7FB;
+          overflow: auto;
+          padding: 2%;
+        }
+      }
+      .currentTaskBtn {
+        width: 95%;
+        margin: 20px auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        flex-direction: column;
-        .icon-unie62b {
-          font-size: 400%;
-          color: @color-white;
+        button {
+          width: 15%;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
-        span {
-          margin-top: 10px;
+      }
+      .currentTaskRouter {
+        margin-top: 50px;
+        width: 95%;
+        .currentTaskRouterTitle {
           font-size: @font-size-large;
-          color: @color-white;
+          padding-left: 10%;
         }
       }
-      .currentTaskDivRight {
-        flex: 9;
-        height: 100px;
-        background-color: #F6F7FB;
-        overflow: auto;
-        padding: 2%;
-      }
     }
-    .currentTaskButton {
-      width: 95%;
-      margin: 20px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      button {
-        width: 15%;
-        height: 50px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
-    .currentTaskRouter {
-      margin-top: 50px;
-      width: 95%;
-      .currentTaskRouterTitle {
-        font-size: @font-size-large;
-        padding-left: 10%;
-      }
-    }
+
   }
 
   .qualityDiv {
@@ -882,83 +932,22 @@
   }
 
   @media only screen and (max-width: 1200px) {
+
     .currentTask {
-      .currentTaskDiv {
-        .currentTaskDivLeft {
-          flex: 2;
-          .icon-unie62b {
-            font-size: 400%;
-            color: @color-white;
-          }
-          span {
-            margin-top: 10px;
-            font-size: @font-size-large;
-            color: @color-white;
+      .currentTaskTemplate{
+        .currentTaskTitle {
+          .titleDiv {
+            .titleDivLeft {
+              font-size:@font-size-large;
+            }
+            .titleDivRight {
+              font-size:@font-size-large
+            }
           }
         }
-        .currentTaskDivRight {
-          flex: 8;
-        }
-      }
-      .currentTaskTitle {
-
-        .titleDiv {
-          .titleDivLeft {
-            font-size: @font-size-medium-x;
-
-          }
-          .titleDivRight {
-            font-size: @font-size-medium-x;
-            width: 50%;
-          }
-        }
-      }
-      .currentTaskButton {
-        button {
-          width: 15%;
-          font-size: @font-size-medium;
-        }
-      }
-    }
-
-  }
-
-  @media only screen and (max-width: 720px) {
-    .currentTask {
-
-      .currentTaskTitle {
-
-        .titleDiv {
-
-          .titleDivLeft {
-            font-size: @font-size-medium;
-          }
-
-          .titleDivRight {
-            font-size: @font-size-medium;
-          }
-        }
-      }
-      .currentTaskButton {
-        width: 95%;
-        button {
-          width: 25%;
-          font-size: @font-size-small-s;
-
-        }
-      }
-
-    }
-
-  }
-
-
-  @media only screen and (max-width: 490px) {
-    .currentTask {
-      .currentTaskTitle {
         .currentTaskDiv {
           .currentTaskDivLeft {
-            flex: 3;
+            flex:3;
             .icon-unie62b {
               font-size: 400%;
               color: @color-white;
@@ -973,50 +962,55 @@
             flex: 7;
           }
         }
-        .titleDiv {
-          width: 20%;
-          .titleDivLeft {
-            font-size: @font-size-small-s;
-          }
-
-          .titleDivRight {
-            font-size: @font-size-small-s;;
+        .currentTaskButton {
+          button {
+            width: 15%;
+            font-size: @font-size-medium;
           }
         }
       }
+
 
     }
 
   }
 
-  @media only screen and (max-width: 490px) {
+  @media only screen and (max-width: 900px) {
     .currentTask {
-      .currentTaskTitle {
+      .currentTaskTemplate{
+        .currentTaskTitle {
+          .titleDiv {
+            .titleDivLeft {
+              font-size:@font-size-medium;
+            }
+            .titleDivRight {
+              font-size:@font-size-medium
+            }
+          }
+        }
         .currentTaskDiv {
           .currentTaskDivLeft {
-            flex: 3;
+            flex: 4;
             .icon-unie62b {
               font-size: 400%;
               color: @color-white;
             }
             span {
               margin-top: 10px;
-              font-size: @font-size-large;
+              font-size: @font-size-medium;
               color: @color-white;
             }
           }
           .currentTaskDivRight {
-            flex: 7;
+            flex: 6;
           }
         }
-        .titleDiv {
-          width: 24%;
-          .titleDivLeft {
+        .currentTaskButton {
+          width: 95%;
+          button {
+            width: 25%;
             font-size: @font-size-small-s;
-          }
 
-          .titleDivRight {
-            font-size: @font-size-small-s;;
           }
         }
       }
@@ -1024,33 +1018,54 @@
     }
 
   }
+
+
+  @media only screen and (max-width:640px) {
+    .currentTask {
+      .currentTaskTemplate{
+        .currentTaskTitle {
+          .titleDiv {
+            .titleDivLeft {
+              font-size:@font-size-small;
+            }
+            .titleDivRight {
+              font-size: @font-size-small;
+            }
+          }
+        }
+        .currentTaskButton {
+          width: 95%;
+          button {
+            width: 25%;
+            font-size: @font-size-small-s;
+
+          }
+        }
+      }
+
+    }
+
+  }
+
 
   @media only screen and (max-width: 400px) {
     .currentTask {
-      .currentTaskDiv {
-        .currentTaskDivLeft {
-          .icon-unie62b {
-            font-size: 200%;
-          }
-          span {
-            margin-top: 10px;
-            font-size: @font-size-small;
+      .currentTaskTemplate{
+        .currentTaskTitle {
+          .titleDiv {
+            .titleDivLeft {
+              font-size:@font-size-small-s;
+            }
+            .titleDivRight {
+              font-size: @font-size-small-s;
+            }
           }
         }
-        .currentTaskDivRight {
-          flex: 9;
-          height: 100px;
-          background-color: #F6F7FB;
-          overflow: auto;
-          padding: 2%;
-        }
-      }
-      .currentTaskTitle {
         .currentTaskDiv {
           .currentTaskDivLeft {
-            flex: 3;
+            flex: 4;
             .icon-unie62b {
-              font-size: 200%;
+              font-size: 300%;
               color: @color-white;
             }
             span {
@@ -1060,17 +1075,15 @@
             }
           }
           .currentTaskDivRight {
-            flex: 7;
+            flex: 6;
           }
         }
-        .titleDiv {
-          width: 24%;
-          .titleDivLeft {
+        .currentTaskButton {
+          width: 95%;
+          button {
+            width: 25%;
             font-size: @font-size-small-s;
-          }
 
-          .titleDivRight {
-            font-size: @font-size-small-s;;
           }
         }
       }
