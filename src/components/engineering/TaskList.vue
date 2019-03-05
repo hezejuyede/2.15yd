@@ -921,22 +921,6 @@
               </el-option>
             </el-select>
           </div>
-          <div class="select fl" v-if=" this.b==1">
-            <el-select
-              v-model="ch"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              placeholder="船号">
-              <el-option
-                v-for="item in chOptions"
-                :key="item.indexno"
-                :label="item.name"
-                :value="item.indexno">
-              </el-option>
-            </el-select>
-          </div>
           <div class="select fl" v-if=" this.c==1">
             <el-select
               v-model="gw"
@@ -953,53 +937,17 @@
               </el-option>
             </el-select>
           </div>
+          <div class="select fl" v-if=" this.b==1">
+            <el-input v-model="ch" placeholder="船号"></el-input>
+          </div>
           <div class="select fl" v-if=" this.d==1">
-            <el-select
-              v-model="ygh"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              placeholder="一贯号">
-              <el-option
-                v-for="item in yghOptions"
-                :key="item.name"
-                :label="item.name"
-                :value="item.name">
-              </el-option>
-            </el-select>
+            <el-input v-model="ygh" placeholder="一贯号"></el-input>
           </div>
           <div class="select fl" v-if=" this.e==1">
-            <el-select
-              v-model="codeN"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              placeholder="Code">
-              <el-option
-                v-for="item in codeNOptions"
-                :key="item.indexno"
-                :label="item.name"
-                :value="item.indexno">
-              </el-option>
-            </el-select>
+            <el-input v-model="codeN" placeholder="code号"></el-input>
           </div>
           <div class="select fl" v-if=" this.f==1">
-            <el-select
-              v-model="PNO"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              placeholder="PNO">
-              <el-option
-                v-for="item in PNOOptions"
-                :key="item.name"
-                :label="item.name"
-                :value="item.name">
-              </el-option>
-            </el-select>
+            <el-input v-model="PNO" placeholder="PNO"></el-input>
           </div>
           <div class="select fl" v-if=" this.g==1">
             <el-select
@@ -1019,14 +967,14 @@
           </div>
           <div class="select fl" v-if=" this.h==1">
             <el-select
-              v-model="type"
+              v-model="typeSelect"
               clearable
               filterable
               allow-create
               default-first-option
               placeholder="类型">
               <el-option
-                v-for="item in typeOptions"
+                v-for="item in typeSelectOptions"
                 :key="item.indexno"
                 :label="item.name"
                 :value="item.indexno">
@@ -1081,6 +1029,25 @@
               </el-option>
             </el-select>
           </div>
+          <div class="select fl" v-if=" this.m==1">
+            <el-select
+              v-model="bihou"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="壁厚">
+              <el-option
+                v-for="item in bihouOptions"
+                :key="item.indexno"
+                :label="item.name"
+                :value="item.indexno">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="select fl" v-if=" this.n==1">
+            <el-input v-model="qianzuoyezhe" placeholder="前作业者"></el-input>
+          </div>
         </div>
         <div class="containerBtn">
           <el-button type="success" icon="search" @click="validationScreening">确认筛选</el-button>
@@ -1133,12 +1100,13 @@
         url: "",
 
         stationId:"",
+        gongwei:"",
 
         screenVisible: false,
         drawingVisible: false,
-        ycSearchBtn: false,
-        dzySearchBtn: false,
-        pcSearchBtn: false,
+
+        ycSearchBtn: 0,
+        dzySearchBtn: 0,
 
 
         searchWord: "",
@@ -1166,19 +1134,15 @@
         gwOptions: [],
 
         ygh:"",
-        yghOptions: [],
-
         codeN:"",
-        codeNOptions:[],
-
         PNO:"",
-        PNOOptions:[],
+
 
         xl: "",
         xlOptions: [],
 
-        type:"",
-        typeOptions:[],
+        typeSelect:"",
+        typeSelectOptions:[],
 
 
         yxj: "",
@@ -1190,6 +1154,11 @@
         scx:"",
         scxOptions:[],
 
+        bihou:"",
+        bihouOptions:[],
+        qianzuoyezhe:"",
+
+
         a:0,
         b:0,
         c:0,
@@ -1200,7 +1169,9 @@
         h:0,
         i:0,
         j:0,
-        l:0
+        l:0,
+        m:0,
+        n:0,
 
       }
 
@@ -1253,6 +1224,7 @@
         else {
           const infoS = JSON.parse(userInfo);
           this.stationId=infoS.GH;
+          this.gongwei= infoS.GW;
           axios.post(" " + url + "/sys/getPiciList")
             .then((res) => {
               this.batchOptions = res.data;
@@ -1311,38 +1283,37 @@
 
       //查询待作业
       dzySearch() {
-        let that = this;
-        axios.all([
-          axios.post(" " + url + "/sys/showTableTitle", {"name": id}),
-          axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": name})
-        ])
-          .then(axios.spread(function (title, table) {
-            that.cols = title.data;
-            that.tableData = table.data;
-          }));
+        this.ycSearchBtn = 0;
+        this.dzySearchBtn = 1;
+        axios.post(" " + url + "/shengchan/shengchanListAll",
+          {"gongxu": this.gongwei, "daizuoye": this.dzySearchBtn})
+          .then((res) => {
+            this.tableData = res.data;
+          })
+          .catch((err) => {
+            console.log(err)
+          })
       },
+
       //查询异常
       ycSearch() {
-        this.ycSearchBtn = true;
-        this.dzySearchBtn = false;
-        this.pcSearchBtn = false;
-        let that = this;
-        axios.all([
-          axios.post(" " + url + "/sys/showTableTitle", {"name": id}),
-          axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": name})
-        ])
-          .then(axios.spread(function (title, table) {
-            that.cols = title.data;
-            that.tableData = table.data;
-          }));
+        this.ycSearchBtn = 1;
+        this.dzySearchBtn = 0;
+        axios.post(" " + url + "/shengchan/shengchanListAll",
+          {"gongxu": this.gongwei, "yichang": this.ycSearchBtn})
+          .then((res) => {
+            this.tableData = res.data;
+          })
+          .catch((err) => {
+            console.log(err)
+          })
 
       },
 
       //批次查询
       doPcSearch() {
-        this.ycSearchBtn = false;
-        this.dzySearchBtn = false;
-        this.pcSearchBtn = true;
+        this.ycSearchBtn = 0;
+        this.dzySearchBtn = 0;
         if (this.batch) {
           const userInfo = sessionStorage.getItem("userInfo");
           if (userInfo === null) {
@@ -1454,6 +1425,12 @@
               if (data[i].l == 1) {
                 this.l = 1;
               }
+              if (data[i].m == 1) {
+                this.m = 1;
+              }
+              if (data[i].n == 1) {
+                this.n = 1;
+              }
             }
 
             let that = this;
@@ -1462,28 +1439,20 @@
               axios.post(" " + url + "/api/getPersonProcessList", {"name": ""}),
               axios.post(" " + url + "/sys/dictionaryList", {"id": "11"}),
               axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
-
-              axios.post(" " + url + "/sysconfig/getShipTypeSelect"),
-
-              axios.post(" " + url + "/sys/dictionaryList", {"id": ""}),
-              axios.post(" " + url + "/sys/dictionaryList", {"id": ""}),
-              axios.post(" " + url + "/sys/dictionaryList", {"id": ""}),
-
               axios.post(" " + url + "/sys/dictionaryList", {"id": "22"}),
               axios.post(" " + url + "/sys/dictionaryList", {"id": "4"}),
-              axios.post(" " + url + "/sys/dictionaryList", {"id": "21"})
+              axios.post(" " + url + "/sys/dictionaryList", {"id": "21"}),
+              axios.post(" " + url + "/sys/dictionaryList", {"id": ""})
             ])
-              .then(axios.spread(function (pici, gw, xl, scx,ch, ygh, codeN, PNO, type, yxj, kj) {
+              .then(axios.spread(function (pici, gw, xl, scx,type, yxj, kj,bihou) {
                 that.batchOptions = pici.data;
                 that.gwOptions = gw.data;
                 that.xlOptions = xl.data;
-                that.chOptions = ch.data;
-                that.yghOptions = ygh.data;
-                that.codeNOptions = codeN.data;
-                that.PNOOptions = PNO.data;
-                that.typeOptions = type.data;
+                that.typeSelectOptions = type.data;
                 that.yxjOptions = yxj.data;
                 that.kjOptions = kj.data;
+                that.scxOptions = scx.data;
+                that.bihouOptions = bihou.data;
               }));
           })
           .catch((err) => {
@@ -1494,23 +1463,89 @@
 
       //进行筛选查询
       validationScreening() {
-        axios.post(" " + url + "/shengchan/shengchanList.html",
-          {
-            "gongxu": this.dqgw,
-            "jiagongxian": this.scx,
-            "pici": this.batch,
-            "preGongxu": this.gw,
-            "jiagongxilie": this.xl,
-            "chuanhao": this.ch,
-            "zuoyezhe": this.zyz
-          })
-          .then((res) => {
-            this.screenVisible = false;
-            this.tableData = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        if(this.ycSearchBtn === 1){
+          axios.post(" " + url + "/shengchan/shengchanList.html",
+            {
+              "gongxu": this.dqgw,
+              "jiagongxian": this.scx,
+              "pici": this.batch,
+              "preGongxu": this.gw,
+              "jiagongxilie": this.xl,
+              "chuanhao": this.ch,
+              "yiguanhao": this.ygh,
+              "typeSelect": this.typeSelect,
+              "koujing": this.kj,
+              "youxianji": this.yxj,
+              "pno": this.PNO,
+              "bihou":this.bihou,
+              "codeN":this.codeN,
+              "zuoyezhe":this.qianzuoyezhe,
+              "yichang":this.ycSearchBtn
+            })
+            .then((res) => {
+              this.screenVisible = false;
+              this.tableData = res.data;
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+        else if(this.dzySearchBtn === 1){
+          axios.post(" " + url + "/shengchan/shengchanList.html",
+            {
+              "gongxu": this.dqgw,
+              "jiagongxian": this.scx,
+              "pici": this.batch,
+              "preGongxu": this.gw,
+              "jiagongxilie": this.xl,
+              "chuanhao": this.ch,
+              "yiguanhao": this.ygh,
+              "typeSelect": this.typeSelect,
+              "koujing": this.kj,
+              "youxianji": this.yxj,
+              "pno": this.PNO,
+              "bihou":this.bihou,
+              "codeN":this.codeN,
+              "zuoyezhe":this.qianzuoyezhe,
+              "daizuoye":this.dzySearchBtn
+            })
+            .then((res) => {
+              this.screenVisible = false;
+              this.tableData = res.data;
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+        else {
+          axios.post(" " + url + "/shengchan/shengchanList.html",
+            {
+              "gongxu": this.dqgw,
+              "jiagongxian": this.scx,
+              "pici": this.batch,
+              "preGongxu": this.gw,
+              "jiagongxilie": this.xl,
+              "chuanhao": this.ch,
+              "yiguanhao": this.ygh,
+              "typeSelect": this.typeSelect,
+              "koujing": this.kj,
+              "youxianji": this.yxj,
+              "pno": this.PNO,
+              "bihou":this.bihou,
+              "codeN":this.codeN,
+              "zuoyezhe":this.qianzuoyezhe,
+            })
+            .then((res) => {
+              this.screenVisible = false;
+              this.tableData = res.data;
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+
+
+
       },
 
 
