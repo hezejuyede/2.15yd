@@ -25,7 +25,7 @@
       <!--切断，直管焊，大阻焊-->
       <div class="publicPage" v-if="this.listType ==1">
         <el-table class="tb-edit"
-                  :data="tableData"
+                  :data="tables"
                   height="500"
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
                   :row-class-name="tableRowClassName"
@@ -1172,10 +1172,10 @@
     </el-dialog>
 
     <!--查看图纸 -->
-    <el-dialog title="一品图查看" :visible.sync="drawingVisible" width="95%" top="0">
-      <div class="container" :style="aaa">
+    <el-dialog title="一品图查看" :visible.sync="drawingVisible" :fullscreen="true" :center="true">
+      <div class="container" style="width: 100%;height: 100%">
         <div class="drawingImg" style="width: 100%;height: 100%">
-          <img :src="url" alt="" style="display:block;width: 100%">
+          <img :src="url" alt="" style="display:block;height: 100%;width: 100%">
         </div>
       </div>
     </el-dialog>
@@ -1208,9 +1208,6 @@
     name: 'ProductionExecution',
     data() {
       return {
-
-        aaa:{},
-        k:"200",
         url:"",
 
         listData: [],
@@ -1409,11 +1406,6 @@
 
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
-        let h = document.body.scrollHeight;
-        this.aaa.height= h;
-        this.aaa.overflow="auto";
-
-
         const userInfo = sessionStorage.getItem("userInfo");
         if (userInfo === null) {
           this.$router.push("/ProductionExecutionLogin")

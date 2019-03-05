@@ -37,15 +37,12 @@
           </div>
         </div>
 
-
-
-
       </div>
 
       <!--切断，直管焊，短管焊-->
       <div class="publicPage" v-if="this.listType ==1">
         <el-table class="tb-edit"
-                  :data="tableData"
+                  :data="tables"
                   height="500"
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
                   :row-class-name="tableRowClassName"
@@ -182,8 +179,6 @@
                 align="center"
                 min-width="20%">
               </el-table-column>
-
-
 
 
               <el-table-column
@@ -906,8 +901,6 @@
     </div>
 
 
-
-
     <!--筛选条件 -->
     <el-dialog title="筛选条件" :visible.sync="screenVisible" width="90%">
       <div class="container" style="height:400px;overflow:auto">
@@ -951,7 +944,7 @@
               filterable
               allow-create
               default-first-option
-              placeholder="工位">
+              placeholder="前工位">
               <el-option
                 v-for="item in gwOptions"
                 :key="item.id"
@@ -1072,6 +1065,22 @@
               </el-option>
             </el-select>
           </div>
+          <div class="select fl" v-if=" this.l==1">
+            <el-select
+              v-model="scx"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="生产线">
+              <el-option
+                v-for="item in scxOptions"
+                :key="item.indexno"
+                :label="item.name"
+                :value="item.indexno">
+              </el-option>
+            </el-select>
+          </div>
         </div>
         <div class="containerBtn">
           <el-button type="success" icon="search" @click="validationScreening">确认筛选</el-button>
@@ -1079,12 +1088,11 @@
       </div>
     </el-dialog>
 
-
     <!--查看图纸 -->
-    <el-dialog title="一品图查看" :visible.sync="drawingVisible" width="95%" top="0">
-      <div class="container" :style="aaa">
+    <el-dialog title="一品图查看" :visible.sync="drawingVisible" :fullscreen="true" :center="true">
+      <div class="container" style="width: 100%;height: 100%">
         <div class="drawingImg" style="width: 100%;height: 100%">
-          <img :src="url" alt="" style="display:block;width: 100%">
+          <img :src="url" alt="" style="display:block;height: 100%;width: 100%">
         </div>
       </div>
     </el-dialog>
@@ -1120,16 +1128,20 @@
         message: '',
         HideModal: true,
 
-        aaa:{},
-        k:"200",
-        url:"",
 
-        screenVisible:false,
-        drawingVisible:false,
+        k: "200",
+        url: "",
+
+        stationId:"",
+
+        screenVisible: false,
+        drawingVisible: false,
+        ycSearchBtn: false,
+        dzySearchBtn: false,
+        pcSearchBtn: false,
 
 
-
-        searchWord:"",
+        searchWord: "",
 
 
         listType: "",
@@ -1138,13 +1150,9 @@
         cols: [],
 
 
-
-
         left: true,
-        zgCenter:false,
+        zgCenter: false,
         right: false,
-
-
 
 
 
@@ -1179,9 +1187,8 @@
         kj:"",
         kjOptions: [],
 
-
-
-        ooooo: [{"a":1},{"b":1},{"c":0},{"d":1},{"e":1},{"f":1},{"g":1},{"h":1},{"i":1},{"j":1}],
+        scx:"",
+        scxOptions:[],
 
         a:0,
         b:0,
@@ -1193,11 +1200,12 @@
         h:0,
         i:0,
         j:0,
+        l:0
 
       }
 
     },
-    components: {Loading, footerNav,Modal, headerNav},
+    components: {Loading, footerNav, Modal, headerNav},
     mounted() {
       this.showUp();
       this.showSearch();
@@ -1243,6 +1251,8 @@
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
+          const infoS = JSON.parse(userInfo);
+          this.stationId=infoS.GH;
           axios.post(" " + url + "/sys/getPiciList")
             .then((res) => {
               this.batchOptions = res.data;
@@ -1300,19 +1310,39 @@
       },
 
       //查询待作业
-      dzySearch(){
-        this.$router.push("/")
+      dzySearch() {
+        let that = this;
+        axios.all([
+          axios.post(" " + url + "/sys/showTableTitle", {"name": id}),
+          axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": name})
+        ])
+          .then(axios.spread(function (title, table) {
+            that.cols = title.data;
+            that.tableData = table.data;
+          }));
       },
       //查询异常
-      ycSearch(){
-        this.ycSearchBtn= true;
-        this.dzySearchBtn= true;
-        this.ycSearchBtn= true;
+      ycSearch() {
+        this.ycSearchBtn = true;
+        this.dzySearchBtn = false;
+        this.pcSearchBtn = false;
+        let that = this;
+        axios.all([
+          axios.post(" " + url + "/sys/showTableTitle", {"name": id}),
+          axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": name})
+        ])
+          .then(axios.spread(function (title, table) {
+            that.cols = title.data;
+            that.tableData = table.data;
+          }));
 
       },
 
       //批次查询
       doPcSearch() {
+        this.ycSearchBtn = false;
+        this.dzySearchBtn = false;
+        this.pcSearchBtn = true;
         if (this.batch) {
           const userInfo = sessionStorage.getItem("userInfo");
           if (userInfo === null) {
@@ -1387,7 +1417,7 @@
       //显示条件筛选
       showScreening() {
         this.screenVisible = true;
-        axios.post(" " + url + "/sys/getPiciList")
+        axios.post(" " + url + "/show/showSelect",{"id":this.stationId})
           .then((res) => {
             let data = res.data;
             for (let i = 0; i < data.length; i++) {
@@ -1421,6 +1451,9 @@
               if (data[i].j == 1) {
                 this.j = 1;
               }
+              if (data[i].l == 1) {
+                this.l = 1;
+              }
             }
 
             let that = this;
@@ -1428,16 +1461,19 @@
               axios.post(" " + url + "/sys/getPiciList"),
               axios.post(" " + url + "/api/getPersonProcessList", {"name": ""}),
               axios.post(" " + url + "/sys/dictionaryList", {"id": "11"}),
+              axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
 
-              axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
-              axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
-              axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
-              axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
-              axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
-              axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
-              axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
+              axios.post(" " + url + "/sysconfig/getShipTypeSelect"),
+
+              axios.post(" " + url + "/sys/dictionaryList", {"id": ""}),
+              axios.post(" " + url + "/sys/dictionaryList", {"id": ""}),
+              axios.post(" " + url + "/sys/dictionaryList", {"id": ""}),
+
+              axios.post(" " + url + "/sys/dictionaryList", {"id": "22"}),
+              axios.post(" " + url + "/sys/dictionaryList", {"id": "4"}),
+              axios.post(" " + url + "/sys/dictionaryList", {"id": "21"})
             ])
-              .then(axios.spread(function (pici, gw, xl, ch, ygh, codeN, PNO, type, yxj, kj) {
+              .then(axios.spread(function (pici, gw, xl, scx,ch, ygh, codeN, PNO, type, yxj, kj) {
                 that.batchOptions = pici.data;
                 that.gwOptions = gw.data;
                 that.xlOptions = xl.data;
@@ -1500,8 +1536,6 @@
       },
 
 
-
-
       //颜色
       tableRowClassName({row, rowIndex}) {
         if (row.status === 3) {
@@ -1510,7 +1544,7 @@
         else if (row.status === 2) {
           return 'success-row';
         }
-        else if (row.status  === 0) {
+        else if (row.status === 0) {
           return 'info-row';
         }
         else if (row.statusStr === "已完成") {
@@ -1522,9 +1556,8 @@
       },
 
 
-
       //查看一品图
-      seeYiPinTu(pici,yiguanhao,code) {
+      seeYiPinTu(pici, yiguanhao, code) {
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
@@ -1606,8 +1639,6 @@
             setTimeout(b, 2000);
           }
         }
-
-
 
 
       },
@@ -1630,21 +1661,11 @@
       },
 
 
-
-
-
-
-
-
-
-
-
-
       //小组立显示左边
       showLeft() {
         this.left = true;
         this.right = false;
-        axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立","type":"1"})
+        axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "1"})
           .then((res) => {
             this.tableData = res.data;
           })
@@ -1657,7 +1678,7 @@
       showRight() {
         this.left = false;
         this.right = true;
-        axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立","type":"2"})
+        axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "2"})
           .then((res) => {
             this.tableData = res.data;
           })
@@ -1667,13 +1688,12 @@
       },
 
 
-
       //支管显示中二正枝左边
       zgShowLeft() {
         this.left = true;
         this.right = false;
         this.zgCenter = false;
-        axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断","type":"3"})
+        axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "3"})
           .then((res) => {
             this.tableData = res.data;
           })
@@ -1687,7 +1707,7 @@
         this.left = false;
         this.right = false;
         this.zgCenter = true;
-        axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断","type":"4"})
+        axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "4"})
           .then((res) => {
             this.tableData = res.data;
           })
@@ -1701,7 +1721,7 @@
         this.left = false;
         this.zgCenter = false;
         this.right = true;
-        axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断","type":"5"})
+        axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "5"})
           .then((res) => {
             this.tableData = res.data;
           })
@@ -1709,21 +1729,6 @@
             console.log(err)
           })
       },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
       //移动显示搜索框
@@ -1782,14 +1787,13 @@
       },
 
 
-
     }
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
   @import "../../assets/less/base";
 
-  .TaskListTemplate{
+  .TaskListTemplate {
     margin-bottom: 80px;
     .contentTop {
       height: 80px;
@@ -1802,7 +1806,7 @@
       .listSearch {
         width: 95%;
         display: flex;
-        .dzySearch{
+        .dzySearch {
           flex: 1;
           display: flex;
           align-items: center;
@@ -1816,7 +1820,7 @@
           }
 
         }
-        .ycSearch{
+        .ycSearch {
           flex: 1;
           display: flex;
           align-items: center;
@@ -1829,7 +1833,7 @@
             height: 35px;
           }
         }
-        .pcSearch{
+        .pcSearch {
           flex: 2;
           display: flex;
           align-items: center;
@@ -1893,7 +1897,7 @@
         }
 
       }
-      .zgDiv{
+      .zgDiv {
         .zg-change {
           height: 50px;
           display: flex;
@@ -1929,24 +1933,24 @@
       }
     }
   }
-  .container{
-    .containerDiv{
+
+  .container {
+    .containerDiv {
       width: 95%;
       height: 70%;
       margin: 0 auto;
-      .select{
+      .select {
         width: 16%;
         height: 50px;
         margin-left: 0.6%;
-        .el-select{
+        .el-select {
           width: 100%;
           font-size: 12px;
         }
 
-
       }
     }
-    .containerBtn{
+    .containerBtn {
       height: 20%;
       width: 95%;
       margin: 0 auto;
@@ -1995,10 +1999,10 @@
     .TaskList {
       margin-bottom: 80px;
       .contentTop {
-        .contentTopLeft{
+        .contentTopLeft {
 
         }
-        .contentTopRight{
+        .contentTopRight {
           .el-button {
             display: flex;
             align-items: center;
