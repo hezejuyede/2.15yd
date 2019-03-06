@@ -36,7 +36,6 @@
             <el-button type="warning" @click="showScreening">条件筛选</el-button>
           </div>
         </div>
-
       </div>
 
       <!--切断，直管焊，短管焊-->
@@ -60,12 +59,7 @@
               v-if="col.prop==='yiguanno'"
               :prop="col.prop" :label="col.label">
               <template scope="scope">
-                <el-button
-                  type="success"
-                  style="width: 100%;height: 40px;line-height: 40px"
-                  @click="goToCurrentTask(scope.row.id)">
-                  {{ scope.row.yiguanno }}
-                </el-button>
+                {{ scope.row.yiguanno }}
               </template>
             </el-table-column>
             <el-table-column
@@ -73,12 +67,7 @@
               v-if="col.prop==='codeno'"
               :prop="col.prop" :label="col.label">
               <template scope="scope">
-                <el-button
-                  type="success"
-                  style="width: 100%;height: 40px;line-height: 40px"
-                  @click="goToCurrentTask(scope.row.id)">
-                  {{ scope.row.codeno }}
-                </el-button>
+                {{ scope.row.codeno }}
               </template>
             </el-table-column>
             <el-table-column
@@ -88,7 +77,7 @@
               <template scope="scope">
                 <el-button
                   type="success"
-                  style="width: 100%;height: 40px;line-height: 40px"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
                   @click="seeCutList">切断表</el-button>
               </template>
             </el-table-column>
@@ -99,7 +88,7 @@
               <template scope="scope">
                 <el-button
                   type="success"
-                  style="width: 100%;height: 40px;line-height: 40px"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
                   @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
                   一品图
                 </el-button>
@@ -1053,6 +1042,7 @@
           </div>
         </div>
         <div class="containerBtn">
+          <el-button type="danger" icon="search" @click="emptyAllValue">一键清空</el-button>
           <el-button type="success" icon="search" @click="validationScreening">确认筛选</el-button>
         </div>
       </div>
@@ -1288,7 +1278,15 @@
           }
           else {
             this.listType = "1";
-            this.showTableData('zxqdall', info.GW)
+            let that = this;
+            axios.all([
+              axios.post(" " + url + "/sys/showTableTitle", {"name": "zxqdall"}),
+              axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": this.gongwei, "yichang": 1})
+            ])
+              .then(axios.spread(function (title, table) {
+                that.cols = title.data;
+                that.tableData = table.data;
+              }));
           }
         }
       },
@@ -1561,25 +1559,21 @@
       },
 
 
-      //点击一贯号,Code号，前往前往任务页面
-      goToCurrentTask(id) {
-        //防止冒泡
-        if (event && event.stopPropagation) {
-          //W3C取消冒泡事件
-          event.stopPropagation();
-          if (id) {
-            localStorage.setItem("pipeId", id);
-            this.$router.push("/CurrentTask");
-          }
-        }
-        else {
-          //IE取消冒泡事件
-          window.event.cancelBubble = true;
-          if (id) {
-            localStorage.setItem("pipeId", id);
-            this.$router.push("/CurrentTask");
-          }
-        }
+      //清空筛选条件
+      emptyAllValue() {
+        this.batch = "";
+        this.ch = "";
+        this.gw = "";
+        this.ygh = "";
+        this.codeN = "";
+        this.PNO = "";
+        this.xl = "";
+        this.typeSelect = "";
+        this.yxj = "";
+        this.kj = "";
+        this.scx = "";
+        this.bihou = "";
+        this.qianzuoyezhe = "";
       },
 
 

@@ -51,7 +51,7 @@
               <template scope="scope">
                 <el-button
                   type="success"
-                  style="width: 100%;height: 40px;line-height: 40px"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
                   @click="goToCurrentTask(scope.row.id)">
                   {{ scope.row.yiguanno }}
                 </el-button>
@@ -64,7 +64,7 @@
               <template scope="scope">
                 <el-button
                   type="success"
-                  style="width: 100%;height: 40px;line-height: 40px"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
                   @click="goToCurrentTask(scope.row.id)">
                   {{ scope.row.codeno }}
                 </el-button>
@@ -77,7 +77,7 @@
               <template scope="scope">
                 <el-button
                   type="success"
-                  style="width: 100%;height: 40px;line-height: 40px"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
                   @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
                   一品图
                 </el-button>
@@ -90,7 +90,7 @@
               <template scope="scope">
                 <el-button
                   type="success"
-                  style="width: 100%;height: 40px;line-height: 40px"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
                   @click="seeCutList">切断表</el-button>
               </template>
             </el-table-column>
@@ -1134,6 +1134,7 @@
           </div>
         </div>
         <div class="containerBtn">
+          <el-button type="danger" icon="search" @click="emptyAllValue">一键清空</el-button>
           <el-button type="success" icon="search" @click="validationScreening">确认筛选</el-button>
         </div>
       </div>
@@ -1148,7 +1149,14 @@
       </div>
     </el-dialog>
 
-
+    <!-- 报完工提醒框 -->
+    <el-dialog title="报完工提醒" :visible.sync="endVisible" width="300px" center>
+      <div class="del-dialog-cnt">完成不可恢复，是否确定完成？</div>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="endVisible = false" style="height:30px;width:80px">取 消</el-button>
+                <el-button type="primary" @click="doWorkEnd" style="height:30px;width:80px">确 定</el-button>
+            </span>
+    </el-dialog>
 
 
 
@@ -1205,6 +1213,7 @@
 
         screenVisible:false,
         drawingVisible:false,
+        endVisible:false,
 
 
         zuoyezhe:"",
@@ -1376,10 +1385,10 @@
       //根据状态显示不同颜色
       tableRowClassName({row, rowIndex}) {
         if (row.level === 2) {
-          return 'warning-row';
+          return 'red-row';
         }
         else if (row.level === 1) {
-          return 'success-row';
+          return 'yellow-row';
         }
       },
 
@@ -1459,32 +1468,7 @@
       //加工完成
       workEnd() {
         if (this.listData.length) {
-          axios.post(" " + url + "/shengchan/updateStatusBatch",
-            {
-              "ids": this.listData,
-              "zuoyezhe": this.zuoyezhe,
-              "gongwei": this.dqgw,
-              "type": this.gwListType,
-              "stationid":this.stationId
-            })
-            .then((res) => {
-              if (res.data === "1") {
-                this.message = "已经完成";
-                this.HideModal = false;
-                const that = this;
-
-                function a() {
-                  that.message = "";
-                  that.HideModal = true;
-                  that.showTableData('zxqieduan', this.dqgw)
-                }
-
-                setTimeout(a, 2000);
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
+          this.endVisible=true;
         }
         else {
           this.message = "请勾选完成的管子";
@@ -1498,6 +1482,35 @@
 
           setTimeout(a, 2000);
         }
+      },
+
+      //进行加工完成
+      doWorkEnd(){
+        axios.post(" " + url + "/shengchan/updateStatusBatch",
+          {
+            "ids": this.listData,
+            "zuoyezhe": this.zuoyezhe,
+            "gongwei": this.dqgw,
+            "type": this.gwListType,
+            "stationid":this.stationId
+          })
+          .then((res) => {
+            if (res.data === "1") {
+              this.endVisible =false;
+              this.message = "已经完成";
+              this.HideModal = false;
+              const that = this;
+              function a() {
+                that.message = "";
+                that.HideModal = true;
+                that.showTableData('zxqieduan', this.dqgw)
+              }
+              setTimeout(a, 2000);
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
       },
 
       //直管物料统计
@@ -1720,6 +1733,23 @@
           .catch((err) => {
             console.log(err)
           })
+      },
+
+      //清空筛选条件
+      emptyAllValue() {
+        this.batch = "";
+        this.ch = "";
+        this.gw = "";
+        this.ygh = "";
+        this.codeN = "";
+        this.PNO = "";
+        this.xl = "";
+        this.typeSelect = "";
+        this.yxj = "";
+        this.kj = "";
+        this.scx = "";
+        this.bihou = "";
+        this.qianzuoyezhe = "";
       },
 
 

@@ -118,6 +118,7 @@
   import axios from 'axios'
   import Modal from '../../common/modal'
   import promptBox from '../../common/promptBox'
+  import screenfull from 'screenfull'
 
   import Qs from 'qs'
 
@@ -125,6 +126,7 @@
     name: 'indexLogin',
     data() {
       return {
+        isFullscreen: true,
         selectList: [],
 
         openPromptBox: true,
@@ -166,6 +168,27 @@
       this.getState()
     },
     methods: {
+
+      // 全屏事件
+      handleFullScreen() {
+        let element = document.documentElement;
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        }
+        else if (element.webkitRequestFullScreen) {
+          element.webkitRequestFullScreen();
+        }
+        else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        }
+        else if (element.msRequestFullscreen) {
+          // IE11
+          element.msRequestFullscreen();
+        }
+      },
+
+
+
       getState() {
         let changeLeft = this.$refs.changeLeft;
         changeLeft.style.borderTopRightRadius = "20px"
@@ -202,6 +225,7 @@
       },
 
       userNameBlur(username) {
+        this.handleFullScreen();
         if (username.length === 0) {
           this.userNameErrText = "用户名不能为空";
         }
@@ -221,6 +245,7 @@
         }
       },
       userNameFocus(username) {
+        this.handleFullScreen();
         if (username.length === 0) {
           this.userNameErrText = "请填写用户名";
         }
@@ -808,6 +833,7 @@
       text-align: center;
       margin-top: 50px;
       font-size: @font-size-medium-x;
+      color: #ffffff;
     }
 
   }
@@ -831,6 +857,7 @@
       }
       footer {
         font-size: @font-size-small;
+
       }
     }
 

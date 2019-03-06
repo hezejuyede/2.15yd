@@ -29,21 +29,13 @@
       <div class="currentTaskBtn">
         <div class="templateBtn" v-for="(item,index) in bottomButton"   v-if="item.show==1">
           <button
-            :disabled="item.disabled===0"
+            :disabled="item.disabled==='0'"
             @click="bottomButtonClick(item.type)"
-            :style="{'background-color':item.backgroundColor,'color':item.color}">
+            :style="{'background-color':item.backgroundcolor,'color':item.color}">
             {{item.name}}
           </button>
         </div>
-
-      <!--  <el-button type="primary" @click="startWork" :disabled="startWorkBtn == -1">开始</el-button>
-        <el-button type="success" @click="endWord" :disabled="endWorkBtn == -1">报完工</el-button>
-        <el-button type="warning" @click="showQdList">切断表</el-button>
-        <el-button type="danger" @click="showReportAbnormal">上报异常</el-button>
-        <el-button type="success" @click="viewDrawings">看一品图</el-button>
-        <el-button type="info" @click="viewTheAccuracyManagementTable">精度管理表</el-button>-->
       </div>
-
       <div class="currentTaskRouter">
         <div class="currentTaskRouterList">
           <el-steps align-center :active="step" finish-status="success">
@@ -289,8 +281,6 @@
 
         img: [],
         id: "",
-        startWorkBtn: "1",
-        endWorkBtn: "-1",
         titleData: [],
 
         tableData: [],
@@ -328,14 +318,7 @@
         selectTbOptions:[],
         listData:[],
 
-        bottomButton: [
-          {"type": "1", "name": "开始", "disabled": 1, "backgroundColor": "#D24D57", "show": "1"},
-          {"type": "2", "name": "报完工", "disabled": 0, "backgroundColor": "#409EFF", "show": "1"},
-          {"type": "3", "name": "切断表", "disabled": 1, "backgroundColor": "#E6A23C", "show": "1"},
-          {"type": "4", "name": "上报异常", "disabled": 1, "backgroundColor": "#67C23A", "show": "1"},
-          {"type": "5", "name": "看一品图", "disabled": 1, "backgroundColor": "#F56C6C", "show": "1"},
-          {"type": "6", "name": "精度管理表", "disabled": 1, "backgroundColor": "#d93f30", "show": "1"}
-        ],
+        bottomButton: [],
 
 
       }
@@ -387,15 +370,18 @@
               let that = this;
               axios.all([
                 axios.post(" " + url + "/sys/showTableTitle", {"name": "yipintu"}),
-                axios.post(" " + url + "/shengchan/getCurShengchanguan", {"id": id})
+                axios.post(" " + url + "/shengchan/getCurShengchanguan", {"id": id}),
+                axios.post(" " + url + "/show/showButton", {"id": this.gongwei}),
+
               ])
-                .then(axios.spread(function (title, table) {
+                .then(axios.spread(function (title, table, btn) {
                   that.cols = title.data;
                   that.wtTableData = table.data;
                   that.titleData = table.data.baseItem;
                   that.tableData = table.data.yipintulist;
                   that.step = table.data.maxstep;
                   that.routerList = table.data.nodeLit;
+                  that.bottomButton = btn.data
                   if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
                     that.matterData = table.data.contextList[0].noticehtml;
                   }
@@ -406,32 +392,31 @@
         }
       },
 
+      //底部公共点击事件
       bottomButtonClick(type) {
+        //加工开始
         if (type === "1") {
           if (this.id) {
-           this.bottomButton[0].disabled =0;
-            this.bottomButton[1].disabled =1;
             axios.post(" " + url + "/shengchan/startWork", {"id": this.id})
               .then((res) => {
                 if (res.data === "success") {
+                  this.bottomButton[0].disabled = "0";
+                  this.bottomButton[1].disabled = "1";
                   this.startWorkBtn = "-1";
                   this.message = "已经开始加工";
                   this.HideModal = false;
                   const that = this;
-
                   function a() {
                     that.message = "";
                     that.HideModal = true;
                   }
-
-
                   setTimeout(a, 2000);
 
                 }
                 else if (res.data === "-1") {
-                  this.startWorkBtn = "-1";
-                  this.endWorkBtn ="-1";
-                  this.message = "已经完成，无法开始";
+                  this.bottomButton[0].disabled = "0";
+                  this.bottomButton[1].disabled = "1";
+                  this.message = "已经开始，请勿重复";
                   this.HideModal = false;
                   const that = this;
 
@@ -448,10 +433,11 @@
               })
           }
         }
+        //加工结束
         else if (type === "2") {
-          this.bottomButton[0].disabled =1;
-          this.bottomButton[1].disabled =0;
-          this.jobLogVisible=true;
+          this.bottomButton[0].disabled = "0";
+          this.bottomButton[1].disabled = "1";
+          this.jobLogVisible = true;
           let that = this;
           axios.all([
             axios.post(" " + url + "/sysconfig/opreaRecordTypeList", {"station": that.gongwei}),
@@ -469,7 +455,7 @@
                         oqtypename: listData.data[i].context,
                         indexno: listData.data[i].ctype,
                         oqmsg: listData.data[i].value,
-                        relatableOptions:res.data
+                        relatableOptions: res.data
                       };
                       data.push(list);
                     })
@@ -491,10 +477,11 @@
               that.listTableData = data;
             }));
         }
-        else  if(type ==="3"){
+        else if (type === "3") {
 
         }
-        else  if(type ==="4"){
+        //显示上报异常按钮
+        else if (type === "4") {
           axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
             .then((res) => {
               //删除所有
@@ -508,7 +495,8 @@
             })
           this.abnormalBtnVisible = true
         }
-        else  if(type ==="5"){
+        //显示查看当前图纸
+        else if (type === "5") {
           let pici = this.titleData[0].text;
           let yiguanhao = this.titleData[2].text;
           let code = this.titleData[3].text;
@@ -535,99 +523,9 @@
               console.log(err)
             })
         }
-        else  if(type ==="6"){
+        else if (type === "6") {
 
         }
-      },
-
-
-
-      //加工开始
-      startWork() {
-        if (this.id) {
-          this.endWorkBtn = "1";
-          axios.post(" " + url + "/shengchan/startWork", {"id": this.id})
-            .then((res) => {
-              if (res.data === "success") {
-                this.startWorkBtn = "-1";
-                this.message = "已经开始加工";
-                this.HideModal = false;
-                const that = this;
-
-                function a() {
-                  that.message = "";
-                  that.HideModal = true;
-                }
-
-
-                setTimeout(a, 2000);
-
-              }
-              else if (res.data === "-1") {
-                this.startWorkBtn = "-1";
-                this.endWorkBtn ="-1";
-                this.message = "已经完成，无法开始";
-                this.HideModal = false;
-                const that = this;
-
-                function b() {
-                  that.message = "";
-                  that.HideModal = true;
-                }
-
-                setTimeout(b, 2000);
-              }
-
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-        }
-
-      },
-
-      //加工结束
-      endWord() {
-        this.startWorkBtn = "1";
-        this.jobLogVisible=true;
-        let that = this;
-        axios.all([
-          axios.post(" " + url + "/sysconfig/opreaRecordTypeList", {"station": that.gongwei}),
-
-        ])
-          .then(axios.spread(function (listData) {
-            let data = [];
-            for (let i = 0; i < listData.data.length; i++) {
-              if (listData.data[i].code == 2) {
-                axios.post(" " + url + "/sys/dictionaryList", {"id": listData.data[i].code})
-                  .then((res) => {
-                    var list = {
-                      id: listData.data[i].id,
-                      cindex: listData.data[i].cindex,
-                      oqtypename: listData.data[i].context,
-                      indexno: listData.data[i].ctype,
-                      oqmsg: listData.data[i].value,
-                      relatableOptions:res.data
-                    };
-                    data.push(list);
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  });
-              }
-              else {
-                var list = {
-                  id: listData.data[i].id,
-                  cindex: listData.data[i].cindex,
-                  oqtypename: listData.data[i].context,
-                  indexno: listData.data[i].ctype,
-                  oqmsg: listData.data[i].value
-                };
-                data.push(list);
-              }
-            }
-            that.listTableData = data;
-          }));
       },
 
       //弯头结束
@@ -678,55 +576,8 @@
           });
       },
 
-      //显示上报异常按钮
-      showReportAbnormal() {
-        axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
-          .then((res) => {
-            //删除所有
-            /*   res.data.splice(0, 1);*/
-            //第一个禁用
-            /*res.data[0].disabled =true;*/
-            this.options = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-        this.abnormalBtnVisible = true
-      },
-
-      //显示查看当前图纸
-      viewDrawings() {
-        let pici = this.titleData[0].text;
-        let yiguanhao = this.titleData[2].text;
-        let code = this.titleData[3].text;
-        axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
-          .then((res) => {
-            if (res.data.imgurl) {
-              this.url = res.data.imgurl;
-              this.drawingVisible = true;
-            }
-            else {
-              this.message = "没有查到一品图";
-              this.HideModal = false;
-              const that = this;
-
-              function a() {
-                that.message = "";
-                that.HideModal = true;
-              }
-
-              setTimeout(a, 2000);
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      },
-
-
-
       //作业记录单选择
-      selectJlList(val,index) {
+      selectJlList(val, index) {
 
         if (val.length) {
           let data = [];
@@ -738,10 +589,8 @@
         }
       },
 
-
-
       //作业记录多全选
-      selectJlAll(val){
+      selectJlAll(val) {
         if (val.length) {
           let data = [];
           for (let i = 0; i < val.length; i++) {
@@ -754,35 +603,34 @@
       },
 
       //提交记录
-      addJl(){
-           axios.post(" " + url + "/shengchan/updateStatus", {
-             "id": this.id,
-             "zuoyezhe": this.zuoyezhe,
-             "stationid": this.gongwei,
-             "ids": this.listData,
-             "list": this.listTableData
-           })
-             .then((res) => {
-               if (res.data ==="success") {
-                 this.$message({
-                   message: '提交成功',
-                   type: 'success'
-                 });
-                 this.endWorkBtn = "-1";
-                 this.startWorkBtn = "-1";
-                 this.jobLogVisible=false;
-               }
-               else  {
-                 this.$message({
-                   message: '提交失败',
-                   type: 'warning'
-                 });
-               }
-             })
-             .catch((err) => {
-               console.log(err)
-             });
-
+      addJl() {
+        axios.post(" " + url + "/shengchan/updateStatus", {
+          "id": this.id,
+          "zuoyezhe": this.zuoyezhe,
+          "stationid": this.gongwei,
+          "ids": this.listData,
+          "list": this.listTableData
+        })
+          .then((res) => {
+            if (res.data === "success") {
+              this.$message({
+                message: '提交成功',
+                type: 'success'
+              });
+              this.bottomButton[0].disabled = "0";
+              this.bottomButton[1].disabled = "0";
+              this.jobLogVisible = false;
+            }
+            else {
+              this.$message({
+                message: '提交失败',
+                type: 'warning'
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          });
 
 
       },
@@ -804,9 +652,9 @@
                 that.wtTableData = table.data;
 
               }));
-            setTimeout(()=>{
+            setTimeout(() => {
               this.elbowVisible = true;
-            },400)
+            }, 400)
 
           })
           .catch((err) => {
@@ -838,13 +686,11 @@
       },
 
 
-
-
       //点按钮弹出备注框
       showReportAbnormalContent(Reason) {
         this.abnormalVisible = true;
         this.Reason = Reason;
-        this.remarks ="";
+        this.remarks = "";
       },
 
       //进行上报异常
