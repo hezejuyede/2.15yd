@@ -31,7 +31,8 @@
         <el-button type="success" @click="endWord" :disabled="endWorkBtn == -1">报完工</el-button>
         <el-button type="warning" @click="showQdList">切断表</el-button>
         <el-button type="danger" @click="showReportAbnormal">上报异常</el-button>
-        <el-button type="success" @click="viewDrawings">查看图纸</el-button>
+        <el-button type="success" @click="viewDrawings">看一品图</el-button>
+        <el-button type="info" @click="viewTheAccuracyManagementTable">精度管理表</el-button>
       </div>
 
       <div class="currentTaskRouter">
@@ -96,27 +97,30 @@
     </div>
 
 
-    <!--上报异常 -->
-    <el-dialog title="上报异常" :visible.sync="abnormalVisible" width="90%">
+    <!--上报异常按钮 -->
+    <el-dialog title="上报异常按钮注" :visible.sync="abnormalBtnVisible" width="90%">
+      <div class="container" style="height:350px;width: 100%">
+        <div class="qualityBtn">
+          <div class="" v-for="(item,index) in options">
+            <el-button v-if="index===0" type="primary" @click="showReportAbnormalContent(item.indexno)">{{item.name}}
+            </el-button>
+            <el-button v-if="index===1" type="success" @click="showReportAbnormalContent(item.indexno)">{{item.name}}
+            </el-button>
+            <el-button v-if="index===2" type="warning" @click="showReportAbnormalContent(item.indexno)">{{item.name}}
+            </el-button>
+            <el-button v-if="index===3" type="danger" @click="showReportAbnormalContent(item.indexno)">{{item.name}}
+            </el-button>
+          </div>
+
+        </div>
+      </div>
+    </el-dialog>
+
+
+    <!--上报异常备注 -->
+    <el-dialog title="上报异常备注" :visible.sync="abnormalVisible" width="90%">
       <div class="container" style="height:350px;overflow:auto">
         <div class="qualityDiv">
-          <div class="qualityDivTitle">
-            <el-select
-              v-model="indexno"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              placeholder="请选择异常原因">
-              <el-option
-                v-for="item in options"
-                :key="item.indexno"
-                :label="item.name"
-                :value="item.indexno"
-                :disabled="item.disabled">
-              </el-option>
-            </el-select>
-          </div>
           <div class="qualityDivContent">
             <el-input
               type="textarea"
@@ -133,10 +137,10 @@
     </el-dialog>
 
     <!--查看图纸 -->
-    <el-dialog title="一品图查看" :visible.sync="drawingVisible" width="95%" top="0">
-      <div class="container" :style="aaa">
+    <el-dialog title="一品图查看" :visible.sync="drawingVisible" :fullscreen="true" :center="true">
+      <div class="container">
         <div class="drawingImg" style="width: 100%;height: 100%">
-          <img :src="url" alt="" style="display:block;width: 100%">
+          <img :src="url" alt="" style="display:block;width: 100%;height: 100%">
         </div>
       </div>
     </el-dialog>
@@ -266,7 +270,6 @@
     name: 'drawing',
     data() {
       return {
-        aaa:{},
         station:1,
 
 
@@ -275,7 +278,7 @@
         step: 3,
         routerList: [],
 
-        img: "",
+        img: [],
         id: "",
         startWorkBtn: "1",
         endWorkBtn: "-1",
@@ -287,14 +290,14 @@
         matterData: "",
 
         abnormalVisible: false,
+        abnormalBtnVisible:false,
         drawingVisible: false,
         jobLogVisible: false,
         elbowVisible: false,
 
         options: [],
-        indexno: '',
         remarks: "",
-
+        Reason:"",
         zuoyezhe: "",
 
         wt: "1",
@@ -326,22 +329,22 @@
 
     },
     created() {
+      //检索用户状态
       this.getAdminState();
 
+      //转圈延迟一秒执行
       setTimeout(() => {
         this.getLoading();
       }, 1000);
 
     },
     methods: {
+      //转圈延迟一秒执行
       getLoading() {
         this.img = ["1"]
       },
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
-        let h = document.body.scrollHeight;
-        this.aaa.height= h;
-        this.aaa.overflow="auto";
         const userInfo = sessionStorage.getItem("userInfo");
         const info = JSON.parse(userInfo);
 
@@ -519,7 +522,13 @@
             console.log(err)
           });
       },
-      showQdList(){
+
+      //查看切断表
+      showQdList(){},
+
+
+      //查看精度管理表
+      viewTheAccuracyManagementTable(){
 
       },
 
@@ -631,13 +640,14 @@
           });
         }
       },
-      //显示上报异常
+
+
+      //显示上报异常按钮
       showReportAbnormal() {
-        this.abnormalVisible = true;
         axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
           .then((res) => {
             //删除所有
-            res.data.splice(0, 1);
+            /*   res.data.splice(0, 1);*/
             //第一个禁用
             /*res.data[0].disabled =true;*/
             this.options = res.data;
@@ -645,11 +655,20 @@
           .catch((err) => {
             console.log(err)
           })
-
+        this.abnormalBtnVisible = true
       },
-      //上报异常
+
+
+      //点按钮弹出备注框
+      showReportAbnormalContent(Reason) {
+        this.abnormalVisible = true;
+        this.Reason = Reason;
+        this.remarks ="";
+      },
+
+      //进行上报异常
       submitAbnormal() {
-        if (this.indexno && this.remarks) {
+        if (this.remarks) {
           const userInfo = sessionStorage.getItem("userInfo");
           const id = localStorage.getItem("pipeId");
           const info = JSON.parse(userInfo);
@@ -657,7 +676,7 @@
           axios.post(" " + url + "/shengchanError/errorEvent",
             {
               "userId": userId,
-              "errorId": this.indexno,
+              "errorId": this.Reason,
               "context": this.remarks,
               "id": id
             })
@@ -670,7 +689,14 @@
                 let that = this;
                 setTimeout(function () {
                   that.abnormalVisible = false;
+                  that.abnormalBtnVisible = false;
                 }, 2000)
+              }
+              else if (res.data === "2") {
+                this.$message({
+                  message: '该管子已经提报异常无需重新提交',
+                  type: 'warning'
+                });
               }
               else {
                 this.$message({
@@ -683,28 +709,24 @@
               console.log(err)
             })
         }
-        else if (!this.indexno) {
-          this.$message({
-            message: '请选择异常原因',
-            type: 'warning'
-          });
-        }
-        else if (!this.remarks) {
+        else {
           this.$message({
             message: '请输入异常备注',
             type: 'warning'
-          });
+          })
         }
       },
+
+
       //显示查看当前图纸
       viewDrawings() {
         let pici = this.titleData[0].text;
         let yiguanhao = this.titleData[2].text;
         let code = this.titleData[3].text;
-        axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici":pici,"yiguanhao":yiguanhao,"code":code})
+        axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
           .then((res) => {
-            if(res.data.imgurl){
-              this.url =res.data.imgurl;
+            if (res.data.imgurl) {
+              this.url = res.data.imgurl;
               this.drawingVisible = true;
             }
             else {
@@ -871,6 +893,7 @@
 
       }
     }
+
   }
 
   .container {
@@ -912,6 +935,25 @@
         .el-button {
           width: 100px;
           height: 30px;
+        }
+      }
+
+    }
+    .qualityBtn{
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      div{
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .el-button {
+          width:95%;
+          height: 50px;
+          margin-left: 5%;
         }
       }
 

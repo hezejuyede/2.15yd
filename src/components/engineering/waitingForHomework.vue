@@ -53,7 +53,7 @@
               <template scope="scope">
                 <el-button
                   type="success"
-                  style="width: 100%;height: 30px"
+                  style="width: 100%;height: 40px;line-height: 40px"
                   @click="goToCurrentTask(scope.row.id)">
                   {{ scope.row.yiguanno }}
                 </el-button>
@@ -66,18 +66,10 @@
               <template scope="scope">
                 <el-button
                   type="success"
-                  style="width: 100%;height: 30px"
+                  style="width: 100%;height: 40px;line-height: 40px"
                   @click="goToCurrentTask(scope.row.id)">
                   {{ scope.row.codeno }}
                 </el-button>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              v-if="col.prop==='qieduanbiao'"
-              :prop="col.prop" :label="col.label">
-              <template scope="scope">
-                <el-button type="success" style="width: 100%;height: 30px" @click="seeCutList">切断表</el-button>
               </template>
             </el-table-column>
             <el-table-column
@@ -87,10 +79,21 @@
               <template scope="scope">
                 <el-button
                   type="success"
-                  style="width: 100%;height: 30px"
+                  style="width: 100%;height: 40px;line-height: 40px"
                   @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
                   一品图
                 </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='qieduanbiao'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 40px;line-height: 40px"
+                  @click="seeCutList">切断表</el-button>
               </template>
             </el-table-column>
           </template>
@@ -1157,7 +1160,7 @@
     </div>
     <Modal :msg="message"
            :isHideModal="HideModal"></Modal>
-    <div class="loading-container" v-show="!tableData.length">
+    <div class="loading-container" v-show="!img.length">
       <loading></loading>
     </div>
     <footer-nav></footer-nav>
@@ -1175,6 +1178,7 @@
     name: 'ProductionExecution',
     data() {
       return {
+        img:[],
         url:"",
 
         listData: [],
@@ -1294,12 +1298,22 @@
     created() {
       //检索用户状态
       this.getAdminState();
+
+      //转圈延迟一秒执行
+      setTimeout(() => {
+        this.getLoading();
+      }, 1000);
     },
     methods: {
+      //转圈延迟一秒执行
+      getLoading() {
+        this.img = ["1"]
+      },
+
+
 
       //公共方法显示根据不同工位显示不同的表头和表数据
       showTableData(id,name){
-
 
         let that = this;
         axios.all([

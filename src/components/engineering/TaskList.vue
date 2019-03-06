@@ -62,7 +62,7 @@
               <template scope="scope">
                 <el-button
                   type="success"
-                  style="width: 100%;height: 30px"
+                  style="width: 100%;height: 40px;line-height: 40px"
                   @click="goToCurrentTask(scope.row.id)">
                   {{ scope.row.yiguanno }}
                 </el-button>
@@ -75,7 +75,7 @@
               <template scope="scope">
                 <el-button
                   type="success"
-                  style="width: 100%;height: 30px"
+                  style="width: 100%;height: 40px;line-height: 40px"
                   @click="goToCurrentTask(scope.row.id)">
                   {{ scope.row.codeno }}
                 </el-button>
@@ -86,7 +86,10 @@
               v-if="col.prop==='qieduanbiao'"
               :prop="col.prop" :label="col.label">
               <template scope="scope">
-                <el-button type="success" style="width: 100%;height: 30px" @click="seeCutList">切断表</el-button>
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 40px;line-height: 40px"
+                  @click="seeCutList">切断表</el-button>
               </template>
             </el-table-column>
             <el-table-column
@@ -96,7 +99,7 @@
               <template scope="scope">
                 <el-button
                   type="success"
-                  style="width: 100%;height: 30px"
+                  style="width: 100%;height: 40px;line-height: 40px"
                   @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
                   一品图
                 </el-button>
@@ -1069,7 +1072,7 @@
     <div class="upTop" ref="upTop" @click="upToTop">
       <i class="iconfont icon-xiangshang1"></i>
     </div>
-    <div class="loading-container" v-show="!tableData.length">
+    <div class="loading-container" v-show="!img.length">
       <loading></loading>
     </div>
 
@@ -1094,7 +1097,7 @@
       return {
         message: '',
         HideModal: true,
-
+        img:[],
 
         k: "200",
         url: "",
@@ -1199,8 +1202,20 @@
     created() {
       //检索用户状态
       this.getAdminState();
+
+      //转圈延迟一秒执行
+      setTimeout(() => {
+        this.getLoading();
+      }, 1000);
     },
     methods: {
+
+      //转圈延迟一秒执行
+      getLoading() {
+        this.img = ["1"]
+      },
+
+
       //公共方法显示根据不同工位显示不同的表头和表数据
       showTableData(id, name) {
 
@@ -1275,7 +1290,7 @@
             this.listType = "1";
             let that = this;
             setTimeout(() => {
-              that.showTableData('zxqieduan', info.GW)
+              that.showTableData('zxqdall', info.GW)
             }, 1000);
           }
         }
