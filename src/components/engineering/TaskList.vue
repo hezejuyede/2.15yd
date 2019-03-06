@@ -1206,7 +1206,7 @@
       //转圈延迟一秒执行
       setTimeout(() => {
         this.getLoading();
-      }, 1000);
+      }, 100);
     },
     methods: {
 
@@ -1288,10 +1288,7 @@
           }
           else {
             this.listType = "1";
-            let that = this;
-            setTimeout(() => {
-              that.showTableData('zxqdall', info.GW)
-            }, 1000);
+            this.showTableData('zxqdall', info.GW)
           }
         }
       },

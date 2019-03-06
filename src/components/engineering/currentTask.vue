@@ -27,12 +27,21 @@
         <div class="currentTaskDivRight" v-html="matterData"></div>
       </div>
       <div class="currentTaskBtn">
-        <el-button type="primary" @click="startWork" :disabled="startWorkBtn == -1">开始</el-button>
+        <div class="templateBtn" v-for="(item,index) in bottomButton"   v-if="item.show==1">
+          <button
+            :disabled="item.disabled===0"
+            @click="bottomButtonClick(item.type)"
+            :style="{'background-color':item.backgroundColor,'color':item.color}">
+            {{item.name}}
+          </button>
+        </div>
+
+      <!--  <el-button type="primary" @click="startWork" :disabled="startWorkBtn == -1">开始</el-button>
         <el-button type="success" @click="endWord" :disabled="endWorkBtn == -1">报完工</el-button>
         <el-button type="warning" @click="showQdList">切断表</el-button>
         <el-button type="danger" @click="showReportAbnormal">上报异常</el-button>
         <el-button type="success" @click="viewDrawings">看一品图</el-button>
-        <el-button type="info" @click="viewTheAccuracyManagementTable">精度管理表</el-button>
+        <el-button type="info" @click="viewTheAccuracyManagementTable">精度管理表</el-button>-->
       </div>
 
       <div class="currentTaskRouter">
@@ -317,7 +326,16 @@
         listTableData:[],
         selectTb:"",
         selectTbOptions:[],
-        listData:[]
+        listData:[],
+
+        bottomButton: [
+          {"type": "1", "name": "开始", "disabled": 1, "backgroundColor": "#D24D57", "show": "1"},
+          {"type": "2", "name": "报完工", "disabled": 0, "backgroundColor": "#409EFF", "show": "1"},
+          {"type": "3", "name": "切断表", "disabled": 1, "backgroundColor": "#E6A23C", "show": "1"},
+          {"type": "4", "name": "上报异常", "disabled": 1, "backgroundColor": "#67C23A", "show": "1"},
+          {"type": "5", "name": "看一品图", "disabled": 1, "backgroundColor": "#F56C6C", "show": "1"},
+          {"type": "6", "name": "精度管理表", "disabled": 1, "backgroundColor": "#d93f30", "show": "1"}
+        ],
 
 
       }
@@ -387,6 +405,143 @@
           }
         }
       },
+
+      bottomButtonClick(type) {
+        if (type === "1") {
+          if (this.id) {
+           this.bottomButton[0].disabled =0;
+            this.bottomButton[1].disabled =1;
+            axios.post(" " + url + "/shengchan/startWork", {"id": this.id})
+              .then((res) => {
+                if (res.data === "success") {
+                  this.startWorkBtn = "-1";
+                  this.message = "已经开始加工";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function a() {
+                    that.message = "";
+                    that.HideModal = true;
+                  }
+
+
+                  setTimeout(a, 2000);
+
+                }
+                else if (res.data === "-1") {
+                  this.startWorkBtn = "-1";
+                  this.endWorkBtn ="-1";
+                  this.message = "已经完成，无法开始";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function b() {
+                    that.message = "";
+                    that.HideModal = true;
+                  }
+
+                  setTimeout(b, 2000);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
+        }
+        else if (type === "2") {
+          this.bottomButton[0].disabled =1;
+          this.bottomButton[1].disabled =0;
+          this.jobLogVisible=true;
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sysconfig/opreaRecordTypeList", {"station": that.gongwei}),
+
+          ])
+            .then(axios.spread(function (listData) {
+              let data = [];
+              for (let i = 0; i < listData.data.length; i++) {
+                if (listData.data[i].code == 2) {
+                  axios.post(" " + url + "/sys/dictionaryList", {"id": listData.data[i].code})
+                    .then((res) => {
+                      var list = {
+                        id: listData.data[i].id,
+                        cindex: listData.data[i].cindex,
+                        oqtypename: listData.data[i].context,
+                        indexno: listData.data[i].ctype,
+                        oqmsg: listData.data[i].value,
+                        relatableOptions:res.data
+                      };
+                      data.push(list);
+                    })
+                    .catch((err) => {
+                      console.log(err)
+                    });
+                }
+                else {
+                  var list = {
+                    id: listData.data[i].id,
+                    cindex: listData.data[i].cindex,
+                    oqtypename: listData.data[i].context,
+                    indexno: listData.data[i].ctype,
+                    oqmsg: listData.data[i].value
+                  };
+                  data.push(list);
+                }
+              }
+              that.listTableData = data;
+            }));
+        }
+        else  if(type ==="3"){
+
+        }
+        else  if(type ==="4"){
+          axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
+            .then((res) => {
+              //删除所有
+              /*   res.data.splice(0, 1);*/
+              //第一个禁用
+              /*res.data[0].disabled =true;*/
+              this.options = res.data;
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+          this.abnormalBtnVisible = true
+        }
+        else  if(type ==="5"){
+          let pici = this.titleData[0].text;
+          let yiguanhao = this.titleData[2].text;
+          let code = this.titleData[3].text;
+          axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
+            .then((res) => {
+              if (res.data.imgurl) {
+                this.url = res.data.imgurl;
+                this.drawingVisible = true;
+              }
+              else {
+                this.message = "没有查到一品图";
+                this.HideModal = false;
+                const that = this;
+
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                }
+
+                setTimeout(a, 2000);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+        else  if(type ==="6"){
+
+        }
+      },
+
+
+
       //加工开始
       startWork() {
         if (this.id) {
@@ -523,14 +678,51 @@
           });
       },
 
-      //查看切断表
-      showQdList(){},
-
-
-      //查看精度管理表
-      viewTheAccuracyManagementTable(){
-
+      //显示上报异常按钮
+      showReportAbnormal() {
+        axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
+          .then((res) => {
+            //删除所有
+            /*   res.data.splice(0, 1);*/
+            //第一个禁用
+            /*res.data[0].disabled =true;*/
+            this.options = res.data;
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+        this.abnormalBtnVisible = true
       },
+
+      //显示查看当前图纸
+      viewDrawings() {
+        let pici = this.titleData[0].text;
+        let yiguanhao = this.titleData[2].text;
+        let code = this.titleData[3].text;
+        axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
+          .then((res) => {
+            if (res.data.imgurl) {
+              this.url = res.data.imgurl;
+              this.drawingVisible = true;
+            }
+            else {
+              this.message = "没有查到一品图";
+              this.HideModal = false;
+              const that = this;
+
+              function a() {
+                that.message = "";
+                that.HideModal = true;
+              }
+
+              setTimeout(a, 2000);
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+
 
 
       //作业记录单选择
@@ -545,6 +737,8 @@
           this.listData = data;
         }
       },
+
+
 
       //作业记录多全选
       selectJlAll(val){
@@ -592,6 +786,7 @@
 
 
       },
+
       //显示弯头查询
       curvedPipeState() {
 
@@ -620,6 +815,7 @@
 
 
       },
+
       //弯头完成状态查询
       doSearch() {
         if (this.batch) {
@@ -642,21 +838,6 @@
       },
 
 
-      //显示上报异常按钮
-      showReportAbnormal() {
-        axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
-          .then((res) => {
-            //删除所有
-            /*   res.data.splice(0, 1);*/
-            //第一个禁用
-            /*res.data[0].disabled =true;*/
-            this.options = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-        this.abnormalBtnVisible = true
-      },
 
 
       //点按钮弹出备注框
@@ -718,34 +899,6 @@
       },
 
 
-      //显示查看当前图纸
-      viewDrawings() {
-        let pici = this.titleData[0].text;
-        let yiguanhao = this.titleData[2].text;
-        let code = this.titleData[3].text;
-        axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
-          .then((res) => {
-            if (res.data.imgurl) {
-              this.url = res.data.imgurl;
-              this.drawingVisible = true;
-            }
-            else {
-              this.message = "没有查到一品图";
-              this.HideModal = false;
-              const that = this;
-
-              function a() {
-                that.message = "";
-                that.HideModal = true;
-              }
-
-              setTimeout(a, 2000);
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      },
 
 
     }
@@ -833,16 +986,45 @@
       }
       .currentTaskBtn {
         width: 95%;
+        height: 60px;
         margin: 20px auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        button {
-          width: 15%;
-          height: 50px;
+        /* button {
+           width: 15%;
+           height: 50px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+         }*/
+        .templateBtn {
+          width: 100%;
+          height: 100%;
           display: flex;
           align-items: center;
           justify-content: center;
+          flex: 1;
+          button {
+            width: 90%;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            color: #ffffff;
+          }
+          button:disabled {
+            background-color: @sousuo;
+            pointer-events: none;
+            cursor: not-allowed;
+            filter: alpha(opacity=1);
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            opacity: .65;
+          }
         }
       }
       .currentTaskRouter {

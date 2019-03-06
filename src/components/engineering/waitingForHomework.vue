@@ -20,8 +20,6 @@
 
       </div>
 
-
-
       <!--切断，直管焊，大阻焊-->
       <div class="publicPage" v-if="this.listType ==1">
         <el-table class="tb-edit"
@@ -1302,15 +1300,13 @@
       //转圈延迟一秒执行
       setTimeout(() => {
         this.getLoading();
-      }, 1000);
+      }, 100);
     },
     methods: {
       //转圈延迟一秒执行
       getLoading() {
         this.img = ["1"]
       },
-
-
 
       //公共方法显示根据不同工位显示不同的表头和表数据
       showTableData(id,name){
@@ -1439,9 +1435,7 @@
           }
           else if (info.GW === "切断" || info.GW === "短管焊" || info.GW === "直管焊") {
             this.listType = "1";
-            setTimeout(() => {
-              this.showTableData('zxqieduan', this.dqgw)
-            }, 1000);
+            this.showTableData('zxqieduan', this.dqgw)
           }
           else {
 
