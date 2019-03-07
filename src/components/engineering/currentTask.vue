@@ -250,6 +250,15 @@
       </div>
     </el-dialog>
 
+    <!--查看切断表 -->
+    <el-dialog title="切断表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
+      <div class="container" style="width: 100%;height: 100%">
+        <div class="drawingImg" style="width: 100%;height: 100%">
+          <img :src="url" alt="" style="display:block;height: 100%;width: 100%">
+        </div>
+      </div>
+    </el-dialog>
+
     <Modal :msg="message"
            :isHideModal="HideModal"></Modal>
     <div class="loading-container" v-show="!img.length">
@@ -293,6 +302,7 @@
         drawingVisible: false,
         jobLogVisible: false,
         elbowVisible: false,
+        qdbVisible:false,
 
         options: [],
         remarks: "",
@@ -524,7 +534,7 @@
           axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
             .then((res) => {
               if (res.data.imgurl) {
-                this.url = res.data.imgurl;
+                this.url = url+res.data.imgurl;
                 this.drawingVisible = true;
               }
               else {

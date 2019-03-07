@@ -1057,7 +1057,14 @@
       </div>
     </el-dialog>
 
-
+    <!--查看切断表 -->
+    <el-dialog title="切断表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
+      <div class="container" style="width: 100%;height: 100%">
+        <div class="drawingImg" style="width: 100%;height: 100%">
+          <img :src="url" alt="" style="display:block;height: 100%;width: 100%">
+        </div>
+      </div>
+    </el-dialog>
 
     <div class="upTop" ref="upTop" @click="upToTop">
       <i class="iconfont icon-xiangshang1"></i>
@@ -1097,6 +1104,7 @@
 
         screenVisible: false,
         drawingVisible: false,
+        qdbVisible:false,
 
         ycSearchBtn: 0,
         dzySearchBtn: 0,
@@ -1607,7 +1615,7 @@
             axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
               .then((res) => {
                 if (res.data.imgurl) {
-                  this.url = res.data.imgurl;
+                  this.url = url+res.data.imgurl;
                   this.drawingVisible = true;
                 }
                 else {
@@ -1691,7 +1699,28 @@
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
           event.stopPropagation();
+          axios.post(" " + url + "/show/showExcelImg")
+            .then((res) => {
+              if(res.data){
+                this.url = url+res.data;
+                this.qdbVisible = true;
+              }
+              else {
+                this.message = "没有查到切断表";
+                this.HideModal = false;
+                const that = this;
 
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                }
+
+                setTimeout(a, 2000);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
         }
         else {
           //IE取消冒泡事件

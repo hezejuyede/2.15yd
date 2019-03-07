@@ -25,7 +25,6 @@
   components: {},
   mounted() {
     this._getIndexUrl()
-
   },
   created() {
 
