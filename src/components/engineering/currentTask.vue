@@ -435,47 +435,68 @@
         }
         //加工结束
         else if (type === "2") {
-          this.bottomButton[0].disabled = "0";
-          this.bottomButton[1].disabled = "1";
-          this.jobLogVisible = true;
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/sysconfig/opreaRecordTypeList", {"station": that.gongwei}),
-
-          ])
-            .then(axios.spread(function (listData) {
-              let data = [];
-              for (let i = 0; i < listData.data.length; i++) {
-                if (listData.data[i].code == 2) {
-                  axios.post(" " + url + "/sys/dictionaryList", {"id": listData.data[i].code})
-                    .then((res) => {
-                      var list = {
-                        id: listData.data[i].id,
-                        cindex: listData.data[i].cindex,
-                        oqtypename: listData.data[i].context,
-                        indexno: listData.data[i].ctype,
-                        oqmsg: listData.data[i].value,
-                        relatableOptions: res.data
-                      };
-                      data.push(list);
-                    })
-                    .catch((err) => {
-                      console.log(err)
-                    });
+          axios.post(" "+ url +"/shengchan/updateStatus", {"id": this.id})
+            .then((res) => {
+              if (res.data === "-1") {
+                this.bottomButton[0].disabled = "0";
+                this.bottomButton[1].disabled = "0";
+                this.message = "已经完成";
+                this.HideModal = false;
+                const that = this;
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                  that.$router.push("/")
                 }
-                else {
-                  var list = {
-                    id: listData.data[i].id,
-                    cindex: listData.data[i].cindex,
-                    oqtypename: listData.data[i].context,
-                    indexno: listData.data[i].ctype,
-                    oqmsg: listData.data[i].value
-                  };
-                  data.push(list);
-                }
+                setTimeout(a, 2000);
               }
-              that.listTableData = data;
-            }));
+              else if (res.data === "1") {
+                this.bottomButton[0].disabled = "0";
+                this.bottomButton[1].disabled = "1";
+                this.jobLogVisible = true;
+                let that = this;
+                axios.all([
+                  axios.post(" " + url + "/sysconfig/opreaRecordTypeList", {"station": that.gongwei}),
+
+                ])
+                  .then(axios.spread(function (listData) {
+                    let data = [];
+                    for (let i = 0; i < listData.data.length; i++) {
+                      if (listData.data[i].code == 2) {
+                        axios.post(" " + url + "/sys/dictionaryList", {"id": listData.data[i].code})
+                          .then((res) => {
+                            var list = {
+                              id: listData.data[i].id,
+                              cindex: listData.data[i].cindex,
+                              oqtypename: listData.data[i].context,
+                              indexno: listData.data[i].ctype,
+                              oqmsg: listData.data[i].value,
+                              relatableOptions: res.data
+                            };
+                            data.push(list);
+                          })
+                          .catch((err) => {
+                            console.log(err)
+                          });
+                      }
+                      else {
+                        var list = {
+                          id: listData.data[i].id,
+                          cindex: listData.data[i].cindex,
+                          oqtypename: listData.data[i].context,
+                          indexno: listData.data[i].ctype,
+                          oqmsg: listData.data[i].value
+                        };
+                        data.push(list);
+                      }
+                    }
+                    that.listTableData = data;
+                  }));
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            });
         }
         else if (type === "3") {
 
