@@ -1216,15 +1216,15 @@
 
 
       //公共方法显示根据不同工位显示不同的表头和表数据
-      showTableData(id, name) {
+      showTableData(id, name,wz,type) {
 
         let that = this;
         axios.all([
-          axios.post(" " + url + "/sys/showTableTitle", {"name": id}),
+          axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":id,"weizhiid":wz,"type":type}),
           axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": name})
         ])
           .then(axios.spread(function (title, table) {
-            that.cols = title.data;
+            that.cols = title.data.data;
             that.tableData = table.data;
           }));
       },
@@ -1287,11 +1287,11 @@
             this.listType = "1";
             let that = this;
             axios.all([
-              axios.post(" " + url + "/sys/showTableTitle", {"name": "zxqdall"}),
+              axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":this.stationId,"weizhiid":2,"type":1}),
               axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": this.gongwei, "yichang": 1})
             ])
               .then(axios.spread(function (title, table) {
-                that.cols = title.data;
+                that.cols = title.data.data;
                 that.tableData = table.data;
               }));
           }

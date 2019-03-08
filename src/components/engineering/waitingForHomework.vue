@@ -1259,20 +1259,20 @@
           this.stationId = info.GH;
           if (info.GW === "切断") {
             this.listType = "1";
-            this.showTableData('zxqieduan', this.dqgw)
+            this.showTableData(this.stationId, this.dqgw,1,1)
           }
           else if (info.GW === "直管焊") {
             this.listType = "5";
-            this.showTableData('zxqieduan', this.dqgw)
+            this.showTableData(this.stationId, this.dqgw,1,1)
           }
           else if (info.GW === "短管焊") {
             this.listType = "6";
-            this.showTableData('zxqieduan', this.dqgw)
+            this.showTableData(this.stationId, this.dqgw,1,1)
           }
           else if (info.GW === "小组立") {
             this.listType = "2";
             this.gwListType = "1";
-            this.showTableData('zxqieduan', this.dqgw)
+            this.showTableData(this.stationId, this.dqgw,1,1)
           }
           else if (info.GW === "弯头切断") {
             this.listType = "3";
@@ -1319,15 +1319,15 @@
       },
 
       //公共方法显示根据不同工位显示不同的表头和表数据
-      showTableData(id,name){
+      showTableData(id,name,wz,type){
 
         let that = this;
         axios.all([
-          axios.post(" "+ url +"/sys/showTableTitle",{"name":id}),
+          axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":id,"weizhiid":wz,"type":type}),
           axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu":name})
         ])
           .then(axios.spread(function (title, table) {
-            that.cols = title.data;
+            that.cols = title.data.data;
             that.tableData = table.data;
           }));
       },
@@ -1455,7 +1455,7 @@
               function a() {
                 that.message = "";
                 that.HideModal = true;
-                that.showTableData('zxqieduan', this.dqgw)
+                that.showTableData(this.stationId, this.dqgw,1,1)
               }
               setTimeout(a, 2000);
             }
@@ -1526,10 +1526,7 @@
             axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
               .then((res) => {
                 if (res.data.imgurl) {
-                  console.log(res.data.imgurl)
                   this.url = url+res.data.imgurl;
-                  console.log(this.url)
-
                   this.drawingVisible = true;
                 }
                 else {
