@@ -4,7 +4,7 @@
     <div class="ProductionExecutionDiv">
       <!-- 公共头部-->
       <div class="contentTop" ref="contentTop">
-        <div class="listSearch" v-if="this.listType ==1">
+        <div class="listSearch" v-if="this.listType ==1 || this.listType ==5">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
                       placeholder="检索管子或扫码或手工输入"
@@ -17,11 +17,37 @@
             <el-button  type="danger" @click="workEnd">报完工</el-button>
           </div>
         </div>
+        <div class="listSearch" v-if="this.listType ==6">
+          <div class="listSearchInput">
+            <el-input v-model="searchWord"
+                      placeholder="检索管子或扫码或手工输入"
+                      @keyup.enter.native="goToPipePage(searchWord)"></el-input>
+          </div>
+          <div class="listSearchBtn">
+            <el-button type="success" @click="showScreening">条件筛选</el-button>
+            <el-button type="warning" @click="zgMaterialStatistics">短管物料统计</el-button>
+            <el-button type="primary" @click="goGeneralListOfProcessing">总清单</el-button>
+            <el-button  type="danger" @click="workEnd">报完工</el-button>
+          </div>
+        </div>
+        <div class="listSearch" v-if="this.listType ==2">
+          <div class="listSearchInput">
+            <el-input v-model="searchWord"
+                      placeholder="检索管子或扫码或手工输入"
+                      @keyup.enter.native="goToPipePage(searchWord)"></el-input>
+          </div>
+          <div class="listSearchBtn">
+            <el-button type="success" @click="showScreening">条件筛选</el-button>
+            <el-button type="warning" @click="zgMaterialStatistics">物料统计</el-button>
+            <el-button type="primary" @click="goGeneralListOfProcessing">总清单</el-button>
+            <el-button  type="danger" @click="workEnd">报完工</el-button>
+          </div>
+        </div>
 
       </div>
 
       <!--切断，直管焊，大阻焊-->
-      <div class="publicPage" v-if="this.listType ==1">
+      <div class="publicPage" v-if="this.listType ==1 || this.listType ==5 || this.listType ==6">
         <el-table class="tb-edit"
                   :data="tables"
                   height="500"
@@ -97,6 +123,7 @@
           </template>
         </el-table>
       </div>
+
       <!--小组立-->
       <div class="xzlDiv" v-if="this.listType ==2">
         <div class="xzl-change">
@@ -105,209 +132,80 @@
         </div>
         <div class="xzl-list">
           <div class="saoMa" v-if="left === true">
-            <el-table
-              :data="tables"
-              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-              :row-class-name="tableRowClassName"
-              @select="selectList"
-              @select-all="selectAll"
-              style="width: 95%;margin: 0 auto">
+            <el-table class="tb-edit"
+                      :data="tables"
+                      height="500"
+                      :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+                      :row-class-name="tableRowClassName"
+                      @select="selectList"
+                      @select-all="selectAll"
+                      @row-click="doSelect"
+                      @selection-change="selectChange"
+                      ref="moviesTable"
+                      style="width: 99%;margin: 0 auto">
               <el-table-column
                 type="selection"
                 width="30">
               </el-table-column>
-              <el-table-column
-                prop="jiagongxian"
-                label="加工线"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="pici"
-                label="批次"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="jiagongxilie"
-                label="加工系列"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="shipcode"
-                label="船号"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="yiguanno"
-                label="一贯号"
-                align="center"
-                min-width="20%">
-                <template slot-scope="scope">
-                  <div @click="goToCurrentTask(scope.row.id)">
-                    {{scope.row.yiguanno}}
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="xitong"
-                label="Code号"
-                align="center"
-                min-width="20%">
-                <template slot-scope="scope">
-                  <div @click="goToCurrentTask(scope.row.id)">
-                    {{scope.row.yiguanno}}
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="hou"
-                label="PIENO"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-
-
-              <el-table-column
-                prop="pregongweiname"
-                label="上道工位"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="prepersonname"
-                label="前作业者"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-
-
-
-
-              <el-table-column
-                prop="levelStr"
-                label="优先级"
-                align="center"
-                min-width="20%">
-              </el-table-column>
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='qieduanbiao'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList">切断表</el-button>
+                  </template>
+                </el-table-column>
+              </template>
             </el-table>
-          <!--  <el-table
-              :data="tables"
-              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-              border
-              height="350"
-              @row-click="goToCurrentTask"
-              @select="selectList"
-              @select-all="selectAll"
-              :row-class-name="tableRowClassName"
-              style="width: 95%;margin: 0 auto;overflow: auto">
-              <el-table-column
-                type="selection"
-                width="30">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="chuanhao"
-                label="船番"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="jiagongxilie"
-                label="加工系列"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="yiguanhao"
-                label="一贯号"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="pno"
-                label="pNo"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="daihao"
-                label="代号"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="guige"
-                label="规格"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="hujing"
-                label="呼径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="houdu"
-                label="厚度"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="qieduanchang"
-                label="切断长"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="guanduan"
-                label="管端"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="jiaodu"
-                label="角度"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="lianjiexinxi"
-                label="连接"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pinming"
-                label="金物"
-                align="center"
-                width="200">
-              </el-table-column>
-              <el-table-column
-                prop="guanduan"
-                label="管端"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="beizhu"
-                label="备注"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="levelStr"
-                label="优先级"
-                align="center"
-                width="100">
-              </el-table-column>
-            </el-table>-->
           </div>
           <div class="account" v-if="right === true">
             <el-table
@@ -317,7 +215,7 @@
               @select="selectList"
               @select-all="selectAll"
               :row-class-name="tableRowClassName"
-              style="width: 95%;margin: 0 auto">
+              style="width: 99%;margin: 0 auto">
               <el-table-column
                 type="selection"
                 width="30">
@@ -380,6 +278,7 @@
           </div>
         </div>
       </div>
+
       <!--弯头切断-->
       <div class="" v-if="this.listType ==3">
         <el-table
@@ -433,6 +332,7 @@
           </el-table-column>
         </el-table>
       </div>
+
       <!-- 枝管切断-->
       <div class="zgDiv" v-if="this.listType ==4">
 
@@ -1134,7 +1034,8 @@
           </div>
         </div>
         <div class="containerBtn">
-          <el-button type="danger" icon="search" @click="emptyAllValue">一键清空</el-button>
+          <el-button type="danger" @click="screenVisible = false" >关闭窗口</el-button>
+          <el-button type="warning" icon="search" @click="emptyAllValue">一键清空</el-button>
           <el-button type="success" icon="search" @click="validationScreening">确认筛选</el-button>
         </div>
       </div>
@@ -1142,6 +1043,9 @@
 
     <!--查看图纸 -->
     <el-dialog title="一品图查看" :visible.sync="drawingVisible" :fullscreen="true" :center="true">
+      <div class="closeBtn">
+        <el-button type="danger" @click="drawingVisible = false" >关闭窗口</el-button>
+      </div>
       <div class="container" style="width: 100%;height: 100%">
         <div class="drawingImg" style="width: 100%;height: 100%">
           <img :src="url" alt="" style="display:block;height: 100%;width: 100%">
@@ -1151,6 +1055,9 @@
 
     <!--查看切断表 -->
     <el-dialog title="切断表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
+      <div class="closeBtn">
+        <el-button type="danger" @click="qdbVisible = false" >关闭窗口</el-button>
+      </div>
       <div class="container" style="width: 100%;height: 100%">
         <div class="drawingImg" style="width: 100%;height: 100%">
           <img :src="url" alt="" style="display:block;height: 100%;width: 100%">
@@ -1193,32 +1100,29 @@
     name: 'ProductionExecution',
     data() {
       return {
-        img:[],
-        url:"",
+        message: '',  //组件弹出框的信息
+        HideModal: true, //组件是否弹出
+        img:[],   //转圈img数组
 
-        listData: [],
+        tableData: [],//总数据的表数据
+        cols: [],     //总数据的表头
+
+        zuoyezhe:"",   //用户名
+        dqgw:"",       //中文工位名字
+        stationId:"",  //工位对应的ID
+
+
+        url:"",   //一品图和切断表的URL地址
+
+        listData: [],  //点击复选框中对ID的数组
 
         listType: "",
 
 
-        tableData: [],
-        cols: [],
+        inputWord: '',//扫码的Value
 
-
-
-
-        inputWord: '',
-
-        searchWord: '',
+        searchWord: '',//智能检索的value
         is_search: false,
-
-        message: '',
-        HideModal: true,
-
-
-        left: true,
-        zgCenter:false,
-        right: false,
 
         screenVisible:false,
         drawingVisible:false,
@@ -1226,11 +1130,18 @@
         qdbVisible:false,
 
 
-        zuoyezhe:"",
-        dqgw:"",
+
+        left: true,
+        zgCenter:false,
+        right: false,
+
+
+
+
+
 
         gwListType:0,
-        stationId:"",
+
 
 
 
@@ -1293,9 +1204,19 @@
     },
     components: {Loading, footerNav, Modal, headerNav},
     mounted() {
+      //点击向上按钮返回头部
       this.showUp();
+
+      //往下滑动动态固定搜索框
       this.showSearch();
+
+      //搜索框颜色变化
       this.bianse();
+
+      //切断工位每隔5分钟刷新一下数据
+      setInterval(()=>{
+        this.qdWorkStationGetDataList(this.stationId)
+      },50000)
 
     },
     computed: {
@@ -1320,11 +1241,81 @@
       setTimeout(() => {
         this.getLoading();
       }, 100);
+
+
+
     },
     methods: {
+      //页面加载检查用户是否登陆，没有登陆就加载登陆页面
+      getAdminState() {
+        const userInfo = sessionStorage.getItem("userInfo");
+        if (userInfo === null) {
+          this.$router.push("/ProductionExecutionLogin")
+        }
+        else {
+          const info = JSON.parse(userInfo);
+          this.zuoyezhe = info.username;
+          this.dqgw = info.GW;
+          this.stationId = info.GH;
+          if (info.GW === "切断") {
+            this.listType = "1";
+            this.showTableData('zxqieduan', this.dqgw)
+          }
+          else if (info.GW === "直管焊") {
+            this.listType = "5";
+            this.showTableData('zxqieduan', this.dqgw)
+          }
+          else if (info.GW === "短管焊") {
+            this.listType = "6";
+            this.showTableData('zxqieduan', this.dqgw)
+          }
+          else if (info.GW === "小组立") {
+            this.listType = "2";
+            this.gwListType = "1";
+            this.showTableData('zxqieduan', this.dqgw)
+          }
+          else if (info.GW === "弯头切断") {
+            this.listType = "3";
+            setTimeout(() => {
+              axios.post(" " + url + "/importother/showWtqieduanExcel", {"gongxu": info.GW})
+                .then((res) => {
+                  this.tableData = res.data;
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }, 1000);
+          }
+          else if (info.GW === "枝管切断") {
+            this.listType = "4";
+            this.gwListType = "3";
+            setTimeout(() => {
+              axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": info.GW, "type": "3"})
+                .then((res) => {
+                  this.tableData = res.data;
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }, 1000);
+          }
+          else {
+
+          }
+        }
+      },
+
+
       //转圈延迟一秒执行
       getLoading() {
         this.img = ["1"]
+      },
+
+      //切断工位每隔5分钟刷新一下数据
+      qdWorkStationGetDataList(workStation){
+        if(workStation===1){
+          this.showTableData('zxqieduan', this.dqgw)
+        }
       },
 
       //公共方法显示根据不同工位显示不同的表头和表数据
@@ -1340,6 +1331,11 @@
             that.tableData = table.data;
           }));
       },
+
+
+
+
+
 
       //列表单独选择
       selectList(val) {
@@ -1400,67 +1396,13 @@
         else if (row.level === 1) {
           return 'yellow-row';
         }
-      },
-
-
-      //页面加载检查用户是否登陆，没有登陆就加载登陆页面
-      getAdminState() {
-        const userInfo = sessionStorage.getItem("userInfo");
-        if (userInfo === null) {
-          this.$router.push("/ProductionExecutionLogin")
-        }
-        else {
-          const info = JSON.parse(userInfo);
-          this.zuoyezhe = info.username;
-          this.dqgw = info.GW;
-          this.stationId=info.GH;
-          if (info.GW === "小组立") {
-            this.listType = "2";
-            this.gwListType ="1";
-            setTimeout(() => {
-              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": info.GW, "type": "1"})
-                .then((res) => {
-                  this.tableData = res.data;
-                })
-                .catch((err) => {
-                  console.log(err)
-                })
-            }, 1000);
-          }
-          else if (info.GW === "弯头切断") {
-            this.listType = "3";
-            setTimeout(() => {
-              axios.post(" " + url + "/importother/showWtqieduanExcel", {"gongxu": info.GW})
-                .then((res) => {
-                  this.tableData = res.data;
-                })
-                .catch((err) => {
-                  console.log(err)
-                })
-            }, 1000);
-          }
-          else if (info.GW === "枝管切断") {
-            this.listType = "4";
-            this.gwListType ="3";
-            setTimeout(() => {
-              axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": info.GW,"type":"3"})
-                .then((res) => {
-                  this.tableData = res.data;
-                })
-                .catch((err) => {
-                  console.log(err)
-                })
-            }, 1000);
-          }
-          else if (info.GW === "切断" || info.GW === "短管焊" || info.GW === "直管焊") {
-            this.listType = "1";
-            this.showTableData('zxqieduan', this.dqgw)
-          }
-          else {
-
-          }
+        else if (row.status === 7) {
+          return 'gray-row';
         }
       },
+
+
+
 
       //扫码直接前往任务页面
       goToPipePage(searchWord) {
@@ -1988,6 +1930,7 @@
 
       }
     }
+
     .xzlDiv {
       .xzl-change {
         height: 50px;
@@ -2049,6 +1992,20 @@
     }
   }
 
+  .closeBtn{
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .el-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20%;
+      height: 35px;
+    }
+  }
+
   .upTop {
     width: 50px;
     height: 50px;
@@ -2068,6 +2025,7 @@
     }
 
   }
+
   .container{
     .containerDiv{
       width: 95%;

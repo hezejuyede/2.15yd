@@ -100,16 +100,27 @@
 
     <!--上报异常按钮 -->
     <el-dialog title="上报异常按钮注" :visible.sync="abnormalBtnVisible" width="90%">
+      <div class="closeBtn">
+        <el-button type="danger" @click="abnormalBtnVisible = false" >关闭窗口</el-button>
+      </div>
       <div class="container" style="height:350px;width: 100%">
         <div class="qualityBtn">
           <div class="" v-for="(item,index) in options">
-            <el-button v-if="index===0" type="primary" @click="showReportAbnormalContent(item.indexno)">{{item.name}}
+            <el-button v-if="index===0" type="primary"
+                       @click="showReportAbnormalContent(item.indexno,item.name)">
+              {{item.name}}
             </el-button>
-            <el-button v-if="index===1" type="success" @click="showReportAbnormalContent(item.indexno)">{{item.name}}
+            <el-button v-if="index===1" type="success"
+                       @click="showReportAbnormalContent(item.indexno,item.name)">
+              {{item.name}}
             </el-button>
-            <el-button v-if="index===2" type="warning" @click="showReportAbnormalContent(item.indexno)">{{item.name}}
+            <el-button v-if="index===2" type="warning"
+                       @click="showReportAbnormalContent(item.indexno,item.name)">
+              {{item.name}}
             </el-button>
-            <el-button v-if="index===3" type="danger" @click="showReportAbnormalContent(item.indexno)">{{item.name}}
+            <el-button v-if="index===3" type="danger"
+                       @click="showReportAbnormalContent(item.indexno,item.name)">
+              {{item.name}}
             </el-button>
           </div>
 
@@ -120,11 +131,22 @@
 
     <!--上报异常备注 -->
     <el-dialog title="上报异常备注" :visible.sync="abnormalVisible" width="90%">
-      <div class="container" style="height:350px;overflow:auto">
+      <div class="container" style="height:400px;overflow:auto">
+        <div class="closeBtn">
+
+          <el-button type="danger" @click="abnormalVisible = false" >关闭窗口</el-button>
+        </div>
         <div class="qualityDiv">
+          <div class="qualityDivTitle ">
+            <span style="font-size: 18px">异常原因</span>
+            <span  style="margin: 0 5px">:</span>
+            <el-button type="warning" style="width: 150px;height: 35px">{{abnormalReason}}</el-button>
+          </div>
           <div class="qualityDivContent">
             <el-input
               type="textarea"
+              ref="siteInput"
+              auto-complete="off"
               :autosize="{ minRows: 6, maxRows: 6 }"
               placeholder="请出入异常备注"
               v-model="remarks">
@@ -329,7 +351,7 @@
         listData:[],
 
         bottomButton: [],
-
+        abnormalReason:"",
 
       }
 
@@ -354,6 +376,7 @@
       getLoading() {
         this.img = ["1"]
       },
+
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
         const userInfo = sessionStorage.getItem("userInfo");
@@ -445,68 +468,52 @@
         }
         //加工结束
         else if (type === "2") {
-          axios.post(" "+ url +"/shengchan/updateStatus", {"id": this.id})
-            .then((res) => {
-              if (res.data === "-1") {
-                this.bottomButton[0].disabled = "0";
-                this.bottomButton[1].disabled = "0";
-                this.message = "已经完成";
-                this.HideModal = false;
-                const that = this;
-                function a() {
-                  that.message = "";
-                  that.HideModal = true;
-                  that.$router.push("/")
-                }
-                setTimeout(a, 2000);
-              }
-              else if (res.data === "1") {
-                this.bottomButton[0].disabled = "0";
-                this.bottomButton[1].disabled = "1";
-                this.jobLogVisible = true;
-                let that = this;
-                axios.all([
-                  axios.post(" " + url + "/sysconfig/opreaRecordTypeList", {"station": that.gongwei}),
-
-                ])
-                  .then(axios.spread(function (listData) {
-                    let data = [];
-                    for (let i = 0; i < listData.data.length; i++) {
-                      if (listData.data[i].code == 2) {
-                        axios.post(" " + url + "/sys/dictionaryList", {"id": listData.data[i].code})
-                          .then((res) => {
-                            var list = {
-                              id: listData.data[i].id,
-                              cindex: listData.data[i].cindex,
-                              oqtypename: listData.data[i].context,
-                              indexno: listData.data[i].ctype,
-                              oqmsg: listData.data[i].value,
-                              relatableOptions: res.data
-                            };
-                            data.push(list);
-                          })
-                          .catch((err) => {
-                            console.log(err)
-                          });
-                      }
-                      else {
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sysconfig/opreaRecordTypeList", {"station": that.gongwei}),
+          ])
+            .then(axios.spread(function (listData) {
+              if(listData.data.length>0){
+                let data = [];
+                for (let i = 0; i < listData.data.length; i++) {
+                  if (listData.data[i].code == 2) {
+                    axios.post(" " + url + "/sys/dictionaryList", {"id": listData.data[i].code})
+                      .then((res) => {
                         var list = {
                           id: listData.data[i].id,
                           cindex: listData.data[i].cindex,
                           oqtypename: listData.data[i].context,
                           indexno: listData.data[i].ctype,
-                          oqmsg: listData.data[i].value
+                          oqmsg: listData.data[i].value,
+                          relatableOptions:res.data
                         };
                         data.push(list);
-                      }
-                    }
-                    that.listTableData = data;
-                  }));
+                      })
+                      .catch((err) => {
+                        console.log(err)
+                      });
+                  }
+                  else {
+                    var list = {
+                      id: listData.data[i].id,
+                      cindex: listData.data[i].cindex,
+                      oqtypename: listData.data[i].context,
+                      indexno: listData.data[i].ctype,
+                      oqmsg: listData.data[i].value
+                    };
+                    data.push(list);
+                  }
+                }
+                that.listTableData = data
               }
-            })
-            .catch((err) => {
-              console.log(err)
-            });
+              else {
+                that.addJl(1);
+                setTimeout(() => {
+                  that.$router.push("/")
+                }, 1000);
+
+              }
+            }));
         }
         else if (type === "3") {
 
@@ -523,8 +530,10 @@
             })
             .catch((err) => {
               console.log(err)
-            })
-          this.abnormalBtnVisible = true
+            });
+
+          this.abnormalBtnVisible = true;
+
         }
         //显示查看当前图纸
         else if (type === "5") {
@@ -561,7 +570,6 @@
 
       //弯头结束
       wtEndWord() {
-
         axios.post(" " + url + "/shengchan/updateStatus", {
           "id": this.id,
           "zuoyezhe": this.zuoyezhe,
@@ -634,18 +642,19 @@
       },
 
       //提交记录
-      addJl() {
+      addJl(type) {
         axios.post(" " + url + "/shengchan/updateStatus", {
           "id": this.id,
           "zuoyezhe": this.zuoyezhe,
           "stationid": this.gongwei,
           "ids": this.listData,
-          "list": this.listTableData
+          "list": this.listTableData,
+          "type":type
         })
           .then((res) => {
             if (res.data === "success") {
               this.$message({
-                message: '提交成功',
+                message: '报完工成功',
                 type: 'success'
               });
               this.bottomButton[0].disabled = "0";
@@ -716,12 +725,18 @@
         }
       },
 
-
       //点按钮弹出备注框
-      showReportAbnormalContent(Reason) {
+      showReportAbnormalContent(Reason,message) {
         this.abnormalVisible = true;
         this.Reason = Reason;
         this.remarks = "";
+        this.abnormalReason=message;
+        this.$nextTick(function(){
+          this.$refs['siteInput'].focus();
+        })
+
+
+
       },
 
       //进行上报异常
@@ -920,7 +935,7 @@
     width: 100%;
     height: 100%;
     .qualityDivTitle {
-      height: 25%;
+      height: 15%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1030,6 +1045,20 @@
   .el-button {
     width: 100px;
     height: 30px;
+  }
+
+  .closeBtn{
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .el-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20%;
+      height: 35px;
+    }
   }
 
   @media only screen and (max-width: 1200px) {
