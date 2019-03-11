@@ -1099,7 +1099,7 @@
   import footerNav from '../../common/footer'
   import Loading from '../../common/loading'
   import Modal from '../../common/modal'
-  import { disableHistory } from '../../assets/js/api'
+
 
   export default {
     name: 'ProductionExecution',
@@ -1247,13 +1247,9 @@
       setTimeout(() => {
         this.getLoading();
       }, 100);
-
-
-
+      
     },
     methods: {
-
-
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
         const userInfo = sessionStorage.getItem("userInfo");
