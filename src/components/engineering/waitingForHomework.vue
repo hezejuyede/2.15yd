@@ -8,6 +8,8 @@
           <div class="listSearchInput">
             <el-input v-model="searchWord"
                       placeholder="检索管子或扫码或手工输入"
+                      @blur="searchData(searchWord)"
+                      @input="searchEmptyData(searchWord)"
                       @keyup.enter.native="goToPipePage(searchWord)"></el-input>
           </div>
           <div class="listSearchBtn">
@@ -48,17 +50,19 @@
 
       <!--切断，直管焊，大阻焊-->
       <div class="publicPage" v-if="this.listType ==1 || this.listType ==5 || this.listType ==6">
-        <el-table class="tb-edit"
-                  :data="tables"
-                  height="500"
-                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-                  :row-class-name="tableRowClassName"
-                  @select="selectList"
-                  @select-all="selectAll"
-                  @row-click="doSelect"
-                  @selection-change="selectChange"
-                  ref="moviesTable"
-                  style="width: 99%;margin: 0 auto">
+        <el-table
+          class="tb-edit"
+          v-tableLoadingMore="tableLoadingMore"
+          :data="tableData"
+          height="500"
+          :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+          :row-class-name="tableRowClassName"
+          @select="selectList"
+          @select-all="selectAll"
+          @row-click="doSelect"
+          @selection-change="selectChange"
+          ref="moviesTable"
+          style="width: 99%;margin: 0 auto">
           <el-table-column
             type="selection"
             width="30">
@@ -1095,6 +1099,7 @@
   import footerNav from '../../common/footer'
   import Loading from '../../common/loading'
   import Modal from '../../common/modal'
+  import { disableHistory } from '../../assets/js/api'
 
   export default {
     name: 'ProductionExecution',
@@ -1195,8 +1200,9 @@
         n:0,
 
 
-
-
+        arrAll: [],
+        num: 1,
+        znSearch:true
 
 
       }
@@ -1220,7 +1226,7 @@
 
     },
     computed: {
-      //模糊检索
+     /* //模糊检索
       tables: function () {
         var search = this.searchWord;
         if (search) {
@@ -1231,7 +1237,7 @@
           })
         }
         return this.tableData
-      }
+      }*/
     },
     created() {
       //检索用户状态
@@ -1246,6 +1252,8 @@
 
     },
     methods: {
+
+
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
         const userInfo = sessionStorage.getItem("userInfo");
@@ -1314,13 +1322,12 @@
       //切断工位每隔5分钟刷新一下数据
       qdWorkStationGetDataList(workStation){
         if(workStation===1){
-          this.showTableData('zxqieduan', this.dqgw)
+          this.showTableData(this.stationId, this.dqgw,1,1)
         }
       },
 
       //公共方法显示根据不同工位显示不同的表头和表数据
       showTableData(id,name,wz,type){
-
         let that = this;
         axios.all([
           axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":id,"weizhiid":wz,"type":type}),
@@ -1328,13 +1335,16 @@
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data.data;
-            that.tableData = table.data;
+            that.arrAll = table.data;
+            let arr = [];
+            for (let i = 0; i < that.arrAll.length; i++) {
+              if (i < 9) {
+                arr.push(that.arrAll[i])
+              }
+            }
+            that.tableData = arr;
           }));
       },
-
-
-
-
 
 
       //列表单独选择
@@ -1820,7 +1830,56 @@
       },
 
 
+      //失去焦点后进行智能检索
+      searchData(search) {
+        if (search) {
+          this.znSearch = false;
+          this.arrAll.filter(function (dataNews) {
+            return Object.keys(dataNews).some(function (key) {
+              return String(dataNews[key]).indexOf(search) > -1
+            })
+          })
+          if(this.arrAll.length>1){
+            this.tableData =  this.arrAll.filter(function (dataNews) {
+              return Object.keys(dataNews).some(function (key) {
+                return String(dataNews[key]).indexOf(search) > -1
+              })
+            })
+          }
+        }
+        else {
+          this.znSearch = true
+        }
+        console.log(this.tableData);
+      },
 
+      //输入框为空值时需要执行的数据
+      searchEmptyData(search){
+        if(!search){
+          this.znSearch = true
+        }
+      },
+
+      //每次往表格数据里添加数据
+      addData(index) {
+        let arr = [];
+        for (let i = 0; i < this.arrAll.length; i++) {
+          if (i < index) {
+            arr.push(this.arrAll[i])
+          }
+        }
+        this.tableData = arr;
+      },
+
+      //每次到底部给计算出需要下次添加的数据
+      tableLoadingMore() {
+        if(this.znSearch===true &&this.tableData.length< this.arrAll.length){
+          this.num++;
+          let index = 8* this.num;
+          this.addData(index)
+        }
+
+      },
 
       //移动显示搜索框
       showSearch() {

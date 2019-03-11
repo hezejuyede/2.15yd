@@ -7,7 +7,9 @@
     </div>
   </footer>
 </template>
-<script type="text/ecmascript-6">export default {
+<script type="text/ecmascript-6">
+  import { disableHistory } from '../assets/js/api'
+  export default {
   name: 'ga-footer',
   data() {
     return {
@@ -27,14 +29,20 @@
     this._getIndexUrl()
   },
   created() {
-
+//禁用浏览器后退事件
+    this.beforeCreate ();
   },
   methods: {
+    beforeCreate () {
+      disableHistory(document.URL)
+    },
+
     _getIndexUrl() {
       let Url = localStorage.getItem("IndexUrl");
       if (Url === null) {
         this.num = 0;
-      } else {
+      }
+      else {
         this.num = parseInt(Url);
       }
 

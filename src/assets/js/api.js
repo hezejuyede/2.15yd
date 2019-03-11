@@ -12,3 +12,11 @@ export function addRowId(val,list) {
   }
 
 }
+
+export function disableHistory (url) {
+  //防止页面后退
+  history.pushState(null, null, url);
+  window.addEventListener('popstate', function () {
+    history.pushState(null, null, url);
+  })
+}

@@ -161,6 +161,9 @@
 
     <!--查看图纸 -->
     <el-dialog title="一品图查看" :visible.sync="drawingVisible" :fullscreen="true" :center="true">
+      <div class="closeBtn">
+        <el-button type="danger" @click="drawingVisible = false" >关闭窗口</el-button>
+      </div>
       <div class="container">
         <div class="drawingImg" style="width: 100%;height: 100%">
           <img :src="url" alt="" style="display:block;width: 100%;height: 100%">
