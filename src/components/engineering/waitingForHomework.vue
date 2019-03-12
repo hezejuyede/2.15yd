@@ -169,7 +169,86 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xiaozuli'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList">小组里表
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </template>
+            </el-table>
+          </div>
+          <div class="account" v-if="right === true">
+            <el-table
+              :key="1"
+              class="tb-edit"
+              :data="tableData"
+              height="500"
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              :row-class-name="tableRowClassName"
+              @select="selectList"
+              @select-all="selectAll"
+              @row-click="doSelect"
+              @selection-change="selectChange"
+              ref="moviesTable"
+              style="width: 99%;margin: 0 auto">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='pianfubiao' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -221,85 +300,6 @@
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
                       @click="seeCutList">片付表
-                    </el-button>
-                  </template>
-                </el-table-column>
-              </template>
-            </el-table>
-          </div>
-          <div class="account" v-if="right === true">
-            <el-table
-              :key="1"
-              class="tb-edit"
-              :data="tableData"
-              height="500"
-              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-              :row-class-name="tableRowClassName"
-              @select="selectList"
-              @select-all="selectAll"
-              @row-click="doSelect"
-              @selection-change="selectChange"
-              ref="moviesTable"
-              style="width: 99%;margin: 0 auto">
-              <el-table-column
-                type="selection"
-                width="30">
-              </el-table-column>
-              <template v-for="(col ,index) in cols">
-                <el-table-column
-                  align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop==='yiguanno'"
-                  :prop="col.prop" :label="col.label">
-                  <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.yiguanno }}
-                    </el-button>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop==='codeno'"
-                  :prop="col.prop" :label="col.label">
-                  <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.codeno }}
-                    </el-button>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop==='yipintu'"
-                  :prop="col.prop" :label="col.label">
-                  <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
-                      一品图
-                    </el-button>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop==='xiaozuli'"
-                  :prop="col.prop" :label="col.label">
-                  <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">小组里表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -1481,11 +1481,7 @@
             this.gwListType = "1";
             let that = this;
             axios.all([
-              axios.post(" " + url + "/sys/showTableTitleById", {
-                "stationid": this.stationId,
-                "weizhiid": 1,
-                "type": 1
-              }),
+              axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 1}),
               axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立", "type": "1"})
             ])
               .then(axios.spread(function (title, table) {
