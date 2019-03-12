@@ -169,13 +169,13 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='qieduanbiao'"
+                  v-if="col.prop==='xiaozuli'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">切断表</el-button>
+                      @click="seeCutList">小组立表</el-button>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -195,89 +195,61 @@
             </el-table>
           </div>
           <div class="account" v-if="right === true">
-            <el-table
-              :data="tables"
-              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-              border
-              :row-class-name="tableRowClassName"
-              style="width: 99%;margin: 0 auto">
-              <el-table-column
-                type="selection"
-                width="30">
-              </el-table-column>
-              <el-table-column
-                prop="chuanhao"
-                label="船番"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="jiagongxilie"
-                label="加工系列"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="yiguanhao"
-                label="一贯号"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="xuhao2"
-                label="序号"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="jinwuzhu"
-                label="注番"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="jinwu"
-                label="金物"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="juaodu"
-                label="角度"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="beizhu"
-                label="备注"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="levelStr"
-                label="优先级"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="jiagongxian"
-                label="加工线"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-
-              <el-table-column
-                prop="jiagongxilie"
-                label="加工系列"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="statusStr"
-                label="当前状态"
-                align="center"
-                min-width="20%">
-              </el-table-column>
+            <el-table class="tb-edit"
+                      :data="tables"
+                      height="500"
+                      :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+                      :row-class-name="tableRowClassName"
+                      ref="moviesTable"
+                      style="width: 99%;margin: 0 auto">
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    {{ scope.row.yiguanno }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    {{ scope.row.codeno }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xiaozuli'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList">小组立表</el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </template>
             </el-table>
           </div>
         </div>
@@ -1119,7 +1091,7 @@
         tableData: [],
         cols: [],
 
-
+        gwType:1,
         left: true,
         zgCenter: false,
         right: false,
@@ -1251,11 +1223,11 @@
             this.listType = "2";
             let that = this;
             axios.all([
-              axios.post(" " + url + "/sys/showTableTitle", {"name": "zxqdall"}),
+              axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":this.stationId,"weizhiid":2,"type":1}),
               axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": this.gongwei, "yichang": 1})
             ])
               .then(axios.spread(function (title, table) {
-                that.cols = title.data;
+                that.cols = title.data.data;
                 that.tableData = table.data;
               }));
           }
@@ -1339,9 +1311,8 @@
           else {
             const info = JSON.parse(userInfo);
             if (info.GW === "小组立") {
-              this.listType = "2";
               setTimeout(() => {
-                axios.post(" " + url + "/importother/showXiaozuliExcel", {"gongxu": info.GW, "pici": this.batch})
+                axios.post(" " + url + "/importother/showXiaozuliExcel", {"gongxu": info.GW, "pici": this.batch,"type":this.gwType})
                   .then((res) => {
                     this.tableData = res.data;
                   })
@@ -1483,6 +1454,7 @@
         if(this.ycSearchBtn === 1){
           axios.post(" " + url + "/shengchan/shengchanList.html",
             {
+              "type":this.gwType,
               "gongxu": this.dqgw,
               "jiagongxian": this.scx,
               "pici": this.batch,
@@ -1738,26 +1710,37 @@
       showLeft() {
         this.left = true;
         this.right = false;
-        axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "1"})
-          .then((res) => {
-            this.tableData = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        this.gwType=1;
+        setTimeout(()=> {
+          let that = this;
+          axios.all([
+            axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":this.stationId,"weizhiid":2,"type":1}),
+            axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "1"})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.tableData = table.data;
+            }));
+        },500)
       },
 
       //小组立显示右边
       showRight() {
         this.left = false;
         this.right = true;
-        axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "2"})
-          .then((res) => {
-            this.tableData = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        this.gwType=2;
+        setTimeout(()=> {
+          let that = this;
+          axios.all([
+            axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":this.stationId,"weizhiid":2,"type":2}),
+            axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "2"})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.tableData = table.data;
+            }));
+        },500)
+
       },
 
 
@@ -1802,6 +1785,10 @@
             console.log(err)
           })
       },
+
+
+
+
 
 
       //移动显示搜索框

@@ -16,10 +16,10 @@
             <el-button type="success" @click="showScreening">条件筛选</el-button>
             <el-button type="warning" @click="zgMaterialStatistics">直管物料统计</el-button>
             <el-button type="primary" @click="goGeneralListOfProcessing">总清单</el-button>
-            <el-button  type="danger" @click="workEnd">报完工</el-button>
+            <el-button type="danger" @click="workEnd">报完工</el-button>
           </div>
         </div>
-        <div class="listSearch" v-if="this.listType ==6">
+        <div class="listSearch" v-if="this.listType ==6 ">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
                       placeholder="检索管子或扫码或手工输入"
@@ -29,10 +29,10 @@
             <el-button type="success" @click="showScreening">条件筛选</el-button>
             <el-button type="warning" @click="zgMaterialStatistics">短管物料统计</el-button>
             <el-button type="primary" @click="goGeneralListOfProcessing">总清单</el-button>
-            <el-button  type="danger" @click="workEnd">报完工</el-button>
+            <el-button type="danger" @click="workEnd">报完工</el-button>
           </div>
         </div>
-        <div class="listSearch" v-if="this.listType ==2">
+        <div class="listSearch" v-if="this.listType ==2 || this.listType ==9">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
                       placeholder="检索管子或扫码或手工输入"
@@ -42,10 +42,22 @@
             <el-button type="success" @click="showScreening">条件筛选</el-button>
             <el-button type="warning" @click="zgMaterialStatistics">物料统计</el-button>
             <el-button type="primary" @click="goGeneralListOfProcessing">总清单</el-button>
-            <el-button  type="danger" @click="workEnd">报完工</el-button>
+            <el-button type="danger" @click="workEnd">报完工</el-button>
           </div>
         </div>
-
+        <div class="listSearch" v-if="this.listType ==7 || this.listType ==8">
+          <div class="listSearchInput">
+            <el-input v-model="searchWord"
+                      placeholder="检索管子或扫码或手工输入"
+                      @keyup.enter.native="goToPipePage(searchWord)"></el-input>
+          </div>
+          <div class="listSearchBtn">
+            <el-button type="success" @click="showScreening">条件筛选</el-button>
+            <el-button type="warning" @click="zgMaterialStatistics">一品图预览</el-button>
+            <el-button type="primary" @click="goGeneralListOfProcessing">总清单</el-button>
+            <el-button type="danger" @click="workEnd">报完工</el-button>
+          </div>
+        </div>
       </div>
 
       <!--切断，直管焊，大阻焊-->
@@ -137,7 +149,7 @@
         <div class="xzl-list">
           <div class="saoMa" v-if="left === true">
             <el-table class="tb-edit"
-                      :data="tables"
+                      :data="tableData"
                       height="500"
                       :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
                       :row-class-name="tableRowClassName"
@@ -199,85 +211,92 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='qieduanbiao'"
+                  v-if="col.prop==='pianfubiao'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">切断表</el-button>
+                      @click="seeCutList">片付表</el-button>
                   </template>
                 </el-table-column>
               </template>
             </el-table>
           </div>
           <div class="account" v-if="right === true">
-            <el-table
-              :data="tables"
-              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-              border
-              @select="selectList"
-              @select-all="selectAll"
-              :row-class-name="tableRowClassName"
-              style="width: 99%;margin: 0 auto">
+            <el-table class="tb-edit"
+                      :data="tableData"
+                      height="500"
+                      :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+                      :row-class-name="tableRowClassName"
+                      @select="selectList"
+                      @select-all="selectAll"
+                      @row-click="doSelect"
+                      @selection-change="selectChange"
+                      ref="moviesTable"
+                      style="width: 99%;margin: 0 auto">
               <el-table-column
                 type="selection"
                 width="30">
               </el-table-column>
-              <el-table-column
-                prop="chuanhao"
-                label="船番"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="jiagongxilie"
-                label="加工系列"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="yiguanhao"
-                label="一贯号"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="xuhao2"
-                label="序号"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="juaodu"
-                label="角度"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="beizhu"
-                label="备注"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="levelStr"
-                label="优先级"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="jinwuzhu"
-                label="注番"
-                align="center"
-                min-width="20%">
-              </el-table-column>
-              <el-table-column
-                prop="jinwu"
-                label="金物"
-                align="center"
-                min-width="20%">
-              </el-table-column>
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xiaozuli'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList">小组里表</el-button>
+                  </template>
+                </el-table-column>
+              </template>
             </el-table>
           </div>
         </div>
@@ -877,16 +896,100 @@
       </div>
 
 
+      <!--43/48装配、45/46装配和大组焊-->
+      <div class="publicPage" v-if="this.listType ==7 || this.listType ==8 || this.listType ==9">
+        <el-table
+          class="tb-edit"
+          v-tableLoadingMore="tableLoadingMore"
+          :data="ycb"
+          height="500"
+          :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+          :row-class-name="tableRowClassName"
+          @select="selectList"
+          @select-all="selectAll"
+          @row-click="doSelect"
+          @selection-change="selectChange"
+          ref="moviesTable"
+          style="width: 99%;margin: 0 auto">
+          <el-table-column
+            type="selection"
+            width="30">
+          </el-table-column>
+          <el-table-column type="expand">
+            <template slot-scope="scope">
+              <el-table class="tb-edit"
+                        :data="scope.row.list"
+                        :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'20px'}"
+                        border
+                        highlight-current-row
+                        style="width: 98%;margin: auto">
+                <template v-for="(col ,index) in scope.row.title">
+                  <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
+                </template>
+              </el-table>
+            </template>
+          </el-table-column>
+          <template v-for="(col ,index) in yct">
+            <el-table-column
+              align="center"
+              v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+              :prop="col.prop"
+              :label="col.label">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yiguanno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="goToCurrentTask(scope.row.id)">
+                  {{ scope.row.yiguanno }}
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='codeno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="goToCurrentTask(scope.row.id)">
+                  {{ scope.row.codeno }}
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yipintu'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                  一品图
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='qieduanbiao'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="seeCutList">切断表</el-button>
+              </template>
+            </el-table-column>
+          </template>
 
-
-
-
-
-
-
-
-
-
+        </el-table>
+      </div>
     </div>
 
     <!--筛选条件 -->
@@ -1129,6 +1232,8 @@
         searchWord: '',//智能检索的value
         is_search: false,
 
+        gwType:1,//一种工位有几种类型，
+
         screenVisible:false,
         drawingVisible:false,
         endVisible:false,
@@ -1202,8 +1307,107 @@
 
         arrAll: [],
         num: 1,
-        znSearch:true
+        znSearch:true,
 
+        yct: [
+          {"prop": "type", "label": "类型"},
+          {"prop": "context", "label": "描述"},
+          {"prop": "succount", "label": "成功数"},
+          {"prop": "failcount", "label": "失败数"},
+          {"prop": "allcount", "label": "总数"},
+          {"prop": "pici", "label": "批次"},
+          {"prop": "createtimeStr", "label": "操作时间"}
+        ],
+        ycb: [
+          {
+            "createtime": 1551009488120,
+            "createtimeStr": "2019-02-24 19:58:08",
+            "failcount": 0,
+            "context": "切断表同步到数据库",
+            "succount": 0,
+            "id": 149,
+            "allcount": 0,
+            "pici": "20190222",
+            "type": "1",
+            "title": [
+              {"prop": "type", "label": "类型"},
+              {"prop": "context", "label": "描述"},
+              {"prop": "succount", "label": "成功数"},
+              {"prop": "failcount", "label": "失败数"},
+              {"prop": "allcount", "label": "总数"},
+              {"prop": "pici", "label": "批次"},
+              {"prop": "createtimeStr", "label": "操作时间"}
+            ],
+            "list": [
+              {
+                "createtime": 1551009488120,
+                "createtimeStr": "2019-02-24 19:58:08",
+                "failcount": 0,
+                "context": "切断表同步到数据库",
+                "succount": 0,
+                "id": 149,
+                "allcount": 0,
+                "pici": "20190222",
+                "type": "1",
+              },
+              {
+                "createtime": 1551009488120,
+                "createtimeStr": "2019-02-24 19:58:08",
+                "failcount": 0,
+                "context": "切断表同步到数据库",
+                "succount": 0,
+                "id": 149,
+                "allcount": 0,
+                "pici": "20190222",
+                "type": "1",
+              }
+            ],
+          },
+          {
+            "createtime": 1551009488120,
+            "createtimeStr": "2019-02-24 19:58:08",
+            "failcount": 0,
+            "context": "切断表同步到数据库",
+            "succount": 0,
+            "id": 149,
+            "allcount": 0,
+            "pici": "20190222",
+            "type": "1",
+            "title": [
+              {"prop": "type", "label": "类型"},
+              {"prop": "context", "label": "描述"},
+              {"prop": "succount", "label": "成功数"},
+              {"prop": "failcount", "label": "失败数"},
+              {"prop": "allcount", "label": "总数"},
+              {"prop": "pici", "label": "批次"},
+              {"prop": "createtimeStr", "label": "操作时间"}
+            ],
+            "list": [
+              {
+                "createtime": 1551009488120,
+                "createtimeStr": "2019-02-24 19:58:08",
+                "failcount": 0,
+                "context": "切断表同步到数据库",
+                "succount": 0,
+                "id": 149,
+                "allcount": 0,
+                "pici": "20190222",
+                "type": "1",
+              },
+              {
+                "createtime": 1551009488120,
+                "createtimeStr": "2019-02-24 19:58:08",
+                "failcount": 0,
+                "context": "切断表同步到数据库",
+                "succount": 0,
+                "id": 149,
+                "allcount": 0,
+                "pici": "20190222",
+                "type": "1",
+              }
+            ],
+          }
+        ]
 
       }
 
@@ -1226,7 +1430,7 @@
 
     },
     computed: {
-     /* //模糊检索
+      //模糊检索
       tables: function () {
         var search = this.searchWord;
         if (search) {
@@ -1237,7 +1441,7 @@
           })
         }
         return this.tableData
-      }*/
+      }
     },
     created() {
       //检索用户状态
@@ -1247,7 +1451,7 @@
       setTimeout(() => {
         this.getLoading();
       }, 100);
-      
+
     },
     methods: {
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
@@ -1303,6 +1507,19 @@
                 })
             }, 1000);
           }
+
+          else if (info.GW === "43/48装配") {
+            this.listType = "7";
+            this.showTableData(this.stationId, this.dqgw,1,1)
+          }
+          else if (info.GW === "45/46装配") {
+            this.listType = "8";
+            this.showTableData(this.stationId, this.dqgw,1,1)
+          }
+          else if (info.GW === "大组焊") {
+            this.listType = "9";
+          /*  this.showTableData(this.stationId, this.dqgw,1,1)*/
+          }
           else {
 
           }
@@ -1341,6 +1558,76 @@
             that.tableData = arr;
           }));
       },
+
+
+      //失去焦点后进行智能检索
+      searchData(search) {
+        if (search) {
+          this.znSearch = false;
+          this.arrAll.filter(function (dataNews) {
+            return Object.keys(dataNews).some(function (key) {
+              return String(dataNews[key]).indexOf(search) > -1
+            })
+          });
+          if(this.arrAll.length>1){
+            this.tableData =  this.arrAll.filter(function (dataNews) {
+              return Object.keys(dataNews).some(function (key) {
+                return String(dataNews[key]).indexOf(search) > -1
+              })
+            })
+          }
+        }
+        else {
+          this.znSearch = true
+        }
+        console.log(this.tableData);
+      },
+
+      //输入框为空值时需要执行的数据
+      searchEmptyData(search){
+        if(!search){
+          this.znSearch = true
+        }
+      },
+
+      //每次往表格数据里添加数据
+      addData(index) {
+        let arr = [];
+        for (let i = 0; i < this.arrAll.length; i++) {
+          if (i < index) {
+            arr.push(this.arrAll[i])
+          }
+        }
+        this.tableData = arr;
+      },
+
+      //每次到底部给计算出需要下次添加的数据
+      tableLoadingMore() {
+        if(this.znSearch===true &&this.tableData.length< this.arrAll.length){
+          this.num++;
+          let index = 8* this.num;
+          this.addData(index)
+        }
+
+      },
+
+      //移动显示搜索框
+      showSearch() {
+        let search = this.$refs.contentTop;
+        let searchHight = this.$refs.contentTop.offsetHeight;
+        window.addEventListener('scroll', () => {
+          let top = window.scrollY;
+          if (top > searchHight) {
+            search.style.width = "100%";
+            search.style.position = "fixed";
+            search.style.top = 0;
+            search.style.zIndex = 999;
+          } else if (top <= searchHight) {
+            search.style.position = "";
+          }
+        })
+      },
+
 
 
       //列表单独选择
@@ -1686,6 +1973,7 @@
       validationScreening() {
         axios.post(" " + url + "/shengchan/shengchanList.html",
           {
+            "type":this.gwType,
             "gongxu": this.dqgw,
             "jiagongxian": this.scx,
             "pici": this.batch,
@@ -1752,32 +2040,37 @@
 
       //小组立显示左边
       showLeft() {
+        let that = this;
+        axios.all([
+          axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":this.stationId,"weizhiid":1,"type":1}),
+          axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立","type":"1"})
+        ])
+          .then(axios.spread(function (title, table) {
+            that.cols = title.data.data;
+            that.tableData = table.data;
+          }));
         this.left = true;
         this.right = false;
-        axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立","type":"1"})
-          .then((res) => {
-            this.tableData = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        this.gwType =1;
       },
 
       //小组立显示右边
       showRight() {
-        this.gwListType = "2";
-        axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立", "type": "2"})
-          .then((res) => {
-            this.tableData = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          });
+        let that = this;
+        axios.all([
+          axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":this.stationId,"weizhiid":1,"type":2}),
+          axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立","type":"2"})
+        ])
+          .then(axios.spread(function (title, table) {
+            that.cols = title.data.data;
+            that.tableData = table.data;
+          }));
         this.left = false;
-        setTimeout(() => {
+        this.gwType =2;
+        this.gwListType = "2";
+        setTimeout(()=> {
           this.right = true;
-        }, 200);
-
+        },200)
       },
 
       //支管显示中二正枝左边
@@ -1825,74 +2118,6 @@
           })
       },
 
-
-      //失去焦点后进行智能检索
-      searchData(search) {
-        if (search) {
-          this.znSearch = false;
-          this.arrAll.filter(function (dataNews) {
-            return Object.keys(dataNews).some(function (key) {
-              return String(dataNews[key]).indexOf(search) > -1
-            })
-          })
-          if(this.arrAll.length>1){
-            this.tableData =  this.arrAll.filter(function (dataNews) {
-              return Object.keys(dataNews).some(function (key) {
-                return String(dataNews[key]).indexOf(search) > -1
-              })
-            })
-          }
-        }
-        else {
-          this.znSearch = true
-        }
-        console.log(this.tableData);
-      },
-
-      //输入框为空值时需要执行的数据
-      searchEmptyData(search){
-        if(!search){
-          this.znSearch = true
-        }
-      },
-
-      //每次往表格数据里添加数据
-      addData(index) {
-        let arr = [];
-        for (let i = 0; i < this.arrAll.length; i++) {
-          if (i < index) {
-            arr.push(this.arrAll[i])
-          }
-        }
-        this.tableData = arr;
-      },
-
-      //每次到底部给计算出需要下次添加的数据
-      tableLoadingMore() {
-        if(this.znSearch===true &&this.tableData.length< this.arrAll.length){
-          this.num++;
-          let index = 8* this.num;
-          this.addData(index)
-        }
-
-      },
-
-      //移动显示搜索框
-      showSearch() {
-        let search = this.$refs.contentTop;
-        let searchHight = this.$refs.contentTop.offsetHeight;
-        window.addEventListener('scroll', () => {
-          let top = window.scrollY;
-          if (top > searchHight) {
-            search.style.width = "100%";
-            search.style.position = "fixed";
-            search.style.top = 0;
-            search.style.zIndex = 999;
-          } else if (top <= searchHight) {
-            search.style.position = "";
-          }
-        })
-      },
 
       //搜索框变色
       bianse() {

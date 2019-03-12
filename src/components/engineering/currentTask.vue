@@ -507,14 +507,14 @@
                     data.push(list);
                   }
                 }
-                that.listTableData = data
+                that.listTableData = data;
+                this.jobLogVisible=true;
               }
               else {
                 that.addJl(1);
                 setTimeout(() => {
                   that.$router.push("/")
                 }, 1000);
-
               }
             }));
         }
