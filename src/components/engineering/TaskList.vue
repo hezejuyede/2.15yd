@@ -1224,7 +1224,7 @@
             let that = this;
             axios.all([
               axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":this.stationId,"weizhiid":2,"type":1}),
-              axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": this.gongwei, "yichang": 1})
+              axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": this.gongwei, "yichang": 1,"type":1})
             ])
               .then(axios.spread(function (title, table) {
                 that.cols = title.data.data;
@@ -1275,7 +1275,12 @@
         this.ycSearchBtn = 0;
         this.dzySearchBtn = 1;
         axios.post(" " + url + "/shengchan/shengchanListAll",
-          {"gongxu": this.gongwei, "daizuoye": this.dzySearchBtn})
+          {
+            "gongxu": this.gongwei,
+            "daizuoye": this.dzySearchBtn,
+            "type":this.gwType
+          }
+          )
           .then((res) => {
             this.tableData = res.data;
           })
@@ -1289,7 +1294,12 @@
         this.ycSearchBtn = 1;
         this.dzySearchBtn = 0;
         axios.post(" " + url + "/shengchan/shengchanListAll",
-          {"gongxu": this.gongwei, "yichang": this.ycSearchBtn})
+          {
+            "gongxu": this.gongwei,
+            "yichang": this.ycSearchBtn,
+            "type":this.gwType
+          }
+            )
           .then((res) => {
             this.tableData = res.data;
           })
