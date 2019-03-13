@@ -916,7 +916,7 @@
         <el-table
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
-          :data="ycb"
+          :data="tableData"
           height="500"
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           :row-class-name="tableRowClassName"
@@ -944,7 +944,7 @@
               </el-table>
             </template>
           </el-table-column>
-          <template v-for="(col ,index) in yct">
+          <template v-for="(col ,index) in cols">
             <el-table-column
               align="center"
               v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
@@ -1316,106 +1316,6 @@
         num: 1,
         znSearch: true,
 
-        yct: [
-          {"prop": "type", "label": "类型"},
-          {"prop": "context", "label": "描述"},
-          {"prop": "succount", "label": "成功数"},
-          {"prop": "failcount", "label": "失败数"},
-          {"prop": "allcount", "label": "总数"},
-          {"prop": "pici", "label": "批次"},
-          {"prop": "createtimeStr", "label": "操作时间"}
-        ],
-        ycb: [
-          {
-            "createtime": 1551009488120,
-            "createtimeStr": "2019-02-24 19:58:08",
-            "failcount": 0,
-            "context": "切断表同步到数据库",
-            "succount": 0,
-            "id": 149,
-            "allcount": 0,
-            "pici": "20190222",
-            "type": "1",
-            "title": [
-              {"prop": "type", "label": "类型"},
-              {"prop": "context", "label": "描述"},
-              {"prop": "succount", "label": "成功数"},
-              {"prop": "failcount", "label": "失败数"},
-              {"prop": "allcount", "label": "总数"},
-              {"prop": "pici", "label": "批次"},
-              {"prop": "createtimeStr", "label": "操作时间"}
-            ],
-            "list": [
-              {
-                "createtime": 1551009488120,
-                "createtimeStr": "2019-02-24 19:58:08",
-                "failcount": 0,
-                "context": "切断表同步到数据库",
-                "succount": 0,
-                "id": 149,
-                "allcount": 0,
-                "pici": "20190222",
-                "type": "1",
-              },
-              {
-                "createtime": 1551009488120,
-                "createtimeStr": "2019-02-24 19:58:08",
-                "failcount": 0,
-                "context": "切断表同步到数据库",
-                "succount": 0,
-                "id": 149,
-                "allcount": 0,
-                "pici": "20190222",
-                "type": "1",
-              }
-            ],
-          },
-          {
-            "createtime": 1551009488120,
-            "createtimeStr": "2019-02-24 19:58:08",
-            "failcount": 0,
-            "context": "切断表同步到数据库",
-            "succount": 0,
-            "id": 149,
-            "allcount": 0,
-            "pici": "20190222",
-            "type": "1",
-            "title": [
-              {"prop": "type", "label": "类型"},
-              {"prop": "context", "label": "描述"},
-              {"prop": "succount", "label": "成功数"},
-              {"prop": "failcount", "label": "失败数"},
-              {"prop": "allcount", "label": "总数"},
-              {"prop": "pici", "label": "批次"},
-              {"prop": "createtimeStr", "label": "操作时间"}
-            ],
-            "list": [
-              {
-                "createtime": 1551009488120,
-                "createtimeStr": "2019-02-24 19:58:08",
-                "failcount": 0,
-                "context": "切断表同步到数据库",
-                "succount": 0,
-                "id": 149,
-                "allcount": 0,
-                "pici": "20190222",
-                "type": "1",
-              },
-              {
-                "createtime": 1551009488120,
-                "createtimeStr": "2019-02-24 19:58:08",
-                "failcount": 0,
-                "context": "切断表同步到数据库",
-                "succount": 0,
-                "id": 149,
-                "allcount": 0,
-                "pici": "20190222",
-                "type": "1",
-              }
-            ],
-          }
-        ]
-
       }
 
     },
@@ -1533,7 +1433,7 @@
           }
           else if (info.GW === "大组焊") {
             this.listType = "9";
-            /*  this.showTableData(this.stationId, this.dqgw,1,1)*/
+            this.showTableData(this.stationId, this.dqgw,1,1)
           }
           else {
 
