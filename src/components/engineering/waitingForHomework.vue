@@ -45,7 +45,7 @@
             <el-button type="danger" @click="workEnd">报完工</el-button>
           </div>
         </div>
-        <div class="listSearch" v-if="this.listType ==7 || this.listType ==8">
+        <div class="listSearch" v-if="this.listType ==7 || this.listType ==8 || this.listType ==10">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
                       placeholder="检索管子或扫码或手工输入"
@@ -1006,6 +1006,88 @@
 
         </el-table>
       </div>
+
+      <!--弯管-->
+      <div class="publicPage" v-if="this.listType ==10">
+        <el-table
+          class="tb-edit"
+          v-tableLoadingMore="tableLoadingMore"
+          :data="tableData"
+          height="500"
+          :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+          :row-class-name="tableRowClassName"
+          @select="selectList"
+          @select-all="selectAll"
+          @row-click="doSelect"
+          @selection-change="selectChange"
+          ref="moviesTable"
+          style="width: 99%;margin: 0 auto">
+          <el-table-column
+            type="selection"
+            width="30">
+          </el-table-column>
+          <template v-for="(col ,index) in cols">
+            <el-table-column
+              align="center"
+              v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+              :prop="col.prop"
+              :label="col.label">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yiguanno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="goToCurrentTask(scope.row.id)">
+                  {{ scope.row.yiguanno }}
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='codeno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="goToCurrentTask(scope.row.id)">
+                  {{ scope.row.codeno }}
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yipintu'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                  一品图
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='qieduanbiao'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="seeCutList">切断表
+                </el-button>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
+      </div>
+
     </div>
 
     <!--筛选条件 -->
@@ -1197,6 +1279,19 @@
             </span>
     </el-dialog>
 
+    <!-- 弯管工提醒框 -->
+    <el-dialog title="弯管信息确认" :visible.sync="wgVisible" width="80%" center>
+      <div class="container" style="height:400px;overflow:auto">
+        <div class="containerDiv">
+
+        </div>
+        <div class="containerBtn">
+          <el-button type="danger" @click="wgVisible = false">关闭窗口</el-button>
+          <el-button type="success" icon="search" @click="validationScreening">确认筛选</el-button>
+        </div>
+      </div>
+    </el-dialog>
+
 
     <div class="upTop" ref="upTop" @click="upToTop">
       <i class="iconfont icon-xiangshang1"></i>
@@ -1252,6 +1347,7 @@
         drawingVisible: false,
         endVisible: false,
         qdbVisible: false,
+        wgVisible:false,
 
 
         left: true,
@@ -1433,6 +1529,10 @@
           }
           else if (info.GW === "大组焊") {
             this.listType = "9";
+            this.showTableData(this.stationId, this.dqgw,1,1)
+          }
+          else if (info.GW === "弯管") {
+            this.listType = "10";
             this.showTableData(this.stationId, this.dqgw,1,1)
           }
           else {
@@ -1679,7 +1779,8 @@
 
       //前往总清单
       goGeneralListOfProcessing() {
-        this.$router.push("/taskList")
+        this.$router.push("/taskList");
+
       },
 
 
@@ -1937,8 +2038,15 @@
           //W3C取消冒泡事件
           event.stopPropagation();
           if (id) {
-            localStorage.setItem("pipeId", id);
-            this.$router.push("/CurrentTask");
+            if (this.dqgw === "弯管") {
+              this.wgVisible=true;
+
+            }
+            else {
+              localStorage.setItem("pipeId", id);
+              this.$router.push("/CurrentTask");
+            }
+
           }
         }
         else {
