@@ -132,14 +132,22 @@
       <!--小组立-->
       <div class="xzlDiv" v-if="this.listType ==2">
         <div class="xzl-change">
-          <div class="change-left" @click="showLeft" :style="{'color':this.left ? 'red':''}">中二小组立表</div>
-          <div class="change-right" @click="showRight" :style="{'color':this.right ? 'red':''}">中二片付表</div>
+          <div class="change-left" @click="showLeft" >
+            <button  :style="{'background-color':this.left ? '#d93f30':''}">
+              中二小组立
+            </button>
+          </div>
+          <div class="change-right" @click="showRight" >
+            <button  :style="{'background-color':this.right ? '#d93f30':''}">
+              中二片付
+            </button>
+          </div>
         </div>
         <div class="xzl-list">
           <div class="saoMa" v-if="left === true">
             <el-table class="tb-edit"
                       :data="tables"
-                      height="500"
+                      height="450"
                       :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
                       :row-class-name="tableRowClassName"
                       ref="moviesTable"
@@ -197,7 +205,7 @@
           <div class="account" v-if="right === true">
             <el-table class="tb-edit"
                       :data="tables"
-                      height="500"
+                      height="450"
                       :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
                       :row-class-name="tableRowClassName"
                       ref="moviesTable"
@@ -1519,7 +1527,8 @@
         else {
           axios.post(" " + url + "/shengchan/shengchanList.html",
             {
-              "gongxu": this.dqgw,
+              "type": this.gwType,
+              "gongxu": this.gongwei,
               "jiagongxian": this.scx,
               "pici": this.batch,
               "preGongxu": this.gw,
@@ -1949,7 +1958,7 @@
     }
     .xzlDiv {
       .xzl-change {
-        height: 50px;
+        height: 60px;
         display: flex;
         .change-left {
           flex: 1;
@@ -1959,6 +1968,14 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          button{
+            width: 50%;
+            height: 50px;
+            border-radius: 10px;
+            background-color: #409EFF;
+            color: @color-white;
+            border: none;
+          }
         }
         .change-right {
           flex: 1;
@@ -1968,6 +1985,14 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          button{
+            width: 50%;
+            height: 50px;
+            border-radius: 10px;
+            background-color: #409EFF;
+            color: @color-white;
+            border: none;
+          }
         }
       }
 
