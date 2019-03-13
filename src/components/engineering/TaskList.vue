@@ -147,7 +147,7 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -205,7 +205,7 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='pianfubiao' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -227,13 +227,13 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='xiaozuli'"
+                  v-if="col.prop==='pianfubiao'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">小组立表</el-button>
+                      @click="seeCutList">片付表</el-button>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -1718,6 +1718,7 @@
 
       //小组立显示左边
       showLeft() {
+        this.cols=[];
         this.left = true;
         this.right = false;
         this.gwType=1;
@@ -1731,11 +1732,12 @@
               that.cols = title.data.data;
               that.tableData = table.data;
             }));
-        },500)
+        },200)
       },
 
       //小组立显示右边
       showRight() {
+        this.cols=[];
         this.left = false;
         this.right = true;
         this.gwType=2;
@@ -1749,7 +1751,7 @@
               that.cols = title.data.data;
               that.tableData = table.data;
             }));
-        },500)
+        },200)
 
       },
 

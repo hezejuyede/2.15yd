@@ -207,7 +207,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">小组里表
+                      @click="seeCutList">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -2046,6 +2046,7 @@
 
       //小组立显示左边
       showLeft() {
+        this.cols= [];
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 1}),
