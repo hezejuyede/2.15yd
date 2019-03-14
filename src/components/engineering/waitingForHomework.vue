@@ -4,7 +4,7 @@
     <div class="ProductionExecutionDiv">
       <!-- 公共头部-->
       <div class="contentTop" ref="contentTop">
-        <div class="listSearch" v-if="this.listType ==1 || this.listType ==5">
+        <div class="listSearch" v-if="this.listType ==1 || this.listType ==5 || this.listType ==4">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
                       placeholder="检索管子或扫码或手工输入"
@@ -375,536 +375,258 @@
       <div class="zgDiv" v-if="this.listType ==4">
 
         <div class="zg-change">
-          <div class="change-left" @click="zgShowLeft" :style="{'color':this.left ? 'red':''}">中二正枝</div>
-          <div class="change-center" @click="zgShowCenter" :style="{'color':this.zgCenter ? 'red':''}">中二斜枝</div>
-          <div class="change-right" @click="zgShowRight" :style="{'color':this.right ? 'red':''}">直枝偏心</div>
+          <div class="change-left" @click="zgShowLeft">
+            <button  :style="{'background-color':this.left ? '#d93f30':''}">
+              中二正枝
+            </button>
+          </div>
+          <div class="change-center" @click="zgShowCenter">
+            <button  :style="{'background-color':this.zgCenter ? '#d93f30':''}">
+              中二斜枝
+            </button>
+          </div>
+          <div class="change-right" @click="zgShowRight">
+            <button  :style="{'background-color':this.right ? '#d93f30':''}">
+              直枝偏心
+            </button>
+          </div>
         </div>
         <div class="zg-list">
           <div class="saoMa" v-if="left === true">
             <el-table
-              :data="tables"
+              :key="0"
+              class="tb-edit"
+              :data="tableData"
+              height="450"
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-              border
-              height="430"
               :row-class-name="tableRowClassName"
               @select="selectList"
               @select-all="selectAll"
-              style="width: 95%;margin: 0 auto;">
+              @row-click="doSelect"
+              @selection-change="selectChange"
+              ref="moviesTable"
+              style="width: 99%;margin: 0 auto">
               <el-table-column
                 type="selection"
                 width="30">
               </el-table-column>
-              <el-table-column
-                fixed
-                prop="type"
-                label="类型"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="chuanfan"
-                label="船番"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="jiagongxilie"
-                label="加工系列"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="fanhao"
-                label="一贯号"
-                align="center"
-                width="100">
-                <template slot-scope="scope">
-                  <div @click="goToCurrentTask(scope.row.id)">
-                    {{scope.row.fanhao}}
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="daihao"
-                label="代号"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pno"
-                label="pNo"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="guige"
-                label="规格"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="waijing"
-                label="外径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="bihou"
-                label="壁厚"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="neijing"
-                label="内径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="changdu"
-                label="长度"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pianxinliang"
-                label="偏心量"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="muguanwaijing"
-                label="母管外径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="quanchang"
-                label="全长"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="denglizi"
-                label="等离子"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="qieduan"
-                label="切断"
-                align="center"
-                width="400">
-              </el-table-column>
-              <el-table-column
-                prop="jiancha"
-                label="检查"
-                align="center"
-                width="150">
-              </el-table-column>
-              <el-table-column
-                prop="jinwu"
-                label="金物"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="zuox"
-                label="左X°"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="wjuhao"
-                label="ω°"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="atext"
-                label="A"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="btext"
-                label="B"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="ktext"
-                label="K"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="beizhu"
-                label="备注"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="levelStr"
-                label="优先级"
-                align="center"
-                width="100">
-              </el-table-column>
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xiaozuli'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList">小组立表
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </template>
             </el-table>
           </div>
           <div class="account" v-if="zgCenter === true">
             <el-table
-              :data="tables"
+              :key="0"
+              class="tb-edit"
+              :data="tableData"
+              height="450"
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-              border
-              height="430"
               :row-class-name="tableRowClassName"
               @select="selectList"
               @select-all="selectAll"
-              @row-click="goToCurrentTask"
-              style="width: 95%;margin: 0 auto;">
+              @row-click="doSelect"
+              @selection-change="selectChange"
+              ref="moviesTable"
+              style="width: 99%;margin: 0 auto">
               <el-table-column
                 type="selection"
                 width="30">
               </el-table-column>
-              <el-table-column
-                fixed
-                prop="type"
-                label="类型"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="chuanfan"
-                label="船番"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="jiagongxilie"
-                label="加工系列"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="fanhao"
-                label="一贯号"
-                align="center"
-                width="100">
-                <template slot-scope="scope">
-                  <div @click="goToCurrentTask(scope.row.id)">
-                    {{scope.row.fanhao}}
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="daihao"
-                label="代号"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pno"
-                label="pNo"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="guige"
-                label="规格"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="waijing"
-                label="外径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="bihou"
-                label="壁厚"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="neijing"
-                label="内径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="changdu"
-                label="长度"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pianxinliang"
-                label="偏心量"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="muguanwaijing"
-                label="母管外径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="quanchang"
-                label="全长"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="denglizi"
-                label="等离子"
-                align="center"
-                width="500">
-              </el-table-column>
-              <el-table-column
-                prop="qieduan"
-                label="切断"
-                align="center"
-                width="400">
-              </el-table-column>
-              <el-table-column
-                prop="jiancha"
-                label="检查"
-                align="center"
-                width="150">
-              </el-table-column>
-              <el-table-column
-                prop="jinwu"
-                label="金物"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="zuox"
-                label="左X°"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="wjuhao"
-                label="ω°"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="atext"
-                label="A"
-                align="center"
-                width="1500">
-              </el-table-column>
-              <el-table-column
-                prop="btext"
-                label="B"
-                align="center"
-                width="500">
-              </el-table-column>
-              <el-table-column
-                prop="ktext"
-                label="K"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="beizhu"
-                label="备注"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="levelStr"
-                label="优先级"
-                align="center"
-                width="100">
-              </el-table-column>
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xiaozuli'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList">小组立表
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </template>
             </el-table>
           </div>
           <div class="account" v-if="right === true">
             <el-table
-              :data="tables"
+              :key="0"
+              class="tb-edit"
+              :data="tableData"
+              height="450"
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-              border
-              height="430"
               :row-class-name="tableRowClassName"
               @select="selectList"
               @select-all="selectAll"
-              @row-click="goToCurrentTask"
-              style="width: 95%;margin: 0 auto;">
+              @row-click="doSelect"
+              @selection-change="selectChange"
+              ref="moviesTable"
+              style="width: 99%;margin: 0 auto">
               <el-table-column
                 type="selection"
                 width="30">
               </el-table-column>
-              <el-table-column
-                fixed
-                prop="type"
-                label="类型"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="chuanfan"
-                label="船番"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="jiagongxilie"
-                label="加工系列"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="fanhao"
-                label="一贯号"
-                align="center"
-                width="100">
-                <template slot-scope="scope">
-                  <div @click="goToCurrentTask(scope.row.id)">
-                    {{scope.row.fanhao}}
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="daihao"
-                label="代号"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pno"
-                label="pNo"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="guige"
-                label="规格"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="waijing"
-                label="外径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="bihou"
-                label="壁厚"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="neijing"
-                label="内径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="changdu"
-                label="长度"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pianxinliang"
-                label="偏心量"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="muguanwaijing"
-                label="母管外径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="quanchang"
-                label="全长"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="denglizi"
-                label="等离子"
-                align="center"
-                width="500">
-              </el-table-column>
-              <el-table-column
-                prop="qieduan"
-                label="切断"
-                align="center"
-                width="400">
-              </el-table-column>
-              <el-table-column
-                prop="jiancha"
-                label="检查"
-                align="center"
-                width="150">
-              </el-table-column>
-              <el-table-column
-                prop="jinwu"
-                label="金物"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="zuox"
-                label="左X°"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="wjuhao"
-                label="ω°"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="atext"
-                label="A"
-                align="center"
-                width="1500">
-              </el-table-column>
-              <el-table-column
-                prop="btext"
-                label="B"
-                align="center"
-                width="500">
-              </el-table-column>
-              <el-table-column
-                prop="ktext"
-                label="K"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="beizhu"
-                label="备注"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="levelStr"
-                label="优先级"
-                align="center"
-                width="100">
-              </el-table-column>
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xiaozuli'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList">小组立表
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </template>
             </el-table>
           </div>
         </div>
@@ -1508,17 +1230,16 @@
           else if (info.GW === "枝管切断") {
             this.listType = "4";
             this.gwListType = "3";
-            setTimeout(() => {
-              axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": info.GW, "type": "3"})
-                .then((res) => {
-                  this.tableData = res.data;
-                })
-                .catch((err) => {
-                  console.log(err)
-                })
-            }, 1000);
+            let that = this;
+            axios.all([
+              axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 1}),
+              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "枝管切断", "type": "1"})
+            ])
+              .then(axios.spread(function (title, table) {
+                that.cols = title.data.data;
+                that.tableData = table.data;
+              }));
           }
-
           else if (info.GW === "43/48装配") {
             this.listType = "7";
             this.showTableData(this.stationId, this.dqgw, 1, 1)
@@ -2098,47 +1819,56 @@
 
       //支管显示中二正枝左边
       zgShowLeft() {
+        this.cols= [];
         this.left = true;
         this.right = false;
         this.zgCenter = false;
-        this.gwListType = "3";
-        axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "3"})
-          .then((res) => {
-            this.tableData = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        this.gwType = "1";
+        let that = this;
+        axios.all([
+          axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": "1"}),
+          axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": this.gwType})
+        ])
+          .then(axios.spread(function (title, table) {
+            that.cols = title.data.data;
+            that.tableData = table.data;
+          }));
       },
 
       //支管显示中二斜枝中间
       zgShowCenter() {
+        this.cols= [];
         this.left = false;
         this.right = false;
         this.zgCenter = true;
-        this.gwListType = "4";
-        axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "4"})
-          .then((res) => {
-            this.tableData = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        this.gwType = "2";
+        let that = this;
+        axios.all([
+          axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 2}),
+          axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "4"})
+        ])
+          .then(axios.spread(function (title, table) {
+            that.cols = title.data.data;
+            that.tableData = table.data;
+          }));
       },
 
       //支管显示直枝偏心中间
       zgShowRight() {
+        this.cols= [];
         this.left = false;
         this.zgCenter = false;
         this.right = true;
-        this.gwListType = "5";
-        axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "5"})
-          .then((res) => {
-            this.tableData = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        this.gwType = "3";
+        let that = this;
+        axios.all([
+          axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 3}),
+          axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "5"})
+        ])
+          .then(axios.spread(function (title, table) {
+            that.cols = title.data.data;
+            that.tableData = table.data;
+          }));
       },
 
 
@@ -2284,6 +2014,14 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          button {
+            width: 95%;
+            height: 50px;
+            border-radius: 10px;
+            background-color: #409EFF;
+            color: @color-white;
+            border: none;
+          }
         }
         .change-center {
           flex: 1;
@@ -2293,6 +2031,14 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          button {
+            width: 95%;
+            height: 50px;
+            border-radius: 10px;
+            background-color: #409EFF;
+            color: @color-white;
+            border: none;
+          }
         }
         .change-right {
           flex: 1;
@@ -2302,6 +2048,14 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          button {
+            width: 95%;
+            height: 50px;
+            border-radius: 10px;
+            background-color: #409EFF;
+            color: @color-white;
+            border: none;
+          }
 
         }
       }

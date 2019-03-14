@@ -98,6 +98,13 @@
     </div>
 
 
+
+
+
+
+
+
+
     <!--上报异常按钮 -->
     <el-dialog title="上报异常按钮注" :visible.sync="abnormalBtnVisible" width="90%">
       <div class="closeBtn">
@@ -384,19 +391,26 @@
       getAdminState() {
         const userInfo = sessionStorage.getItem("userInfo");
         const info = JSON.parse(userInfo);
-
         if (info === null) {
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
           this.zuoyezhe = info.username;
           this.gongwei = info.GH;
+          const id = localStorage.getItem("pipeId");
+          if(id){
+            this.id = id;
+          }
+          else {
+
+          }
+
+
 
           if (info.GW === "弯头切断") {
             this.wt = "-1"
           }
-          const id = localStorage.getItem("pipeId");
-          this.id = id;
+
           if (id === null) {
             localStorage.setItem("IndexUrl", 0);
             this.$router.push("/")
