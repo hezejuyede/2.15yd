@@ -5,7 +5,7 @@
       <!-- 公共头部-->
       <div class="contentTop" ref="contentTop">
         <!--切断，直管焊，短管焊-->
-        <div class="listSearch" v-if="this.listType ==1">
+        <div class="listSearch" v-if="this.listType ==1 || this.listType ==4">
           <div class="dzySearch">
             <el-button type="success" @click="dzySearch">全部待转入</el-button>
           </div>
@@ -317,549 +317,258 @@
       <!-- 枝管切断-->
       <div class="zgDiv" v-if="this.listType ==4">
         <div class="zg-change">
-          <div class="change-left" @click="zgShowLeft" :style="{'color':this.left ? 'red':''}">中二正枝</div>
-          <div class="change-center" @click="zgShowCenter" :style="{'color':this.zgCenter ? 'red':''}">中二斜枝</div>
-          <div class="change-right" @click="zgShowRight" :style="{'color':this.right ? 'red':''}">直枝偏心</div>
+          <div class="change-left" @click="zgShowLeft">
+            <button  :style="{'background-color':this.left ? '#d93f30':''}">
+              中二正枝
+            </button>
+          </div>
+          <div class="change-center" @click="zgShowCenter">
+            <button  :style="{'background-color':this.zgCenter ? '#d93f30':''}">
+              中二斜枝
+            </button>
+          </div>
+          <div class="change-right" @click="zgShowRight">
+            <button  :style="{'background-color':this.right ? '#d93f30':''}">
+              直枝偏心
+            </button>
+          </div>
         </div>
         <div class="zg-list">
           <div class="saoMa" v-if="left === true">
             <el-table
-              :data="tables"
+              :key="0"
+              class="tb-edit"
+              :data="tableData"
+              height="450"
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-              border
-              height="430"
               :row-class-name="tableRowClassName"
-              style="width: 95%;margin: 0 auto;">
+              @select="selectList"
+              @select-all="selectAll"
+              @row-click="doSelect"
+              @selection-change="selectChange"
+              ref="moviesTable"
+              style="width: 99%;margin: 0 auto">
               <el-table-column
                 type="selection"
                 width="30">
               </el-table-column>
-              <el-table-column
-                fixed
-                prop="type"
-                label="类型"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="chuanfan"
-                label="船番"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="jiagongxilie"
-                label="加工系列"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="fanhao"
-                label="一贯号"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="daihao"
-                label="代号"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pno"
-                label="pNo"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="guige"
-                label="规格"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="waijing"
-                label="外径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="bihou"
-                label="壁厚"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="neijing"
-                label="内径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="changdu"
-                label="长度"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pianxinliang"
-                label="偏心量"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="muguanwaijing"
-                label="母管外径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="quanchang"
-                label="全长"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="denglizi"
-                label="等离子"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="qieduan"
-                label="切断"
-                align="center"
-                width="400">
-              </el-table-column>
-              <el-table-column
-                prop="jiancha"
-                label="检查"
-                align="center"
-                width="150">
-              </el-table-column>
-              <el-table-column
-                prop="jinwu"
-                label="金物"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="zuox"
-                label="左X°"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="wjuhao"
-                label="ω°"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="atext"
-                label="A"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="btext"
-                label="B"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="ktext"
-                label="K"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="beizhu"
-                label="备注"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="levelStr"
-                label="优先级"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pici"
-                label="批次"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="statusStr"
-                label="当前状态"
-                align="center"
-                width="100">
-              </el-table-column>
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xiaozuli'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList">小组立表
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </template>
             </el-table>
           </div>
           <div class="account" v-if="zgCenter === true">
             <el-table
-              :data="tables"
+              :key="0"
+              class="tb-edit"
+              :data="tableData"
+              height="450"
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-              border
-              height="430"
               :row-class-name="tableRowClassName"
-              style="width: 95%;margin: 0 auto;">
+              @select="selectList"
+              @select-all="selectAll"
+              @row-click="doSelect"
+              @selection-change="selectChange"
+              ref="moviesTable"
+              style="width: 99%;margin: 0 auto">
               <el-table-column
                 type="selection"
                 width="30">
               </el-table-column>
-              <el-table-column
-                fixed
-                prop="type"
-                label="类型"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="chuanfan"
-                label="船番"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="jiagongxilie"
-                label="加工系列"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="fanhao"
-                label="一贯号"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="daihao"
-                label="代号"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pno"
-                label="pNo"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="guige"
-                label="规格"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="waijing"
-                label="外径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="bihou"
-                label="壁厚"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="neijing"
-                label="内径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="changdu"
-                label="长度"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pianxinliang"
-                label="偏心量"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="muguanwaijing"
-                label="母管外径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="quanchang"
-                label="全长"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="denglizi"
-                label="等离子"
-                align="center"
-                width="500">
-              </el-table-column>
-              <el-table-column
-                prop="qieduan"
-                label="切断"
-                align="center"
-                width="400">
-              </el-table-column>
-              <el-table-column
-                prop="jiancha"
-                label="检查"
-                align="center"
-                width="150">
-              </el-table-column>
-              <el-table-column
-                prop="jinwu"
-                label="金物"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="zuox"
-                label="左X°"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="wjuhao"
-                label="ω°"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="atext"
-                label="A"
-                align="center"
-                width="1500">
-              </el-table-column>
-              <el-table-column
-                prop="btext"
-                label="B"
-                align="center"
-                width="300">
-              </el-table-column>
-              <el-table-column
-                prop="ktext"
-                label="K"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="beizhu"
-                label="备注"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="levelStr"
-                label="优先级"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pici"
-                label="批次"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="statusStr"
-                label="当前状态"
-                align="center"
-                width="100">
-              </el-table-column>
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xiaozuli'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList">小组立表
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </template>
             </el-table>
           </div>
           <div class="account" v-if="right === true">
             <el-table
-              :data="tables"
+              :key="0"
+              class="tb-edit"
+              :data="tableData"
+              height="450"
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-              border
-              height="430"
               :row-class-name="tableRowClassName"
-              style="width: 95%;margin: 0 auto;">
+              @select="selectList"
+              @select-all="selectAll"
+              @row-click="doSelect"
+              @selection-change="selectChange"
+              ref="moviesTable"
+              style="width: 99%;margin: 0 auto">
               <el-table-column
                 type="selection"
                 width="30">
               </el-table-column>
-              <el-table-column
-                fixed
-                prop="type"
-                label="类型"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="chuanfan"
-                label="船番"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="jiagongxilie"
-                label="加工系列"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                fixed
-                prop="fanhao"
-                label="一贯号"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="daihao"
-                label="代号"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pno"
-                label="pNo"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="guige"
-                label="规格"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="waijing"
-                label="外径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="bihou"
-                label="壁厚"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="neijing"
-                label="内径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="changdu"
-                label="长度"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pianxinliang"
-                label="偏心量"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="muguanwaijing"
-                label="母管外径"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="quanchang"
-                label="全长"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="denglizi"
-                label="等离子"
-                align="center"
-                width="500">
-              </el-table-column>
-              <el-table-column
-                prop="qieduan"
-                label="切断"
-                align="center"
-                width="400">
-              </el-table-column>
-              <el-table-column
-                prop="jiancha"
-                label="检查"
-                align="center"
-                width="150">
-              </el-table-column>
-              <el-table-column
-                prop="jinwu"
-                label="金物"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="zuox"
-                label="左X°"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="wjuhao"
-                label="ω°"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="atext"
-                label="A"
-                align="center"
-                width="1500">
-              </el-table-column>
-              <el-table-column
-                prop="btext"
-                label="B"
-                align="center"
-                width="500">
-              </el-table-column>
-              <el-table-column
-                prop="ktext"
-                label="K"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="beizhu"
-                label="备注"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="levelStr"
-                label="优先级"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="pici"
-                label="批次"
-                align="center"
-                width="100">
-              </el-table-column>
-              <el-table-column
-                prop="statusStr"
-                label="当前状态"
-                align="center"
-                width="100">
-              </el-table-column>
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xiaozuli'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList">小组立表
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </template>
             </el-table>
           </div>
         </div>
@@ -1196,11 +905,11 @@
 
 
       //公共方法显示根据不同工位显示不同的表头和表数据
-      showTableData(id, name,wz,type) {
+      showTableData(id, name, wz, type) {
 
         let that = this;
         axios.all([
-          axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":id,"weizhiid":wz,"type":type}),
+          axios.post(" " + url + "/sys/showTableTitleById", {"stationid": id, "weizhiid": wz, "type": type}),
           axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": name})
         ])
           .then(axios.spread(function (title, table) {
@@ -1217,8 +926,8 @@
         }
         else {
           const infoS = JSON.parse(userInfo);
-          this.stationId=infoS.GH;
-          this.gongwei= infoS.GW;
+          this.stationId = infoS.GH;
+          this.gongwei = infoS.GW;
           axios.post(" " + url + "/sys/getPiciList")
             .then((res) => {
               this.batchOptions = res.data;
@@ -1231,8 +940,12 @@
             this.listType = "2";
             let that = this;
             axios.all([
-              axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":this.stationId,"weizhiid":2,"type":1}),
-              axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": this.gongwei, "yichang": 1,"type":1})
+              axios.post(" " + url + "/sys/showTableTitleById", {
+                "stationid": this.stationId,
+                "weizhiid": 2,
+                "type": 1
+              }),
+              axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": this.gongwei, "yichang": 1, "type": 1})
             ])
               .then(axios.spread(function (title, table) {
                 that.cols = title.data.data;
@@ -1253,21 +966,29 @@
           }
           else if (info.GW === "枝管切断") {
             this.listType = "4";
-            setTimeout(() => {
-              axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": info.GW, "type": "3"})
-                .then((res) => {
-                  this.tableData = res.data;
-                })
-                .catch((err) => {
-                  console.log(err)
-                })
-            }, 1000);
+            let that = this;
+            axios.all([
+              axios.post(" " + url + "/sys/showTableTitleById", {
+                "stationid": this.stationId,
+                "weizhiid": 2,
+                "type": 1
+              }),
+              axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": this.gongwei, "yichang": 1})
+            ])
+              .then(axios.spread(function (title, table) {
+                that.cols = title.data.data;
+                that.tableData = table.data;
+              }));
           }
           else {
             this.listType = "1";
             let that = this;
             axios.all([
-              axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":this.stationId,"weizhiid":2,"type":1}),
+              axios.post(" " + url + "/sys/showTableTitleById", {
+                "stationid": this.stationId,
+                "weizhiid": 2,
+                "type": 1
+              }),
               axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": this.gongwei, "yichang": 1})
             ])
               .then(axios.spread(function (title, table) {
@@ -1286,9 +1007,9 @@
           {
             "gongxu": this.gongwei,
             "daizuoye": this.dzySearchBtn,
-            "type":this.gwType
+            "type": this.gwType
           }
-          )
+        )
           .then((res) => {
             this.tableData = res.data;
           })
@@ -1305,9 +1026,9 @@
           {
             "gongxu": this.gongwei,
             "yichang": this.ycSearchBtn,
-            "type":this.gwType
+            "type": this.gwType
           }
-            )
+        )
           .then((res) => {
             this.tableData = res.data;
           })
@@ -1330,7 +1051,11 @@
             const info = JSON.parse(userInfo);
             if (info.GW === "小组立") {
               setTimeout(() => {
-                axios.post(" " + url + "/importother/showXiaozuliExcel", {"gongxu": info.GW, "pici": this.batch,"type":this.gwType})
+                axios.post(" " + url + "/importother/showXiaozuliExcel", {
+                  "gongxu": info.GW,
+                  "pici": this.batch,
+                  "type": this.gwType
+                })
                   .then((res) => {
                     this.tableData = res.data;
                   })
@@ -1394,7 +1119,7 @@
       //显示条件筛选
       showScreening() {
         this.screenVisible = true;
-        axios.post(" " + url + "/show/showSelect",{"id":this.stationId})
+        axios.post(" " + url + "/show/showSelect", {"id": this.stationId})
           .then((res) => {
             let data = res.data;
             for (let i = 0; i < data.length; i++) {
@@ -1450,7 +1175,7 @@
               axios.post(" " + url + "/sys/dictionaryList", {"id": "21"}),
               axios.post(" " + url + "/sys/dictionaryList", {"id": ""})
             ])
-              .then(axios.spread(function (pici, gw, xl, scx,type, yxj, kj,bihou) {
+              .then(axios.spread(function (pici, gw, xl, scx, type, yxj, kj, bihou) {
                 that.batchOptions = pici.data;
                 that.gwOptions = gw.data;
                 that.xlOptions = xl.data;
@@ -1469,10 +1194,10 @@
 
       //进行筛选查询
       validationScreening() {
-        if(this.ycSearchBtn === 1){
+        if (this.ycSearchBtn === 1) {
           axios.post(" " + url + "/shengchan/shengchanList.html",
             {
-              "type":this.gwType,
+              "type": this.gwType,
               "gongxu": this.dqgw,
               "jiagongxian": this.scx,
               "pici": this.batch,
@@ -1484,10 +1209,10 @@
               "koujing": this.kj,
               "youxianji": this.yxj,
               "pno": this.PNO,
-              "bihou":this.bihou,
-              "codeN":this.codeN,
-              "zuoyezhe":this.qianzuoyezhe,
-              "yichang":this.ycSearchBtn
+              "bihou": this.bihou,
+              "codeN": this.codeN,
+              "zuoyezhe": this.qianzuoyezhe,
+              "yichang": this.ycSearchBtn
             })
             .then((res) => {
               this.screenVisible = false;
@@ -1497,7 +1222,7 @@
               console.log(err)
             })
         }
-        else if(this.dzySearchBtn === 1){
+        else if (this.dzySearchBtn === 1) {
           axios.post(" " + url + "/shengchan/shengchanList.html",
             {
               "gongxu": this.dqgw,
@@ -1511,10 +1236,10 @@
               "koujing": this.kj,
               "youxianji": this.yxj,
               "pno": this.PNO,
-              "bihou":this.bihou,
-              "codeN":this.codeN,
-              "zuoyezhe":this.qianzuoyezhe,
-              "daizuoye":this.dzySearchBtn
+              "bihou": this.bihou,
+              "codeN": this.codeN,
+              "zuoyezhe": this.qianzuoyezhe,
+              "daizuoye": this.dzySearchBtn
             })
             .then((res) => {
               this.screenVisible = false;
@@ -1539,9 +1264,9 @@
               "koujing": this.kj,
               "youxianji": this.yxj,
               "pno": this.PNO,
-              "bihou":this.bihou,
-              "codeN":this.codeN,
-              "zuoyezhe":this.qianzuoyezhe,
+              "bihou": this.bihou,
+              "codeN": this.codeN,
+              "zuoyezhe": this.qianzuoyezhe,
             })
             .then((res) => {
               this.screenVisible = false;
@@ -1551,7 +1276,6 @@
               console.log(err)
             })
         }
-
 
 
       },
@@ -1609,7 +1333,7 @@
             axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
               .then((res) => {
                 if (res.data.imgurl) {
-                  this.url = url+res.data.imgurl;
+                  this.url = url + res.data.imgurl;
                   this.drawingVisible = true;
                 }
                 else {
@@ -1695,8 +1419,8 @@
           event.stopPropagation();
           axios.post(" " + url + "/show/showExcelImg")
             .then((res) => {
-              if(res.data){
-                this.url = url+res.data;
+              if (res.data) {
+                this.url = url + res.data;
                 this.qdbVisible = true;
               }
               else {
@@ -1727,89 +1451,103 @@
 
       //小组立显示左边
       showLeft() {
-        this.cols=[];
+        this.cols = [];
         this.left = true;
         this.right = false;
-        this.gwType=1;
-        setTimeout(()=> {
+        this.gwType = 1;
+        setTimeout(() => {
           let that = this;
           axios.all([
-            axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":this.stationId,"weizhiid":2,"type":1}),
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 1}),
             axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "1"})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
               that.tableData = table.data;
             }));
-        },200)
+        }, 200)
       },
 
       //小组立显示右边
       showRight() {
-        this.cols=[];
+        this.cols = [];
         this.left = false;
         this.right = true;
-        this.gwType=2;
-        setTimeout(()=> {
+        this.gwType = 2;
+        setTimeout(() => {
           let that = this;
           axios.all([
-            axios.post(" "+ url +"/sys/showTableTitleById",{"stationid":this.stationId,"weizhiid":2,"type":2}),
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 2}),
             axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "2"})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
               that.tableData = table.data;
             }));
-        },200)
+        }, 200)
 
       },
 
 
       //支管显示中二正枝左边
       zgShowLeft() {
+        this.cols = [];
         this.left = true;
         this.right = false;
         this.zgCenter = false;
-        axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "3"})
-          .then((res) => {
-            this.tableData = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        this.gwType = 1;
+        setTimeout(() => {
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 1}),
+            axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "3"})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.tableData = table.data;
+            }));
+        }, 200)
       },
 
       //支管显示中二斜枝中间
       zgShowCenter() {
+        this.cols = [];
         this.left = false;
         this.right = false;
         this.zgCenter = true;
-        axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "4"})
-          .then((res) => {
-            this.tableData = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        this.gwType = 2;
+        setTimeout(() => {
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 2}),
+            axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "4"})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.tableData = table.data;
+            }));
+        }, 200)
       },
 
       //支管显示直枝偏心中间
       zgShowRight() {
+        this.cols = [];
         this.left = false;
         this.zgCenter = false;
         this.right = true;
-        axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "5"})
-          .then((res) => {
-            this.tableData = res.data;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        this.gwType = 3;
+        setTimeout(() => {
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 3}),
+            axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "5"})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.tableData = table.data;
+            }));
+        }, 200)
       },
-
-
-
-
 
 
       //移动显示搜索框
@@ -2009,6 +1747,14 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          button{
+            width: 80%;
+            height: 50px;
+            border-radius: 10px;
+            background-color: #409EFF;
+            color: @color-white;
+            border: none;
+          }
         }
         .change-center {
           flex: 1;
@@ -2018,6 +1764,14 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          button{
+            width: 80%;
+            height: 50px;
+            border-radius: 10px;
+            background-color: #409EFF;
+            color: @color-white;
+            border: none;
+          }
         }
         .change-right {
           flex: 1;
@@ -2027,7 +1781,14 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
-
+          button{
+            width: 80%;
+            height: 50px;
+            border-radius: 10px;
+            background-color: #409EFF;
+            color: @color-white;
+            border: none;
+          }
         }
       }
     }
