@@ -1190,7 +1190,7 @@
       //切断工位每隔5分钟刷新一下数据
       setInterval(() => {
         this.qdWorkStationGetDataList(this.stationId)
-      }, 50000)
+      }, 300000)
 
     },
     computed: {

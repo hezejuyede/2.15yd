@@ -1148,7 +1148,8 @@
               }));
           }
           else {
-            this.listType = "1";
+            this.listType = 1;
+            console.log(this.listType)
             let that = this;
             axios.all([
               axios.post(" " + url + "/sys/showTableTitleById", {
