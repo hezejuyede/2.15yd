@@ -13,49 +13,55 @@
                       @keyup.enter.native="goToPipePage(searchWord)"></el-input>
           </div>
           <div class="listSearchBtn">
-            <el-button type="success" @click="showScreening">条件筛选</el-button>
-            <el-button type="warning" @click="zgMaterialStatistics">直管物料统计</el-button>
-            <el-button type="primary" @click="goGeneralListOfProcessing">总清单</el-button>
-            <el-button type="danger" @click="workEnd">报完工</el-button>
+            <button @click="showScreening">条件筛选</button>
+            <button @click="zgMaterialStatistics">直管物料统计</button>
+            <button @click="goGeneralListOfProcessing">总清单</button>
+            <button @click="workEnd">报完工</button>
           </div>
         </div>
         <div class="listSearch" v-if="this.listType ==6 ">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
                       placeholder="检索管子或扫码或手工输入"
+                      @blur="searchData(searchWord)"
+                      @input="searchEmptyData(searchWord)"
                       @keyup.enter.native="goToPipePage(searchWord)"></el-input>
           </div>
           <div class="listSearchBtn">
-            <el-button type="success" @click="showScreening">条件筛选</el-button>
-            <el-button type="warning" @click="zgMaterialStatistics">短管物料统计</el-button>
-            <el-button type="primary" @click="goGeneralListOfProcessing">总清单</el-button>
-            <el-button type="danger" @click="workEnd">报完工</el-button>
+            <button @click="showScreening">条件筛选</button>
+            <button @click="zgMaterialStatistics">短管物料统计</button>
+            <button @click="goGeneralListOfProcessing">总清单</button>
+            <button @click="workEnd">报完工</button>
           </div>
         </div>
         <div class="listSearch" v-if="this.listType ==2 || this.listType ==9">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
                       placeholder="检索管子或扫码或手工输入"
+                      @blur="searchData(searchWord)"
+                      @input="searchEmptyData(searchWord)"
                       @keyup.enter.native="goToPipePage(searchWord)"></el-input>
           </div>
           <div class="listSearchBtn">
-            <el-button type="success" @click="showScreening">条件筛选</el-button>
-            <el-button type="warning" @click="zgMaterialStatistics">物料统计</el-button>
-            <el-button type="primary" @click="goGeneralListOfProcessing">总清单</el-button>
-            <el-button type="danger" @click="workEnd">报完工</el-button>
+            <button  @click="showScreening">条件筛选</button>
+            <button  @click="zgMaterialStatistics">物料统计</button>
+            <button  @click="goGeneralListOfProcessing">总清单</button>
+            <button @click="workEnd">报完工</button>
           </div>
         </div>
         <div class="listSearch" v-if="this.listType ==7 || this.listType ==8 || this.listType ==10">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
                       placeholder="检索管子或扫码或手工输入"
+                      @blur="searchData(searchWord)"
+                      @input="searchEmptyData(searchWord)"
                       @keyup.enter.native="goToPipePage(searchWord)"></el-input>
           </div>
           <div class="listSearchBtn">
-            <el-button type="success" @click="showScreening">条件筛选</el-button>
-            <el-button type="warning" @click="zgMaterialStatistics">一品图预览</el-button>
-            <el-button type="primary" @click="goGeneralListOfProcessing">总清单</el-button>
-            <el-button type="danger" @click="workEnd">报完工</el-button>
+            <button @click="showScreening">条件筛选</button>
+            <button @click="zgMaterialStatistics">一品图预览</button>
+            <button @click="goGeneralListOfProcessing">总清单</button>
+            <button @click="workEnd">报完工</button>
           </div>
         </div>
       </div>
@@ -133,7 +139,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList">切断表
+                  @click="seeCutList(scope.row.id)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -228,7 +234,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList">切断表
+                  @click="seeCutList(scope.row.id)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -310,7 +316,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList">切断表
+                  @click="seeCutList(scope.row.id)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -322,12 +328,18 @@
       <div class="xzlDiv" v-if="this.listType ==2">
         <div class="xzl-change">
           <div class="change-left" @click="showLeft" >
-            <button  :style="{'background-color':this.left ? '#d93f30':''}">
+            <button
+              :style="{
+             'background-color':this.left ? '#2A437B':'',
+             'color':this.left ? '#ffffff':''}">
               中二小组立
             </button>
           </div>
           <div class="change-right" @click="showRight" >
-            <button  :style="{'background-color':this.right ? '#d93f30':''}">
+            <button
+              :style="{
+             'background-color':this.right ? '#2A437B':'',
+             'color':this.right  ? '#ffffff':''}">
               中二片付
             </button>
           </div>
@@ -339,7 +351,7 @@
               class="tb-edit"
               :data="tableData"
               height="450"
-              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'14px'}"
               :row-class-name="tableRowClassName"
               @select="selectList"
               @select-all="selectAll"
@@ -354,7 +366,85 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  v-if="col.prop =='pici'"
+                  width="83"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='shipcode'"
+                  width="63"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='pno'"
+                  width="51"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='guige'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='hujing'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='houdu'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='lianjiexinxi'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='qieduanchang'"
+                  width="66"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='beizhu'"
+                  width="55"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='jiagongxilie'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='typeStr'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='levelStr'"
+                  width="63"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -392,7 +482,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">小组立表
+                      @click="seeCutList(scope.row.id)">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -484,7 +574,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">片付表
+                      @click="seeCutList(scope.row.id)">片付表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -575,7 +665,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">小组立表
+                      @click="seeCutList(scope.row.id)">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -654,7 +744,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">小组立表
+                      @click="seeCutList(scope.row.id)">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -733,7 +823,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">小组立表
+                      @click="seeCutList(scope.row.id)">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -918,6 +1008,7 @@
     <el-dialog title="一品图查看" :visible.sync="drawingVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
         <el-button type="danger" @click="drawingVisible = false">关闭窗口</el-button>
+
       </div>
       <div class="container" style="width: 100%;height: 100%">
         <div class="drawingImg" style="width: 100%;height: 100%">
@@ -927,9 +1018,10 @@
     </el-dialog>
 
     <!--查看切断表 -->
-    <el-dialog title="切断表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
+    <el-dialog title="工位表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
         <el-button type="danger" @click="qdbVisible = false">关闭窗口</el-button>
+        <el-button type="primary" @click="gwbDoWorkEnd">报完工</el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
         <div class="drawingImg" style="width: 100%;height: 100%">
@@ -1001,6 +1093,7 @@
 
         listData: [],  //点击复选框中对ID的数组
 
+        id:"",        //管子的ID
         listType: "",
 
 
@@ -1236,6 +1329,7 @@
 
       //失去焦点后进行智能检索
       searchData(search) {
+        console.log(search)
         if (search) {
           this.znSearch = false;
           this.arrAll.filter(function (dataNews) {
@@ -1381,6 +1475,33 @@
 
       },
 
+      //在工位表里报完工
+      gwbDoWorkEnd(){
+        axios.post(" " + url + "/shengchan/updateStatusBatch",
+          {
+            "ids": [this.id],
+            "zuoyezhe": this.zuoyezhe,
+            "gongwei": this.dqgw,
+            "type": this.gwListType,
+            "stationid": this.stationId
+          })
+          .then((res) => {
+            if (res.data === "1") {
+              this.showTableData(this.stationId, this.dqgw, 1, 1);
+              this.$message.success(`报完工成功`);
+              let that =this;
+              setTimeout(()=>{
+                that.qdbVisible = false;
+              },1000)
+            }
+            else {
+              this.$message.warning(`报完工失败`);
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
       //加工完成
       workEnd() {
         if (this.listData.length) {
@@ -1420,7 +1541,7 @@
               function a() {
                 that.message = "";
                 that.HideModal = true;
-                that.showTableData(this.stationId, this.dqgw, 1, 1)
+                that.showTableData(that.stationId,that.dqgw, 1, that.gwType)
               }
 
               setTimeout(a, 2000);
@@ -1518,19 +1639,21 @@
             this.HideModal = false;
             const that = this;
 
-            function b() {
+            function c() {
               that.message = "";
               that.HideModal = true;
             }
 
-            setTimeout(b, 2000);
+            setTimeout(c, 2000);
           }
         }
       },
 
 
       //查看切断表
-      seeCutList() {
+      seeCutList(id) {
+        console.log(id)
+        this.id  = id;
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
@@ -1721,38 +1844,42 @@
 
       //小组立显示左边
       showLeft() {
-        this.cols= [];
-        let that = this;
-        axios.all([
-          axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 1}),
-          axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立", "type": "1"})
-        ])
-          .then(axios.spread(function (title, table) {
-            that.cols = title.data.data;
-            that.tableData = table.data;
-          }));
-        this.left = true;
-        this.right = false;
-        this.gwType = 1;
+        if (this.left !== true) {
+          this.cols = [];
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 1}),
+            axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立", "type": "1"})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.tableData = table.data;
+            }));
+          this.left = true;
+          this.right = false;
+          this.gwType = 1;
+        }
       },
 
       //小组立显示右边
       showRight() {
-        let that = this;
-        axios.all([
-          axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 2}),
-          axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立", "type": "2"})
-        ])
-          .then(axios.spread(function (title, table) {
-            that.cols = title.data.data;
-            that.tableData = table.data;
-          }));
-        this.left = false;
-        this.gwType = 2;
-        this.gwListType = "2";
-        setTimeout(() => {
-          this.right = true;
-        }, 200)
+        if (this.right !== true) {
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 2}),
+            axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立", "type": "2"})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.tableData = table.data;
+            }));
+          this.left = false;
+          this.gwType = 2;
+          this.gwListType = "2";
+          setTimeout(() => {
+            this.right = true;
+          }, 200)
+        }
       },
 
       //支管显示中二正枝左边
@@ -1886,23 +2013,31 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          .el-button {
+          button {
             display: flex;
             align-items: center;
             justify-content: center;
             width: 30%;
             height: 50px;
             margin-left: 2%;
+            background-color: @color-dlLan;
+            border: none;
+            color: @color-white;
+            border-radius: 10px;
           }
         }
 
       }
     }
-
     .xzlDiv {
       .xzl-change {
+        width: 99%;
+        margin: 0 auto;
         height: 60px;
         display: flex;
+        background-color: @color-dlLan;;
+        border-top-left-radius: 30px;
+        border-top-right-radius:30px;
         .change-left {
           flex: 1;
           display: flex;
@@ -1911,12 +2046,14 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
-          button{
-            width: 50%;
-            height: 50px;
-            border-radius: 10px;
-            background-color: #409EFF;
-            color: @color-white;
+          button {
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
             border: none;
           }
         }
@@ -1928,17 +2065,19 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
-          button{
-            width: 50%;
-            height: 50px;
-            border-radius: 10px;
-            background-color: #409EFF;
-            color: @color-white;
+          button {
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            background-color: @color-white;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
             border: none;
           }
         }
       }
-
     }
     .zgDiv {
       .zg-change {
@@ -2101,7 +2240,7 @@
         }
       }
       .containerBtn {
-        .el-button {
+        button {
           width: 50%;
         }
       }
@@ -2114,7 +2253,7 @@
       .listSearch {
         .listSearchBtn {
           flex: 2;
-          .el-button {
+          button {
             width: 40%;
             font-size: @font-size-small-s;
           }

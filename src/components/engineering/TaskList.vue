@@ -4,13 +4,12 @@
     <div class="TaskList" ref="TaskList">
       <!-- 公共头部-->
       <div class="contentTop" ref="contentTop">
-        <!--切断，直管焊，短管焊-->
-        <div class="listSearch" v-if="this.listType ==1 || this.listType ==4">
+        <div class="listSearch">
           <div class="dzySearch">
-            <el-button type="success" @click="dzySearch">全部待转入</el-button>
+            <button :style="{'background-color':this.nowClick===1 ? '#d93f30':''}" @click="dzySearch">全部待转入</button>
           </div>
           <div class="ycSearch">
-            <el-button type="danger" @click="ycSearch">全部异常管</el-button>
+            <button :style="{'background-color':this.nowClick===2 ? '#d93f30':''}" @click="ycSearch">全部异常管</button>
           </div>
           <div class="pcSearch">
             <el-select
@@ -27,44 +26,13 @@
                 :value="item.id">
               </el-option>
             </el-select>
-            <el-button type="primary" @click="doPcSearch">查询</el-button>
+            <button :style="{'background-color':this.nowClick===3 ? '#d93f30':''}" @click="doPcSearch">查询</button>
           </div>
           <div class="listSearchInput">
             <el-input v-model="searchWord" placeholder="智能检索"></el-input>
           </div>
           <div class="tjSearch">
-            <el-button type="warning" @click="showScreening">条件筛选</el-button>
-          </div>
-        </div>
-        <div class="listSearch" v-if="this.listType ==2">
-          <div class="dzySearch">
-            <el-button type="success" @click="dzySearch">全部待转入</el-button>
-          </div>
-          <div class="ycSearch">
-            <el-button type="danger" @click="ycSearch">全部异常管</el-button>
-          </div>
-          <div class="pcSearch">
-            <el-select
-              v-model="batch"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              placeholder="批次">
-              <el-option
-                v-for="item in batchOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-            <el-button type="primary" @click="doPcSearch">查询</el-button>
-          </div>
-          <div class="listSearchInput">
-            <el-input v-model="searchWord" placeholder="智能检索"></el-input>
-          </div>
-          <div class="tjSearch">
-            <el-button type="warning" @click="showScreening">条件筛选</el-button>
+            <button :style="{'background-color':this.nowClick===4 ? '#d93f30':''}" @click="showScreening">条件筛选</button>
           </div>
         </div>
       </div>
@@ -133,12 +101,18 @@
       <div class="xzlDiv" v-if="this.listType ==2">
         <div class="xzl-change">
           <div class="change-left" @click="showLeft" >
-            <button  :style="{'background-color':this.left ? '#d93f30':''}">
+            <button
+              :style="{
+             'background-color':this.left ? '#2A437B':'',
+             'color':this.left ? '#ffffff':''}">
               中二小组立
             </button>
           </div>
           <div class="change-right" @click="showRight" >
-            <button  :style="{'background-color':this.right ? '#d93f30':''}">
+            <button
+              :style="{
+             'background-color':this.right ? '#2A437B':'',
+             'color':this.right  ? '#ffffff':''}">
               中二片付
             </button>
           </div>
@@ -155,12 +129,91 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  v-if="col.prop =='pici'"
+                  width="83"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
+                  v-if="col.prop =='shipcode'"
+                  width="63"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='pno'"
+                  width="40"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='guige'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='hujing'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='houdu'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='lianjiexinxi'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='qieduanchang'"
+                  width="70"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='beizhu'"
+                  width="45"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='jiagongxilie'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                align="center"
+                v-if="col.prop =='typeStr'"
+                width="48"
+                :prop="col.prop"
+                :label="col.label">
+              </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='levelStr'"
+                  width="65"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="50"
                   v-if="col.prop==='yiguanno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
@@ -169,6 +222,7 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
+                  width="50"
                   v-if="col.prop==='codeno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
@@ -177,17 +231,20 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
+                  width="80"
                   v-if="col.prop==='xiaozuli'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">小组立表</el-button>
+                      @click="seeCutList">小组立表
+                    </el-button>
                   </template>
                 </el-table-column>
                 <el-table-column
                   align="center"
+                  width="80"
                   v-if="col.prop==='yipintu'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
@@ -198,6 +255,20 @@
                       一品图
                     </el-button>
                   </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='curstationname'"
+                  width="50"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='statusStr'"
+                  width="50"
+                  :prop="col.prop"
+                  :label="col.label">
                 </el-table-column>
               </template>
             </el-table>
@@ -213,12 +284,91 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='pianfubiao' && col.prop !=='yipintu'"
+                  v-if="col.prop =='pici'"
+                  width="83"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
+                  v-if="col.prop =='chuanhao'"
+                  width="63"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='pno'"
+                  width="40"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='guige'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='hujing'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='houdu'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='lianjiexinxi'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='qieduanchang'"
+                  width="70"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='beizhu'"
+                  width="45"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='jiagongxilie'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='typeStr'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='levelStr'"
+                  width="65"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="50"
                   v-if="col.prop==='yiguanno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
@@ -227,11 +377,40 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
+                  width="50"
                   v-if="col.prop==='codeno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     {{ scope.row.codeno }}
                   </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="80"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='curstationname'"
+                  width="50"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop =='statusStr'"
+                  width="50"
+                  :prop="col.prop"
+                  :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
@@ -242,19 +421,6 @@
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
                       @click="seeCutList">片付表</el-button>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop==='yipintu'"
-                  :prop="col.prop" :label="col.label">
-                  <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
-                      一品图
-                    </el-button>
                   </template>
                 </el-table-column>
               </template>
@@ -785,6 +951,7 @@
         message: '',
         HideModal: true,
         img:[],
+        nowClick:2,
 
         k: "200",
         url: "",
@@ -1003,6 +1170,7 @@
       dzySearch() {
         this.ycSearchBtn = 0;
         this.dzySearchBtn = 1;
+        this.nowClick =1;
         axios.post(" " + url + "/shengchan/shengchanListAll",
           {
             "gongxu": this.gongwei,
@@ -1022,6 +1190,7 @@
       ycSearch() {
         this.ycSearchBtn = 1;
         this.dzySearchBtn = 0;
+        this.nowClick =2;
         axios.post(" " + url + "/shengchan/shengchanListAll",
           {
             "gongxu": this.gongwei,
@@ -1040,66 +1209,27 @@
 
       //批次查询
       doPcSearch() {
-        this.ycSearchBtn = 0;
-        this.dzySearchBtn = 0;
         if (this.batch) {
+          this.ycSearchBtn = 0;
+          this.dzySearchBtn = 0;
+          this.nowClick =3;
           const userInfo = sessionStorage.getItem("userInfo");
           if (userInfo === null) {
             this.$router.push("/ProductionExecutionLogin")
           }
           else {
             const info = JSON.parse(userInfo);
-            if (info.GW === "小组立") {
-              setTimeout(() => {
-                axios.post(" " + url + "/importother/showXiaozuliExcel", {
-                  "gongxu": info.GW,
-                  "pici": this.batch,
-                  "type": this.gwType
-                })
-                  .then((res) => {
-                    this.tableData = res.data;
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  })
-              }, 1000);
-            }
-            else if (info.GW === "弯头切断") {
-              this.listType = "3";
-              setTimeout(() => {
-                axios.post(" " + url + "/importother/showWtqieduanExcel", {"gongxu": info.GW, "pici": this.batch})
-                  .then((res) => {
-                    this.tableData = res.data;
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  })
-              }, 1000);
-            }
-            else if (info.GW === "枝管切断") {
-              this.listType = "4";
-              setTimeout(() => {
-                axios.post(" " + url + "/importother/showOtherZgbExcel", {"gongxu": info.GW, "pici": this.batch})
-                  .then((res) => {
-                    this.tableData = res.data;
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  })
-              }, 1000);
-            }
-            else {
-              this.listType = "1";
-              setTimeout(() => {
-                axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": info.GW, "pici": this.batch})
-                  .then((res) => {
-                    this.tableData = res.data;
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  })
-              }, 1000);
-            }
+            axios.post(" " + url + "/shengchan/shengchanListAll", {
+              "gongxu": info.GW,
+              "pici": this.batch,
+              "type": this.gwType
+            })
+              .then((res) => {
+                this.tableData = res.data;
+              })
+              .catch((err) => {
+                console.log(err)
+              })
           }
         }
         else {
@@ -1118,6 +1248,7 @@
 
       //显示条件筛选
       showScreening() {
+
         this.screenVisible = true;
         axios.post(" " + url + "/show/showSelect", {"id": this.stationId})
           .then((res) => {
@@ -1194,6 +1325,7 @@
 
       //进行筛选查询
       validationScreening() {
+        this.nowClick =4;
         if (this.ycSearchBtn === 1) {
           axios.post(" " + url + "/shengchan/shengchanList.html",
             {
@@ -1451,40 +1583,46 @@
 
       //小组立显示左边
       showLeft() {
-        this.cols = [];
-        this.left = true;
-        this.right = false;
-        this.gwType = 1;
-        setTimeout(() => {
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 1}),
-            axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "1"})
-          ])
-            .then(axios.spread(function (title, table) {
-              that.cols = title.data.data;
-              that.tableData = table.data;
-            }));
-        }, 200)
+        if(this.left !==true){
+          this.cols = [];
+          this.left = true;
+          this.right = false;
+          this.gwType = 1;
+          setTimeout(() => {
+            let that = this;
+            axios.all([
+              axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 1}),
+              axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "1"})
+            ])
+              .then(axios.spread(function (title, table) {
+                that.cols = title.data.data;
+                that.tableData = table.data;
+              }));
+          }, 200)
+        }
+
       },
 
       //小组立显示右边
       showRight() {
-        this.cols = [];
-        this.left = false;
-        this.right = true;
-        this.gwType = 2;
-        setTimeout(() => {
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 2}),
-            axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "2"})
-          ])
-            .then(axios.spread(function (title, table) {
-              that.cols = title.data.data;
-              that.tableData = table.data;
-            }));
-        }, 200)
+        if(this.right !==true){
+          this.cols = [];
+          this.left = false;
+          this.right = true;
+          this.gwType = 2;
+          setTimeout(() => {
+            let that = this;
+            axios.all([
+              axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 2}),
+              axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "2"})
+            ])
+              .then(axios.spread(function (title, table) {
+                that.cols = title.data.data;
+                that.tableData = table.data;
+              }));
+          }, 200)
+        }
+
 
       },
 
@@ -1630,12 +1768,16 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          .el-button {
+          button {
             display: flex;
             align-items: center;
             justify-content: center;
+            background-color: @color-dlLan;
             width: 80%;
-            height: 35px;
+            height: 50px;
+            border: none;
+            color: @color-white;
+            border-radius: 10px;
           }
 
         }
@@ -1644,12 +1786,16 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          .el-button {
+          button {
             display: flex;
             align-items: center;
             justify-content: center;
+            background-color: @color-dlLan;
             width: 80%;
-            height: 35px;
+            height: 50px;
+            border: none;
+            color: @color-white;
+            border-radius: 10px;
           }
         }
         .pcSearch {
@@ -1657,17 +1803,20 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          .el-button {
+          button {
             display: flex;
             align-items: center;
             justify-content: center;
+            background-color: @color-dlLan;
+            border: none;
             width: 30%;
-            height: 35px;
+            height: 50px;
             margin-left: 5%;
             margin-right: 5%;
+            color: @color-white;
+            border-radius: 10px;
           }
         }
-
         .listSearchInput {
           flex: 1.5;
           display: flex;
@@ -1680,24 +1829,30 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          .el-button {
+          button {
+            background-color: @color-dlLan;
             display: flex;
             align-items: center;
             justify-content: center;
             width: 80%;
-            height: 35px;
+            height: 50px;
             margin-left: 10%;
+            border: none;
+            color: @color-white;
+            border-radius: 10px;
           }
         }
-
       }
-
-
     }
     .xzlDiv {
       .xzl-change {
+        width: 99%;
+        margin: 0 auto;
         height: 60px;
         display: flex;
+        background-color: @color-dlLan;;
+        border-top-left-radius: 30px;
+        border-top-right-radius:30px;
         .change-left {
           flex: 1;
           display: flex;
@@ -1706,12 +1861,14 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
-          button{
-            width: 50%;
-            height: 50px;
-            border-radius: 10px;
-            background-color: #409EFF;
-            color: @color-white;
+          button {
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
             border: none;
           }
         }
@@ -1723,12 +1880,15 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
-          button{
-            width: 50%;
-            height: 50px;
-            border-radius: 10px;
-            background-color: #409EFF;
-            color: @color-white;
+          button {
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            background-color: @color-white;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
             border: none;
           }
         }
