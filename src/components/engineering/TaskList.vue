@@ -231,7 +231,6 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  width="80"
                   v-if="col.prop==='xiaozuli'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
@@ -244,7 +243,6 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  width="80"
                   v-if="col.prop==='yipintu'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
@@ -386,7 +384,6 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  width="80"
                   v-if="col.prop==='yipintu'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
@@ -1331,7 +1328,7 @@
           axios.post(" " + url + "/shengchan/shengchanList.html",
             {
               "type": this.gwType,
-              "gongxu": this.dqgw,
+              "gongxu": this.gongwei,
               "jiagongxian": this.scx,
               "pici": this.batch,
               "preGongxu": this.gw,
@@ -1358,7 +1355,8 @@
         else if (this.dzySearchBtn === 1) {
           axios.post(" " + url + "/shengchan/shengchanList.html",
             {
-              "gongxu": this.dqgw,
+              "type": this.gwType,
+              "gongxu": this.gongwei,
               "jiagongxian": this.scx,
               "pici": this.batch,
               "preGongxu": this.gw,
