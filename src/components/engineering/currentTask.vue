@@ -1,7 +1,7 @@
 <template>
   <div class="currentTask">
     <header-nav></header-nav>
-    <div class="currentTaskTemplate" v-if="station==1">
+    <div class="currentTaskTemplate">
       <div class="currentTaskTitle">
         <div class="titleDiv" v-for="(item,index) in titleData" :style="{'width':item.width}">
           <div class="titleDivLeft">
@@ -9,6 +9,25 @@
           </div>
           <div class="titleDivRight">
             {{item.text}}
+          </div>
+        </div>
+      </div>
+      <div class="currentTaskBtn">
+        <div class="templateBtn" v-for="(item,index) in bottomButton"   v-if="item.show==1">
+          <button
+            :disabled="item.disabled==='0'"
+            @click="bottomButtonClick(item.type)"
+            :style="{'background-color':item.backgroundcolor,'color':item.color}">
+            {{item.name}}
+          </button>
+        </div>
+      </div>
+      <div class="currentTaskRouter">
+        <div class="">
+          <div class="currentTaskRouterList">
+            <el-steps align-center :active="step" finish-status="success">
+              <el-step v-for="(item,index) in routerList" :keys="index" :title="item.stationname"></el-step>
+            </el-steps>
           </div>
         </div>
       </div>
@@ -26,84 +45,7 @@
         </div>
         <div class="currentTaskDivRight" v-html="matterData"></div>
       </div>
-      <div class="currentTaskBtn">
-        <div class="templateBtn" v-for="(item,index) in bottomButton"   v-if="item.show==1">
-          <button
-            :disabled="item.disabled==='0'"
-            @click="bottomButtonClick(item.type)"
-            :style="{'background-color':item.backgroundcolor,'color':item.color}">
-            {{item.name}}
-          </button>
-        </div>
-      </div>
-      <div class="currentTaskRouter">
-        <div class="currentTaskRouterList">
-          <el-steps align-center :active="step" finish-status="success">
-            <el-step v-for="(item,index) in routerList" :keys="index" :title="item.stationname"></el-step>
-          </el-steps>
-        </div>
-      </div>
     </div>
-    <div class="currentTaskDiv" v-if="station==2">
-      <div class="currentTaskTitle">
-        <div class="titleDiv fl" v-for="(item,index) in titleData">
-          <div class="titleDivLeft">
-            {{item.name}}
-          </div>
-          <div class="titleDivRight">
-            {{item.text}}
-          </div>
-        </div>
-      </div>
-      <div class="currentTaskTable">
-        <el-table class="tb-edit"
-                  :data="tableData"
-                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'14px'}"
-                  border
-                  highlight-current-row
-                  style="width: 98%;margin: auto">
-          <template v-for="(col ,index) in cols">
-            <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
-          </template>
-        </el-table>
-
-      </div>
-      <div class="currentTaskDiv">
-        <div class="currentTaskDivLeft">
-          <i class="iconfont icon-unie62b"></i>
-          <span>注意事项</span>
-        </div>
-        <div class="currentTaskDivRight" v-html="matterData"></div>
-      </div>
-      <div class="currentTaskButton" v-if="this.wt == 1">
-        <el-button type="primary" @click="startWork" :disabled="startWorkBtn == -1">开始</el-button>
-        <el-button type="success" @click="endWord" :disabled="endWorkBtn == -1">完成</el-button>
-        <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
-        <el-button type="danger" @click="showReportAbnormal">上报异常</el-button>
-        <el-button type="success" @click="viewDrawings">查看图纸</el-button>
-      </div>
-      <div class="currentTaskButton" v-if="this.wt == -1">
-        <el-button type="success" @click="wtEndWord">完成</el-button>
-        <el-button type="warning" @click="curvedPipeState">弯管完成状态</el-button>
-        <el-button type="danger" @click="showReportAbnormal">上报异常</el-button>
-        <el-button type="primary" @click="viewDrawings">查看一品图</el-button>
-      </div>
-      <div class="currentTaskRouter">
-        <div class="currentTaskRouterList">
-          <el-steps align-center :active="step" finish-status="success">
-            <el-step v-for="(item,index) in routerList" :keys="index" :title="item.stationname"></el-step>
-          </el-steps>
-        </div>
-      </div>
-    </div>
-
-
-
-
-
-
-
-
 
     <!--上报异常按钮 -->
     <el-dialog title="上报异常按钮注" :visible.sync="abnormalBtnVisible" width="90%">
@@ -296,7 +238,6 @@
     <div class="loading-container" v-show="!img.length">
       <loading></loading>
     </div>
-
     <footer-nav></footer-nav>
   </div>
 </template>

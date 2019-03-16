@@ -277,7 +277,13 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="goToCurrentTask(scope.row.id)">
+                  @click="goToCurrentTask(
+                  scope.row.id,
+                  scope.row.jiagongxilie,
+                  scope.row.koujing,
+                  scope.row.shipcode,
+                  scope.row.yiguanno,
+                  scope.row.codeno)">
                   {{ scope.row.yiguanno }}
                 </el-button>
               </template>
@@ -290,7 +296,13 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="goToCurrentTask(scope.row.id)">
+                  @click="goToCurrentTask(
+                  scope.row.id,
+                  scope.row.jiagongxilie,
+                  scope.row.koujing,
+                  scope.row.shipcode,
+                  scope.row.yiguanno,
+                  scope.row.codeno)">
                   {{ scope.row.codeno }}
                 </el-button>
               </template>
@@ -1043,11 +1055,23 @@
     <el-dialog title="弯管信息确认" :visible.sync="wgVisible" width="80%" center>
       <div class="container" style="height:400px;overflow:auto">
         <div class="containerDiv">
+          <el-table
+            :key="1"
+            class="tb-edit"
+            :data="tdTableData"
+            :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+            :row-class-name="tableRowClassName"
+            ref="moviesTable"
+            style="width: 99%;margin: 0 auto">
+            <template v-for="(col ,index) in tdCols">
+              <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
+            </template>
+          </el-table>
 
         </div>
         <div class="containerBtn">
-          <el-button type="danger" @click="wgVisible = false">关闭窗口</el-button>
-          <el-button type="success" icon="search" @click="validationScreening">确认筛选</el-button>
+          <el-button type="danger" @click="wgVisible = false">信息不符，退出作业</el-button>
+          <el-button type="success" icon="search" @click="tdGoToCurrentTask">核对正确，开始作业</el-button>
         </div>
       </div>
     </el-dialog>
@@ -1084,6 +1108,14 @@
         tableData: [],//总数据的表数据
         cols: [],     //总数据的表头
 
+        tdTableData: [],  //特定工位的表数据
+        tdCols: [
+          {"prop":"chuanhao","label":"船号"},
+          {"prop":"bianhao","label":"编号"},
+          {"prop":"koujing","label":"口径"},
+          {"prop":"jiagongxilie","label":"加工系列"},
+        ],    //特定工位的表头
+
         zuoyezhe: "",   //用户名
         dqgw: "",       //中文工位名字
         stationId: "",  //工位对应的ID
@@ -1093,7 +1125,7 @@
 
         listData: [],  //点击复选框中对ID的数组
 
-        id:"",        //管子的ID
+        id: "",        //管子的ID
         listType: "",
 
 
@@ -1108,7 +1140,7 @@
         drawingVisible: false,
         endVisible: false,
         qdbVisible: false,
-        wgVisible:false,
+        wgVisible: false,
 
 
         left: true,
@@ -1293,7 +1325,6 @@
         }
       },
 
-
       //转圈延迟一秒执行
       getLoading() {
         this.img = ["1"]
@@ -1326,10 +1357,8 @@
           }));
       },
 
-
       //失去焦点后进行智能检索
       searchData(search) {
-        console.log(search)
         if (search) {
           this.znSearch = false;
           this.arrAll.filter(function (dataNews) {
@@ -1652,7 +1681,6 @@
 
       //查看切断表
       seeCutList(id) {
-        console.log(id)
         this.id  = id;
         //防止冒泡
         if (event && event.stopPropagation) {
@@ -1814,21 +1842,27 @@
 
 
       //点击一贯号,Code号，前往前往任务页面
-      goToCurrentTask(id) {
+      goToCurrentTask(id, jiagongxilie, koujing, shipcode, yiguanno, codeno) {
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
           event.stopPropagation();
           if (id) {
+            this.id = id;
             if (this.dqgw === "弯管") {
-              this.wgVisible=true;
-
+              this.wgVisible = true;
+              this.tdTableData = [{
+                "jiagongxilie": jiagongxilie,
+                "bianhao": yiguanno + "/" + codeno,
+                "koujing": koujing,
+                "chuanhao": shipcode
+              }];
             }
             else {
               localStorage.setItem("pipeId", id);
               this.$router.push("/CurrentTask");
-            }
 
+            }
           }
         }
         else {
@@ -1842,6 +1876,35 @@
       },
 
 
+
+      //特定工位进行确认后要执行的方法
+      tdGoToCurrentTask(){
+        if (this.id) {
+          axios.post(" " + url + "/shengchan/startWork", {"id": this.id})
+            .then((res) => {
+              if (res.data === "success") {
+                localStorage.setItem("pipeId", this.id);
+                this.$router.push("/CurrentTask");
+              }
+              else if (res.data === "-1") {
+                this.message = "已经开始，请勿重复";
+                this.HideModal = false;
+                const that = this;
+
+                function b() {
+                  that.message = "";
+                  that.HideModal = true;
+                }
+
+                setTimeout(b, 2000);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+
+      },
       //小组立显示左边
       showLeft() {
         if (this.left !== true) {
