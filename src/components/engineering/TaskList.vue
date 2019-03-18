@@ -1146,7 +1146,6 @@
           }
           else {
             this.listType = 1;
-            console.log(this.listType)
             let that = this;
             axios.all([
               axios.post(" " + url + "/sys/showTableTitleById", {
@@ -1325,7 +1324,7 @@
       validationScreening() {
         this.nowClick =4;
         if (this.ycSearchBtn === 1) {
-          axios.post(" " + url + "/shengchan/shengchanList.html",
+          axios.post(" " + url + "/shengchan/shengchanListAll",
             {
               "type": this.gwType,
               "gongxu": this.gongwei,
@@ -1353,7 +1352,7 @@
             })
         }
         else if (this.dzySearchBtn === 1) {
-          axios.post(" " + url + "/shengchan/shengchanList.html",
+          axios.post(" " + url + "/shengchan/shengchanListAll",
             {
               "type": this.gwType,
               "gongxu": this.gongwei,
@@ -1381,7 +1380,7 @@
             })
         }
         else {
-          axios.post(" " + url + "/shengchan/shengchanList.html",
+          axios.post(" " + url + "/shengchan/shengchanListAll",
             {
               "type": this.gwType,
               "gongxu": this.gongwei,
@@ -1407,8 +1406,6 @@
               console.log(err)
             })
         }
-
-
       },
 
 

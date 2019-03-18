@@ -1816,7 +1816,14 @@
           })
           .then((res) => {
             this.screenVisible = false;
-            this.tableData = res.data;
+            this.arrAll = res.data;
+            let arr = [];
+            for (let i = 0; i < this.arrAll.length; i++) {
+              if (i < 9) {
+                arr.push(this.arrAll[i])
+              }
+            }
+            this.tableData = arr;
           })
           .catch((err) => {
             console.log(err)

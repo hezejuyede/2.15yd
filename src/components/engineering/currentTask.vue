@@ -23,10 +23,10 @@
         </div>
       </div>
       <div class="currentTaskRouter">
-        <div class="">
-          <div class="currentTaskRouterList">
+        <div class="" v-for="(item,index) in routerList">
+          <div class="currentTaskRouterList" >
             <el-steps align-center :active="step" finish-status="success">
-              <el-step v-for="(item,index) in routerList" :keys="index" :title="item.stationname"></el-step>
+              <el-step v-for="(item,index) in item.nodeList" :keys="index" :title="item.stationname"></el-step>
             </el-steps>
           </div>
         </div>
@@ -293,7 +293,8 @@
         wtCols: [],
 
 
-        gongwei: "",
+        gongwei: "",//数字工位
+        gongHao: "",//汉字工号
         url:"",
 
         listTableData:[],
@@ -338,47 +339,66 @@
         else {
           this.zuoyezhe = info.username;
           this.gongwei = info.GH;
+          this.gongHao = info.GW;
           const id = localStorage.getItem("pipeId");
-          if(id){
-            this.id = id;
-          }
-          else {
-
-          }
-
-
-
-          if (info.GW === "弯头切断") {
-            this.wt = "-1"
-          }
-
-          if (id === null) {
+          if (id === null || id === "") {
             localStorage.setItem("IndexUrl", 0);
             this.$router.push("/")
           }
           else {
-            setTimeout(() => {
-              let that = this;
+            this.id = id;
+            let that = this;
+            if (this.gongHao === "43/48装配" || this.gongHao === "45/46装配" || this.gongHao === "大组焊") {
               axios.all([
-                axios.post(" " + url + "/sys/showTableTitle", {"name": "yipintu"}),
-                axios.post(" " + url + "/shengchan/getCurShengchanguan", {"id": id}),
+                axios.post(" " + url + "/shengchan/getCurShengchanguanZhuangpei", {"id": id}),
                 axios.post(" " + url + "/show/showButton", {"id": this.gongwei}),
-
               ])
-                .then(axios.spread(function (title, table, btn) {
-                  that.cols = title.data;
+                .then(axios.spread(function (table, btn) {
                   that.wtTableData = table.data;
                   that.titleData = table.data.baseItem;
                   that.tableData = table.data.yipintulist;
                   that.step = table.data.maxstep;
-                  that.routerList = table.data.nodeLit;
-                  that.bottomButton = btn.data
+                  that.routerList = table.data.flowLine;
+                  that.bottomButton = btn.data;
                   if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
                     that.matterData = table.data.contextList[0].noticehtml;
                   }
                 }))
-
-            }, 100);
+            }
+            else if (this.gongHao === "弯头焊") {
+              axios.all([
+                axios.post(" " + url + "/shengchan/getCurShengchanguanWth", {"id": id}),
+                axios.post(" " + url + "/show/showButton", {"id": this.gongwei}),
+              ])
+                .then(axios.spread(function (table, btn) {
+                  that.wtTableData = table.data;
+                  that.titleData = table.data.baseItem;
+                  that.tableData = table.data.yipintulist;
+                  that.step = table.data.maxstep;
+                  that.routerList = table.data.flowLine;
+                  that.bottomButton = btn.data;
+                  if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
+                    that.matterData = table.data.contextList[0].noticehtml;
+                  }
+                }))
+            }
+            else {
+              axios.all([
+                axios.post(" " + url + "/shengchan/getCurShengchanguan", {"id": id}),
+                axios.post(" " + url + "/show/showButton", {"id": this.gongwei}),
+              ])
+                .then(axios.spread(function (table, btn) {
+                  that.wtTableData = table.data;
+                  that.titleData = table.data.baseItem;
+                  that.tableData = table.data.yipintulist;
+                  that.step = table.data.maxstep;
+                  that.routerList = table.data.flowLine;
+                  that.bottomButton = btn.data;
+                  if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
+                    that.matterData = table.data.contextList[0].noticehtml;
+                  }
+                }))
+            }
           }
         }
       },
@@ -473,6 +493,8 @@
               }
             }));
         }
+
+        //查看各位工位表
         else if (type === "3") {
 
         }
@@ -521,7 +543,36 @@
               console.log(err)
             })
         }
+        //查看精度管理表
         else if (type === "6") {
+
+        }
+        //查看精度管理表
+        else if (type === "6") {
+
+        }
+        //叫料
+        else if (type === "7") {
+
+        }
+        //查看3D图
+        else if (type === "8") {
+
+        }
+        //取消作业
+        else if (type === "9") {
+
+        }
+        //弯头查询
+        else if (type === "10") {
+
+        }
+        //废止管处理
+        else if (type === "11") {
+
+        }
+        //发送数据
+        else if (type === "12") {
 
         }
       },
