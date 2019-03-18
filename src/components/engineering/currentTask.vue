@@ -515,7 +515,7 @@
                     }
                   }
                   that.listTableData = data;
-                  this.jobLogVisible = true;
+                  that.jobLogVisible = true;
                 }
                 else {
                   that.addJl(1);
@@ -695,6 +695,15 @@
         })
           .then((res) => {
             if (res.data === "success") {
+              this.$message({
+                message: '报完工成功',
+                type: 'success'
+              });
+              this.bottomButton[0].disabled = "0";
+              this.bottomButton[1].disabled = "0";
+              this.jobLogVisible = false;
+            }
+            else if (res.data === "1") {
               this.$message({
                 message: '报完工成功',
                 type: 'success'
