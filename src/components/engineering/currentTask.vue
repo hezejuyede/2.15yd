@@ -258,7 +258,7 @@
 
         message: '',
         HideModal: true,
-        step: 3,
+        step: 0,
         routerList: [],
 
         img: [],
@@ -357,7 +357,8 @@
                   that.wtTableData = table.data;
                   that.titleData = table.data.baseItem;
                   that.tableData = table.data.yipintulist;
-                  that.step = table.data.maxstep;
+                  that.step = table.data.flowLine[0].maxstep;
+                  console.log(that.step)
                   that.routerList = table.data.flowLine;
                   that.bottomButton = btn.data;
                   if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
@@ -366,15 +367,19 @@
                 }))
             }
             else if (this.gongHao === "弯头焊") {
+              let pici = this.$route.params.pici;
+              let yiguanno = this.$route.params.yiguanno;
+              let codeno = this.$route.params.codeno;
+              let fuhao = this.$route.params.fuhao;
               axios.all([
-                axios.post(" " + url + "/shengchan/getCurShengchanguanWth", {"id": id}),
+                axios.post(" " + url + "/shengchan/getCurShengchanguanWth", {"pici": pici, "yiguanhao": yiguanno, "codeN": codeno, "fuhao": fuhao}),
                 axios.post(" " + url + "/show/showButton", {"id": this.gongwei}),
               ])
                 .then(axios.spread(function (table, btn) {
                   that.wtTableData = table.data;
                   that.titleData = table.data.baseItem;
                   that.tableData = table.data.yipintulist;
-                  that.step = table.data.maxstep;
+                  that.step = table.data.flowLine[0].maxstep;
                   that.routerList = table.data.flowLine;
                   that.bottomButton = btn.data;
                   if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
@@ -391,7 +396,7 @@
                   that.wtTableData = table.data;
                   that.titleData = table.data.baseItem;
                   that.tableData = table.data.yipintulist;
-                  that.step = table.data.maxstep;
+                  that.step = table.data.flowLine[0].maxstep;
                   that.routerList = table.data.flowLine;
                   that.bottomButton = btn.data;
                   if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
@@ -446,52 +451,80 @@
         }
         //加工结束
         else if (type === "2") {
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/sysconfig/opreaRecordTypeList", {"station": that.gongwei}),
-          ])
-            .then(axios.spread(function (listData) {
-              if(listData.data.length>0){
-                let data = [];
-                for (let i = 0; i < listData.data.length; i++) {
-                  if (listData.data[i].code == 2) {
-                    axios.post(" " + url + "/sys/dictionaryList", {"id": listData.data[i].code})
-                      .then((res) => {
-                        var list = {
-                          id: listData.data[i].id,
-                          cindex: listData.data[i].cindex,
-                          oqtypename: listData.data[i].context,
-                          indexno: listData.data[i].ctype,
-                          oqmsg: listData.data[i].value,
-                          relatableOptions:res.data
-                        };
-                        data.push(list);
-                      })
-                      .catch((err) => {
-                        console.log(err)
-                      });
-                  }
-                  else {
-                    var list = {
-                      id: listData.data[i].id,
-                      cindex: listData.data[i].cindex,
-                      oqtypename: listData.data[i].context,
-                      indexno: listData.data[i].ctype,
-                      oqmsg: listData.data[i].value
-                    };
-                    data.push(list);
-                  }
+          if (this.gongHao === "弯头焊") {
+            let pici = this.$route.params.pici;
+            let yiguanno = this.$route.params.yiguanno;
+            let codeno = this.$route.params.codeno;
+            let fuhao = this.$route.params.fuhao;
+            let that = this;
+            axios.all([
+              axios.post(" " + url + "/shengchan/updateStatusWth", {
+                "pici": pici,
+                "yiguanhao": yiguanno,
+                "codeN": codeno,
+                "fuhao": fuhao,
+                "zuoyezhe":that.zuoyezhe}),
+            ])
+              .then(axios.spread(function (table) {
+                if(table.data==="1"){
+                  that.$message({
+                    message: '报完工成功',
+                    type: 'success'
+                  });
+                  setTimeout(() => {
+                    that.$router.push("/")
+                  }, 1000);
                 }
-                that.listTableData = data;
-                this.jobLogVisible=true;
-              }
-              else {
-                that.addJl(1);
-                setTimeout(() => {
-                  that.$router.push("/")
-                }, 1000);
-              }
-            }));
+              }))
+          }
+          else {
+            let that = this;
+            axios.all([
+              axios.post(" " + url + "/sysconfig/opreaRecordTypeList", {"station": that.gongwei}),
+            ])
+              .then(axios.spread(function (listData) {
+                if (listData.data.length > 0) {
+                  let data = [];
+                  for (let i = 0; i < listData.data.length; i++) {
+                    if (listData.data[i].code == 2) {
+                      axios.post(" " + url + "/sys/dictionaryList", {"id": listData.data[i].code})
+                        .then((res) => {
+                          var list = {
+                            id: listData.data[i].id,
+                            cindex: listData.data[i].cindex,
+                            oqtypename: listData.data[i].context,
+                            indexno: listData.data[i].ctype,
+                            oqmsg: listData.data[i].value,
+                            relatableOptions: res.data
+                          };
+                          data.push(list);
+                        })
+                        .catch((err) => {
+                          console.log(err)
+                        });
+                    }
+                    else {
+                      var list = {
+                        id: listData.data[i].id,
+                        cindex: listData.data[i].cindex,
+                        oqtypename: listData.data[i].context,
+                        indexno: listData.data[i].ctype,
+                        oqmsg: listData.data[i].value
+                      };
+                      data.push(list);
+                    }
+                  }
+                  that.listTableData = data;
+                  this.jobLogVisible = true;
+                }
+                else {
+                  that.addJl(1);
+                  setTimeout(() => {
+                    that.$router.push("/")
+                  }, 1000);
+                }
+              }));
+          }
         }
 
         //查看各位工位表
@@ -518,8 +551,8 @@
         //显示查看当前图纸
         else if (type === "5") {
           let pici = this.titleData[0].text;
-          let yiguanhao = this.titleData[2].text;
-          let code = this.titleData[3].text;
+          let yiguanhao = this.titleData[1].text;
+          let code = this.titleData[2].text;
           axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
             .then((res) => {
               if (res.data.imgurl) {
