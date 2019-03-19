@@ -1241,7 +1241,7 @@
                 "weizhiid": 2,
                 "type": 1
               }),
-              axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": this.gongwei, "yichang": 1})
+              axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": this.gongwei, "yichang": 1,"type": 1})
             ])
               .then(axios.spread(function (title, table) {
                 that.cols = title.data.data;

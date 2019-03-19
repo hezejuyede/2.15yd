@@ -47,7 +47,7 @@
       </div>
     </div>
 
-    <!--上报异常按钮 -->
+    <!--显示上报异常按钮 -->
     <el-dialog title="上报异常按钮注" :visible.sync="abnormalBtnVisible" width="90%">
       <div class="closeBtn">
         <el-button type="danger" @click="abnormalBtnVisible = false" >关闭窗口</el-button>
@@ -76,7 +76,6 @@
         </div>
       </div>
     </el-dialog>
-
 
     <!--上报异常备注 -->
     <el-dialog title="上报异常备注" :visible.sync="abnormalVisible" width="90%">
@@ -188,6 +187,9 @@
 
     <!--弯管状态 -->
     <el-dialog title="弯管完成状态" :visible.sync="elbowVisible" width="95%">
+      <div class="closeBtn">
+        <el-button type="danger" @click="elbowVisible = false" >关闭窗口</el-button>
+      </div>
       <div class="container" style="height:450px;overflow:auto">
         <div class="elbowDiv">
           <div class="elbowTop">
@@ -226,6 +228,9 @@
 
     <!--查看切断表 -->
     <el-dialog title="切断表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
+      <div class="closeBtn">
+        <el-button type="danger" @click="qdbVisible = false" >关闭窗口</el-button>
+      </div>
       <div class="container" style="width: 100%;height: 100%">
         <div class="drawingImg" style="width: 100%;height: 100%">
           <img :src="url" alt="" style="display:block;height: 100%;width: 100%">
@@ -253,57 +258,44 @@
     name: 'drawing',
     data() {
       return {
-        station:1,
+        img: [],             //转圈img数组
+        message: '',         //自己封装的弹框信息
+        HideModal: true,     //是否显示弹出框
+
+        gongwei: "",        //数字工位
+        gongHao: "",        //汉字工号
+        zuoyezhe: "",       //当前登录账户
+        id: "",             //加工详情页面内管子的ID
+
+        step: 0,                            //工艺路线已经走过哪一个
+        routerList: [],                   // 工艺路线的数组，里面有一个或者多个工艺路线
+        titleData: [],                   //当前任务页面头部显示内容数组
+        matterData: "",                 //注意事项的内容
+        bottomButton: [],              //底部按钮的是数组
 
 
-        message: '',
-        HideModal: true,
-        step: 0,
-        routerList: [],
 
-        img: [],
-        id: "",
-        titleData: [],
+        abnormalVisible: false,       //上报异常类型提醒框
+        abnormalBtnVisible:false,     //上报异常按钮提醒框
+        drawingVisible: false,        //一品图提醒框
+        jobLogVisible: false,        //作业执行记录提醒框
+        elbowVisible: false,         //弯管状态提醒框
+        qdbVisible:false,            //工位表提醒框
 
-        tableData: [],
-        cols:[],
+        batch: "",                 //批次值
+        batchOptions: [],          //批次的下拉列表
 
-        matterData: "",
+        wtTableData: [],          //弯头的数据数组
+        wtCols: [],               //弯头的数据表头
 
-        abnormalVisible: false,
-        abnormalBtnVisible:false,
-        drawingVisible: false,
-        jobLogVisible: false,
-        elbowVisible: false,
-        qdbVisible:false,
+        url:"",                 //一品图的URL
+        listTableData:[],       //作业记录表数据
 
-        options: [],
-        remarks: "",
-        Reason:"",
-        zuoyezhe: "",
-
-        wt: "1",
-
-
-        batch: "",
-        batchOptions: [],
-
-
-        wtTableData: [],
-        wtCols: [],
-
-
-        gongwei: "",//数字工位
-        gongHao: "",//汉字工号
-        url:"",
-
-        listTableData:[],
-        selectTb:"",
-        selectTbOptions:[],
-        listData:[],
-
-        bottomButton: [],
-        abnormalReason:"",
+        options: [],                //异常原因的数组
+        abnormalReason: "",       //选择上报的异常原因
+        remarks: "",                // 异常备注的内容
+        Reason:"",                  //选择的异常按钮id号
+        listData:[]                //复选框的ID数组
 
       }
 
@@ -418,7 +410,6 @@
                 if (res.data === "success") {
                   this.bottomButton[0].disabled = "0";
                   this.bottomButton[1].disabled = "1";
-                  this.startWorkBtn = "-1";
                   this.message = "已经开始加工";
                   this.HideModal = false;
                   const that = this;
@@ -483,6 +474,7 @@
               axios.post(" " + url + "/sysconfig/opreaRecordTypeList", {"station": that.gongwei}),
             ])
               .then(axios.spread(function (listData) {
+
                 if (listData.data.length > 0) {
                   let data = [];
                   for (let i = 0; i < listData.data.length; i++) {
@@ -598,8 +590,29 @@
         }
         //弯头查询
         else if (type === "10") {
+          axios.post(" " + url + "/sys/getPiciList")
+            .then((res) => {
+              this.batchOptions = res.data;
+              this.batch = this.batchOptions[0].id;
+              const that = this;
+              axios.all([
+                axios.post(" " + url + "/sys/showTableTitle", {"name": "wtqdb"}),
+                axios.post(" " + url + "/importother/showWtqieduanExcelAll", {"pici": this.batchOptions[0].id})
+              ])
+                .then(axios.spread(function (title, table) {
+                  that.wtCols = title.data;
+                  that.wtTableData = table.data;
+                }));
+              setTimeout(() => {
+                this.elbowVisible = true;
+              }, 400)
 
+            })
+            .catch((err) => {
+              console.log(err)
+            });
         }
+
         //废止管处理
         else if (type === "11") {
 
@@ -610,52 +623,6 @@
         }
       },
 
-      //弯头结束
-      wtEndWord() {
-        axios.post(" " + url + "/shengchan/updateStatus", {
-          "id": this.id,
-          "zuoyezhe": this.zuoyezhe,
-          "stationid": this.gongwei
-        })
-          .then((res) => {
-            if (res.data === "1") {
-              this.endWorkBtn = "-1";
-              this.message = "已经完成加工";
-              this.HideModal = false;
-              const that = this;
-
-              function a() {
-                that.message = "";
-                that.HideModal = true;
-              }
-
-              setTimeout(a, 2000);
-
-            }
-            else if (res.data === "-1") {
-              this.endWorkBtn = "-1";
-              this.message = "完成失败";
-              this.HideModal = false;
-              const that = this;
-
-              function b() {
-                that.message = "";
-                that.HideModal = true;
-              }
-
-              setTimeout(b, 2000);
-
-            }
-            else if (res.data === "2") {
-              this.jobLogVisible = true
-
-
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          });
-      },
 
       //作业记录单选择
       selectJlList(val, index) {
@@ -670,6 +637,7 @@
         }
       },
 
+
       //作业记录多全选
       selectJlAll(val) {
         if (val.length) {
@@ -683,7 +651,7 @@
 
       },
 
-      //提交记录
+      //提交作业质量记录
       addJl(type) {
         axios.post(" " + url + "/shengchan/updateStatus", {
           "id": this.id,
@@ -726,34 +694,6 @@
 
       },
 
-      //显示弯头查询
-      curvedPipeState() {
-
-        axios.post(" " + url + "/sys/getPiciList")
-          .then((res) => {
-            this.batchOptions = res.data;
-            this.batch = this.batchOptions[0].id;
-            const that = this;
-            axios.all([
-              axios.post(" " + url + "/sys/showTableTitle", {"name": "wtqdb"}),
-              axios.post(" " + url + "/importother/showWtqieduanExcelAll", {"pici": this.batchOptions[0].id})
-            ])
-              .then(axios.spread(function (title, table) {
-                that.wtCols = title.data;
-                that.wtTableData = table.data;
-
-              }));
-            setTimeout(() => {
-              this.elbowVisible = true;
-            }, 400)
-
-          })
-          .catch((err) => {
-            console.log(err)
-          });
-
-
-      },
 
       //弯头完成状态查询
       doSearch() {
@@ -840,10 +780,7 @@
           })
         }
       },
-
-
-
-
+      
     }
   }
 </script>
