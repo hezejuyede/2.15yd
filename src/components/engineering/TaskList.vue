@@ -1036,6 +1036,7 @@
     <div class="upTop" ref="upTop" @click="upToTop">
       <i class="iconfont icon-xiangshang1"></i>
     </div>
+
     <div class="loading-container" v-show="!img.length">
       <loading></loading>
     </div>
@@ -1061,6 +1062,7 @@
       return {
         message: '',
         HideModal: true,
+
         img: [],
         nowClick: 2,
 
@@ -1864,6 +1866,8 @@
           }
         })
       },
+
+
       //搜索框变色
       bianse() {
         let search = this.$refs.contentTop;
