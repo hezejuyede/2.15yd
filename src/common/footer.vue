@@ -29,7 +29,7 @@
     this._getIndexUrl()
   },
   created() {
-//禁用浏览器后退事件
+     //禁用浏览器后退事件
     this.beforeCreate ();
   },
   methods: {

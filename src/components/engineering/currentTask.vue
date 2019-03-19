@@ -227,7 +227,7 @@
     </el-dialog>
 
     <!--查看切断表 -->
-    <el-dialog title="切断表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
+    <el-dialog title="当前工位表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
         <el-button type="danger" @click="qdbVisible = false" >关闭窗口</el-button>
       </div>
@@ -780,7 +780,7 @@
           })
         }
       },
-      
+
     }
   }
 </script>
