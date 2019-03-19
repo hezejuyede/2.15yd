@@ -379,6 +379,24 @@
                   }
                 }))
             }
+            else if(this.gongHao === "枝管切断"){
+              let type = this.$route.params.type;
+              axios.all([
+                axios.post(" " + url + "/shengchan/getCurShengchanguanZhiguan", {"id": id,"type":type}),
+                axios.post(" " + url + "/show/showButton", {"id": this.gongwei}),
+              ])
+                .then(axios.spread(function (table, btn) {
+                  that.wtTableData = table.data;
+                  that.titleData = table.data.baseItem;
+                  that.tableData = table.data.yipintulist;
+                  that.step = table.data.flowLine[0].maxstep;
+                  that.routerList = table.data.flowLine;
+                  that.bottomButton = btn.data;
+                  if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
+                    that.matterData = table.data.contextList[0].noticehtml;
+                  }
+                }))
+            }
             else {
               axios.all([
                 axios.post(" " + url + "/shengchan/getCurShengchanguan", {"id": id}),
@@ -467,6 +485,45 @@
                   }, 1000);
                 }
               }))
+          }
+          else if(this.gongHao === "枝管切断"){
+            axios.post(" " + url + "/shengchan/updateStatus", {
+              "id": this.id,
+              "zuoyezhe": this.zuoyezhe,
+              "stationid": this.gongwei,
+              "ids": this.listData,
+              "list": this.listTableData,
+              "type":this.$route.params.type
+            })
+              .then((res) => {
+                if (res.data === "success") {
+                  this.$message({
+                    message: '报完工成功',
+                    type: 'success'
+                  });
+                  this.bottomButton[0].disabled = "0";
+                  this.bottomButton[1].disabled = "0";
+                  this.jobLogVisible = false;
+                }
+                else if (res.data === "1") {
+                  this.$message({
+                    message: '报完工成功',
+                    type: 'success'
+                  });
+                  this.bottomButton[0].disabled = "0";
+                  this.bottomButton[1].disabled = "0";
+                  this.jobLogVisible = false;
+                }
+                else {
+                  this.$message({
+                    message: '提交失败',
+                    type: 'warning'
+                  });
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              });
           }
           else {
             let that = this;

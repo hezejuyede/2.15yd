@@ -778,7 +778,7 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='zzb' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -810,13 +810,13 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='xiaozuli'"
+                  v-if="col.prop==='zzb'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">小组立表
+                      @click="seeCutList(scope.row.id)">正枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -857,7 +857,7 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xzb' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -889,13 +889,13 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='xiaozuli'"
+                  v-if="col.prop==='xzb'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">小组立表
+                      @click="seeCutList(scope.row.id)">斜枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -936,7 +936,7 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='pxz' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -968,13 +968,13 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='xiaozuli'"
+                  v-if="col.prop==='pxz'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">小组立表
+                      @click="seeCutList(scope.row.id)">偏心枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -1053,7 +1053,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">小组立表
+                      @click="seeCutList(scope.row.id)">母管开孔表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -1132,7 +1132,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">小组立表
+                      @click="seeCutList(scope.row.id)">支架管表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -1409,7 +1409,7 @@
 
         num: 1,
 
-        znSearch: true,
+        znSearch: true,   //是否查询
 
 
         tableData: [],//总数据的表数据
@@ -1604,7 +1604,7 @@
             let that = this;
             axios.all([
               axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 1}),
-              axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "3"})
+              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "枝管切断", "type": "1"})
             ])
               .then(axios.spread(function (title, table) {
                 that.cols = title.data.data;
@@ -1703,7 +1703,14 @@
       //输入框为空值时需要执行的数据
       searchEmptyData(search) {
         if (!search) {
-          this.znSearch = true
+          this.znSearch = true;
+          let arr = [];
+          for (let i = 0; i < this.arrAll.length; i++) {
+            if (i < 9) {
+              arr.push(this.arrAll[i])
+            }
+          }
+          this.tableData = arr;
         }
       },
 
@@ -2193,6 +2200,7 @@
           if (id) {
             this.id = id;
             if (this.dqgw === "弯管" || this.dqgw === "43/48装配" || this.dqgw === "45/46装配" || this.dqgw === "大组焊") {
+              localStorage.setItem("pipeId", id);
               this.tdVisible = true;
               this.tdTableData = [{
                 "jiagongxilie": jiagongxilie,
@@ -2201,6 +2209,16 @@
                 "koujing": koujing,
                 "chuanhao": shipcode
               }];
+            }
+            else if(this.dqgw === "枝管切断"){
+
+              localStorage.setItem("pipeId", id);
+              this.$router.push({
+                name: 'CurrentTask',
+                params: {
+                  type: this.gwType
+                }
+              })
             }
             else {
               localStorage.setItem("pipeId", id);
@@ -2331,7 +2349,7 @@
           let that = this;
           axios.all([
             axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": that.gwType}),
-            axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "3"})
+            axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "枝管切断", "type": that.gwType})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
@@ -2361,7 +2379,7 @@
           let that = this;
           axios.all([
             axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type":that.gwType}),
-            axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "4"})
+            axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "枝管切断", "type": that.gwType})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
@@ -2391,7 +2409,7 @@
           let that = this;
           axios.all([
             axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": that.gwType}),
-            axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "5"})
+            axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "枝管切断", "type": that.gwType})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
