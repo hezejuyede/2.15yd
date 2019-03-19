@@ -29,7 +29,7 @@
           </div>
           <div class="listSearchBtn">
             <button @click="showScreening">条件筛选</button>
-            <button @click="zgMaterialStatistics">短管物料统计</button>
+            <button @click="dgMaterialStatistics">短管物料统计</button>
             <button @click="goGeneralListOfProcessing">总清单</button>
             <button @click="workEnd">报完工</button>
           </div>
@@ -44,7 +44,7 @@
           </div>
           <div class="listSearchBtn">
             <button  @click="showScreening">条件筛选</button>
-            <button  @click="zgMaterialStatistics">物料统计</button>
+            <button  @click="materialStatistics">物料统计</button>
             <button  @click="goGeneralListOfProcessing">总清单</button>
             <button @click="workEnd">报完工</button>
           </div>
@@ -59,14 +59,14 @@
           </div>
           <div class="listSearchBtn">
             <button @click="showScreening">条件筛选</button>
-            <button @click="zgMaterialStatistics">一品图预览</button>
+            <button @click="yptLook">一品图预览</button>
             <button @click="goGeneralListOfProcessing">总清单</button>
             <button @click="workEnd">报完工</button>
           </div>
         </div>
       </div>
 
-      <!--切断，直管焊，大阻焊-->
+      <!--切断，直管焊，大阻焊，弯头切断-->
       <div class="publicPage" v-if="this.listType ==1 || this.listType ==5 || this.listType ==6  || this.listType ==3">
         <el-table
           class="tb-edit"
@@ -714,26 +714,129 @@
 
       <!-- 枝管切断-->
       <div class="zgDiv" v-if="this.listType ==4">
-
         <div class="zg-change">
           <div class="change-left" @click="zgShowLeft">
-            <button  :style="{'background-color':this.left ? '#d93f30':''}">
+            <button
+              :style="{
+             'background-color':this.left ? '#2A437B':'',
+             'color':this.left ? '#ffffff':''}">
               正枝
             </button>
           </div>
-          <div class="change-center" @click="zgShowCenter">
-            <button  :style="{'background-color':this.zgCenter ? '#d93f30':''}">
+          <div class="change-left2" @click="zgShowLeft2">
+            <button
+              :style="{
+             'background-color':this.left2 ? '#2A437B':'',
+             'color':this.left2 ? '#ffffff':''}">
               斜枝
             </button>
           </div>
+          <div class="change-center" @click="zgShowCenter">
+            <button
+              :style="{
+             'background-color':this.zgCenter ? '#2A437B':'',
+             'color':this.zgCenter ? '#ffffff':''}">
+              偏心枝
+            </button>
+          </div>
           <div class="change-right" @click="zgShowRight">
-            <button  :style="{'background-color':this.right ? '#d93f30':''}">
-              直枝偏心
+            <button
+              :style="{
+              'background-color':this.right ? '#2A437B':'',
+              'color':this.right ? '#ffffff':''}">
+              母管开孔
+            </button>
+          </div>
+          <div class="change-right2" @click="zgShowRight2">
+            <button
+              :style="{
+              'background-color':this.right2 ? '#2A437B':'',
+              'color':this.right2 ? '#ffffff':''}">
+              支架管
             </button>
           </div>
         </div>
         <div class="zg-list">
           <div class="saoMa" v-if="left === true">
+            <el-table
+              :key="0"
+              class="tb-edit"
+              :data="tableData"
+              height="450"
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              :row-class-name="tableRowClassName"
+              @select="selectList"
+              @select-all="selectAll"
+              @row-click="doSelect"
+              @selection-change="selectChange"
+              ref="moviesTable"
+              style="width: 99%;margin: 0 auto">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xiaozuli'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList(scope.row.id)">小组立表
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </template>
+            </el-table>
+          </div>
+          <div class="saoMa" v-if="left2 === true">
             <el-table
               :key="0"
               class="tb-edit"
@@ -892,6 +995,85 @@
             </el-table>
           </div>
           <div class="account" v-if="right === true">
+            <el-table
+              :key="0"
+              class="tb-edit"
+              :data="tableData"
+              height="450"
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              :row-class-name="tableRowClassName"
+              @select="selectList"
+              @select-all="selectAll"
+              @row-click="doSelect"
+              @selection-change="selectChange"
+              ref="moviesTable"
+              style="width: 99%;margin: 0 auto">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xiaozuli'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList(scope.row.id)">小组立表
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </template>
+            </el-table>
+          </div>
+          <div class="account" v-if="right2 === true">
             <el-table
               :key="0"
               class="tb-edit"
@@ -1215,9 +1397,20 @@
     name: 'ProductionExecution',
     data() {
       return {
+        listType: "",   //根据工位控制显示与隐藏内容模块
+
+
         message: '',  //组件弹出框的信息
         HideModal: true, //组件是否弹出
         img: [],   //转圈img数组
+
+
+        arrAll: [],//优化页面的，第一次加载需要容器数据
+
+        num: 1,
+
+        znSearch: true,
+
 
         tableData: [],//总数据的表数据
         cols: [],     //总数据的表头
@@ -1241,7 +1434,7 @@
         listData: [],  //点击复选框中对ID的数组
 
         id: "",        //管子的ID
-        listType: "",
+
 
 
         inputWord: '',//扫码的Value
@@ -1251,19 +1444,21 @@
 
         gwType: 1,//一种工位有几种类型，
 
-        screenVisible: false,
-        drawingVisible: false,
-        endVisible: false,
-        qdbVisible: false,
-        tdVisible: false,
+        screenVisible: false,   //筛选条件弹出框
+        drawingVisible: false,  // 一品图弹出框
+        endVisible: false,     //报完工提醒弹出框
+        qdbVisible: false,    //工位表查看弹出框
+        tdVisible: false,    //特定工位提醒框
 
 
-        left: true,
-        zgCenter: false,
-        right: false,
+        left: true,    //        显示最左边
+        left2: false,    //      显示左二
+        zgCenter: false,    //   显示中间
+        right: false,    //      显示最右边
+        right2: false,    //     显示右二
 
 
-        gwListType: 0,
+
 
 
         batch: "",
@@ -1315,10 +1510,6 @@
         m: 0,
         n: 0,
 
-
-        arrAll: [],
-        num: 1,
-        znSearch: true,
 
       }
 
@@ -1413,7 +1604,7 @@
             let that = this;
             axios.all([
               axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 1}),
-              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "枝管切断", "type": "1"})
+              axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "3"})
             ])
               .then(axios.spread(function (title, table) {
                 that.cols = title.data.data;
@@ -1660,6 +1851,7 @@
             console.log(err)
           })
       },
+
       //加工完成
       workEnd() {
         if (this.listData.length) {
@@ -1710,8 +1902,23 @@
           })
       },
 
+
       //直管物料统计
       zgMaterialStatistics() {
+
+      },
+
+      //短管物料统计
+      dgMaterialStatistics() {
+
+      },
+      // 物料统计
+      materialStatistics() {
+
+      },
+
+      //一拼图预览
+      yptLook() {
 
       },
 
@@ -2051,6 +2258,12 @@
 
 
 
+
+
+
+
+      
+
       //小组立显示左边
       showLeft() {
         if (this.left !== true) {
@@ -2062,7 +2275,14 @@
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
-              that.tableData = table.data;
+              that.arrAll = table.data;
+              let arr = [];
+              for (let i = 0; i < that.arrAll.length; i++) {
+                if (i < 9) {
+                  arr.push(that.arrAll[i])
+                }
+              }
+              that.tableData = arr;
             }));
           this.left = true;
           this.right = false;
@@ -2080,7 +2300,14 @@
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
-              that.tableData = table.data;
+              that.arrAll = table.data;
+              let arr = [];
+              for (let i = 0; i < that.arrAll.length; i++) {
+                if (i < 9) {
+                  arr.push(that.arrAll[i])
+                }
+              }
+              that.tableData = arr;
             }));
           this.left = false;
           this.gwType = 2;
@@ -2091,59 +2318,159 @@
         }
       },
 
-      //支管显示中二正枝左边
+      //支管显示正枝
       zgShowLeft() {
-        this.cols= [];
-        this.left = true;
-        this.right = false;
-        this.zgCenter = false;
-        this.gwType = "1";
-        let that = this;
-        axios.all([
-          axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": "1"}),
-          axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": this.gwType})
-        ])
-          .then(axios.spread(function (title, table) {
-            that.cols = title.data.data;
-            that.tableData = table.data;
-          }));
+        if (this.left !== true) {
+          this.cols= [];
+          this.left = true;
+          this.left2 = false;
+          this.zgCenter = false;
+          this.right = false;
+          this.right2 = false;
+          this.gwType = "1";
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": that.gwType}),
+            axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "3"})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.arrAll = table.data;
+              let arr = [];
+              for (let i = 0; i < that.arrAll.length; i++) {
+                if (i < 9) {
+                  arr.push(that.arrAll[i])
+                }
+              }
+              that.tableData = arr;
+            }));
+        }
+
       },
 
-      //支管显示中二斜枝中间
+      //支管显示斜枝
+      zgShowLeft2() {
+        if (this.left2 !== true) {
+          this.cols= [];
+          this.left = false;
+          this.left2 = true;
+          this.zgCenter = false;
+          this.right = false;
+          this.right2 = false;
+          this.gwType = "2";
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type":that.gwType}),
+            axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "4"})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.arrAll = table.data;
+              let arr = [];
+              for (let i = 0; i < that.arrAll.length; i++) {
+                if (i < 9) {
+                  arr.push(that.arrAll[i])
+                }
+              }
+              that.tableData = arr;
+            }));
+        }
+
+      },
+
+      //支管显示偏心枝
       zgShowCenter() {
-        this.cols= [];
-        this.left = false;
-        this.right = false;
-        this.zgCenter = true;
-        this.gwType = "2";
-        let that = this;
-        axios.all([
-          axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 2}),
-          axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "4"})
-        ])
-          .then(axios.spread(function (title, table) {
-            that.cols = title.data.data;
-            that.tableData = table.data;
-          }));
+        if (this.zgCenter !== true) {
+          this.cols= [];
+          this.left = false;
+          this.left2 = false;
+          this.zgCenter = true;
+          this.right = false;
+          this.right2 = false;
+          this.gwType = "3";
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": that.gwType}),
+            axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "5"})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.arrAll = table.data;
+              let arr = [];
+              for (let i = 0; i < that.arrAll.length; i++) {
+                if (i < 9) {
+                  arr.push(that.arrAll[i])
+                }
+              }
+              that.tableData = arr;
+            }));
+        }
+
       },
 
-      //支管显示直枝偏心中间
+      //支管显示母管开孔
       zgShowRight() {
-        this.cols= [];
-        this.left = false;
-        this.zgCenter = false;
-        this.right = true;
-        this.gwType = "3";
-        let that = this;
-        axios.all([
-          axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 3}),
-          axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": "5"})
-        ])
-          .then(axios.spread(function (title, table) {
-            that.cols = title.data.data;
-            that.tableData = table.data;
-          }));
+        if (this.right !== true) {
+          this.cols= [];
+          this.left = false;
+          this.left2 = false;
+          this.zgCenter = false;
+          this.right = true;
+          this.right2 = false;
+          this.gwType = "4";
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": that.gwType}),
+            axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": that.gwType})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.arrAll = table.data;
+              let arr = [];
+              for (let i = 0; i < that.arrAll.length; i++) {
+                if (i < 9) {
+                  arr.push(that.arrAll[i])
+                }
+              }
+              that.tableData = arr;
+            }));
+        }
+
       },
+
+      //支管显示支架管
+      zgShowRight2() {
+        if (this.right2 !== true) {
+          this.cols= [];
+          this.left = false;
+          this.left2 = false;
+          this.zgCenter = false;
+          this.right = false;
+          this.right2 = true;
+          this.gwType = "5";
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": that.gwType}),
+            axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": that.gwType})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.arrAll = table.data;
+              let arr = [];
+              for (let i = 0; i < that.arrAll.length; i++) {
+                if (i < 9) {
+                  arr.push(that.arrAll[i])
+                }
+              }
+              that.tableData = arr;
+            }));
+        }
+
+      },
+
+
+
+
 
 
       //搜索框变色
@@ -2290,8 +2617,13 @@
     }
     .zgDiv {
       .zg-change {
-        height: 50px;
+        width: 99%;
+        margin: 0 auto;
+        height: 60px;
         display: flex;
+        background-color: @color-dlLan;;
+        border-top-left-radius: 30px;
+        border-top-right-radius:30px;
         .change-left {
           flex: 1;
           display: flex;
@@ -2301,11 +2633,32 @@
           color: @color-background-dd;
           cursor: pointer;
           button {
-            width: 80%;
-            height: 50px;
-            border-radius: 10px;
-            background-color: #409EFF;
-            color: @color-white;
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
+            border: none;
+          }
+        }
+        .change-left2 {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: @font-size-large;
+          color: @color-background-dd;
+          cursor: pointer;
+          button {
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
             border: none;
           }
         }
@@ -2318,11 +2671,13 @@
           color: @color-background-dd;
           cursor: pointer;
           button {
-            width: 80%;
-            height: 50px;
-            border-radius: 10px;
-            background-color: #409EFF;
-            color: @color-white;
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
             border: none;
           }
         }
@@ -2335,11 +2690,33 @@
           color: @color-background-dd;
           cursor: pointer;
           button {
-            width: 80%;
-            height: 50px;
-            border-radius: 10px;
-            background-color: #409EFF;
-            color: @color-white;
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
+            border: none;
+          }
+
+        }
+        .change-right2 {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: @font-size-large;
+          color: @color-background-dd;
+          cursor: pointer;
+          button {
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
             border: none;
           }
 

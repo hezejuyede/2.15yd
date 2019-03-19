@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <!--切断，直管焊，短管焊-->
+      <!--通用管子-->
       <div class="publicPage" v-if="this.listType ==1">
         <el-table class="tb-edit"
                   :data="tables"
@@ -77,7 +77,8 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList">切断表</el-button>
+                  @click="seeCutList">切断表
+                </el-button>
               </template>
             </el-table-column>
             <el-table-column
@@ -100,7 +101,7 @@
       <!--小组立-->
       <div class="xzlDiv" v-if="this.listType ==2">
         <div class="xzl-change">
-          <div class="change-left" @click="showLeft" >
+          <div class="change-left" @click="showLeft">
             <button
               :style="{
              'background-color':this.left ? '#2A437B':'',
@@ -108,7 +109,7 @@
               中二小组立
             </button>
           </div>
-          <div class="change-right" @click="showRight" >
+          <div class="change-right" @click="showRight">
             <button
               :style="{
              'background-color':this.right ? '#2A437B':'',
@@ -198,12 +199,12 @@
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
-                align="center"
-                v-if="col.prop =='typeStr'"
-                width="48"
-                :prop="col.prop"
-                :label="col.label">
-              </el-table-column>
+                  align="center"
+                  v-if="col.prop =='typeStr'"
+                  width="48"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='levelStr'"
@@ -417,7 +418,8 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">片付表</el-button>
+                      @click="seeCutList">片付表
+                    </el-button>
                   </template>
                 </el-table-column>
               </template>
@@ -425,74 +427,48 @@
           </div>
         </div>
       </div>
-      <!--弯头切断-->
-      <div class="" v-if="this.listType ==3">
-        <el-table
-          :data="tables"
-          :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-          border
-          :row-class-name="tableRowClassName"
-          style="width: 95%;margin: 0 auto">
-          <el-table-column
-            prop="koujing"
-            label="口径"
-            align="center"
-            min-width="20%">
-          </el-table-column>
-          <el-table-column
-            prop="guige"
-            label="规格"
-            align="center"
-            min-width="20%">
-          </el-table-column>
-          <el-table-column
-            prop="jiaodu"
-            label="角度"
-            align="center"
-            min-width="20%">
-          </el-table-column>
-          <el-table-column
-            prop="guanliqufen"
-            label="管理区分"
-            align="center"
-            min-width="30%">
-          </el-table-column>
-          <el-table-column
-            prop="shuliang"
-            label="数量"
-            align="center"
-            min-width="10%">
-          </el-table-column>
-          <el-table-column
-            prop="pici"
-            label="批次"
-            align="center"
-            min-width="20%">
-          </el-table-column>
-          <el-table-column
-            prop="statusStr"
-            label="当前状态"
-            align="center"
-            min-width="10%">
-          </el-table-column>
-        </el-table>
-      </div>
+
       <!-- 枝管切断-->
       <div class="zgDiv" v-if="this.listType ==4">
         <div class="zg-change">
           <div class="change-left" @click="zgShowLeft">
-            <button  :style="{'background-color':this.left ? '#d93f30':''}">
-              中二正枝
+            <button
+              :style="{
+             'background-color':this.left ? '#2A437B':'',
+             'color':this.left ? '#ffffff':''}">
+              正枝
+            </button>
+          </div>
+          <div class="change-left2" @click="zgShowLeft2">
+            <button
+              :style="{
+             'background-color':this.left2 ? '#2A437B':'',
+             'color':this.left2 ? '#ffffff':''}">
+              斜枝
             </button>
           </div>
           <div class="change-center" @click="zgShowCenter">
-            <button  :style="{'background-color':this.zgCenter ? '#d93f30':''}">
-              中二斜枝
+            <button
+              :style="{
+             'background-color':this.zgCenter ? '#2A437B':'',
+             'color':this.zgCenter ? '#ffffff':''}">
+              偏心枝
             </button>
           </div>
           <div class="change-right" @click="zgShowRight">
-            <button  :style="{'background-color':this.right ? '#d93f30':''}">
-              直枝偏心
+            <button
+              :style="{
+              'background-color':this.right ? '#2A437B':'',
+              'color':this.right ? '#ffffff':''}">
+              母管开孔
+            </button>
+          </div>
+          <div class="change-right2" @click="zgShowRight2">
+            <button
+              :style="{
+              'background-color':this.right2 ? '#2A437B':'',
+              'color':this.right2 ? '#ffffff':''}">
+              支架管
             </button>
           </div>
         </div>
@@ -511,10 +487,6 @@
               @selection-change="selectChange"
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
-              <el-table-column
-                type="selection"
-                width="30">
-              </el-table-column>
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
@@ -556,7 +528,82 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">小组立表
+                      @click="seeCutList(scope.row.id)">小组立表
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </template>
+            </el-table>
+          </div>
+          <div class="saoMa" v-if="left2 === true">
+            <el-table
+              :key="0"
+              class="tb-edit"
+              :data="tableData"
+              height="450"
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              :row-class-name="tableRowClassName"
+              @select="selectList"
+              @select-all="selectAll"
+              @row-click="doSelect"
+              @selection-change="selectChange"
+              ref="moviesTable"
+              style="width: 99%;margin: 0 auto">
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xiaozuli'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList(scope.row.id)">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -590,10 +637,6 @@
               @selection-change="selectChange"
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
-              <el-table-column
-                type="selection"
-                width="30">
-              </el-table-column>
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
@@ -635,7 +678,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">小组立表
+                      @click="seeCutList(scope.row.id)">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -669,10 +712,6 @@
               @selection-change="selectChange"
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
-              <el-table-column
-                type="selection"
-                width="30">
-              </el-table-column>
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
@@ -714,7 +753,82 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">小组立表
+                      @click="seeCutList(scope.row.id)">小组立表
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </template>
+            </el-table>
+          </div>
+          <div class="account" v-if="right2 === true">
+            <el-table
+              :key="0"
+              class="tb-edit"
+              :data="tableData"
+              height="450"
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              :row-class-name="tableRowClassName"
+              @select="selectList"
+              @select-all="selectAll"
+              @row-click="doSelect"
+              @selection-change="selectChange"
+              ref="moviesTable"
+              style="width: 99%;margin: 0 auto">
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xiaozuli'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeCutList(scope.row.id)">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -888,7 +1002,7 @@
           </div>
         </div>
         <div class="containerBtn">
-          <el-button type="danger" @click="screenVisible = false" >关闭窗口</el-button>
+          <el-button type="danger" @click="screenVisible = false">关闭窗口</el-button>
           <el-button type="warning" icon="search" @click="emptyAllValue">一键清空</el-button>
           <el-button type="success" icon="search" @click="validationScreening">确认筛选</el-button>
         </div>
@@ -898,7 +1012,7 @@
     <!--查看图纸 -->
     <el-dialog title="一品图查看" :visible.sync="drawingVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
-        <el-button type="danger" @click="drawingVisible = false" >关闭窗口</el-button>
+        <el-button type="danger" @click="drawingVisible = false">关闭窗口</el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
         <div class="drawingImg" style="width: 100%;height: 100%">
@@ -907,10 +1021,10 @@
       </div>
     </el-dialog>
 
-    <!--查看切断表 -->
-    <el-dialog title="切断表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
+    <!--查看工位表 -->
+    <el-dialog title="工位查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
-        <el-button type="danger" @click="qdbVisible = false" >关闭窗口</el-button>
+        <el-button type="danger" @click="qdbVisible = false">关闭窗口</el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
         <div class="drawingImg" style="width: 100%;height: 100%">
@@ -947,18 +1061,18 @@
       return {
         message: '',
         HideModal: true,
-        img:[],
-        nowClick:2,
+        img: [],
+        nowClick: 2,
 
-        k: "200",
+
         url: "",
 
-        stationId:"",
-        gongwei:"",
+        stationId: "",
+        gongwei: "",
 
         screenVisible: false,
         drawingVisible: false,
-        qdbVisible:false,
+        qdbVisible: false,
 
         ycSearchBtn: 0,
         dzySearchBtn: 0,
@@ -972,12 +1086,12 @@
         tableData: [],
         cols: [],
 
-        gwType:1,
+        gwType: 1,
         left: true,
+        left2: false,
         zgCenter: false,
         right: false,
-
-
+        right2: false,
 
         batch: "",
         batchOptions: [],
@@ -988,45 +1102,45 @@
         gw: "",
         gwOptions: [],
 
-        ygh:"",
-        codeN:"",
-        PNO:"",
+        ygh: "",
+        codeN: "",
+        PNO: "",
 
 
         xl: "",
         xlOptions: [],
 
-        typeSelect:"",
-        typeSelectOptions:[],
+        typeSelect: "",
+        typeSelectOptions: [],
 
 
         yxj: "",
         yxjOptions: [],
 
-        kj:"",
+        kj: "",
         kjOptions: [],
 
-        scx:"",
-        scxOptions:[],
+        scx: "",
+        scxOptions: [],
 
-        bihou:"",
-        bihouOptions:[],
-        qianzuoyezhe:"",
+        bihou: "",
+        bihouOptions: [],
+        qianzuoyezhe: "",
 
 
-        a:0,
-        b:0,
-        c:0,
-        d:0,
-        e:0,
-        f:0,
-        g:0,
-        h:0,
-        i:0,
-        j:0,
-        l:0,
-        m:0,
-        n:0,
+        a: 0,
+        b: 0,
+        c: 0,
+        d: 0,
+        e: 0,
+        f: 0,
+        g: 0,
+        h: 0,
+        i: 0,
+        j: 0,
+        l: 0,
+        m: 0,
+        n: 0,
 
       }
 
@@ -1116,18 +1230,6 @@
                 that.tableData = table.data;
               }));
           }
-          else if (info.GW === "弯头切断") {
-            this.listType = "3";
-            setTimeout(() => {
-              axios.post(" " + url + "/importother/showWtqieduanExcelAll", {"gongxu": info.GW})
-                .then((res) => {
-                  this.tableData = res.data;
-                })
-                .catch((err) => {
-                  console.log(err)
-                })
-            }, 1000);
-          }
           else if (info.GW === "枝管切断") {
             this.listType = "4";
             let that = this;
@@ -1167,7 +1269,7 @@
       dzySearch() {
         this.ycSearchBtn = 0;
         this.dzySearchBtn = 1;
-        this.nowClick =1;
+        this.nowClick = 1;
         axios.post(" " + url + "/shengchan/shengchanListAll",
           {
             "gongxu": this.gongwei,
@@ -1187,7 +1289,7 @@
       ycSearch() {
         this.ycSearchBtn = 1;
         this.dzySearchBtn = 0;
-        this.nowClick =2;
+        this.nowClick = 2;
         axios.post(" " + url + "/shengchan/shengchanListAll",
           {
             "gongxu": this.gongwei,
@@ -1209,7 +1311,7 @@
         if (this.batch) {
           this.ycSearchBtn = 0;
           this.dzySearchBtn = 0;
-          this.nowClick =3;
+          this.nowClick = 3;
           const userInfo = sessionStorage.getItem("userInfo");
           if (userInfo === null) {
             this.$router.push("/ProductionExecutionLogin")
@@ -1322,7 +1424,7 @@
 
       //进行筛选查询
       validationScreening() {
-        this.nowClick =4;
+        this.nowClick = 4;
         if (this.ycSearchBtn === 1) {
           axios.post(" " + url + "/shengchan/shengchanListAll",
             {
@@ -1579,7 +1681,7 @@
 
       //小组立显示左边
       showLeft() {
-        if(this.left !==true){
+        if (this.left !== true) {
           this.cols = [];
           this.left = true;
           this.right = false;
@@ -1587,7 +1689,11 @@
           setTimeout(() => {
             let that = this;
             axios.all([
-              axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 1}),
+              axios.post(" " + url + "/sys/showTableTitleById", {
+                "stationid": this.stationId,
+                "weizhiid": 2,
+                "type": 1
+              }),
               axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "1"})
             ])
               .then(axios.spread(function (title, table) {
@@ -1601,7 +1707,7 @@
 
       //小组立显示右边
       showRight() {
-        if(this.right !==true){
+        if (this.right !== true) {
           this.cols = [];
           this.left = false;
           this.right = true;
@@ -1609,7 +1715,11 @@
           setTimeout(() => {
             let that = this;
             axios.all([
-              axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 2}),
+              axios.post(" " + url + "/sys/showTableTitleById", {
+                "stationid": this.stationId,
+                "weizhiid": 2,
+                "type": 2
+              }),
               axios.post(" " + url + "/shengchan/shengchanListAll.html", {"gongxu": "小组立", "type": "2"})
             ])
               .then(axios.spread(function (title, table) {
@@ -1623,64 +1733,117 @@
       },
 
 
-      //支管显示中二正枝左边
+      //支管显示正枝
       zgShowLeft() {
-        this.cols = [];
-        this.left = true;
-        this.right = false;
-        this.zgCenter = false;
-        this.gwType = 1;
-        setTimeout(() => {
+        if (this.left !== true) {
+          this.cols= [];
+          this.left = true;
+          this.left2 = false;
+          this.zgCenter = false;
+          this.right = false;
+          this.right2 = false;
+          this.gwType = "1";
           let that = this;
           axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 1}),
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": this.gwType}),
             axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "3"})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
               that.tableData = table.data;
             }));
-        }, 200)
+        }
+
       },
 
-      //支管显示中二斜枝中间
-      zgShowCenter() {
-        this.cols = [];
-        this.left = false;
-        this.right = false;
-        this.zgCenter = true;
-        this.gwType = 2;
-        setTimeout(() => {
+      //支管显示斜枝
+      zgShowLeft2() {
+        if (this.left2 !== true) {
+          this.cols= [];
+          this.left = false;
+          this.left2 = true;
+          this.zgCenter = false;
+          this.right = false;
+          this.right2 = false;
+          this.gwType = "2";
           let that = this;
           axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 2}),
-            axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "4"})
-          ])
-            .then(axios.spread(function (title, table) {
-              that.cols = title.data.data;
-              that.tableData = table.data;
-            }));
-        }, 200)
-      },
-
-      //支管显示直枝偏心中间
-      zgShowRight() {
-        this.cols = [];
-        this.left = false;
-        this.zgCenter = false;
-        this.right = true;
-        this.gwType = 3;
-        setTimeout(() => {
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": 3}),
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": this.gwType}),
             axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "5"})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
               that.tableData = table.data;
             }));
-        }, 200)
+        }
+
+      },
+
+      //支管显示偏心枝
+      zgShowCenter() {
+        if (this.zgCenter !== true) {
+          this.cols= [];
+          this.left = false;
+          this.left2 = false;
+          this.zgCenter = true;
+          this.right = false;
+          this.right2 = false;
+          this.gwType = "3";
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type":that.gwType}),
+            axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "4"})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.tableData = table.data;
+            }));
+        }
+
+      },
+
+      //支管显示母管开孔
+      zgShowRight() {
+        if (this.right !== true) {
+          this.cols= [];
+          this.left = false;
+          this.left2 = false;
+          this.zgCenter = false;
+          this.right = true;
+          this.right2 = false;
+          this.gwType = "4";
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": that.gwType}),
+            axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": that.gwType})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.tableData = table.data;
+            }));
+        }
+      },
+
+      //支管显示支架管
+      zgShowRight2() {
+        if (this.right2 !== true) {
+          this.cols= [];
+          this.left = false;
+          this.left2 = false;
+          this.zgCenter = false;
+          this.right = false;
+          this.right2 = true;
+          this.gwType = "5";
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": that.gwType}),
+            axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": that.gwType})
+          ])
+            .then(axios.spread(function (title, table) {
+              that.cols = title.data.data;
+              that.tableData = table.data;
+            }));
+        }
       },
 
 
@@ -1848,7 +2011,7 @@
         display: flex;
         background-color: @color-dlLan;;
         border-top-left-radius: 30px;
-        border-top-right-radius:30px;
+        border-top-right-radius: 30px;
         .change-left {
           flex: 1;
           display: flex;
@@ -1893,8 +2056,13 @@
     }
     .zgDiv {
       .zg-change {
-        height: 50px;
+        width: 99%;
+        margin: 0 auto;
+        height: 60px;
         display: flex;
+        background-color: @color-dlLan;;
+        border-top-left-radius: 30px;
+        border-top-right-radius:30px;
         .change-left {
           flex: 1;
           display: flex;
@@ -1903,12 +2071,33 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
-          button{
-            width: 80%;
-            height: 50px;
-            border-radius: 10px;
-            background-color: #409EFF;
-            color: @color-white;
+          button {
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
+            border: none;
+          }
+        }
+        .change-left2 {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: @font-size-large;
+          color: @color-background-dd;
+          cursor: pointer;
+          button {
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
             border: none;
           }
         }
@@ -1920,12 +2109,14 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
-          button{
-            width: 80%;
-            height: 50px;
-            border-radius: 10px;
-            background-color: #409EFF;
-            color: @color-white;
+          button {
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
             border: none;
           }
         }
@@ -1937,14 +2128,37 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
-          button{
-            width: 80%;
-            height: 50px;
-            border-radius: 10px;
-            background-color: #409EFF;
-            color: @color-white;
+          button {
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
             border: none;
           }
+
+        }
+        .change-right2 {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: @font-size-large;
+          color: @color-background-dd;
+          cursor: pointer;
+          button {
+            width: 100%;
+            height: 100%;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            color: @color-background-dd;
+            cursor: pointer;
+            background-color: @color-white;
+            border: none;
+          }
+
         }
       }
     }
@@ -2011,7 +2225,7 @@
     transform: translateY(-50%);
   }
 
-  .closeBtn{
+  .closeBtn {
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -2024,7 +2238,6 @@
       height: 35px;
     }
   }
-
 
   @media only screen and (max-width: 800px) {
     .TaskList {
