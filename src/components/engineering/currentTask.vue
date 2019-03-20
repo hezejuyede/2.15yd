@@ -341,7 +341,7 @@
             let that = this;
             if (this.gongHao === "43/48装配" || this.gongHao === "45/46装配" || this.gongHao === "大组焊") {
               axios.all([
-                axios.post(" " + url + "/shengchan/getCurShengchanguanZhuangpei", {"id": id}),
+                axios.post(" " + url + "/shengchan/getCurShengchanguanZhuangpei", {"id": id,stationid:this.gongwei}),
                 axios.post(" " + url + "/show/showButton", {"id": this.gongwei}),
               ])
                 .then(axios.spread(function (table, btn) {
@@ -723,14 +723,14 @@
       },
 
       //提交作业质量记录
-      addJl(type) {
+      addJl() {
         axios.post(" " + url + "/shengchan/updateStatus", {
           "id": this.id,
           "zuoyezhe": this.zuoyezhe,
           "stationid": this.gongwei,
           "ids": this.listData,
           "list": this.listTableData,
-          "type":type
+          "type":1
         })
           .then((res) => {
             if (res.data === "success") {
@@ -741,6 +741,10 @@
               this.bottomButton[0].disabled = "0";
               this.bottomButton[1].disabled = "0";
               this.jobLogVisible = false;
+              let that =this;
+              setTimeout(() => {
+                that.$router.push("/")
+              }, 1000);
             }
             else if (res.data === "1") {
               this.$message({
@@ -750,6 +754,10 @@
               this.bottomButton[0].disabled = "0";
               this.bottomButton[1].disabled = "0";
               this.jobLogVisible = false;
+              let that =this;
+              setTimeout(() => {
+                that.$router.push("/")
+              }, 1000);
             }
             else {
               this.$message({
@@ -877,6 +885,7 @@
           .titleDivLeft {
             width: 40%;
             height: 50%;
+            text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -891,6 +900,7 @@
           .titleDivRight {
             width: 50%;
             height: 50%;
+            text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
