@@ -73,6 +73,7 @@
           v-tableLoadingMore="tableLoadingMore"
           :data="tableData"
           height="500"
+          border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           :row-class-name="tableRowClassName"
           @select="selectList"
@@ -154,6 +155,7 @@
           v-tableLoadingMore="tableLoadingMore"
           :data="tableData"
           height="500"
+          border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           :row-class-name="tableRowClassName"
           @select="selectList"
@@ -262,6 +264,7 @@
           v-tableLoadingMore="tableLoadingMore"
           :data="tableData"
           height="500"
+          border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           :row-class-name="tableRowClassName"
           @select="selectList"
@@ -366,6 +369,7 @@
           v-tableLoadingMore="tableLoadingMore"
           :data="tableData"
           height="500"
+          border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           :row-class-name="tableRowClassName"
           @select="selectList"
@@ -479,6 +483,7 @@
               class="tb-edit"
               :data="tableData"
               height="450"
+              border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'14px'}"
               :row-class-name="tableRowClassName"
               @select="selectList"
@@ -495,56 +500,49 @@
                 <el-table-column
                   align="center"
                   v-if="col.prop =='pici'"
-                  width="83"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='shipcode'"
-                  width="63"
+                  width="85"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='pno'"
-                  width="51"
+                  width="52"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='guige'"
-                  width="48"
+                  width="52"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='hujing'"
-                  width="48"
+                  width="52"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='houdu'"
-                  width="48"
+                  width="52"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='lianjiexinxi'"
-                  width="48"
+                  width="52"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='qieduanchang'"
-                  width="66"
+                  width="70"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -558,21 +556,21 @@
                 <el-table-column
                   align="center"
                   v-if="col.prop =='jiagongxilie'"
-                  width="48"
+                  width="52"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='typeStr'"
-                  width="48"
+                  width="52"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='levelStr'"
-                  width="63"
+                  width="70"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -636,6 +634,7 @@
               class="tb-edit"
               :data="tableData"
               height="450"
+              border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
               @select="selectList"
@@ -763,6 +762,7 @@
               class="tb-edit"
               :data="tableData"
               height="450"
+              border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
               @select="selectList"
@@ -842,6 +842,7 @@
               class="tb-edit"
               :data="tableData"
               height="450"
+              border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
               @select="selectList"
@@ -921,6 +922,7 @@
               class="tb-edit"
               :data="tableData"
               height="450"
+              border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
               @select="selectList"
@@ -1000,6 +1002,7 @@
               class="tb-edit"
               :data="tableData"
               height="450"
+              border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
               @select="selectList"
@@ -1079,6 +1082,7 @@
               class="tb-edit"
               :data="tableData"
               height="450"
+              border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
               @select="selectList"

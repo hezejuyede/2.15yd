@@ -42,6 +42,7 @@
         <el-table class="tb-edit"
                   :data="tables"
                   height="500"
+                  border
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
                   :row-class-name="tableRowClassName"
                   ref="moviesTable"
@@ -123,6 +124,7 @@
             <el-table class="tb-edit"
                       :data="tables"
                       height="450"
+                      border
                       :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
                       :row-class-name="tableRowClassName"
                       ref="moviesTable"
@@ -131,49 +133,28 @@
                 <el-table-column
                   align="center"
                   v-if="col.prop =='pici'"
-                  width="83"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='shipcode'"
-                  width="63"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='pno'"
-                  width="40"
+                  width="85"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='guige'"
-                  width="48"
+                  width="60"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='hujing'"
-                  width="48"
+                  width="60"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='houdu'"
-                  width="48"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='lianjiexinxi'"
-                  width="48"
+                  width="60"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -194,40 +175,31 @@
                 <el-table-column
                   align="center"
                   v-if="col.prop =='jiagongxilie'"
-                  width="48"
+                  width="55"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='typeStr'"
-                  width="48"
+                  width="60"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='levelStr'"
-                  width="65"
+                  width="70"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  width="50"
+                  width="120"
                   v-if="col.prop==='yiguanno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     {{ scope.row.yiguanno }}
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  width="50"
-                  v-if="col.prop==='codeno'"
-                  :prop="col.prop" :label="col.label">
-                  <template scope="scope">
-                    {{ scope.row.codeno }}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -258,14 +230,14 @@
                 <el-table-column
                   align="center"
                   v-if="col.prop =='curstationname'"
-                  width="50"
+                  width="90"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   v-if="col.prop =='statusStr'"
-                  width="50"
+                  width="90"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -276,6 +248,7 @@
             <el-table class="tb-edit"
                       :data="tables"
                       height="450"
+                      border
                       :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
                       :row-class-name="tableRowClassName"
                       ref="moviesTable"
@@ -479,6 +452,7 @@
               class="tb-edit"
               :data="tableData"
               height="450"
+              border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
               @select="selectList"
@@ -554,6 +528,7 @@
               class="tb-edit"
               :data="tableData"
               height="450"
+              border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
               @select="selectList"
@@ -629,6 +604,7 @@
               class="tb-edit"
               :data="tableData"
               height="450"
+              border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
               @select="selectList"
@@ -704,6 +680,7 @@
               class="tb-edit"
               :data="tableData"
               height="450"
+              border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
               @select="selectList"
@@ -779,6 +756,7 @@
               class="tb-edit"
               :data="tableData"
               height="450"
+              border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
               @select="selectList"
