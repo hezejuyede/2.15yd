@@ -25,7 +25,7 @@
       <div class="currentTaskRouter">
         <div class="" v-for="(item,index) in routerList">
           <div class="currentTaskRouterList" >
-            <el-steps align-center :active="item.step" finish-status="success">
+            <el-steps align-center :active="item.maxstep" finish-status="success">
               <el-step v-for="(item,index) in item.nodeList" :keys="index" :title="item.stationname"></el-step>
             </el-steps>
           </div>
@@ -267,7 +267,6 @@
         zuoyezhe: "",       //当前登录账户
         id: "",             //加工详情页面内管子的ID
 
-        step: 0,                            //工艺路线已经走过哪一个
         routerList: [],                   // 工艺路线的数组，里面有一个或者多个工艺路线
         titleData: [],                   //当前任务页面头部显示内容数组
         matterData: "",                 //注意事项的内容
