@@ -1885,8 +1885,8 @@
             "ids": this.listData,
             "zuoyezhe": this.zuoyezhe,
             "gongwei": this.dqgw,
-            "type": this.gwListType,
-            "stationid": this.stationId
+            "type": this.gwType,
+            "stationid": this.stationId,
           })
           .then((res) => {
             if (res.data === "1") {

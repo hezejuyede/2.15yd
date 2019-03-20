@@ -25,7 +25,7 @@
       <div class="currentTaskRouter">
         <div class="" v-for="(item,index) in routerList">
           <div class="currentTaskRouterList" >
-            <el-steps align-center :active="step" finish-status="success">
+            <el-steps align-center :active="item.step" finish-status="success">
               <el-step v-for="(item,index) in item.nodeList" :keys="index" :title="item.stationname"></el-step>
             </el-steps>
           </div>
@@ -389,7 +389,23 @@
                   that.wtTableData = table.data;
                   that.titleData = table.data.baseItem;
                   that.tableData = table.data.yipintulist;
-                  that.step = table.data.flowLine[0].maxstep;
+                  that.routerList = table.data.flowLine;
+                  that.bottomButton = btn.data;
+                  if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
+                    that.matterData = table.data.contextList[0].noticehtml;
+                  }
+                }))
+            }
+            else if(this.gongHao === "弯头切断"){
+              let type = this.$route.params.type;
+              axios.all([
+                axios.post(" " + url + "/shengchan/getCurShengchanguanwtqd", {"id": id}),
+                axios.post(" " + url + "/show/showButton", {"id": this.gongwei}),
+              ])
+                .then(axios.spread(function (table, btn) {
+                  that.wtTableData = table.data;
+                  that.titleData = table.data.baseItem;
+                  that.tableData = table.data.yipintulist;
                   that.routerList = table.data.flowLine;
                   that.bottomButton = btn.data;
                   if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
@@ -406,7 +422,6 @@
                   that.wtTableData = table.data;
                   that.titleData = table.data.baseItem;
                   that.tableData = table.data.yipintulist;
-                  that.step = table.data.flowLine[0].maxstep;
                   that.routerList = table.data.flowLine;
                   that.bottomButton = btn.data;
                   if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
