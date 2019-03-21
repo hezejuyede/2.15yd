@@ -1,7 +1,7 @@
 <template>
   <div class="currentTask">
     <header-nav></header-nav>
-    <div class="currentTaskTemplate">
+    <div class="currentTaskTemplate"  v-if="this.gongHao !=='小组立'">
       <div class="currentTaskTitle">
         <div class="titleDiv" v-for="(item,index) in titleData" :style="{'width':item.width}">
           <div class="titleDivLeft">
@@ -11,6 +11,162 @@
             {{item.text}}
           </div>
         </div>
+      </div>
+      <div class="currentTaskBtn">
+        <div class="templateBtn" v-for="(item,index) in bottomButton"   v-if="item.show==1">
+          <button
+            :disabled="item.disabled==='0'"
+            @click="bottomButtonClick(item.type)"
+            :style="{'background-color':item.backgroundcolor,'color':item.color}">
+            {{item.name}}
+          </button>
+        </div>
+      </div>
+      <div class="currentTaskRouter">
+        <div class="" v-for="(item,index) in routerList">
+          <div class="currentTaskRouterList" >
+            <el-steps align-center :active="item.maxstep" finish-status="success">
+              <el-step v-for="(item,index) in item.nodeList" :keys="index" :title="item.stationname"></el-step>
+            </el-steps>
+          </div>
+        </div>
+      </div>
+      <div class="currentTaskDiv">
+        <div class="currentTaskDivLeft">
+          <i class="iconfont icon-unie62b"></i>
+          <span>当前工位注意事项</span>
+        </div>
+        <div class="currentTaskDivRight" v-html="matterData"></div>
+      </div>
+      <div class="currentTaskDiv">
+        <div class="currentTaskDivLeft">
+          <i class="iconfont icon-unie62b"></i>
+          <span>当前加工管注意事项</span>
+        </div>
+        <div class="currentTaskDivRight" v-html="matterData"></div>
+      </div>
+    </div>
+
+    <div class="currentTaskTemplate" v-if="this.gongHao==='小组立'">
+      <div class="currentTaskTitle">
+        <template>
+          <el-table
+            :data="xzlData"
+            :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            color:'rgba(0, 0, 0, 1)'}"
+            :cell-style="{
+             border: '1px solid #303133'
+            }"
+            style="width: 100%;border: 1px solid #303133">
+            <el-table-column
+              align="center"
+              prop="indexno"
+              label="序号"
+              width="50">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="chuanhao"
+              label="船番NE0"
+              width="55">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="jiagongxilie"
+              label="加工系列"
+              width="54">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="yiguanhao"
+              label="一贯番号"
+              width="64">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="daihao"
+              label="代号"
+              width="50">
+            </el-table-column>
+            <el-table-column align="center" label="管材">
+              <el-table-column
+                align="center"
+                prop="pno"
+                label="PNo."
+                width="54">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="guige"
+                label="规格"
+                width="53">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="hujing"
+                label="呼径"
+                width="51">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="houdu"
+                label="厚度"
+                width="51">
+              </el-table-column>
+              <el-table-column
+                width="70"
+                prop="qieduanchang"
+                align="center"
+                label="切断长">
+              </el-table-column>
+              <el-table-column
+                width="54"
+                prop="danwei"
+                align="center"
+                label="单位">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="guanduan"
+                label="管端"
+                width="55">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jiaodu"
+                label="角度"
+                width="55">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="lianjiexinxi"
+              label="连接信息"
+              width="53">
+            </el-table-column>
+            <el-table-column align="center" label="金物">
+              <el-table-column
+                align="center"
+                prop="pinming"
+                label="品名（注番）.">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="guanduan2"
+              label="管端"
+              width="55">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="beizhu"
+              label="备注"
+              width="60">
+            </el-table-column>
+          </el-table>
+        </template>
       </div>
       <div class="currentTaskBtn">
         <div class="templateBtn" v-for="(item,index) in bottomButton"   v-if="item.show==1">
@@ -273,6 +429,9 @@
         bottomButton: [],              //底部按钮的是数组
 
 
+        xzlData:[],                     //小组立表的数据
+
+
 
         abnormalVisible: false,       //上报异常类型提醒框
         abnormalBtnVisible:false,     //上报异常按钮提醒框
@@ -420,6 +579,7 @@
                 .then(axios.spread(function (table, btn) {
                   that.wtTableData = table.data;
                   that.titleData = table.data.baseItem;
+                  that.xzlData =table.data.baseItem;
                   that.tableData = table.data.yipintulist;
                   that.routerList = table.data.flowLine;
                   that.bottomButton = btn.data;
@@ -915,6 +1075,11 @@
             text-overflow: ellipsis;
           }
         }
+
+
+
+
+
       }
       .currentTaskDiv {
         width: 95%;
@@ -999,6 +1164,9 @@
     }
 
   }
+
+
+
 
   .qualityDiv {
     width: 100%;
