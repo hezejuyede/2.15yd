@@ -210,7 +210,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">小组立表
+                      @click="seeXzlList(scope.row.pici)">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -245,102 +245,33 @@
             </el-table>
           </div>
           <div class="account" v-if="right === true">
-            <el-table class="tb-edit"
-                      :data="tables"
-                      height="450"
-                      border
-                      :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-                      :row-class-name="tableRowClassName"
-                      ref="moviesTable"
-                      style="width: 99%;margin: 0 auto">
+            <el-table
+              :key="1"
+              class="tb-edit"
+              :data="tableData"
+              height="450"
+              border
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              :row-class-name="tableRowClassName"
+              @select="selectList"
+              @select-all="selectAll"
+              @row-click="doSelect"
+              @selection-change="selectChange"
+              ref="moviesTable"
+              style="width: 99%;margin: 0 auto">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop =='pici'"
-                  width="83"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='pianfubiao' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop =='chuanhao'"
-                  width="63"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='pno'"
-                  width="40"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='guige'"
-                  width="48"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='hujing'"
-                  width="48"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='houdu'"
-                  width="48"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='lianjiexinxi'"
-                  width="48"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='qieduanchang'"
-                  width="70"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='beizhu'"
-                  width="45"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='jiagongxilie'"
-                  width="48"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='typeStr'"
-                  width="48"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='levelStr'"
-                  width="65"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  width="50"
                   v-if="col.prop==='yiguanno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
@@ -349,7 +280,6 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  width="50"
                   v-if="col.prop==='codeno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
@@ -371,27 +301,13 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop =='curstationname'"
-                  width="50"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop =='statusStr'"
-                  width="50"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
                   v-if="col.prop==='pianfubiao'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList">片付表
+                      @click="seeCutList(scope.row.id)">片付表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -831,6 +747,7 @@
     </div>
 
 
+
     <!--筛选条件 -->
     <el-dialog title="筛选条件" :visible.sync="screenVisible" width="90%">
       <div class="container" style="height:400px;overflow:auto">
@@ -1011,6 +928,134 @@
       </div>
     </el-dialog>
 
+    <!--查看小组立表 -->
+    <el-dialog title="小组立表查看" :visible.sync="xzlVisible" :fullscreen="true" :center="true">
+      <div class="closeBtn">
+        <el-button type="danger" @click="xzlVisible = false">关闭窗口</el-button>
+      </div>
+      <div class="container" style="width: 100%;height: 100%">
+        <el-table
+          :data="xzlData"
+           height="640"
+          :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            fontSize:'12px',
+            color:'rgba(0, 0, 0, 1)'}"
+          :cell-style="{
+             border: '1px solid #303133',
+             fontSize:'12px'
+            }"
+          style="width: 100%;border: 1px solid #303133">
+          <!--  <el-table-column
+              align="center"
+              prop="indexno"
+              label="序号"
+              width="50">
+            </el-table-column>-->
+          <el-table-column
+            align="center"
+            prop="chuanhao"
+            label="船番NE0"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="jiagongxilie"
+            label="加工系列"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="yiguanhao"
+            label="一贯番号"
+            width="57">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="daihao"
+            label="代号"
+            width="50">
+          </el-table-column>
+          <el-table-column align="center" label="管材">
+            <el-table-column
+              align="center"
+              prop="pno"
+              label="PNo"
+              width="50">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="guige"
+              label="规格"
+              width="53">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="hujing"
+              label="呼径"
+              width="51">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="houdu"
+              label="厚度"
+              width="51">
+            </el-table-column>
+            <el-table-column
+              width="70"
+              prop="qieduanchang"
+              align="center"
+              label="切断长">
+            </el-table-column>
+            <el-table-column
+              width="50"
+              prop="danwei"
+              align="center"
+              label="单位">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="guanduan"
+              label="管端"
+              width="70">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="jiaodu"
+              label="角度"
+              width="55">
+            </el-table-column>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="lianjiexinxi"
+            label="连接信息"
+            width="53">
+          </el-table-column>
+          <el-table-column align="center" label="金物">
+            <el-table-column
+              align="center"
+              prop="pinming"
+              label="品名（注番）.">
+            </el-table-column>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="guanduan2"
+            label="管端"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="beizhu"
+            label="备注"
+            width="60">
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-dialog>
+
     <div class="upTop" ref="upTop" @click="upToTop">
       <i class="iconfont icon-xiangshang1"></i>
     </div>
@@ -1044,7 +1089,7 @@
         img: [],
         nowClick: 2,
 
-
+        xzlData:[],
         url: "",
 
         stationId: "",
@@ -1053,6 +1098,7 @@
         screenVisible: false,
         drawingVisible: false,
         qdbVisible: false,
+        xzlVisible:false,
 
         ycSearchBtn: 0,
         dzySearchBtn: 0,
@@ -1658,6 +1704,42 @@
 
       },
 
+      //查看小组立表
+      seeXzlList(pici) {
+        //防止冒泡
+        if (event && event.stopPropagation) {
+          //W3C取消冒泡事件
+          event.stopPropagation();
+          axios.post(" " + url + "/importother/showXiaozuliExcel", {"pici": pici})
+            .then((res) => {
+              if (res.data) {
+                this.xzlData = res.data;
+                this.xzlVisible = true;
+              }
+              else {
+                this.message = "没有查到切断表";
+                this.HideModal = false;
+                const that = this;
+
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                }
+
+                setTimeout(a, 2000);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+        else {
+          //IE取消冒泡事件
+          window.event.cancelBubble = true;
+
+        }
+
+      },
 
       //小组立显示左边
       showLeft() {

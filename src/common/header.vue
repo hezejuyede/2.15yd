@@ -1,7 +1,7 @@
 <template>
     <div class="headerCommon clearfix">
       <div class="header-left fl">
-        <div class="collapse-btn">
+        <div class="collapse-btn" @click="handleFullScreen">
           <i class="el-icon-menu"></i>
         </div>
         <div class="logo">中二线管加工生产执行系统</div>
@@ -73,6 +73,33 @@
           this.GW = info.GW;
           this.LastLoginTime = info.LastLoginTime;
         }
+      },
+       // 全屏事件
+      handleFullScreen() {
+        let element = document.documentElement;
+        if (this.fullscreen) {
+          if (document.exitFullscreen) {
+            document.exitFullscreen();
+          } else if (document.webkitCancelFullScreen) {
+            document.webkitCancelFullScreen();
+          } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+          } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+          }
+        } else {
+          if (element.requestFullscreen) {
+            element.requestFullscreen();
+          } else if (element.webkitRequestFullScreen) {
+            element.webkitRequestFullScreen();
+          } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+          } else if (element.msRequestFullscreen) {
+            // IE11
+            element.msRequestFullscreen();
+          }
+        }
+        this.fullscreen = !this.fullscreen;
       },
       //离开岗位
       LeavePost() {

@@ -608,7 +608,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">小组立表
+                      @click="seeXzlList(scope.row.id,scope.row.pici)">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -659,12 +659,7 @@
                   v-if="col.prop==='yiguanno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.yiguanno }}
-                    </el-button>
+                    {{ scope.row.yiguanno }}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -672,12 +667,7 @@
                   v-if="col.prop==='codeno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.codeno }}
-                    </el-button>
+                    {{ scope.row.codeno }}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -1337,9 +1327,248 @@
         <el-button type="primary" @click="gwbDoWorkEnd">报完工</el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
-        <div class="drawingImg" style="width: 100%;height: 100%">
-          <img :src="url" alt="" style="display:block;height: 100%;width: 100%">
-        </div>
+        <el-table
+          :data="qdbData"
+          height="640"
+          :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            fontSize:'12px',
+            color:'rgba(0, 0, 0, 1)'}"
+          :cell-style="{
+             border: '1px solid #303133',
+             fontSize:'12px'
+            }"
+          style="width: 100%;border: 1px solid #303133">
+          <el-table-column
+            align="center"
+            prop="chuanhao"
+            label="船番NE0"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="jiagongxilie"
+            label="加工系列"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="yiguanhao"
+            label="一贯番号"
+            width="57">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="daihao"
+            label="代号"
+            width="50">
+          </el-table-column>
+          <el-table-column align="center" label="管材">
+            <el-table-column
+              align="center"
+              prop="pno"
+              label="PNo"
+              width="50">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="guige"
+              label="规格"
+              width="53">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="hujing"
+              label="呼径"
+              width="51">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="houdu"
+              label="厚度"
+              width="51">
+            </el-table-column>
+            <el-table-column
+              width="70"
+              prop="qieduanchang"
+              align="center"
+              label="切断长">
+            </el-table-column>
+            <el-table-column
+              width="50"
+              prop="danwei"
+              align="center"
+              label="单位">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="guanduan"
+              label="管端"
+              width="70">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="jiaodu"
+              label="角度"
+              width="55">
+            </el-table-column>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="lianjiexinxi"
+            label="连接信息"
+            width="53">
+          </el-table-column>
+          <el-table-column align="center" label="金物">
+            <el-table-column
+              align="center"
+              prop="pinming"
+              label="品名（注番）.">
+            </el-table-column>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="guanduan2"
+            label="管端"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="beizhu"
+            label="备注"
+            width="60">
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-dialog>
+
+    <!--查看小组立表 -->
+    <el-dialog title="小组立表查看" :visible.sync="xzlVisible" :fullscreen="true" :center="true">
+      <div class="closeBtn">
+        <el-button type="danger" @click="xzlVisible = false">关闭窗口</el-button>
+        <el-button type="primary" @click="gwbDoWorkEnd">报完工</el-button>
+      </div>
+      <div class="container" style="width: 100%;height: 100%">
+        <el-table
+          :data="xzlData"
+          height="640"
+          :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            fontSize:'12px',
+            color:'rgba(0, 0, 0, 1)'}"
+          :cell-style="{
+             border: '1px solid #303133',
+             fontSize:'12px'
+            }"
+          style="width: 100%;border: 1px solid #303133">
+        <!--  <el-table-column
+            align="center"
+            prop="indexno"
+            label="序号"
+            width="50">
+          </el-table-column>-->
+          <el-table-column
+            align="center"
+            prop="chuanhao"
+            label="船番NE0"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="jiagongxilie"
+            label="加工系列"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="yiguanhao"
+            label="一贯番号"
+            width="57">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="daihao"
+            label="代号"
+            width="50">
+          </el-table-column>
+          <el-table-column align="center" label="管材">
+            <el-table-column
+              align="center"
+              prop="pno"
+              label="PNo"
+              width="50">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="guige"
+              label="规格"
+              width="53">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="hujing"
+              label="呼径"
+              width="51">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="houdu"
+              label="厚度"
+              width="51">
+            </el-table-column>
+            <el-table-column
+              width="70"
+              prop="qieduanchang"
+              align="center"
+              label="切断长">
+            </el-table-column>
+            <el-table-column
+              width="50"
+              prop="danwei"
+              align="center"
+              label="单位">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="guanduan"
+              label="管端"
+              width="70">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="jiaodu"
+              label="角度"
+              width="55">
+            </el-table-column>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="lianjiexinxi"
+            label="连接信息"
+            width="53">
+          </el-table-column>
+          <el-table-column align="center" label="金物">
+            <el-table-column
+              align="center"
+              prop="pinming"
+              label="品名（注番）.">
+            </el-table-column>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="guanduan2"
+            label="管端"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="beizhu"
+            label="备注"
+            width="60">
+          </el-table-column>
+        </el-table>
       </div>
     </el-dialog>
 
@@ -1418,7 +1647,8 @@
 
         tableData: [],//总数据的表数据
         cols: [],     //总数据的表头
-
+        xzlData:[],     //小组立表数据
+        qdbData:[],     //切断表数据
         tdTableData: [],  //特定工位的表数据
         tdCols: [
           {"prop":"chuanhao","label":"船号"},
@@ -1453,7 +1683,7 @@
         endVisible: false,     //报完工提醒弹出框
         qdbVisible: false,    //工位表查看弹出框
         tdVisible: false,    //特定工位提醒框
-
+        xzlVisible:false,   //小组里表弹出框
 
         left: true,    //        显示最左边
         left2: false,    //      显示左二
@@ -1852,6 +2082,7 @@
               let that =this;
               setTimeout(()=>{
                 that.qdbVisible = false;
+                that.xzlVisible = false;
               },1000)
             }
             else {
@@ -2026,6 +2257,8 @@
       },
 
 
+
+
       //查看切断表
       seeCutList(id) {
         this.id  = id;
@@ -2063,6 +2296,47 @@
         }
 
       },
+
+
+      //查看小组立表
+      seeXzlList(id, pici) {
+        this.id = id;
+        //防止冒泡
+        if (event && event.stopPropagation) {
+          //W3C取消冒泡事件
+          event.stopPropagation();
+          axios.post(" " + url + "/importother/showXiaozuliExcel", {"pici": pici})
+            .then((res) => {
+              if (res.data) {
+                this.xzlData = res.data;
+                this.xzlVisible = true;
+              }
+              else {
+                this.message = "没有查到切断表";
+                this.HideModal = false;
+                const that = this;
+
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                }
+
+                setTimeout(a, 2000);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+        else {
+          //IE取消冒泡事件
+          window.event.cancelBubble = true;
+
+        }
+
+      },
+
+
 
 
       //显示条件筛选
