@@ -78,7 +78,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList">切断表
+                  @click="seeCutList(scope.row.pici)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -922,8 +922,98 @@
         <el-button type="danger" @click="qdbVisible = false">关闭窗口</el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
-        <div class="drawingImg" style="width: 100%;height: 100%">
-          <img :src="url" alt="" style="display:block;height: 100%;width: 100%">
+        <div class="container" style="width: 100%;height: 100%">
+          <el-table
+            :data="qdbData"
+            height="640"
+            :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            fontSize:'12px',
+            color:'rgba(0, 0, 0, 1)'}"
+            :cell-style="{
+             border: '1px solid #303133',
+             fontSize:'12px'
+            }"
+            style="width: 100%;border: 1px solid #303133">
+            <el-table-column
+              align="center"
+              prop="shipcode"
+              label="船番NE0"
+              width="70">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="waijing"
+              label="外径"
+              width="70">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="waijingchang"
+              label="母管长"
+              width="70">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="bihou"
+              label="壁厚"
+              width="70">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="pno"
+              label="PNo"
+              width="70">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="jiagongxilie"
+              label="加工系列"
+              width="80">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="yiguanhao"
+              label="一贯番号"
+              width="80">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="codeno"
+              label="代码No"
+              width="70">
+            </el-table-column>
+            <el-table-column
+              width="70"
+              prop="qieduanchang"
+              align="center"
+              label="切断长">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="guanduan2"
+              label="管端"
+              width="70">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="wanqu"
+              width="60"
+              label="弯曲">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="albl"
+              label="备注"
+              width="110">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop=""
+              label="">
+            </el-table-column>
+          </el-table>
         </div>
       </div>
     </el-dialog>
@@ -1090,6 +1180,7 @@
         nowClick: 2,
 
         xzlData:[],
+        qdbData:[],
         url: "",
 
         stationId: "",
@@ -1668,15 +1759,15 @@
 
 
       //查看切断表
-      seeCutList() {
+      seeCutList(pici) {
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
           event.stopPropagation();
-          axios.post(" " + url + "/show/showExcelImg")
+          axios.post(" " + url + "/importother/publicData",{"code":"qieduan","pici":pici})
             .then((res) => {
               if (res.data) {
-                this.url = url + res.data;
+                this.qdbData = res.data;
                 this.qdbVisible = true;
               }
               else {

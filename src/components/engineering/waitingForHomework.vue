@@ -140,7 +140,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList(scope.row.id)">切断表
+                  @click="seeCutList(scope.row.id,scope.row.pici)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -1342,102 +1342,80 @@
           style="width: 100%;border: 1px solid #303133">
           <el-table-column
             align="center"
-            prop="chuanhao"
+            prop="shipcode"
             label="船番NE0"
-            width="50">
+            width="70">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="waijing"
+            label="外径"
+            width="70">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="waijingchang"
+            label="母管长"
+            width="70">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="bihou"
+            label="壁厚"
+            width="70">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="pno"
+            label="PNo"
+            width="70">
           </el-table-column>
           <el-table-column
             align="center"
             prop="jiagongxilie"
             label="加工系列"
-            width="50">
+            width="80">
           </el-table-column>
           <el-table-column
             align="center"
             prop="yiguanhao"
             label="一贯番号"
-            width="57">
+            width="80">
           </el-table-column>
           <el-table-column
             align="center"
-            prop="daihao"
-            label="代号"
-            width="50">
-          </el-table-column>
-          <el-table-column align="center" label="管材">
-            <el-table-column
-              align="center"
-              prop="pno"
-              label="PNo"
-              width="50">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="guige"
-              label="规格"
-              width="53">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="hujing"
-              label="呼径"
-              width="51">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="houdu"
-              label="厚度"
-              width="51">
-            </el-table-column>
-            <el-table-column
-              width="70"
-              prop="qieduanchang"
-              align="center"
-              label="切断长">
-            </el-table-column>
-            <el-table-column
-              width="50"
-              prop="danwei"
-              align="center"
-              label="单位">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="guanduan"
-              label="管端"
-              width="70">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="jiaodu"
-              label="角度"
-              width="55">
-            </el-table-column>
+            prop="codeno"
+            label="代码No"
+            width="70">
           </el-table-column>
           <el-table-column
+            width="70"
+            prop="qieduanchang"
             align="center"
-            prop="lianjiexinxi"
-            label="连接信息"
-            width="53">
-          </el-table-column>
-          <el-table-column align="center" label="金物">
-            <el-table-column
-              align="center"
-              prop="pinming"
-              label="品名（注番）.">
-            </el-table-column>
+            label="切断长">
           </el-table-column>
           <el-table-column
             align="center"
             prop="guanduan2"
             label="管端"
-            width="50">
+            width="70">
           </el-table-column>
           <el-table-column
             align="center"
-            prop="beizhu"
+            prop="wanqu"
+            width="60"
+            label="弯曲">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="albl"
             label="备注"
-            width="60">
+            width="110">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop=""
+            label="">
           </el-table-column>
         </el-table>
       </div>
@@ -2260,16 +2238,16 @@
 
 
       //查看切断表
-      seeCutList(id) {
+      seeCutList(id,pici) {
         this.id  = id;
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
           event.stopPropagation();
-          axios.post(" " + url + "/show/showExcelImg")
+          axios.post(" " + url + "/importother/publicData",{"code":"qieduan","pici":pici})
             .then((res) => {
               if (res.data) {
-                this.url = url + res.data;
+                this.qdbData = res.data;
                 this.qdbVisible = true;
               }
               else {
