@@ -72,6 +72,7 @@
             <input
               @blur="passwordBlur(password)"
               @focus="passwordFocus(password)"
+              @keyup.enter="enterSubmit"
               v-model="password"
               type="password"
               placeholder="请输入密码"/>
@@ -167,8 +168,109 @@
     mounted() {
       this.getState();
 
-      //监听键盘的回车事件
-      document.onkeydown = (e)=>{
+
+    },
+    methods: {
+
+      // 全屏事件
+      handleFullScreen() {
+        let element = document.documentElement;
+        if (element.requestFullscreen) {
+          element.requestFullscreen();
+        }
+        else if (element.webkitRequestFullScreen) {
+          element.webkitRequestFullScreen();
+        }
+        else if (element.mozRequestFullScreen) {
+          element.mozRequestFullScreen();
+        }
+        else if (element.msRequestFullscreen) {
+          // IE11
+          element.msRequestFullscreen();
+        }
+      },
+
+
+
+      getState() {
+        let changeLeft = this.$refs.changeLeft;
+        changeLeft.style.borderTopRightRadius = "20px"
+      },
+
+      grmBlur(grm) {
+        if (grm.length === 0) {
+          this.grmErrText = "工牌码扫描不能为空";
+        }
+        else {
+          this.grmErrText = "";
+          this.grmState = true
+        }
+      },
+      grmFocus(grm) {
+        if (grm.length === 0) {
+          this.grmErrText = "请填扫描个人工牌";
+        }
+      },
+
+      gwmBlur(gwm) {
+        if (gwm.length === 0) {
+          this.gwmErrText = "工位码扫描不能为空";
+        }
+        else {
+          this.gwmErrText = "";
+          this.gwmState = true
+        }
+      },
+      gwmFocus(gwm) {
+        if (gwm.length === 0) {
+          this.gwmErrText = "请填扫描工位码";
+        }
+      },
+
+      userNameBlur(username) {
+        this.handleFullScreen();
+        if (username.length === 0) {
+          this.userNameErrText = "用户名不能为空";
+        }
+        else {
+          this.userNameErrText = "";
+          this.userNameState = true;
+          axios.post(" " + url + "/api/getPersonProcessList", {"name": this.username})
+            .then((res) => {
+              this.selectList = res.data;
+              this.selectWorkstationName = this.selectList[0].name;
+              this.selectWorkstationId = this.selectList[0].id;
+              this.selectWorkstationState = true
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+      },
+      userNameFocus(username) {
+        this.handleFullScreen();
+        if (username.length === 0) {
+          this.userNameErrText = "请填写用户名";
+        }
+      },
+
+      passwordBlur(password) {
+        if (password.length === 0) {
+          this.passwordErrText = "密码不能为空";
+        }
+        else {
+          this.passwordErrText = "";
+          this.passwordState = true
+        }
+      },
+      passwordFocus(password) {
+        if (password.length === 0) {
+          this.passwordErrText = "请填写密码";
+        }
+      },
+
+
+      enterSubmit(e){
         if(e.keyCode == 13){
           this.passwordErrText = "";
           this.passwordState = true;
@@ -347,106 +449,8 @@
             setTimeout(a, 2000);
           }
         }
-      }
-    },
-    methods: {
-
-      // 全屏事件
-      handleFullScreen() {
-        let element = document.documentElement;
-        if (element.requestFullscreen) {
-          element.requestFullscreen();
-        }
-        else if (element.webkitRequestFullScreen) {
-          element.webkitRequestFullScreen();
-        }
-        else if (element.mozRequestFullScreen) {
-          element.mozRequestFullScreen();
-        }
-        else if (element.msRequestFullscreen) {
-          // IE11
-          element.msRequestFullscreen();
-        }
       },
 
-
-
-      getState() {
-        let changeLeft = this.$refs.changeLeft;
-        changeLeft.style.borderTopRightRadius = "20px"
-      },
-
-      grmBlur(grm) {
-        if (grm.length === 0) {
-          this.grmErrText = "工牌码扫描不能为空";
-        }
-        else {
-          this.grmErrText = "";
-          this.grmState = true
-        }
-      },
-      grmFocus(grm) {
-        if (grm.length === 0) {
-          this.grmErrText = "请填扫描个人工牌";
-        }
-      },
-
-      gwmBlur(gwm) {
-        if (gwm.length === 0) {
-          this.gwmErrText = "工位码扫描不能为空";
-        }
-        else {
-          this.gwmErrText = "";
-          this.gwmState = true
-        }
-      },
-      gwmFocus(gwm) {
-        if (gwm.length === 0) {
-          this.gwmErrText = "请填扫描工位码";
-        }
-      },
-
-      userNameBlur(username) {
-        this.handleFullScreen();
-        if (username.length === 0) {
-          this.userNameErrText = "用户名不能为空";
-        }
-        else {
-          this.userNameErrText = "";
-          this.userNameState = true;
-          axios.post(" " + url + "/api/getPersonProcessList", {"name": this.username})
-            .then((res) => {
-              this.selectList = res.data;
-              this.selectWorkstationName = this.selectList[0].name;
-              this.selectWorkstationId = this.selectList[0].id;
-              this.selectWorkstationState = true
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-        }
-      },
-      userNameFocus(username) {
-        this.handleFullScreen();
-        if (username.length === 0) {
-          this.userNameErrText = "请填写用户名";
-        }
-      },
-
-      passwordBlur(password) {
-        if (password.length === 0) {
-          this.passwordErrText = "密码不能为空";
-        }
-        else {
-          this.passwordErrText = "";
-          this.passwordState = true
-        }
-      },
-      passwordFocus(password) {
-        if (password.length === 0) {
-          this.passwordErrText = "请填写密码";
-        }
-      },
 
       selectWorkstationBlur(selectWorkstation) {
         {
