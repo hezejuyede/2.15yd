@@ -595,8 +595,6 @@
                   that.wtTableData = table.data;
                   that.titleData = table.data.baseItem;
                   that.tableData = table.data.yipintulist;
-                  that.step = table.data.flowLine[0].maxstep;
-                  console.log(that.step)
                   that.routerList = table.data.flowLine;
                   that.bottomButton = btn.data;
                   if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
@@ -617,7 +615,6 @@
                   that.wtTableData = table.data;
                   that.titleData = table.data.baseItem;
                   that.tableData = table.data.yipintulist;
-                  that.step = table.data.flowLine[0].maxstep;
                   that.routerList = table.data.flowLine;
                   that.bottomButton = btn.data;
                   if (table.data.contextList !== undefined && table.data.contextList.length > 0) {
@@ -643,7 +640,6 @@
                 }))
             }
             else if(this.gongHao === "弯头切断"){
-              let type = this.$route.params.type;
               axios.all([
                 axios.post(" " + url + "/shengchan/getCurShengchanguanwtqd", {"id": id}),
                 axios.post(" " + url + "/show/showButton", {"id": this.gongwei}),
