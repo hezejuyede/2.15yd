@@ -34,7 +34,7 @@
             <button @click="workEnd">报完工</button>
           </div>
         </div>
-        <div class="listSearch" v-if="this.listType ==2 || this.listType ==9">
+        <div class="listSearch" v-if="this.listType ==2">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
                       placeholder="检索管子或扫码或手工输入"
@@ -49,6 +49,20 @@
             <button @click="workEnd">报完工</button>
           </div>
         </div>
+        <div class="listSearch" v-if="this.listType ==9">
+          <div class="listSearchInput">
+            <el-input v-model="searchWord"
+                      placeholder="检索管子或扫码或手工输入"
+                      @blur="searchData(searchWord)"
+                      @input="searchEmptyData(searchWord)"
+                      @keyup.enter.native="goToPipePage(searchWord)"></el-input>
+          </div>
+          <div class="listSearchBtn">
+            <button  @click="showScreening">条件筛选</button>
+            <button  @click="materialStatistics">物料统计</button>
+            <button  @click="goGeneralListOfProcessing">总清单</button>
+          </div>
+        </div>
         <div class="listSearch" v-if="this.listType ==7 || this.listType ==8 || this.listType ==10">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
@@ -61,7 +75,6 @@
             <button @click="showScreening">条件筛选</button>
             <button @click="yptLook">一品图预览</button>
             <button @click="goGeneralListOfProcessing">总清单</button>
-            <button @click="workEnd">报完工</button>
           </div>
         </div>
       </div>
@@ -164,10 +177,6 @@
           @selection-change="selectChange"
           ref="moviesTable"
           style="width: 99%;margin: 0 auto">
-          <el-table-column
-            type="selection"
-            width="30">
-          </el-table-column>
           <el-table-column type="expand">
             <template slot-scope="scope">
               <el-table class="tb-edit"
@@ -378,10 +387,6 @@
           @selection-change="selectChange"
           ref="moviesTable"
           style="width: 99%;margin: 0 auto">
-          <el-table-column
-            type="selection"
-            width="30">
-          </el-table-column>
           <template v-for="(col ,index) in cols">
             <el-table-column
               align="center"
@@ -1324,7 +1329,7 @@
     <el-dialog title="工位表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
         <el-button type="danger" @click="qdbVisible = false">关闭窗口</el-button>
-        <el-button type="primary" @click="gwbDoWorkEnd">报完工</el-button>
+       <!-- <el-button type="primary" @click="gwbDoWorkEnd">报完工</el-button>-->
       </div>
       <div class="container" style="width: 100%;height: 100%">
         <el-table
