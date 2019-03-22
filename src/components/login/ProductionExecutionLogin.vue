@@ -30,6 +30,8 @@
               <input
                 @blur="grmBlur(grm)"
                 @focus="grmFocus(grm)"
+                @keyup.enter="nextSubmit"
+                ref="leftInput"
                 v-model="grm"
                 type="password"
                 placeholder="请扫描工牌条形码"/>
@@ -43,7 +45,9 @@
                 @blur="gwmBlur(gwm)"
                 @focus="gwmFocus(gwm)"
                 v-model="gwm"
+                ref="Input3"
                 type="password"
+                @keyup.enter="smSubmit"
                 placeholder="请扫描工位条形码"/>
               <div class="gwmText">
                 <span>{{gwmErrText}}</span>
@@ -60,6 +64,8 @@
             <input
               @blur="userNameBlur(username)"
               @focus="userNameFocus(username)"
+              @keyup.enter="nextSubmit"
+              ref="rightInput"
               v-model="username"
               type="text"
               placeholder="请输入用户名"/>
@@ -73,6 +79,7 @@
               @blur="passwordBlur(password)"
               @focus="passwordFocus(password)"
               @keyup.enter="enterSubmit"
+              ref="Input2"
               v-model="password"
               type="password"
               placeholder="请输入密码"/>
@@ -190,11 +197,23 @@
         }
       },
 
+      //监控回车按钮事件
+      nextSubmit(e) {
+        if (e.keyCode == 13) {
+          this.$nextTick(function(){
+            this.$refs['Input2'].focus();
+            this.$refs['Input3'].focus();
+          })
 
+        }
+      },
 
       getState() {
         let changeLeft = this.$refs.changeLeft;
-        changeLeft.style.borderTopRightRadius = "20px"
+        changeLeft.style.borderTopRightRadius = "20px";
+        this.$nextTick(function(){
+          this.$refs['rightInput'].focus();
+        })
       },
 
       grmBlur(grm) {
@@ -733,15 +752,118 @@
           setTimeout(a, 2000);
         }
       },
+
+      //监控回车按钮事件
+      smSubmit(e){
+        if (e.keyCode == 13) {
+          this.gwmState = true;
+          this.gwmErrText="";
+          if (this.grmState === true && this.gwmState === true) {
+            axios.post(" " + url + "/api/MUserLogin", {
+              ghm: this.grm,
+              gwm: this.gwm
+            })
+              .then((res) => {
+                if (res.data.state === "1") {
+                  let userInfo = res.data;
+                  userInfo = JSON.stringify(userInfo);
+                  sessionStorage.setItem("userInfo", userInfo);
+                  this.message = "登录成功";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function a() {
+                    that.message = "";
+                    that.HideModal = true;
+                  }
+
+                  function showPromptBox() {
+                    that.openPromptBox = false;
+                    that.needKnown = res.data.needKnown;
+                    that.contentText = res.data.contentText;
+                  }
+
+                  setTimeout(showPromptBox, 3000);
+                  setTimeout(a, 2000);
+                }
+                else if (res.data === "2") {
+                  this.message = "该用户没有注册";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function b() {
+                    that.message = "";
+                    that.HideModal = true;
+                    that.username = '';
+                    that.password = '';
+                  }
+
+                  setTimeout(b, 2000);
+                }
+                else if (res.data === "-1") {
+                  this.message = "扫码码错误";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function c() {
+                    that.message = "";
+                    that.HideModal = true;
+                    that.password = '';
+                  }
+
+                  setTimeout(c, 2000);
+                }
+                else if (res.data === "3") {
+                  this.message = "岗位不合符";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function d() {
+                    that.message = "";
+                    that.HideModal = true;
+                    that.password = '';
+                  }
+
+                  setTimeout(d, 2000);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              });
+          }
+          else {
+            this.message = "请正确填写信息";
+            this.HideModal = false;
+            const that = this;
+
+            function a() {
+              that.message = "";
+              that.HideModal = true;
+            }
+
+            setTimeout(a, 2000);
+          }
+        }
+      },
+
+
+
       showLeft() {
         this.left = true;
         this.right = false;
+        this.$nextTick(function(){
+          this.$refs['leftInput'].focus();
+        })
+
       },
       showRight() {
         this.left = false;
         this.right = true;
         let changeLeft = this.$refs.changeLeft;
-        changeLeft.style.borderTopRightRadius = "20px"
+        changeLeft.style.borderTopRightRadius = "20px";
+        this.$nextTick(function(){
+          this.$refs['rightInput'].focus();
+        })
       }
     },
   }
