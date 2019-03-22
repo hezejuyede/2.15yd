@@ -448,7 +448,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList(scope.row.id)">切断表
+                  @click="seeCutList(scope.row.id,scope.row.pici)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -1331,15 +1331,22 @@
           :data="qdbData"
           height="640"
           :header-cell-style="{
-            background:'#ffffff',
+            background:'#f0f0f0',
             border: '1px solid #303133',
             fontSize:'12px',
             color:'rgba(0, 0, 0, 1)'}"
-          :cell-style="{
+            :cell-style="{
              border: '1px solid #303133',
              fontSize:'12px'
             }"
+
           style="width: 100%;border: 1px solid #303133">
+          <el-table-column
+            align="center"
+            prop="type"
+
+            label="管种">
+          </el-table-column>
           <el-table-column
             align="center"
             prop="shipcode"
@@ -1348,27 +1355,27 @@
           </el-table-column>
           <el-table-column
             align="center"
-            prop="waijing"
-            label="外径"
-            width="70">
-          </el-table-column>
-          <el-table-column
-            align="center"
             prop="waijingchang"
-            label="母管长"
-            width="70">
+            label="外径"
+            width="60">
           </el-table-column>
           <el-table-column
             align="center"
             prop="bihou"
             label="壁厚"
-            width="70">
+            width="55">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="waijing"
+            label="母管长"
+            width="60">
           </el-table-column>
           <el-table-column
             align="center"
             prop="pno"
             label="PNo"
-            width="70">
+            width="55">
           </el-table-column>
           <el-table-column
             align="center"
@@ -1379,8 +1386,8 @@
           <el-table-column
             align="center"
             prop="yiguanhao"
-            label="一贯番号"
-            width="80">
+            label="一贯号"
+            width="65">
           </el-table-column>
           <el-table-column
             align="center"
@@ -1396,26 +1403,20 @@
           </el-table-column>
           <el-table-column
             align="center"
-            prop="guanduan2"
+            prop="guanduan"
             label="管端"
-            width="70">
+            width="55">
           </el-table-column>
           <el-table-column
             align="center"
             prop="wanqu"
-            width="60"
+            width="55"
             label="弯曲">
           </el-table-column>
           <el-table-column
             align="center"
             prop="albl"
-            label="备注"
-            width="110">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop=""
-            label="">
+            label="备注">
           </el-table-column>
         </el-table>
       </div>
@@ -1768,6 +1769,7 @@
 
     },
     methods: {
+
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
         const userInfo = sessionStorage.getItem("userInfo");
@@ -2529,7 +2531,6 @@
         }
 
       },
-
 
 
 
