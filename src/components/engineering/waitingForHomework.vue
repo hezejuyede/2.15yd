@@ -79,7 +79,7 @@
         </div>
       </div>
 
-      <!--切断，直管焊，大阻焊，弯头切断-->
+      <!--切断，直管焊，短管焊，弯头切断-->
       <div class="publicPage" v-if="this.listType ==1 || this.listType ==5 || this.listType ==6 ||this.listType ==3">
         <el-table
           class="tb-edit"
