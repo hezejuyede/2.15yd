@@ -80,7 +80,7 @@
       </div>
 
       <!--切断，直管焊，大阻焊，弯头切断-->
-      <div class="publicPage" v-if="this.listType ==1 || this.listType ==5 || this.listType ==3">
+      <div class="publicPage" v-if="this.listType ==1 || this.listType ==5 || this.listType ==6 ||this.listType ==3">
         <el-table
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
@@ -161,83 +161,6 @@
         </el-table>
       </div>
 
-      <!--大阻焊-->
-      <div class="publicPage" v-if="this.listType ==6">
-        <el-table
-          class="tb-edit"
-          v-tableLoadingMore="tableLoadingMore"
-          :data="tableData"
-          height="500"
-          border
-          :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-          :row-class-name="tableRowClassName"
-          @select="selectList"
-          @select-all="selectAll"
-          @row-click="doSelect"
-          @selection-change="selectChange"
-          ref="moviesTable"
-          style="width: 99%;margin: 0 auto">
-          <template v-for="(col ,index) in cols">
-            <el-table-column
-              align="center"
-              v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
-              :prop="col.prop"
-              :label="col.label">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              v-if="col.prop==='yiguanno'"
-              :prop="col.prop" :label="col.label">
-              <template scope="scope">
-                <el-button
-                  type="success"
-                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="goToCurrentTask(scope.row.id)">
-                  {{ scope.row.yiguanno }}
-                </el-button>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              v-if="col.prop==='codeno'"
-              :prop="col.prop" :label="col.label">
-              <template scope="scope">
-                <el-button
-                  type="success"
-                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="goToCurrentTask(scope.row.id)">
-                  {{ scope.row.codeno }}
-                </el-button>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              v-if="col.prop==='yipintu'"
-              :prop="col.prop" :label="col.label">
-              <template scope="scope">
-                <el-button
-                  type="success"
-                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
-                  一品图
-                </el-button>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              v-if="col.prop==='qieduanbiao'"
-              :prop="col.prop" :label="col.label">
-              <template scope="scope">
-                <el-button
-                  type="success"
-                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList(scope.row.id,scope.row.pici)">切断表
-                </el-button>
-              </template>
-            </el-table-column>
-          </template>
-        </el-table>
-      </div>
 
       <!--43/48装配、45/46装配和大组焊-->
       <div class="publicPage" v-if="this.listType ==7 || this.listType ==8 || this.listType ==9">
