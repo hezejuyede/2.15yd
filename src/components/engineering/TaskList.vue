@@ -196,10 +196,10 @@
                 <el-table-column
                   align="center"
                   width="120"
-                  v-if="col.prop==='yiguanno'"
+                  v-if="col.prop==='bianhao'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
-                    {{ scope.row.yiguanno }}
+                    {{ scope.row.bianhao }}
                   </template>
                 </el-table-column>
                 <el-table-column

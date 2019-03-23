@@ -80,7 +80,7 @@
       </div>
 
       <!--切断，直管焊，大阻焊，弯头切断-->
-      <div class="publicPage" v-if="this.listType ==1 || this.listType ==5 || this.listType ==6  || this.listType ==3">
+      <div class="publicPage" v-if="this.listType ==1 || this.listType ==5 || this.listType ==3">
         <el-table
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
@@ -99,6 +99,84 @@
             type="selection"
             width="30">
           </el-table-column>
+          <template v-for="(col ,index) in cols">
+            <el-table-column
+              align="center"
+              v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+              :prop="col.prop"
+              :label="col.label">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yiguanno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="goToCurrentTask(scope.row.id)">
+                  {{ scope.row.yiguanno }}
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='codeno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="goToCurrentTask(scope.row.id)">
+                  {{ scope.row.codeno }}
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yipintu'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                  一品图
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='qieduanbiao'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="seeCutList(scope.row.id,scope.row.pici)">切断表
+                </el-button>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
+      </div>
+
+      <!--大阻焊-->
+      <div class="publicPage" v-if="this.listType ==6">
+        <el-table
+          class="tb-edit"
+          v-tableLoadingMore="tableLoadingMore"
+          :data="tableData"
+          height="500"
+          border
+          :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+          :row-class-name="tableRowClassName"
+          @select="selectList"
+          @select-all="selectAll"
+          @row-click="doSelect"
+          @selection-change="selectChange"
+          ref="moviesTable"
+          style="width: 99%;margin: 0 auto">
           <template v-for="(col ,index) in cols">
             <el-table-column
               align="center"
@@ -212,7 +290,9 @@
                   scope.row.koujing,
                   scope.row.shipcode,
                   scope.row.yiguanno,
-                  scope.row.codeno)">
+                  scope.row.codeno,
+                  scope.row.pno
+                  )">
                   {{ scope.row.yiguanno }}
                 </el-button>
               </template>
@@ -231,7 +311,8 @@
                   scope.row.koujing,
                   scope.row.shipcode,
                   scope.row.yiguanno,
-                  scope.row.codeno)">
+                  scope.row.codeno,
+                  scope.row.pno)">
                   {{ scope.row.codeno }}
                 </el-button>
               </template>
@@ -257,7 +338,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList(scope.row.id)">切断表
+                  @click="seeCutList(scope.row.id,scope.row.pici)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -362,7 +443,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList(scope.row.id)">切断表
+                  @click="seeCutList(scope.row.id,scope.row.pici)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -408,7 +489,8 @@
                   scope.row.koujing,
                   scope.row.shipcode,
                   scope.row.yiguanno,
-                  scope.row.codeno)">
+                  scope.row.codeno,
+                  scope.row.pno)">
                   {{ scope.row.yiguanno }}
                 </el-button>
               </template>
@@ -427,7 +509,8 @@
                   scope.row.koujing,
                   scope.row.shipcode,
                   scope.row.yiguanno,
-                  scope.row.codeno)">
+                  scope.row.codeno,
+                  scope.row.pno)">
                   {{ scope.row.codeno }}
                 </el-button>
               </template>
@@ -1638,6 +1721,7 @@
           {"prop":"chuanhao","label":"船号"},
           {"prop":"yiguanhao","label":"一贯号"},
           {"prop":"codeno","label":"Code"},
+          {"prop":"pno","label":"PNO"},
           {"prop":"koujing","label":"口径"},
           {"prop":"jiagongxilie","label":"加工系列"},
         ],    //特定工位的表头
@@ -2455,7 +2539,7 @@
 
 
       //点击一贯号,Code号，前往前往任务页面
-      goToCurrentTask(id,jiagongxilie, koujing, shipcode, yiguanno, codeno) {
+      goToCurrentTask(id,jiagongxilie, koujing, shipcode, yiguanno, codeno,pno) {
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
@@ -2470,7 +2554,8 @@
                 "yiguanhao": yiguanno,
                 "codeno": codeno,
                 "koujing": koujing,
-                "chuanhao": shipcode
+                "chuanhao": shipcode,
+                "pno": pno
               }];
             }
             else if(this.dqgw === "枝管切断"){
