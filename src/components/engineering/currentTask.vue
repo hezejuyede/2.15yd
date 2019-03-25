@@ -1,8 +1,8 @@
 <template>
   <div class="currentTask">
     <header-nav></header-nav>
-    <div class="currentTaskTemplate"  v-if="this.gongHao !=='小组立'">
-      <div class="currentTaskTitle">
+    <div class="currentTaskTemplate">
+      <div class="currentTaskTitle"  v-if="this.gongHao !=='小组立' && this.gongHao !=='枝管切断'">
         <div class="titleDiv" v-for="(item,index) in titleData" :style="{'width':item.width}">
           <div class="titleDivLeft">
             {{item.name}}
@@ -12,43 +12,7 @@
           </div>
         </div>
       </div>
-      <div class="currentTaskBtn">
-        <div class="templateBtn" v-for="(item,index) in bottomButton"   v-if="item.show==1">
-          <button
-            :disabled="item.disabled==='0'"
-            @click="bottomButtonClick(item.type)"
-            :style="{'background-color':item.backgroundcolor,'color':item.color}">
-            {{item.name}}
-          </button>
-        </div>
-      </div>
-      <div class="currentTaskRouter">
-        <div class="" v-for="(item,index) in routerList">
-          <div class="currentTaskRouterList" >
-            <el-steps align-center :active="item.maxstep" finish-status="success">
-              <el-step v-for="(item,index) in item.nodeList" :keys="index" :title="item.stationname"></el-step>
-            </el-steps>
-          </div>
-        </div>
-      </div>
-      <div class="currentTaskDiv">
-        <div class="currentTaskDivLeft">
-          <i class="iconfont icon-unie62b"></i>
-          <span>当前工位注意事项</span>
-        </div>
-        <div class="currentTaskDivRight" v-html="matterData"></div>
-      </div>
-      <div class="currentTaskDiv">
-        <div class="currentTaskDivLeft">
-          <i class="iconfont icon-unie62b"></i>
-          <span>当前加工管注意事项</span>
-        </div>
-        <div class="currentTaskDivRight" v-html="matterData"></div>
-      </div>
-    </div>
-
-    <div class="currentTaskTemplate" v-if="this.gongHao==='小组立'">
-      <div class="currentTaskTitle">
+      <div class="currentTaskTitle" v-if="this.gongHao==='小组立'">
         <template>
           <el-table
             :data="xzlData"
@@ -167,6 +131,664 @@
             </el-table-column>
           </el-table>
         </template>
+      </div>
+      <div class="currentTaskTitle" v-if="this.gongHao==='枝管切断'">
+        <div class="currentTaskTitleTable" v-if="this.$route.params.type==='1'">
+          <template>
+            <el-table
+              :data="xzlData"
+              :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            color:'rgba(0, 0, 0, 1)'}"
+              :cell-style="{
+             border: '1px solid #303133'
+            }"
+              style="width: 100%;border: 1px solid #303133">
+              <el-table-column
+                align="center"
+                prop="chuanfan"
+                label="船番NE0"
+                width="55">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jiagongxilie"
+                label="加工系列"
+                width="54">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="fanhao"
+                label="一贯番号"
+                width="63">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="daihao"
+                label="代号"
+                width="50">
+              </el-table-column>
+              <el-table-column align="center" label="枝管材">
+                <el-table-column
+                  align="center"
+                  prop="pno"
+                  label="PNo."
+                  width="54">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="guige"
+                  label="规格"
+                  width="53">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="waijing"
+                  label="外径"
+                  width="51">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="bihou"
+                  label="壁厚"
+                  width="51">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="neijing"
+                  label="内径"
+                  width="51">
+                </el-table-column>
+                <el-table-column
+                  width="51"
+                  prop="changdu"
+                  align="center"
+                  label="长度">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="muguanwaijing"
+                label="母管外径"
+                width="53">
+              </el-table-column>
+              <el-table-column align="center" label=" 工作管">
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="quanchang"
+                  label="全长">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="qieduan"
+                  label="切断">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="jiancha"
+                  label="检查">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jinwu"
+                label="管端金物"
+                width="55">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="zuox"
+                label="转角左X°"
+                width="60">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="beizhu"
+                label="备注">
+              </el-table-column>
+            </el-table>
+          </template>
+        </div>
+        <div class="currentTaskTitleTable" v-if="this.$route.params.type==='2'">
+          <template>
+            <el-table
+              :data="xzlData"
+              :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            color:'rgba(0, 0, 0, 1)'}"
+              :cell-style="{
+             border: '1px solid #303133'
+            }"
+              style="width: 100%;border: 1px solid #303133">
+              <el-table-column
+                align="center"
+                prop="chuanfan"
+                label="船番NE0"
+                width="55">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jiagongxilie"
+                label="加工系列"
+                width="54">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="fanhao"
+                label="一贯 番号"
+                width="64">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="daihao"
+                label="代号"
+                width="50">
+              </el-table-column>
+              <el-table-column align="center" label="枝管材">
+                <el-table-column
+                  align="center"
+                  prop="pno"
+                  label="PNo"
+                  width="50">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="guige"
+                  label="规格"
+                  width="50">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="waijing"
+                  label="外径"
+                  width="51">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="bihou"
+                  label="壁厚"
+                  width="50">
+                </el-table-column>
+                <el-table-column
+                  width="50"
+                  prop="changdu"
+                  align="center"
+                  label="长度">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="muguanwaijing"
+                label="母管外径"
+                width="58">
+              </el-table-column>
+              <el-table-column align="center" label=" 工作管">
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="quanchang"
+                  label="全长">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="qieduan"
+                  label="切断">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="wjuhao"
+                label="ω"
+                width="40">
+              </el-table-column>
+              <el-table-column align="center" label="输入">
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="atext"
+                  label="A">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="btext"
+                  label="B">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="ktext"
+                  label="K">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jinwu"
+                label="管端金物"
+                width="80">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jiaodu"
+                label="角度"
+                width="60">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="beizhu"
+                label="备注">
+              </el-table-column>
+            </el-table>
+          </template>
+        </div>
+        <div class="currentTaskTitleTable" v-if="this.$route.params.type==='3'">
+          <template>
+            <el-table
+              :data="xzlData"
+              :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            color:'rgba(0, 0, 0, 1)'}"
+              :cell-style="{
+             border: '1px solid #303133'
+            }"
+              style="width: 100%;border: 1px solid #303133">
+              <el-table-column
+                align="center"
+                prop="chuanfan"
+                label="船番NE0"
+                width="50">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jiagongxilie"
+                label="加工系列"
+                width="50">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="fanhao"
+                label="一贯番号"
+                width="63">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="daihao"
+                label="代号"
+                width="50">
+              </el-table-column>
+              <el-table-column align="center" label="枝管材">
+                <el-table-column
+                  align="center"
+                  prop="pno"
+                  label="PNo"
+                  width="49">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="guige"
+                  label="规格"
+                  width="53">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="waijing"
+                  label="外径"
+                  width="51">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="houdu"
+                  label="厚度"
+                  width="51">
+                </el-table-column>
+                <el-table-column
+                  width="51"
+                  prop="changdu"
+                  align="center"
+                  label="长度">
+                </el-table-column>
+                <el-table-column
+                  width="64"
+                  prop="pianxinliang"
+                  align="center"
+                  label="偏心量">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="muguanwaijing"
+                label="母管外径"
+                width="53">
+              </el-table-column>
+              <el-table-column align="center" label=" 工作管">
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="quanchang"
+                  label="全长">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="64"
+                  prop="denglizi"
+                  label="等离子">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column align="center" label="输入">
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="atext"
+                  label="A">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="btext"
+                  label="B">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="ktext"
+                  label="K">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jinwu"
+                label="管端金物"
+                width="60">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jiaodu"
+                label="角度"
+                width="51">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="beizhu"
+                label="备注">
+              </el-table-column>
+            </el-table>
+          </template>
+        </div>
+        <div class="currentTaskTitleTable" v-if="this.$route.params.type==='4'">
+          <template>
+            <el-table
+              :data="xzlData"
+              :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            color:'rgba(0, 0, 0, 1)'}"
+              :cell-style="{
+             border: '1px solid #303133'
+            }"
+              style="width: 100%;border: 1px solid #303133">
+              <el-table-column
+                align="center"
+                prop="chuanfan"
+                label="船番NE0"
+                width="55">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jiagongxilie"
+                label="加工系列"
+                width="54">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="yiguanhao"
+                label="一贯番号"
+                width="63">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="daihao"
+                label="代号"
+                width="50">
+              </el-table-column>
+              <el-table-column align="center" label="枝管材">
+                <el-table-column
+                  align="center"
+                  prop="pno"
+                  label="PNo."
+                  width="54">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="guige"
+                  label="规格"
+                  width="53">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="waijing"
+                  label="外径"
+                  width="51">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="bihou"
+                  label="壁厚"
+                  width="51">
+                </el-table-column>
+                <el-table-column
+                  width="51"
+                  prop="changdu"
+                  align="center"
+                  label="长度">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="muguanwaijing"
+                label="母管外径"
+                width="53">
+              </el-table-column>
+              <el-table-column align="center" label=" 工作管">
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="quanchang"
+                  label="全长">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="qieduan"
+                  label="切断">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="wjuhao"
+                label="ω"
+                width="40">
+              </el-table-column>
+              <el-table-column align="center" label="输入">
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="atext"
+                  label="A">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="btext"
+                  label="B">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="ktext"
+                  label="K">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jinwu"
+                label="管端金物"
+                width="55">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jiaodu"
+                label="角度"
+                width="60">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="beizhu"
+                label="备注">
+              </el-table-column>
+            </el-table>
+          </template>
+        </div>
+        <div class="currentTaskTitleTable" v-if="this.$route.params.type==='5'">
+          <template>
+            <el-table
+              :data="xzlData"
+              :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            color:'rgba(0, 0, 0, 1)'}"
+              :cell-style="{
+             border: '1px solid #303133'
+            }"
+              style="width: 100%;border: 1px solid #303133">
+              <el-table-column
+                align="center"
+                prop="chuanfan"
+                label="船番NE0"
+                width="55">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jiagongxilie"
+                label="加工系列"
+                width="54">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="yiguanhao"
+                label="一贯番号"
+                width="63">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="daihao"
+                label="代号"
+                width="50">
+              </el-table-column>
+              <el-table-column align="center" label="枝管材">
+                <el-table-column
+                  align="center"
+                  prop="pno"
+                  label="PNo."
+                  width="54">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="guige"
+                  label="规格"
+                  width="53">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="waijing"
+                  label="外径"
+                  width="51">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="bihou"
+                  label="壁厚"
+                  width="51">
+                </el-table-column>
+                <el-table-column
+                  width="51"
+                  prop="changdu"
+                  align="center"
+                  label="长度">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="muguanwaijing"
+                label="母管外径"
+                width="53">
+              </el-table-column>
+              <el-table-column align="center" label=" 工作管">
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="quanchang"
+                  label="全长">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="qieduan"
+                  label="切断">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="wjuhao"
+                label="ω"
+                width="40">
+              </el-table-column>
+              <el-table-column align="center" label="输入">
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="atext"
+                  label="A">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="btext"
+                  label="B">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="51"
+                  prop="ktext"
+                  label="K">
+                </el-table-column>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jinwu"
+                label="管端金物"
+                width="55">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="jiaodu"
+                label="角度"
+                width="60">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="beizhu"
+                label="备注">
+              </el-table-column>
+            </el-table>
+          </template>
+        </div>
       </div>
       <div class="currentTaskBtn">
         <div class="templateBtn" v-for="(item,index) in bottomButton"   v-if="item.show==1">
@@ -631,7 +1253,7 @@
               ])
                 .then(axios.spread(function (table, btn) {
                   that.wtTableData = table.data;
-                  that.titleData = table.data.baseItem;
+                  that.xzlData =table.data.baseItem;
                   that.tableData = table.data.yipintulist;
                   that.routerList = table.data.flowLine;
                   that.bottomButton = btn.data;
@@ -1139,6 +1761,7 @@
     .currentTaskTemplate {
       width: 100%;
       .currentTaskTitle {
+        width: 100%;
         background-color: #D8E5F6;
         display: flex;
         flex-flow: row wrap;
@@ -1182,11 +1805,9 @@
             text-overflow: ellipsis;
           }
         }
-
-
-
-
-
+        .currentTaskTitleTable{
+          width: 100%;
+        }
       }
       .currentTaskDiv {
         width: 95%;
