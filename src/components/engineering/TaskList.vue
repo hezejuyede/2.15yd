@@ -253,22 +253,23 @@
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
-              @select="selectList"
-              @select-all="selectAll"
-              @row-click="doSelect"
-              @selection-change="selectChange"
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
-              <el-table-column
-                type="selection"
-                width="30">
-              </el-table-column>
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='pianfubiao' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='pianfubiao' && col.prop !=='jinwuzhu' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="150"
+                  v-if="col.prop==='jinwuzhu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    {{ scope.row.jinwuzhu }}
+                  </template>
                 </el-table-column>
                 <el-table-column
                   align="center"

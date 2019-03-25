@@ -79,12 +79,95 @@
         </div>
       </div>
 
-      <!--切断，直管焊，短管焊，弯头切断-->
-      <div class="publicPage" v-if="this.listType ==1 || this.listType ==5 || this.listType ==6 ||this.listType ==3">
+      <!--切断-->
+      <div class="publicPage" v-if="this.listType ==1 ">
         <el-table
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
           :data="tableData"
+          height="500"
+          border
+          :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+          :row-class-name="tableRowClassName"
+          @select="selectList"
+          @select-all="selectAll"
+          @row-click="doSelect"
+          @selection-change="selectChange"
+          ref="moviesTable"
+          style="width: 99%;margin: 0 auto">
+          <el-table-column
+            type="selection"
+            width="30">
+          </el-table-column>
+          <template v-for="(col ,index) in cols">
+            <el-table-column
+              align="center"
+              v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+              :prop="col.prop"
+              :label="col.label">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yiguanno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="goToCurrentTask(scope.row.id)">
+                  {{ scope.row.yiguanno }}
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='codeno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="goToCurrentTask(scope.row.id)">
+                  {{ scope.row.codeno }}
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yipintu'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                  一品图
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='qieduanbiao'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="seeCutList(scope.row.id,scope.row.pici)">切断表
+                </el-button>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
+      </div>
+
+
+      <!--直管焊，短管焊，弯头切断-->
+      <div class="publicPage" v-if="this.listType ==5 || this.listType ==6 ||this.listType ==3">
+        <el-table
+          class="tb-edit"
+          v-tableLoadingMore="tableLoadingMore"
+          :data="tables"
           height="500"
           border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
@@ -167,7 +250,7 @@
         <el-table
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
-          :data="tableData"
+          :data="tables"
           height="500"
           border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
@@ -274,7 +357,7 @@
         <el-table
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
-          :data="tableData"
+          :data="tables"
           height="500"
           border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
@@ -379,7 +462,7 @@
         <el-table
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
-          :data="tableData"
+          :data="tables"
           height="500"
           border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
@@ -491,7 +574,7 @@
             <el-table
               :key="0"
               class="tb-edit"
-              :data="tableData"
+              :data="tables"
               height="450"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'14px'}"
@@ -642,7 +725,7 @@
             <el-table
               :key="1"
               class="tb-edit"
-              :data="tableData"
+              :data="tables"
               height="450"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
@@ -660,9 +743,18 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='pianfubiao' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='pianfubiao'  && col.prop !=='jinwuzhu' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  width="150"
+                  v-if="col.prop==='jinwuzhu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    {{ scope.row.jinwuzhu }}
+                  </template>
                 </el-table-column>
                 <el-table-column
                   align="center"
@@ -760,7 +852,7 @@
             <el-table
               :key="0"
               class="tb-edit"
-              :data="tableData"
+              :data="tables"
               height="450"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
@@ -840,7 +932,7 @@
             <el-table
               :key="0"
               class="tb-edit"
-              :data="tableData"
+              :data="tables"
               height="450"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
@@ -920,7 +1012,7 @@
             <el-table
               :key="0"
               class="tb-edit"
-              :data="tableData"
+              :data="tables"
               height="450"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
@@ -1000,7 +1092,7 @@
             <el-table
               :key="0"
               class="tb-edit"
-              :data="tableData"
+              :data="tables"
               height="450"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
@@ -1080,7 +1172,7 @@
             <el-table
               :key="0"
               class="tb-edit"
-              :data="tableData"
+              :data="tables"
               height="450"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
@@ -1794,7 +1886,22 @@
           this.stationId = info.GH;
           if (info.GW === "切断") {
             this.listType = "1";
-            this.showTableData(this.stationId, this.dqgw, 1, 1)
+            let that = this;
+            axios.all([
+              axios.post(" " + url + "/sys/showTableTitleById", {"stationid": that.stationId, "weizhiid": 1, "type": 1}),
+              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": that.dqgw,"type":1})
+            ])
+              .then(axios.spread(function (title, table) {
+                that.cols = title.data.data;
+                that.arrAll = table.data;
+                let arr = [];
+                for (let i = 0; i < that.arrAll.length; i++) {
+                  if (i < 9) {
+                    arr.push(that.arrAll[i])
+                  }
+                }
+                that.tableData = arr;
+              }));
           }
           else if (info.GW === "直管焊") {
             this.listType = "5";
@@ -1806,42 +1913,11 @@
           }
           else if (info.GW === "小组立") {
             this.listType = "2";
-            this.gwListType = "1";
-            let that = this;
-            axios.all([
-              axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 1}),
-              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立", "type": "1"})
-            ])
-              .then(axios.spread(function (title, table) {
-                that.cols = title.data.data;
-                that.arrAll = table.data;
-                let arr = [];
-                for (let i = 0; i < that.arrAll.length; i++) {
-                  if (i < 9) {
-                    arr.push(that.arrAll[i])
-                  }
-                }
-                that.tableData = arr;
-              }));
+            this.showTableData(this.stationId, this.dqgw, 1, 1)
           }
           else if (info.GW === "枝管切断") {
             this.listType = "4";
-            let that = this;
-            axios.all([
-              axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 1}),
-              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "枝管切断", "type": "1"})
-            ])
-              .then(axios.spread(function (title, table) {
-                that.cols = title.data.data;
-                that.arrAll = table.data;
-                let arr = [];
-                for (let i = 0; i < that.arrAll.length; i++) {
-                  if (i < 9) {
-                    arr.push(that.arrAll[i])
-                  }
-                }
-                that.tableData = arr;
-              }));
+            this.showTableData(this.stationId, this.dqgw, 1, 1)
           }
           else if (info.GW === "弯头切断") {
             this.listType = "3";
@@ -1878,7 +1954,20 @@
       //切断工位每隔5分钟刷新一下数据
       qdWorkStationGetDataList(workStation) {
         if (workStation === 1) {
-          this.showTableData(this.stationId, this.dqgw, 1, 1)
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": that.dqgw})
+          ])
+            .then(axios.spread(function (table) {
+              that.arrAll = table.data;
+              let arr = [];
+              for (let i = 0; i < that.arrAll.length; i++) {
+                if (i < 9) {
+                  arr.push(that.arrAll[i])
+                }
+              }
+              that.tableData = arr;
+            }));
         }
       },
 
@@ -1887,57 +1976,54 @@
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitleById", {"stationid": id, "weizhiid": wz, "type": type}),
-          axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": name})
+          axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": name,"type": type})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data.data;
-            that.arrAll = table.data;
-            let arr = [];
-            for (let i = 0; i < that.arrAll.length; i++) {
-              if (i < 9) {
-                arr.push(that.arrAll[i])
-              }
-            }
-            that.tableData = arr;
+            that.tableData = table.data;
           }));
       },
 
       //失去焦点后进行智能检索
       searchData(search) {
-        if (search) {
-          this.znSearch = false;
-          this.arrAll.filter(function (dataNews) {
-            return Object.keys(dataNews).some(function (key) {
-              return String(dataNews[key]).indexOf(search) > -1
-            })
-          });
-          if (this.arrAll.length > 1) {
-            this.tableData = this.arrAll.filter(function (dataNews) {
+        if(this.dqgw==="切断"){
+          if (search) {
+            this.znSearch = false;
+            this.arrAll.filter(function (dataNews) {
               return Object.keys(dataNews).some(function (key) {
                 return String(dataNews[key]).indexOf(search) > -1
               })
-            })
+            });
+            if (this.arrAll.length > 1) {
+              this.tableData = this.arrAll.filter(function (dataNews) {
+                return Object.keys(dataNews).some(function (key) {
+                  return String(dataNews[key]).indexOf(search) > -1
+                })
+              })
+            }
+          }
+          else {
+            this.znSearch = true
           }
         }
-        else {
-          this.znSearch = true
-        }
-        console.log(this.tableData);
       },
 
       //输入框为空值时需要执行的数据
       searchEmptyData(search) {
-        if (!search) {
-          this.znSearch = true;
-          let arr = [];
-          for (let i = 0; i < this.arrAll.length; i++) {
-            if (i < 9) {
-              arr.push(this.arrAll[i])
+        if(this.dqgw==="切断"){
+          if (!search) {
+            this.znSearch = true;
+            let arr = [];
+            for (let i = 0; i < this.arrAll.length; i++) {
+              if (i < 9) {
+                arr.push(this.arrAll[i])
+              }
             }
+            this.tableData = arr;
           }
-          this.tableData = arr;
         }
       },
+
 
       //每次往表格数据里添加数据
       addData(index) {
@@ -1952,29 +2038,11 @@
 
       //每次到底部给计算出需要下次添加的数据
       tableLoadingMore() {
-        if (this.znSearch === true && this.tableData.length < this.arrAll.length) {
+        if (this.dqgw === "切断" && this.znSearch === true && this.tableData.length < this.arrAll.length) {
           this.num++;
           let index = 8 * this.num;
           this.addData(index)
         }
-
-      },
-
-      //移动显示搜索框
-      showSearch() {
-        let search = this.$refs.contentTop;
-        let searchHight = this.$refs.contentTop.offsetHeight;
-        window.addEventListener('scroll', () => {
-          let top = window.scrollY;
-          if (top > searchHight) {
-            search.style.width = "100%";
-            search.style.position = "fixed";
-            search.style.top = 0;
-            search.style.zIndex = 999;
-          } else if (top <= searchHight) {
-            search.style.position = "";
-          }
-        })
       },
 
 
@@ -2106,33 +2174,76 @@
 
       //进行加工完成
       doWorkEnd() {
-        axios.post(" " + url + "/shengchan/updateStatusBatch",
-          {
-            "ids": this.listData,
-            "zuoyezhe": this.zuoyezhe,
-            "gongwei": this.dqgw,
-            "type": this.gwType,
-            "stationid": this.stationId,
-          })
-          .then((res) => {
-            if (res.data === "1") {
-              this.endVisible = false;
-              this.message = "已经完成";
-              this.HideModal = false;
-              const that = this;
+        if (this.dqgw === "切断") {
+          axios.post(" " + url + "/shengchan/updateStatusBatch",
+            {
+              "ids": this.listData,
+              "zuoyezhe": this.zuoyezhe,
+              "gongwei": this.dqgw,
+              "type": this.gwType,
+              "stationid": this.stationId,
+            })
+            .then((res) => {
+              if (res.data === "1") {
+                this.endVisible = false;
+                this.message = "已经完成";
+                this.HideModal = false;
+                const that = this;
 
-              function a() {
-                that.message = "";
-                that.HideModal = true;
-                that.showTableData(that.stationId,that.dqgw, 1, that.gwType)
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                  axios.all([
+                    axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": that.dqgw, "type": 1})
+                  ])
+                    .then(axios.spread(function (table) {
+                      that.arrAll = table.data;
+                      let arr = [];
+                      for (let i = 0; i < that.arrAll.length; i++) {
+                        if (i < 9) {
+                          arr.push(that.arrAll[i])
+                        }
+                      }
+                      that.tableData = arr;
+                    }));
+                }
+
+                setTimeout(a, 2000);
               }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+        else {
+          axios.post(" " + url + "/shengchan/updateStatusBatch",
+            {
+              "ids": this.listData,
+              "zuoyezhe": this.zuoyezhe,
+              "gongwei": this.dqgw,
+              "type": this.gwType,
+              "stationid": this.stationId,
+            })
+            .then((res) => {
+              if (res.data === "1") {
+                this.endVisible = false;
+                this.message = "已经完成";
+                this.HideModal = false;
+                const that = this;
 
-              setTimeout(a, 2000);
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                  that.showTableData(that.stationId, that.dqgw, 1, that.gwType)
+                }
+
+                setTimeout(a, 2000);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
       },
 
 
@@ -2248,8 +2359,6 @@
       },
 
 
-
-
       //查看切断表
       seeCutList(id,pici) {
         this.id  = id;
@@ -2326,8 +2435,6 @@
         }
 
       },
-
-
 
 
       //显示条件筛选
@@ -2408,39 +2515,71 @@
 
       //进行筛选查询
       validationScreening() {
-        axios.post(" " + url + "/shengchan/shengchanList.html",
-          {
-            "type": this.gwType,
-            "gongxu": this.dqgw,
-            "jiagongxian": this.scx,
-            "pici": this.batch,
-            "preGongxu": this.gw,
-            "jiagongxilie": this.xl,
-            "chuanhao": this.ch,
-            "yiguanhao": this.ygh,
-            "typeSelect": this.typeSelect,
-            "koujing": this.kj,
-            "youxianji": this.yxj,
-            "pno": this.PNO,
-            "bihou": this.bihou,
-            "codeN": this.codeN,
-            "zuoyezhe": this.qianzuoyezhe
-          })
-          .then((res) => {
-            this.screenVisible = false;
-            this.arrAll = res.data;
-            let arr = [];
-            for (let i = 0; i < this.arrAll.length; i++) {
-              if (i < 9) {
-                arr.push(this.arrAll[i])
+        if(this.dqgw==="切断"){
+          axios.post(" " + url + "/shengchan/shengchanList.html",
+            {
+              "type": this.gwType,
+              "gongxu": this.dqgw,
+              "jiagongxian": this.scx,
+              "pici": this.batch,
+              "preGongxu": this.gw,
+              "jiagongxilie": this.xl,
+              "chuanhao": this.ch,
+              "yiguanhao": this.ygh,
+              "typeSelect": this.typeSelect,
+              "koujing": this.kj,
+              "youxianji": this.yxj,
+              "pno": this.PNO,
+              "bihou": this.bihou,
+              "codeN": this.codeN,
+              "zuoyezhe": this.qianzuoyezhe
+            })
+            .then((res) => {
+              this.screenVisible = false;
+              this.arrAll = res.data;
+              let arr = [];
+              for (let i = 0; i < this.arrAll.length; i++) {
+                if (i < 9) {
+                  arr.push(this.arrAll[i])
+                }
               }
-            }
-            this.tableData = arr;
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+              this.tableData = arr;
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+        else {
+          axios.post(" " + url + "/shengchan/shengchanList.html",
+            {
+              "type": this.gwType,
+              "gongxu": this.dqgw,
+              "jiagongxian": this.scx,
+              "pici": this.batch,
+              "preGongxu": this.gw,
+              "jiagongxilie": this.xl,
+              "chuanhao": this.ch,
+              "yiguanhao": this.ygh,
+              "typeSelect": this.typeSelect,
+              "koujing": this.kj,
+              "youxianji": this.yxj,
+              "pno": this.PNO,
+              "bihou": this.bihou,
+              "codeN": this.codeN,
+              "zuoyezhe": this.qianzuoyezhe
+            })
+            .then((res) => {
+              this.screenVisible = false;
+              this.tableData = res.data;
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+
+
       },
+
 
       //清空筛选条件
       emptyAllValue() {
@@ -2544,64 +2683,25 @@
 
       },
 
-
-
-
-
-
-
-
       //小组立显示左边
       showLeft() {
         if (this.left !== true) {
           this.cols = [];
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 1}),
-            axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立", "type": "1"})
-          ])
-            .then(axios.spread(function (title, table) {
-              that.cols = title.data.data;
-              that.arrAll = table.data;
-              let arr = [];
-              for (let i = 0; i < that.arrAll.length; i++) {
-                if (i < 9) {
-                  arr.push(that.arrAll[i])
-                }
-              }
-              that.tableData = arr;
-            }));
           this.left = true;
           this.right = false;
           this.gwType = 1;
+          this.showTableData(this.stationId, this.dqgw, 1,  this.gwType);
         }
       },
 
       //小组立显示右边
       showRight() {
         if (this.right !== true) {
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 2}),
-            axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "小组立", "type": "2"})
-          ])
-            .then(axios.spread(function (title, table) {
-              that.cols = title.data.data;
-              that.arrAll = table.data;
-              let arr = [];
-              for (let i = 0; i < that.arrAll.length; i++) {
-                if (i < 9) {
-                  arr.push(that.arrAll[i])
-                }
-              }
-              that.tableData = arr;
-            }));
+          this.cols = [];
+          this.right = true;
           this.left = false;
           this.gwType = 2;
-          this.gwListType = "2";
-          setTimeout(() => {
-            this.right = true;
-          }, 200)
+          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
 
@@ -2615,22 +2715,7 @@
           this.right = false;
           this.right2 = false;
           this.gwType = "1";
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": that.gwType}),
-            axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "枝管切断", "type": that.gwType})
-          ])
-            .then(axios.spread(function (title, table) {
-              that.cols = title.data.data;
-              that.arrAll = table.data;
-              let arr = [];
-              for (let i = 0; i < that.arrAll.length; i++) {
-                if (i < 9) {
-                  arr.push(that.arrAll[i])
-                }
-              }
-              that.tableData = arr;
-            }));
+          this.showTableData(this.stationId, this.dqgw, 1,  this.gwType);
         }
 
       },
@@ -2645,22 +2730,7 @@
           this.right = false;
           this.right2 = false;
           this.gwType = "2";
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type":that.gwType}),
-            axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "枝管切断", "type": that.gwType})
-          ])
-            .then(axios.spread(function (title, table) {
-              that.cols = title.data.data;
-              that.arrAll = table.data;
-              let arr = [];
-              for (let i = 0; i < that.arrAll.length; i++) {
-                if (i < 9) {
-                  arr.push(that.arrAll[i])
-                }
-              }
-              that.tableData = arr;
-            }));
+          this.showTableData(this.stationId, this.dqgw, 1,  this.gwType);
         }
 
       },
@@ -2675,22 +2745,7 @@
           this.right = false;
           this.right2 = false;
           this.gwType = "3";
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": that.gwType}),
-            axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": "枝管切断", "type": that.gwType})
-          ])
-            .then(axios.spread(function (title, table) {
-              that.cols = title.data.data;
-              that.arrAll = table.data;
-              let arr = [];
-              for (let i = 0; i < that.arrAll.length; i++) {
-                if (i < 9) {
-                  arr.push(that.arrAll[i])
-                }
-              }
-              that.tableData = arr;
-            }));
+          this.showTableData(this.stationId, this.dqgw, 1,  this.gwType);
         }
 
       },
@@ -2705,22 +2760,7 @@
           this.right = true;
           this.right2 = false;
           this.gwType = "4";
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": that.gwType}),
-            axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": that.gwType})
-          ])
-            .then(axios.spread(function (title, table) {
-              that.cols = title.data.data;
-              that.arrAll = table.data;
-              let arr = [];
-              for (let i = 0; i < that.arrAll.length; i++) {
-                if (i < 9) {
-                  arr.push(that.arrAll[i])
-                }
-              }
-              that.tableData = arr;
-            }));
+          this.showTableData(this.stationId, this.dqgw, 1,  this.gwType);
         }
 
       },
@@ -2735,30 +2775,28 @@
           this.right = false;
           this.right2 = true;
           this.gwType = "5";
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": that.gwType}),
-            axios.post(" " + url + "/importother/showOtherZgbExcelPad", {"gongxu": "枝管切断", "type": that.gwType})
-          ])
-            .then(axios.spread(function (title, table) {
-              that.cols = title.data.data;
-              that.arrAll = table.data;
-              let arr = [];
-              for (let i = 0; i < that.arrAll.length; i++) {
-                if (i < 9) {
-                  arr.push(that.arrAll[i])
-                }
-              }
-              that.tableData = arr;
-            }));
+          this.showTableData(this.stationId, this.dqgw, 1,  this.gwType);
         }
 
       },
 
 
-
-
-
+      //移动显示搜索框
+      showSearch() {
+        let search = this.$refs.contentTop;
+        let searchHight = this.$refs.contentTop.offsetHeight;
+        window.addEventListener('scroll', () => {
+          let top = window.scrollY;
+          if (top > searchHight) {
+            search.style.width = "100%";
+            search.style.position = "fixed";
+            search.style.top = 0;
+            search.style.zIndex = 999;
+          } else if (top <= searchHight) {
+            search.style.position = "";
+          }
+        })
+      },
 
       //搜索框变色
       bianse() {
