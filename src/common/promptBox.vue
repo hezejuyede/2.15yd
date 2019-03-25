@@ -59,7 +59,12 @@
       readText() {
         localStorage.setItem("IndexUrl", 0);
         this.stopTimer = false;
-        this.$router.push({path: "/"})
+        this.$router.push({path: "/"});
+        document.webkitCancelFullScreen();
+        setTimeout(()=>{
+          let element = document.documentElement;
+          element.webkitRequestFullScreen();
+        },100)
       },
       timer() {
         if (this.stopTimer) {
@@ -77,7 +82,6 @@
           }
         }
       }
-
 
     },
     props: ['openPromptBox', 'needKnown', 'contentText','username']
