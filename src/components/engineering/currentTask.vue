@@ -2,7 +2,7 @@
   <div class="currentTask">
     <header-nav></header-nav>
     <div class="currentTaskTemplate">
-      <div class="currentTaskTitle"  v-if="this.gongHao !=='小组立' && this.gongHao !=='枝管切断'">
+      <div class="currentTaskTitle" v-if="this.gongHao !=='小组立' && this.gongHao !=='枝管切断'">
         <div class="titleDiv" v-for="(item,index) in titleData" :style="{'width':item.width}">
           <div class="titleDivLeft">
             {{item.name}}
@@ -791,7 +791,7 @@
         </div>
       </div>
       <div class="currentTaskBtn">
-        <div class="templateBtn" v-for="(item,index) in bottomButton"   v-if="item.show==1">
+        <div class="templateBtn" v-for="(item,index) in bottomButton" v-if="item.show==1">
           <button
             :disabled="item.disabled==='0'"
             @click="bottomButtonClick(item.type)"
@@ -802,7 +802,7 @@
       </div>
       <div class="currentTaskRouter">
         <div class="" v-for="(item,index) in routerList">
-          <div class="currentTaskRouterList" >
+          <div class="currentTaskRouterList">
             <el-steps align-center :active="item.maxstep" finish-status="success">
               <el-step v-for="(item,index) in item.nodeList" :keys="index" :title="item.stationname"></el-step>
             </el-steps>
@@ -828,7 +828,7 @@
     <!--显示上报异常按钮 -->
     <el-dialog title="上报异常按钮注" :visible.sync="abnormalBtnVisible" width="90%">
       <div class="closeBtn">
-        <el-button type="danger" @click="abnormalBtnVisible = false" >关闭窗口</el-button>
+        <el-button type="danger" @click="abnormalBtnVisible = false">关闭窗口</el-button>
       </div>
       <div class="container" style="height:350px;width: 100%">
         <div class="qualityBtn">
@@ -860,12 +860,12 @@
       <div class="container" style="height:400px;overflow:auto">
         <div class="closeBtn">
 
-          <el-button type="danger" @click="abnormalVisible = false" >关闭窗口</el-button>
+          <el-button type="danger" @click="abnormalVisible = false">关闭窗口</el-button>
         </div>
         <div class="qualityDiv">
           <div class="qualityDivTitle ">
             <span style="font-size: 18px">异常原因</span>
-            <span  style="margin: 0 5px">:</span>
+            <span style="margin: 0 5px">:</span>
             <el-button type="warning" style="width: 150px;height: 35px">{{abnormalReason}}</el-button>
           </div>
           <div class="qualityDivContent">
@@ -888,7 +888,7 @@
     <!--查看图纸 -->
     <el-dialog title="一品图查看" :visible.sync="drawingVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
-        <el-button type="danger" @click="drawingVisible = false" >关闭窗口</el-button>
+        <el-button type="danger" @click="drawingVisible = false">关闭窗口</el-button>
       </div>
       <div class="container">
         <div class="drawingImg" style="width: 100%;height: 100%">
@@ -966,7 +966,7 @@
     <!--弯管状态 -->
     <el-dialog title="弯管完成状态" :visible.sync="elbowVisible" width="95%">
       <div class="closeBtn">
-        <el-button type="danger" @click="elbowVisible = false" >关闭窗口</el-button>
+        <el-button type="danger" @click="elbowVisible = false">关闭窗口</el-button>
       </div>
       <div class="container" style="height:450px;overflow:auto">
         <div class="elbowDiv">
@@ -1007,7 +1007,7 @@
     <!--查看切断表 -->
     <el-dialog title="当前工位表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
-        <el-button type="danger" @click="qdbVisible = false" >关闭窗口</el-button>
+        <el-button type="danger" @click="qdbVisible = false">关闭窗口</el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
         <el-table
@@ -1140,16 +1140,16 @@
         bottomButton: [],              //底部按钮的是数组
 
 
-        xzlData:[],                     //小组立表的数据
-        qdbData:[],                     //切断表的数据
+        xzlData: [],                     //小组立表的数据
+        qdbData: [],                     //切断表的数据
 
 
         abnormalVisible: false,       //上报异常类型提醒框
-        abnormalBtnVisible:false,     //上报异常按钮提醒框
+        abnormalBtnVisible: false,     //上报异常按钮提醒框
         drawingVisible: false,        //一品图提醒框
         jobLogVisible: false,        //作业执行记录提醒框
         elbowVisible: false,         //弯管状态提醒框
-        qdbVisible:false,            //工位表提醒框
+        qdbVisible: false,            //工位表提醒框
 
         batch: "",                 //批次值
         batchOptions: [],          //批次的下拉列表
@@ -1157,14 +1157,14 @@
         wtTableData: [],          //弯头的数据数组
         wtCols: [],               //弯头的数据表头
 
-        url:"",                 //一品图的URL
-        listTableData:[],       //作业记录表数据
+        url: "",                 //一品图的URL
+        listTableData: [],       //作业记录表数据
 
         options: [],                //异常原因的数组
         abnormalReason: "",       //选择上报的异常原因
         remarks: "",                // 异常备注的内容
-        Reason:"",                  //选择的异常按钮id号
-        listData:[]                //复选框的ID数组
+        Reason: "",                  //选择的异常按钮id号
+        listData: []                //复选框的ID数组
 
       }
 
@@ -1211,7 +1211,7 @@
             let that = this;
             if (this.gongHao === "43/48装配" || this.gongHao === "45/46装配" || this.gongHao === "大组焊") {
               axios.all([
-                axios.post(" " + url + "/shengchan/getCurShengchanguanZhuangpei", {"id": id,stationid:this.gongwei}),
+                axios.post(" " + url + "/shengchan/getCurShengchanguanZhuangpei", {"id": id, stationid: this.gongwei}),
                 axios.post(" " + url + "/show/showButton", {"id": this.gongwei}),
               ])
                 .then(axios.spread(function (table, btn) {
@@ -1231,7 +1231,12 @@
               let codeno = this.$route.params.codeno;
               let fuhao = this.$route.params.fuhao;
               axios.all([
-                axios.post(" " + url + "/shengchan/getCurShengchanguanWth", {"pici": pici, "yiguanhao": yiguanno, "codeN": codeno, "fuhao": fuhao}),
+                axios.post(" " + url + "/shengchan/getCurShengchanguanWth", {
+                  "pici": pici,
+                  "yiguanhao": yiguanno,
+                  "codeN": codeno,
+                  "fuhao": fuhao
+                }),
                 axios.post(" " + url + "/show/showButton", {"id": this.gongwei}),
               ])
                 .then(axios.spread(function (table, btn) {
@@ -1245,15 +1250,15 @@
                   }
                 }))
             }
-            else if(this.gongHao === "枝管切断"){
+            else if (this.gongHao === "枝管切断") {
               let type = this.$route.params.type;
               axios.all([
-                axios.post(" " + url + "/shengchan/getCurShengchanguanZhiguan", {"id": id,"type":type}),
+                axios.post(" " + url + "/shengchan/getCurShengchanguanZhiguan", {"id": id, "type": type}),
                 axios.post(" " + url + "/show/showButton", {"id": this.gongwei}),
               ])
                 .then(axios.spread(function (table, btn) {
                   that.wtTableData = table.data;
-                  that.xzlData =table.data.baseItem;
+                  that.xzlData = table.data.baseItem;
                   that.tableData = table.data.yipintulist;
                   that.routerList = table.data.flowLine;
                   that.bottomButton = btn.data;
@@ -1262,7 +1267,7 @@
                   }
                 }))
             }
-            else if(this.gongHao === "弯头切断"){
+            else if (this.gongHao === "弯头切断") {
               axios.all([
                 axios.post(" " + url + "/shengchan/getCurShengchanguanwtqd", {"id": id}),
                 axios.post(" " + url + "/show/showButton", {"id": this.gongwei}),
@@ -1286,7 +1291,7 @@
                 .then(axios.spread(function (table, btn) {
                   that.wtTableData = table.data;
                   that.titleData = table.data.baseItem;
-                  that.xzlData =table.data.baseItem;
+                  that.xzlData = table.data.baseItem;
                   that.tableData = table.data.yipintulist;
                   that.routerList = table.data.flowLine;
                   that.bottomButton = btn.data;
@@ -1312,10 +1317,12 @@
                   this.message = "已经开始加工";
                   this.HideModal = false;
                   const that = this;
+
                   function a() {
                     that.message = "";
                     that.HideModal = true;
                   }
+
                   setTimeout(a, 2000);
 
                 }
@@ -1353,10 +1360,11 @@
                 "yiguanhao": yiguanno,
                 "codeN": codeno,
                 "fuhao": fuhao,
-                "zuoyezhe":that.zuoyezhe}),
+                "zuoyezhe": that.zuoyezhe
+              }),
             ])
               .then(axios.spread(function (table) {
-                if(table.data==="1"){
+                if (table.data === "1") {
                   that.$message({
                     message: '报完工成功',
                     type: 'success'
@@ -1367,14 +1375,14 @@
                 }
               }))
           }
-          else if(this.gongHao === "枝管切断"){
+          else if (this.gongHao === "枝管切断") {
             axios.post(" " + url + "/shengchan/updateStatus", {
               "id": this.id,
               "zuoyezhe": this.zuoyezhe,
               "stationid": this.gongwei,
               "ids": this.listData,
               "list": this.listTableData,
-              "type":this.$route.params.type
+              "type": this.$route.params.type
             })
               .then((res) => {
                 if (res.data === "success") {
@@ -1460,7 +1468,7 @@
         //查看各位工位表
         else if (type === "3") {
           let pici = this.titleData[0].text;
-          axios.post(" " + url + "/importother/publicData",{"code":"qieduan","pici":pici})
+          axios.post(" " + url + "/importother/publicData", {"code": "qieduan", "pici": pici})
             .then((res) => {
               if (res.data) {
                 this.qdbData = res.data;
@@ -1508,7 +1516,7 @@
           axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
             .then((res) => {
               if (res.data.imgurl) {
-                this.url = url+res.data.imgurl;
+                this.url = url + res.data.imgurl;
                 this.drawingVisible = true;
               }
               else {
@@ -1619,7 +1627,7 @@
           "stationid": this.gongwei,
           "ids": this.listData,
           "list": this.listTableData,
-          "type":1
+          "type": 1
         })
           .then((res) => {
             if (res.data === "success") {
@@ -1630,7 +1638,7 @@
               this.bottomButton[0].disabled = "0";
               this.bottomButton[1].disabled = "0";
               this.jobLogVisible = false;
-              let that =this;
+              let that = this;
               setTimeout(() => {
                 that.$router.push("/")
               }, 1000);
@@ -1643,7 +1651,7 @@
               this.bottomButton[0].disabled = "0";
               this.bottomButton[1].disabled = "0";
               this.jobLogVisible = false;
-              let that =this;
+              let that = this;
               setTimeout(() => {
                 that.$router.push("/")
               }, 1000);
@@ -1685,15 +1693,14 @@
       },
 
       //点按钮弹出备注框
-      showReportAbnormalContent(Reason,message) {
+      showReportAbnormalContent(Reason, message) {
         this.abnormalVisible = true;
         this.Reason = Reason;
         this.remarks = "";
-        this.abnormalReason=message;
-        this.$nextTick(function(){
+        this.abnormalReason = message;
+        this.$nextTick(function () {
           this.$refs['siteInput'].focus();
         })
-
 
 
       },
@@ -1805,7 +1812,7 @@
             text-overflow: ellipsis;
           }
         }
-        .currentTaskTitleTable{
+        .currentTaskTitleTable {
           width: 100%;
         }
       }
@@ -1893,9 +1900,6 @@
 
   }
 
-
-
-
   .qualityDiv {
     width: 100%;
     height: 100%;
@@ -1962,10 +1966,10 @@
         overflow: auto;
       }
     }
-    .containerDiv{
+    .containerDiv {
       width: 100%;
       height: 100%;
-      .btnDiv{
+      .btnDiv {
         height: 50px;
         width: 100%;
         display: flex;
@@ -1978,19 +1982,19 @@
       }
 
     }
-    .qualityBtn{
+    .qualityBtn {
       width: 100%;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      div{
+      div {
         flex: 1;
         display: flex;
         align-items: center;
         justify-content: center;
         .el-button {
-          width:95%;
+          width: 95%;
           height: 50px;
           margin-left: 5%;
         }
@@ -2012,7 +2016,7 @@
     height: 30px;
   }
 
-  .closeBtn{
+  .closeBtn {
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -2029,20 +2033,20 @@
   @media only screen and (max-width: 1200px) {
 
     .currentTask {
-      .currentTaskTemplate{
+      .currentTaskTemplate {
         .currentTaskTitle {
           .titleDiv {
             .titleDivLeft {
-              font-size:@font-size-large;
+              font-size: @font-size-large;
             }
             .titleDivRight {
-              font-size:@font-size-large
+              font-size: @font-size-large
             }
           }
         }
         .currentTaskDiv {
           .currentTaskDivLeft {
-            flex:3;
+            flex: 3;
             .icon-unie62b {
               font-size: 400%;
               color: @color-white;
@@ -2065,21 +2069,20 @@
         }
       }
 
-
     }
 
   }
 
   @media only screen and (max-width: 900px) {
     .currentTask {
-      .currentTaskTemplate{
+      .currentTaskTemplate {
         .currentTaskTitle {
           .titleDiv {
             .titleDivLeft {
-              font-size:@font-size-medium;
+              font-size: @font-size-medium;
             }
             .titleDivRight {
-              font-size:@font-size-medium
+              font-size: @font-size-medium
             }
           }
         }
@@ -2114,14 +2117,13 @@
 
   }
 
-
-  @media only screen and (max-width:640px) {
+  @media only screen and (max-width: 640px) {
     .currentTask {
-      .currentTaskTemplate{
+      .currentTaskTemplate {
         .currentTaskTitle {
           .titleDiv {
             .titleDivLeft {
-              font-size:@font-size-small;
+              font-size: @font-size-small;
             }
             .titleDivRight {
               font-size: @font-size-small;
@@ -2142,14 +2144,13 @@
 
   }
 
-
   @media only screen and (max-width: 400px) {
     .currentTask {
-      .currentTaskTemplate{
+      .currentTaskTemplate {
         .currentTaskTitle {
           .titleDiv {
             .titleDivLeft {
-              font-size:@font-size-small-s;
+              font-size: @font-size-small-s;
             }
             .titleDivRight {
               font-size: @font-size-small-s;
