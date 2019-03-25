@@ -372,10 +372,6 @@
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
-              @select="selectList"
-              @select-all="selectAll"
-              @row-click="doSelect"
-              @selection-change="selectChange"
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
               <template v-for="(col ,index) in cols">
@@ -448,10 +444,7 @@
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
-              @select="selectList"
-              @select-all="selectAll"
-              @row-click="doSelect"
-              @selection-change="selectChange"
+
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
               <template v-for="(col ,index) in cols">
@@ -524,10 +517,7 @@
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
-              @select="selectList"
-              @select-all="selectAll"
-              @row-click="doSelect"
-              @selection-change="selectChange"
+
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
               <template v-for="(col ,index) in cols">
@@ -600,10 +590,7 @@
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
-              @select="selectList"
-              @select-all="selectAll"
-              @row-click="doSelect"
-              @selection-change="selectChange"
+
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
               <template v-for="(col ,index) in cols">
@@ -676,10 +663,7 @@
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
-              @select="selectList"
-              @select-all="selectAll"
-              @row-click="doSelect"
-              @selection-change="selectChange"
+
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
               <template v-for="(col ,index) in cols">
@@ -1837,6 +1821,7 @@
       //小组立显示左边
       showLeft() {
         if (this.left !== true) {
+          this.nowClick= 5;
           this.cols = [];
           this.left = true;
           this.right = false;
@@ -1863,6 +1848,7 @@
       //小组立显示右边
       showRight() {
         if (this.right !== true) {
+          this.nowClick= 5;
           this.cols = [];
           this.left = false;
           this.right = true;
@@ -1891,6 +1877,7 @@
       //支管显示正枝
       zgShowLeft() {
         if (this.left !== true) {
+          this.nowClick= 5;
           this.cols= [];
           this.left = true;
           this.left2 = false;
@@ -1914,6 +1901,7 @@
       //支管显示斜枝
       zgShowLeft2() {
         if (this.left2 !== true) {
+          this.nowClick= 5;
           this.cols= [];
           this.left = false;
           this.left2 = true;
@@ -1937,6 +1925,7 @@
       //支管显示偏心枝
       zgShowCenter() {
         if (this.zgCenter !== true) {
+          this.nowClick= 5;
           this.cols= [];
           this.left = false;
           this.left2 = false;
@@ -1960,6 +1949,7 @@
       //支管显示母管开孔
       zgShowRight() {
         if (this.right !== true) {
+          this.nowClick= 5;
           this.cols= [];
           this.left = false;
           this.left2 = false;
@@ -1982,6 +1972,7 @@
       //支管显示支架管
       zgShowRight2() {
         if (this.right2 !== true) {
+          this.nowClick= 5;
           this.cols= [];
           this.left = false;
           this.left2 = false;
@@ -2217,9 +2208,10 @@
         margin: 0 auto;
         height: 60px;
         display: flex;
-        background-color: @color-dlLan;;
-        border-top-left-radius: 30px;
-        border-top-right-radius:30px;
+        border-top:1px solid @color-background-d ;
+        border-left:1px solid @color-background-d ;
+        border-right:1px solid @color-background-d ;
+        background-color: @color-background-d;;
         .change-left {
           flex: 1;
           display: flex;
@@ -2228,11 +2220,10 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          border-right:1px solid @color-background-d;
           button {
             width: 100%;
             height: 100%;
-            border-top-left-radius: 30px;
-            border-top-right-radius: 30px;
             color: @color-background-dd;
             cursor: pointer;
             background-color: @color-white;
@@ -2247,11 +2238,10 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          border-right:1px solid @color-background-d;
           button {
             width: 100%;
             height: 100%;
-            border-top-left-radius: 30px;
-            border-top-right-radius: 30px;
             color: @color-background-dd;
             cursor: pointer;
             background-color: @color-white;
@@ -2266,11 +2256,10 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          border-right:1px solid @color-background-d;
           button {
             width: 100%;
             height: 100%;
-            border-top-left-radius: 30px;
-            border-top-right-radius: 30px;
             color: @color-background-dd;
             cursor: pointer;
             background-color: @color-white;
@@ -2285,11 +2274,10 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          border-right:1px solid @color-background-d;
           button {
             width: 100%;
             height: 100%;
-            border-top-left-radius: 30px;
-            border-top-right-radius: 30px;
             color: @color-background-dd;
             cursor: pointer;
             background-color: @color-white;
@@ -2308,8 +2296,6 @@
           button {
             width: 100%;
             height: 100%;
-            border-top-left-radius: 30px;
-            border-top-right-radius: 30px;
             color: @color-background-dd;
             cursor: pointer;
             background-color: @color-white;

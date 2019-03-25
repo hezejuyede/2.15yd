@@ -2946,9 +2946,10 @@
         margin: 0 auto;
         height: 60px;
         display: flex;
-        background-color: @color-dlLan;;
-        border-top-left-radius: 30px;
-        border-top-right-radius:30px;
+        border-top:1px solid @color-background-d ;
+        border-left:1px solid @color-background-d ;
+        border-right:1px solid @color-background-d ;
+        background-color: @color-background-d;;
         .change-left {
           flex: 1;
           display: flex;
@@ -2957,11 +2958,10 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          border-right:1px solid @color-background-d;
           button {
             width: 100%;
             height: 100%;
-            border-top-left-radius: 30px;
-            border-top-right-radius: 30px;
             color: @color-background-dd;
             cursor: pointer;
             background-color: @color-white;
@@ -2976,11 +2976,10 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          border-right:1px solid @color-background-d;
           button {
             width: 100%;
             height: 100%;
-            border-top-left-radius: 30px;
-            border-top-right-radius: 30px;
             color: @color-background-dd;
             cursor: pointer;
             background-color: @color-white;
@@ -2995,11 +2994,10 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          border-right:1px solid @color-background-d;
           button {
             width: 100%;
             height: 100%;
-            border-top-left-radius: 30px;
-            border-top-right-radius: 30px;
             color: @color-background-dd;
             cursor: pointer;
             background-color: @color-white;
@@ -3014,11 +3012,10 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
+          border-right:1px solid @color-background-d;
           button {
             width: 100%;
             height: 100%;
-            border-top-left-radius: 30px;
-            border-top-right-radius: 30px;
             color: @color-background-dd;
             cursor: pointer;
             background-color: @color-white;
@@ -3037,8 +3034,6 @@
           button {
             width: 100%;
             height: 100%;
-            border-top-left-radius: 30px;
-            border-top-right-radius: 30px;
             color: @color-background-dd;
             cursor: pointer;
             background-color: @color-white;
