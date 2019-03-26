@@ -4,7 +4,8 @@
     <div class="ProductionExecutionDiv">
       <!-- 公共头部-->
       <div class="contentTop" ref="contentTop">
-        <div class="listSearch" v-if="this.listType ==1 || this.listType ==5 || this.listType ==4 || this.listType ==3|| this.listType ==11">
+        <div class="listSearch"
+             v-if="this.listType ==1 || this.listType ==5 || this.listType ==4 || this.listType ==3|| this.listType ==11">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
                       placeholder="检索管子或扫码或手工输入"
@@ -43,9 +44,9 @@
                       @keyup.enter.native="goToPipePage(searchWord)"></el-input>
           </div>
           <div class="listSearchBtn">
-            <button  @click="showScreening">条件筛选</button>
-            <button  @click="materialStatistics">物料统计</button>
-            <button  @click="goGeneralListOfProcessing">总清单</button>
+            <button @click="showScreening">条件筛选</button>
+            <button @click="materialStatistics">物料统计</button>
+            <button @click="goGeneralListOfProcessing">总清单</button>
             <button @click="workEnd">报完工</button>
           </div>
         </div>
@@ -58,9 +59,9 @@
                       @keyup.enter.native="goToPipePage(searchWord)"></el-input>
           </div>
           <div class="listSearchBtn">
-            <button  @click="showScreening">条件筛选</button>
-            <button  @click="materialStatistics">物料统计</button>
-            <button  @click="goGeneralListOfProcessing">总清单</button>
+            <button @click="showScreening">条件筛选</button>
+            <button @click="materialStatistics">物料统计</button>
+            <button @click="goGeneralListOfProcessing">总清单</button>
           </div>
         </div>
         <div class="listSearch" v-if="this.listType ==7 || this.listType ==8 || this.listType ==10">
@@ -265,7 +266,7 @@
             <template slot-scope="scope">
               <el-table class="tb-edit"
                         :data="scope.row.list"
-                        :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'20px'}"
+                        :header-cell-style="{background:'#f0f0f0',color:'rgba(0, 0, 0, 0.8)',fontSize:'20px'}"
                         border
                         highlight-current-row
                         style="width: 98%;margin: auto">
@@ -552,7 +553,7 @@
       <!--小组立-->
       <div class="xzlDiv" v-if="this.listType ==2">
         <div class="xzl-change">
-          <div class="change-left" @click="showLeft" >
+          <div class="change-left" @click="showLeft">
             <button
               :style="{
              'background-color':this.left ? '#2A437B':'',
@@ -560,7 +561,7 @@
               中二小组立
             </button>
           </div>
-          <div class="change-right" @click="showRight" >
+          <div class="change-right" @click="showRight">
             <button
               :style="{
              'background-color':this.right ? '#2A437B':'',
@@ -835,7 +836,7 @@
               :style="{
               'background-color':this.right ? '#2A437B':'',
               'color':this.right ? '#ffffff':''}">
-              母管开孔
+              母管表
             </button>
           </div>
           <div class="change-right2" @click="zgShowRight2">
@@ -1426,7 +1427,7 @@
     <el-dialog title="工位表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
         <el-button type="danger" @click="qdbVisible = false">关闭窗口</el-button>
-       <!-- <el-button type="primary" @click="gwbDoWorkEnd">报完工</el-button>-->
+        <!-- <el-button type="primary" @click="gwbDoWorkEnd">报完工</el-button>-->
       </div>
       <div class="container" style="width: 100%;height: 100%">
         <el-table
@@ -1437,7 +1438,7 @@
             border: '1px solid #303133',
             fontSize:'12px',
             color:'rgba(0, 0, 0, 1)'}"
-            :cell-style="{
+          :cell-style="{
              border: '1px solid #303133',
              fontSize:'12px'
             }"
@@ -1544,12 +1545,12 @@
              fontSize:'12px'
             }"
           style="width: 100%;border: 1px solid #303133">
-        <!--  <el-table-column
-            align="center"
-            prop="indexno"
-            label="序号"
-            width="50">
-          </el-table-column>-->
+          <!--  <el-table-column
+              align="center"
+              prop="indexno"
+              label="序号"
+              width="50">
+            </el-table-column>-->
           <el-table-column
             align="center"
             prop="chuanhao"
@@ -1665,9 +1666,23 @@
     <!--  特定工位提醒框 -->
     <el-dialog title="当前管信息确认" :visible.sync="tdVisible" width="80%" center>
       <div class="tdContainer" style="height:400px;overflow:auto">
-        <div class="tdContainerDiv">
+        <div class="tdContainerDiv" v-if="this.dqgw ==='43/48装配' || this.dqgw ==='45/46装配' || this.dqgw ==='大组焊'">
           <el-table
-            :key="1"
+            border
+            class="tb-edit"
+            :data="tdTableData"
+            :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+            :row-class-name="tableRowClassName"
+            ref="moviesTable"
+            style="width: 99%;margin: 0 auto">
+            <template v-for="(col ,index) in tdCols2">
+              <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
+            </template>
+          </el-table>
+        </div>
+        <div class="tdContainerDiv" v-if="this.dqgw ==='弯管'">
+          <el-table
+            border
             class="tb-edit"
             :data="tdTableData"
             :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
@@ -1728,17 +1743,24 @@
 
         tableData: [],//总数据的表数据
         cols: [],     //总数据的表头
-        xzlData:[],     //小组立表数据
-        qdbData:[],     //切断表数据
+        xzlData: [],     //小组立表数据
+        qdbData: [],     //切断表数据
         tdTableData: [],  //特定工位的表数据
         tdCols: [
-          {"prop":"chuanhao","label":"船号"},
-          {"prop":"yiguanhao","label":"一贯号"},
-          {"prop":"codeno","label":"Code"},
-          {"prop":"pno","label":"PNO"},
-          {"prop":"koujing","label":"口径"},
-          {"prop":"jiagongxilie","label":"加工系列"},
+          {"prop": "chuanhao", "label": "船号"},
+          {"prop": "yiguanhao", "label": "一贯号"},
+          {"prop": "codeno", "label": "Code"},
+          {"prop": "pno", "label": "PNO"},
+          {"prop": "koujing", "label": "口径"},
+          {"prop": "jiagongxilie", "label": "加工系列"},
         ],    //特定工位的表头
+        tdCols2: [
+          {"prop": "chuanhao", "label": "船号"},
+          {"prop": "yiguanhao", "label": "一贯号"},
+          {"prop": "codeno", "label": "Code"},
+          {"prop": "jiagongxilie", "label": "加工系列"},
+        ],    //特定工位的表头
+
 
         zuoyezhe: "",   //用户名
         dqgw: "",       //中文工位名字
@@ -1750,7 +1772,6 @@
         listData: [],  //点击复选框中对ID的数组
 
         id: "",        //管子的ID
-
 
 
         inputWord: '',//扫码的Value
@@ -1765,16 +1786,13 @@
         endVisible: false,     //报完工提醒弹出框
         qdbVisible: false,    //工位表查看弹出框
         tdVisible: false,    //特定工位提醒框
-        xzlVisible:false,   //小组里表弹出框
+        xzlVisible: false,   //小组里表弹出框
 
         left: true,    //        显示最左边
         left2: false,    //      显示左二
         zgCenter: false,    //   显示中间
         right: false,    //      显示最右边
         right2: false,    //     显示右二
-
-
-
 
 
         batch: "",
@@ -1888,8 +1906,12 @@
             this.listType = "1";
             let that = this;
             axios.all([
-              axios.post(" " + url + "/sys/showTableTitleById", {"stationid": that.stationId, "weizhiid": 1, "type": 1}),
-              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": that.dqgw,"type":1})
+              axios.post(" " + url + "/sys/showTableTitleById", {
+                "stationid": that.stationId,
+                "weizhiid": 1,
+                "type": 1
+              }),
+              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": that.dqgw, "type": 1})
             ])
               .then(axios.spread(function (title, table) {
                 that.cols = title.data.data;
@@ -1933,15 +1955,15 @@
           }
           else if (info.GW === "大组焊") {
             this.listType = "9";
-            this.showTableData(this.stationId, this.dqgw,1,1)
+            this.showTableData(this.stationId, this.dqgw, 1, 1)
           }
           else if (info.GW === "弯管") {
             this.listType = "10";
-            this.showTableData(this.stationId, this.dqgw,1,1)
+            this.showTableData(this.stationId, this.dqgw, 1, 1)
           }
           else if (info.GW === "弯头焊") {
             this.listType = "11";
-            this.showTableData(this.stationId, this.dqgw,1,1)
+            this.showTableData(this.stationId, this.dqgw, 1, 1)
           }
         }
       },
@@ -1976,7 +1998,7 @@
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitleById", {"stationid": id, "weizhiid": wz, "type": type}),
-          axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": name,"type": type})
+          axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": name, "type": type})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data.data;
@@ -1986,7 +2008,7 @@
 
       //失去焦点后进行智能检索
       searchData(search) {
-        if(this.dqgw==="切断"){
+        if (this.dqgw === "切断") {
           if (search) {
             this.znSearch = false;
             this.arrAll.filter(function (dataNews) {
@@ -2010,7 +2032,7 @@
 
       //输入框为空值时需要执行的数据
       searchEmptyData(search) {
-        if(this.dqgw==="切断"){
+        if (this.dqgw === "切断") {
           if (!search) {
             this.znSearch = true;
             let arr = [];
@@ -2125,7 +2147,7 @@
       },
 
       //在工位表里报完工
-      gwbDoWorkEnd(){
+      gwbDoWorkEnd() {
         axios.post(" " + url + "/shengchan/updateStatusBatch",
           {
             "ids": [this.id],
@@ -2138,11 +2160,11 @@
             if (res.data === "1") {
               this.showTableData(this.stationId, this.dqgw, 1, 1);
               this.$message.success(`报完工成功`);
-              let that =this;
-              setTimeout(()=>{
+              let that = this;
+              setTimeout(() => {
                 that.qdbVisible = false;
                 that.xzlVisible = false;
-              },1000)
+              }, 1000)
             }
             else {
               this.$message.warning(`报完工失败`);
@@ -2360,13 +2382,13 @@
 
 
       //查看切断表
-      seeCutList(id,pici) {
-        this.id  = id;
+      seeCutList(id, pici) {
+        this.id = id;
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
           event.stopPropagation();
-          axios.post(" " + url + "/importother/publicData",{"code":"qieduan","pici":pici})
+          axios.post(" " + url + "/importother/publicData", {"code": "qieduan", "pici": pici})
             .then((res) => {
               if (res.data) {
                 this.qdbData = res.data;
@@ -2515,7 +2537,7 @@
 
       //进行筛选查询
       validationScreening() {
-        if(this.dqgw==="切断"){
+        if (this.dqgw === "切断") {
           axios.post(" " + url + "/shengchan/shengchanList.html",
             {
               "type": this.gwType,
@@ -2600,7 +2622,7 @@
 
 
       //点击一贯号,Code号，前往前往任务页面
-      goToCurrentTask(id,jiagongxilie, koujing, shipcode, yiguanno, codeno,pno) {
+      goToCurrentTask(id, jiagongxilie, koujing, shipcode, yiguanno, codeno, pno) {
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
@@ -2619,7 +2641,7 @@
                 "pno": pno
               }];
             }
-            else if(this.dqgw === "枝管切断"){
+            else if (this.dqgw === "枝管切断") {
 
               localStorage.setItem("pipeId", id);
               this.$router.push({
@@ -2647,14 +2669,14 @@
 
       //弯头焊进行详情页面
       wthGoToCurrentTask(pici, fuhao, yiguanno, codeno) {
-        if (pici && fuhao &&yiguanno && codeno ) {
+        if (pici && fuhao && yiguanno && codeno) {
           this.$router.push({
             name: 'CurrentTask',
             params: {
               pici: pici,
-              fuhao:fuhao,
-              yiguanno:yiguanno,
-              codeno:codeno
+              fuhao: fuhao,
+              yiguanno: yiguanno,
+              codeno: codeno
             }
           })
         }
@@ -2665,7 +2687,7 @@
 
 
       //特定工位进行确认后要执行的方法
-      tdGoToCurrentTask(){
+      tdGoToCurrentTask() {
         if (this.id) {
           this.$router.push("/CurrentTask");
           localStorage.setItem("pipeId", this.id);
@@ -2690,7 +2712,7 @@
           this.left = true;
           this.right = false;
           this.gwType = 1;
-          this.showTableData(this.stationId, this.dqgw, 1,  this.gwType);
+          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
 
@@ -2708,14 +2730,14 @@
       //支管显示正枝
       zgShowLeft() {
         if (this.left !== true) {
-          this.cols= [];
+          this.cols = [];
           this.left = true;
           this.left2 = false;
           this.zgCenter = false;
           this.right = false;
           this.right2 = false;
           this.gwType = "1";
-          this.showTableData(this.stationId, this.dqgw, 1,  this.gwType);
+          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
 
       },
@@ -2723,14 +2745,14 @@
       //支管显示斜枝
       zgShowLeft2() {
         if (this.left2 !== true) {
-          this.cols= [];
+          this.cols = [];
           this.left = false;
           this.left2 = true;
           this.zgCenter = false;
           this.right = false;
           this.right2 = false;
           this.gwType = "2";
-          this.showTableData(this.stationId, this.dqgw, 1,  this.gwType);
+          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
 
       },
@@ -2738,14 +2760,14 @@
       //支管显示偏心枝
       zgShowCenter() {
         if (this.zgCenter !== true) {
-          this.cols= [];
+          this.cols = [];
           this.left = false;
           this.left2 = false;
           this.zgCenter = true;
           this.right = false;
           this.right2 = false;
           this.gwType = "3";
-          this.showTableData(this.stationId, this.dqgw, 1,  this.gwType);
+          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
 
       },
@@ -2753,14 +2775,14 @@
       //支管显示母管开孔
       zgShowRight() {
         if (this.right !== true) {
-          this.cols= [];
+          this.cols = [];
           this.left = false;
           this.left2 = false;
           this.zgCenter = false;
           this.right = true;
           this.right2 = false;
           this.gwType = "4";
-          this.showTableData(this.stationId, this.dqgw, 1,  this.gwType);
+          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
 
       },
@@ -2768,14 +2790,14 @@
       //支管显示支架管
       zgShowRight2() {
         if (this.right2 !== true) {
-          this.cols= [];
+          this.cols = [];
           this.left = false;
           this.left2 = false;
           this.zgCenter = false;
           this.right = false;
           this.right2 = true;
           this.gwType = "5";
-          this.showTableData(this.stationId, this.dqgw, 1,  this.gwType);
+          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
 
       },
@@ -2898,7 +2920,7 @@
         display: flex;
         background-color: @color-dlLan;;
         border-top-left-radius: 30px;
-        border-top-right-radius:30px;
+        border-top-right-radius: 30px;
         .change-left {
           flex: 1;
           display: flex;
@@ -2946,9 +2968,9 @@
         margin: 0 auto;
         height: 60px;
         display: flex;
-        border-top:1px solid @color-background-d ;
-        border-left:1px solid @color-background-d ;
-        border-right:1px solid @color-background-d ;
+        border-top: 1px solid @color-background-d;
+        border-left: 1px solid @color-background-d;
+        border-right: 1px solid @color-background-d;
         background-color: @color-background-d;;
         .change-left {
           flex: 1;
@@ -2958,7 +2980,7 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
-          border-right:1px solid @color-background-d;
+          border-right: 1px solid @color-background-d;
           button {
             width: 100%;
             height: 100%;
@@ -2976,7 +2998,7 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
-          border-right:1px solid @color-background-d;
+          border-right: 1px solid @color-background-d;
           button {
             width: 100%;
             height: 100%;
@@ -2994,7 +3016,7 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
-          border-right:1px solid @color-background-d;
+          border-right: 1px solid @color-background-d;
           button {
             width: 100%;
             height: 100%;
@@ -3012,7 +3034,7 @@
           font-size: @font-size-large;
           color: @color-background-dd;
           cursor: pointer;
-          border-right:1px solid @color-background-d;
+          border-right: 1px solid @color-background-d;
           button {
             width: 100%;
             height: 100%;
@@ -3046,16 +3068,22 @@
   }
 
   .closeBtn {
+    width: 100%;
+    height: 70px;
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
     .el-button {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 20%;
-      height: 35px;
+      width: 30%;
+      height: 50px;
     }
   }
 
@@ -3112,7 +3140,8 @@
     }
 
   }
-  .tdContainer{
+
+  .tdContainer {
     .tdContainerDiv {
       width: 95%;
       height: 70%;

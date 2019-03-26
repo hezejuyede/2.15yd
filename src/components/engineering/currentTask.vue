@@ -2017,16 +2017,22 @@
   }
 
   .closeBtn {
+    width: 100%;
+    height: 70px;
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
     .el-button {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 20%;
-      height: 35px;
+      width: 30%;
+      height: 50px;
     }
   }
 
