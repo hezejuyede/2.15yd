@@ -1410,7 +1410,7 @@
       </div>
     </el-dialog>
 
-    <!--查看图纸 -->
+    <!--查看一品图 -->
     <el-dialog title="一品图查看" :visible.sync="drawingVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
         <el-button type="danger" @click="drawingVisible = false">关闭窗口</el-button>
@@ -2136,14 +2136,38 @@
       //扫码直接前往任务页面
       goToPipePage(searchWord) {
         if (searchWord) {
-          localStorage.setItem("pipeId", "653");
-          localStorage.setItem("IndexUrl", 2);
-          this.$router.push("/CurrentTask");
+          axios.post(" " + url + "/shengchan/updateStatusBatch",
+            {
+              "ids": searchWord,
+            })
+            .then((res) => {
+              if (res.data === "1") {
+                localStorage.setItem("pipeId", "653");
+                localStorage.setItem("IndexUrl", 2);
+                this.$router.push("/CurrentTask");
+              }
+              else {
+
+
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            });
         }
         else {
+          this.message = "扫不到管子信息";
+          this.HideModal = false;
+          const that = this;
+
+          function a() {
+            that.message = "";
+            that.HideModal = true;
+          }
+
+          setTimeout(a, 2000);
 
         }
-
       },
 
       //在工位表里报完工
@@ -2278,6 +2302,7 @@
       dgMaterialStatistics() {
 
       },
+      
       // 物料统计
       materialStatistics() {
 
@@ -3140,6 +3165,8 @@
     }
 
   }
+
+
 
   .tdContainer {
     .tdContainerDiv {
