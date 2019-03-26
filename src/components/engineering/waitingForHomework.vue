@@ -7,11 +7,14 @@
         <div class="listSearch"
              v-if="this.listType ==1 || this.listType ==5 || this.listType ==4 || this.listType ==3|| this.listType ==11">
           <div class="listSearchInput">
-            <el-input v-model="searchWord"
-                      placeholder="检索管子或扫码或手工输入"
-                      @blur="searchData(searchWord)"
-                      @input="searchEmptyData(searchWord)"
-                      @keyup.enter.native="goToPipePage(searchWord)"></el-input>
+            <el-input
+              v-model="searchWord"
+              ref="siteInput"
+              autofocus
+              placeholder="检索管子或扫码或手工输入"
+              @blur="searchData(searchWord)"
+              @input="searchEmptyData(searchWord)"
+              @keyup.enter.native="goToPipePage(searchWord)"></el-input>
           </div>
           <div class="listSearchBtn">
             <button @click="showScreening">条件筛选</button>
@@ -1753,7 +1756,7 @@
           {"prop": "pno", "label": "PNO"},
           {"prop": "koujing", "label": "口径"},
           {"prop": "jiagongxilie", "label": "加工系列"},
-        ],    //特定工位的表头
+        ],    //特定弯管工位的表头
         tdCols2: [
           {"prop": "chuanhao", "label": "船号"},
           {"prop": "yiguanhao", "label": "一贯号"},
@@ -1862,7 +1865,17 @@
       //切断工位每隔5分钟刷新一下数据
       setInterval(() => {
         this.qdWorkStationGetDataList(this.stationId)
-      }, 300000)
+      }, 300000);
+
+
+
+      //监听键盘的回车事件
+      document.onkeydown = (e)=>{
+        if(e.keyCode == 13){
+          this.setInputFocus();
+
+        }
+      }
 
     },
     computed: {
@@ -1883,6 +1896,8 @@
       //检索用户状态
       this.getAdminState();
 
+
+
       //转圈延迟一秒执行
       setTimeout(() => {
         this.getLoading();
@@ -1893,6 +1908,7 @@
 
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
+
         const userInfo = sessionStorage.getItem("userInfo");
         if (userInfo === null) {
           this.$router.push("/ProductionExecutionLogin")
@@ -1902,6 +1918,7 @@
           this.zuoyezhe = info.username;
           this.dqgw = info.GW;
           this.stationId = info.GH;
+
           if (info.GW === "切断") {
             this.listType = "1";
             let that = this;
@@ -1967,6 +1984,14 @@
           }
         }
       },
+
+      //自动聚焦输入框
+      setInputFocus() {
+        this.$nextTick(() => {
+          this.$refs['siteInput'].focus();
+        })
+      },
+
 
       //转圈延迟一秒执行
       getLoading() {
@@ -2135,37 +2160,46 @@
 
       //扫码直接前往任务页面
       goToPipePage(searchWord) {
-        if (searchWord) {
-          axios.post(" " + url + "/shengchan/updateStatusBatch",
-            {
-              "ids": searchWord,
-            })
-            .then((res) => {
-              if (res.data === "1") {
-                localStorage.setItem("pipeId", "653");
-                localStorage.setItem("IndexUrl", 2);
-                this.$router.push("/CurrentTask");
-              }
-              else {
+        if (event && event.stopPropagation) {
+          //W3C取消冒泡事件
+          event.stopPropagation();
+          if (searchWord) {
+            axios.post(" " + url + "/shengchan/getShaomaData",
+              {
+                "stationid":this.stationId,
+                "shaomacode": searchWord
+              })
+              .then((res) => {
+                if (res.data.state=== "1") {
+                  let id = res.data.data.id;
+                  localStorage.setItem("pipeId", id);
+                  this.$router.push("/CurrentTask");
+                }
+                else {
+                  this.$message({type: 'warning', message: res.data.message});
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              });
+          }
+          else {
+            this.message = "扫不到管子信息";
+            this.HideModal = false;
+            const that = this;
 
+            function a() {
+              that.message = "";
+              that.HideModal = true;
+            }
 
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            });
+            setTimeout(a, 2000);
+
+          }
         }
         else {
-          this.message = "扫不到管子信息";
-          this.HideModal = false;
-          const that = this;
-
-          function a() {
-            that.message = "";
-            that.HideModal = true;
-          }
-
-          setTimeout(a, 2000);
+          //IE取消冒泡事件
+          window.event.cancelBubble = true;
 
         }
       },
@@ -2302,7 +2336,7 @@
       dgMaterialStatistics() {
 
       },
-      
+
       // 物料统计
       materialStatistics() {
 
