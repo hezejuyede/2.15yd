@@ -4,8 +4,7 @@
     <div class="ProductionExecutionDiv">
       <!-- 公共头部-->
       <div class="contentTop" ref="contentTop">
-        <div class="listSearch"
-             v-if="this.listType ==1 || this.listType ==5 || this.listType ==4 || this.listType ==3|| this.listType ==11">
+        <div class="listSearch" v-if="this.listType ==1 || this.listType ==5 || this.listType ==4 || this.listType ==3|| this.listType ==11">
           <div class="listSearchInput">
             <el-input
               v-model="searchWord"
@@ -26,6 +25,7 @@
         <div class="listSearch" v-if="this.listType ==6 ">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
+                      ref="siteInput"
                       placeholder="检索管子或扫码或手工输入"
                       @blur="searchData(searchWord)"
                       @input="searchEmptyData(searchWord)"
@@ -41,6 +41,7 @@
         <div class="listSearch" v-if="this.listType ==2">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
+                      ref="siteInput"
                       placeholder="检索管子或扫码或手工输入"
                       @blur="searchData(searchWord)"
                       @input="searchEmptyData(searchWord)"
@@ -56,6 +57,7 @@
         <div class="listSearch" v-if="this.listType ==9">
           <div class="listSearchInput">
             <el-input v-model="searchWord"
+                      ref="siteInput"
                       placeholder="检索管子或扫码或手工输入"
                       @blur="searchData(searchWord)"
                       @input="searchEmptyData(searchWord)"
@@ -69,11 +71,13 @@
         </div>
         <div class="listSearch" v-if="this.listType ==7 || this.listType ==8 || this.listType ==10">
           <div class="listSearchInput">
-            <el-input v-model="searchWord"
-                      placeholder="检索管子或扫码或手工输入"
-                      @blur="searchData(searchWord)"
-                      @input="searchEmptyData(searchWord)"
-                      @keyup.enter.native="goToPipePage(searchWord)"></el-input>
+            <el-input
+              v-model="searchWord"
+              ref="siteInput"
+              placeholder="检索管子或扫码或手工输入"
+              @blur="searchData(searchWord)"
+              @input="searchEmptyData(searchWord)"
+              @keyup.enter.native="goToPipePage(searchWord)"></el-input>
           </div>
           <div class="listSearchBtn">
             <button @click="showScreening">条件筛选</button>
@@ -1867,6 +1871,8 @@
         this.qdWorkStationGetDataList(this.stationId)
       }, 300000);
 
+      //页面加载自动聚焦输入框
+      this.setInputFocus();
 
 
       //监听键盘的回车事件
