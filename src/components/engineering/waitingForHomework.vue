@@ -2177,12 +2177,48 @@
               })
               .then((res) => {
                 if (res.data.state=== "1") {
-                  let id = res.data.data.id;
-                  localStorage.setItem("pipeId", id);
-                  this.$router.push("/CurrentTask");
+                  if (this.dqgw === "弯管" || this.dqgw === "43/48装配" || this.dqgw === "45/46装配" || this.dqgw === "大组焊") {
+                    this.id = res.data.data.id;
+                    this.tdVisible = true;
+                    this.tdTableData = [{
+                      "jiagongxilie": res.data.data.jiagongxilie,
+                      "yiguanhao": res.data.data.yiguanhao,
+                      "codeno": res.data.data.codeno,
+                      "koujing": res.data.data.koujing,
+                      "chuanhao": res.data.data.chuanhao,
+                      "pno": res.data.data.pno
+                    }];
+                  }
+                  else if(this.dqgw === "弯头焊"){
+                    this.$router.push({
+                      name: 'CurrentTask',
+                      params: {
+                        pici: res.data.data.pici,
+                        fuhao: res.data.data.fuhao,
+                        yiguanno: res.data.data.yiguanno,
+                        codeno: res.data.data.codeno
+                      }
+                    })
+                  }
+                  else if (this.gongHao === "枝管切断") {
+                    let id = res.data.data.id;
+                    localStorage.setItem("pipeId", id);
+                    this.$router.push({
+                      name: 'CurrentTask',
+                      params: {
+                        type: res.data.data.type
+                      }
+                    })
+                  }
+                  else {
+                    let id = res.data.data.id;
+                    localStorage.setItem("pipeId", id);
+                    this.$router.push("/CurrentTask");
+                  }
                 }
                 else {
                   this.$message({type: 'warning', message: res.data.message});
+                  this.searchWord="";
                 }
               })
               .catch((err) => {
@@ -2707,7 +2743,6 @@
               }];
             }
             else if (this.dqgw === "枝管切断") {
-
               localStorage.setItem("pipeId", id);
               this.$router.push({
                 name: 'CurrentTask',
