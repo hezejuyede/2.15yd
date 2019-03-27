@@ -1982,7 +1982,7 @@
                       }
                     })
                   }
-                  else if (this.gongHao === "枝管切断") {
+                  else if (this.dqgw === "枝管切断") {
                     let id = res.data.data.id;
                     localStorage.setItem("pipeId", id);
                     this.$router.push({
@@ -1991,6 +1991,9 @@
                         type: res.data.data.type
                       }
                     })
+                  }
+                  else if(this.dqgw === "直管焊" || this.dqgw === "短管焊" || this.dqgw === "切断" ){
+
                   }
                   else {
                     let id = res.data.data.id;
