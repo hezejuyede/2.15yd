@@ -5,6 +5,7 @@
         <div class="" v-if="gwType === '1'">
           <template>
             <el-table
+              height="640"
               :data="excelData"
               :header-cell-style="{
             background:'#ffffff',
@@ -125,6 +126,7 @@
         <div class="" v-if="gwType === '2'">
           <template>
             <el-table
+              height="640"
               :data="excelData"
               :header-cell-style="{
             background:'#ffffff',
@@ -259,6 +261,7 @@
         <div class="" v-if="gwType === '3'">
           <template>
             <el-table
+              height="640"
               :data="excelData"
               :header-cell-style="{
             background:'#ffffff',
@@ -393,6 +396,7 @@
         <div class="" v-if="gwType === '4'">
           <template>
             <el-table
+              height="640"
               :data="excelData"
               :header-cell-style="{
             background:'#ffffff',
@@ -527,6 +531,7 @@
         <div class="" v-if="gwType === '5'">
           <template>
             <el-table
+              height="640"
               :data="excelData"
               :header-cell-style="{
             background:'#ffffff',

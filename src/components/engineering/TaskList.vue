@@ -78,7 +78,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList(scope.row.pici)">切断表
+                  @click="seeStationExcel(scope.row.pici)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -210,7 +210,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeXzlList(scope.row.pici)">小组立表
+                      @click="seeStationExcel(scope.row.pici)">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -367,17 +367,21 @@
             <el-table
               :key="0"
               class="tb-edit"
-              :data="tableData"
+              :data="tables"
               height="450"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='zzb' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -386,12 +390,7 @@
                   v-if="col.prop==='yiguanno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.yiguanno }}
-                    </el-button>
+                    {{ scope.row.yiguanno }}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -399,23 +398,18 @@
                   v-if="col.prop==='codeno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.codeno }}
-                    </el-button>
+                    {{ scope.row.codeno }}
                   </template>
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='xiaozuli'"
+                  v-if="col.prop==='zzb'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">小组立表
+                      @click="seeStationExcel(scope.row.pici)">正枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -439,18 +433,21 @@
             <el-table
               :key="0"
               class="tb-edit"
-              :data="tableData"
+              :data="tables"
               height="450"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
-
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xzb' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -459,12 +456,7 @@
                   v-if="col.prop==='yiguanno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.yiguanno }}
-                    </el-button>
+                    {{ scope.row.yiguanno }}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -472,23 +464,18 @@
                   v-if="col.prop==='codeno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.codeno }}
-                    </el-button>
+                    {{ scope.row.codeno }}
                   </template>
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='xiaozuli'"
+                  v-if="col.prop==='xzb'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">小组立表
+                      @click="seeStationExcel(scope.row.pici)">斜枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -512,18 +499,21 @@
             <el-table
               :key="0"
               class="tb-edit"
-              :data="tableData"
+              :data="tables"
               height="450"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
-
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='pxz' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -532,12 +522,7 @@
                   v-if="col.prop==='yiguanno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.yiguanno }}
-                    </el-button>
+                    {{ scope.row.yiguanno }}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -545,23 +530,18 @@
                   v-if="col.prop==='codeno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.codeno }}
-                    </el-button>
+                    {{ scope.row.codeno }}
                   </template>
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='xiaozuli'"
+                  v-if="col.prop==='pxz'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">小组立表
+                      @click="seeStationExcel(scope.row.pici)">偏心枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -585,18 +565,21 @@
             <el-table
               :key="0"
               class="tb-edit"
-              :data="tableData"
+              :data="tables"
               height="450"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
-
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='mgb' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -605,12 +588,7 @@
                   v-if="col.prop==='yiguanno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.yiguanno }}
-                    </el-button>
+                    {{ scope.row.yiguanno }}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -618,23 +596,18 @@
                   v-if="col.prop==='codeno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.codeno }}
-                    </el-button>
+                    {{ scope.row.codeno }}
                   </template>
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='xiaozuli'"
+                  v-if="col.prop==='mgb'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">小组立表
+                      @click="seeStationExcel(scope.row.pici)">母管表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -658,18 +631,21 @@
             <el-table
               :key="0"
               class="tb-edit"
-              :data="tableData"
+              :data="tables"
               height="450"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
-
               ref="moviesTable"
               style="width: 99%;margin: 0 auto">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='zjg' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -678,12 +654,7 @@
                   v-if="col.prop==='yiguanno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.yiguanno }}
-                    </el-button>
+                    {{ scope.row.yiguanno }}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -691,23 +662,18 @@
                   v-if="col.prop==='codeno'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.codeno }}
-                    </el-button>
+                    {{ scope.row.codeno }}
                   </template>
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='xiaozuli'"
+                  v-if="col.prop==='zjg'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">小组立表
+                      @click="seeStationExcel(scope.row.pici)">支架管表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -902,233 +868,18 @@
     </el-dialog>
 
     <!--查看工位表 -->
-    <el-dialog title="工位查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
+    <el-dialog title="工位查看" :visible.sync="excelVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
-        <el-button type="danger" @click="qdbVisible = false">关闭窗口</el-button>
+        <el-button type="danger" @click="excelVisible = false">关闭窗口</el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
         <div class="container" style="width: 100%;height: 100%">
-          <el-table
-            :data="qdbData"
-            height="640"
-            :header-cell-style="{
-            background:'#f0f0f0',
-            border: '1px solid #303133',
-            fontSize:'12px',
-            color:'rgba(0, 0, 0, 1)'}"
-            :cell-style="{
-             border: '1px solid #303133',
-             fontSize:'12px'
-            }"
-
-            style="width: 100%;border: 1px solid #303133">
-            <el-table-column
-              align="center"
-              prop="type"
-
-              label="管种">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="shipcode"
-              label="船番NE0"
-              width="70">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="waijingchang"
-              label="外径"
-              width="60">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="bihou"
-              label="壁厚"
-              width="55">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="waijing"
-              label="母管长"
-              width="60">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="pno"
-              label="PNo"
-              width="55">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="jiagongxilie"
-              label="加工系列"
-              width="80">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="yiguanhao"
-              label="一贯号"
-              width="65">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="codeno"
-              label="代码No"
-              width="70">
-            </el-table-column>
-            <el-table-column
-              width="70"
-              prop="qieduanchang"
-              align="center"
-              label="切断长">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="guanduan"
-              label="管端"
-              width="55">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="wanqu"
-              width="55"
-              label="弯曲">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="albl"
-              label="备注">
-            </el-table-column>
-          </el-table>
+          <StationExcel
+            :gwType="gwType"
+            :gongHao="gongwei"
+            :isHideStationExcel="isHideStationExcel"
+            :excelData="excelData"></StationExcel>
         </div>
-      </div>
-    </el-dialog>
-
-    <!--查看小组立表 -->
-    <el-dialog title="小组立表查看" :visible.sync="xzlVisible" :fullscreen="true" :center="true">
-      <div class="closeBtn">
-        <el-button type="danger" @click="xzlVisible = false">关闭窗口</el-button>
-      </div>
-      <div class="container" style="width: 100%;height: 100%">
-        <el-table
-          :data="xzlData"
-           height="640"
-          :header-cell-style="{
-            background:'#ffffff',
-            border: '1px solid #303133',
-            fontSize:'12px',
-            color:'rgba(0, 0, 0, 1)'}"
-          :cell-style="{
-             border: '1px solid #303133',
-             fontSize:'12px'
-            }"
-          style="width: 100%;border: 1px solid #303133">
-          <!--  <el-table-column
-              align="center"
-              prop="indexno"
-              label="序号"
-              width="50">
-            </el-table-column>-->
-          <el-table-column
-            align="center"
-            prop="chuanhao"
-            label="船番NE0"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="jiagongxilie"
-            label="加工系列"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="yiguanhao"
-            label="一贯番号"
-            width="57">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="daihao"
-            label="代号"
-            width="50">
-          </el-table-column>
-          <el-table-column align="center" label="管材">
-            <el-table-column
-              align="center"
-              prop="pno"
-              label="PNo"
-              width="50">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="guige"
-              label="规格"
-              width="53">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="hujing"
-              label="呼径"
-              width="51">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="houdu"
-              label="厚度"
-              width="51">
-            </el-table-column>
-            <el-table-column
-              width="70"
-              prop="qieduanchang"
-              align="center"
-              label="切断长">
-            </el-table-column>
-            <el-table-column
-              width="50"
-              prop="danwei"
-              align="center"
-              label="单位">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="guanduan"
-              label="管端"
-              width="70">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="jiaodu"
-              label="角度"
-              width="55">
-            </el-table-column>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="lianjiexinxi"
-            label="连接信息"
-            width="53">
-          </el-table-column>
-          <el-table-column align="center" label="金物">
-            <el-table-column
-              align="center"
-              prop="pinming"
-              label="品名（注番）.">
-            </el-table-column>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="guanduan2"
-            label="管端"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="beizhu"
-            label="备注"
-            width="60">
-          </el-table-column>
-        </el-table>
       </div>
     </el-dialog>
 
@@ -1153,7 +904,7 @@
   import footerNav from '../../common/footer'
   import Loading from '../../common/loading'
   import Modal from '../../common/modal'
-
+  import StationExcel from '../../common/stationExcel'
 
   export default {
     name: 'ProductionExecution',
@@ -1161,12 +912,12 @@
       return {
         message: '',
         HideModal: true,
+        isHideStationExcel:false,
 
         img: [],
         nowClick: 2,
 
-        xzlData:[],
-        qdbData:[],
+        excelData:[],
         url: "",
 
         stationId: "",
@@ -1174,8 +925,7 @@
 
         screenVisible: false,
         drawingVisible: false,
-        qdbVisible: false,
-        xzlVisible:false,
+        excelVisible: false,
 
         ycSearchBtn: 0,
         dzySearchBtn: 0,
@@ -1189,7 +939,7 @@
         tableData: [],
         cols: [],
 
-        gwType: 1,
+        gwType: "1",
         left: true,
         left2: false,
         zgCenter: false,
@@ -1248,7 +998,7 @@
       }
 
     },
-    components: {Loading, footerNav, Modal, headerNav},
+    components: {Loading, footerNav, Modal, headerNav,StationExcel},
     mounted() {
       this.showUp();
       this.showSearch();
@@ -1744,34 +1494,183 @@
       },
 
 
-      //查看切断表
-      seeCutList(pici) {
+      //查看工位表
+      seeStationExcel(pici) {
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
           event.stopPropagation();
-          axios.post(" " + url + "/importother/publicData",{"code":"qieduan","pici":pici})
-            .then((res) => {
-              if (res.data) {
-                this.qdbData = res.data;
-                this.qdbVisible = true;
-              }
-              else {
-                this.message = "没有查到切断表";
-                this.HideModal = false;
-                const that = this;
-
-                function a() {
-                  that.message = "";
-                  that.HideModal = true;
+          if (this.gongwei === "小组立" || this.gongwei === "弯头焊") {
+            axios.post(" " + url + "/importother/showXiaozuliExcel", {"pici": pici})
+              .then((res) => {
+                if (res.data) {
+                  this.excelData = res.data;
+                  this.excelVisible = true;
                 }
+                else {
+                  this.message = "没有查到该工位表";
+                  this.HideModal = false;
+                  const that = this;
 
-                setTimeout(a, 2000);
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
+                  function a() {
+                    that.message = "";
+                    that.HideModal = true;
+                  }
+
+                  setTimeout(a, 2000);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
+          else if (this.gongwei === "枝管切断") {
+            if (this.gwType === "1") {
+              axios.post(" " + url + "/importother/publicData", {"code": "zezz", "pici": pici})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.excelVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+            else if (this.gwType === "2") {
+              axios.post(" " + url + "/importother/publicData", {"code": "zexz", "pici": pici})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.excelVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+            else if (this.gwType === "3") {
+              axios.post(" " + url + "/importother/publicData", {"code": "zzpx", "pici": pici})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.excelVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+            else if (this.gwType === "4") {
+              axios.post(" " + url + "/importother/publicData", {"code": "mgb", "pici": pici})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.excelVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+            else if (this.gwType === "5") {
+              axios.post(" " + url + "/importother/publicData", {"code": "zjg", "pici": pici, "type": this.gwType})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.excelVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+          }
+          else {
+            axios.post(" " + url + "/importother/publicData", {"code": "qieduan", "pici": pici})
+              .then((res) => {
+                if (res.data) {
+                  this.excelData = res.data;
+                  this.excelVisible = true;
+                }
+                else {
+                  this.message = "没有查到切断表";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function a() {
+                    that.message = "";
+                    that.HideModal = true;
+                  }
+
+                  setTimeout(a, 2000);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
+
         }
         else {
           //IE取消冒泡事件
@@ -1781,42 +1680,7 @@
 
       },
 
-      //查看小组立表
-      seeXzlList(pici) {
-        //防止冒泡
-        if (event && event.stopPropagation) {
-          //W3C取消冒泡事件
-          event.stopPropagation();
-          axios.post(" " + url + "/importother/showXiaozuliExcel", {"pici": pici})
-            .then((res) => {
-              if (res.data) {
-                this.xzlData = res.data;
-                this.xzlVisible = true;
-              }
-              else {
-                this.message = "没有查到切断表";
-                this.HideModal = false;
-                const that = this;
 
-                function a() {
-                  that.message = "";
-                  that.HideModal = true;
-                }
-
-                setTimeout(a, 2000);
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-        }
-        else {
-          //IE取消冒泡事件
-          window.event.cancelBubble = true;
-
-        }
-
-      },
 
       //小组立显示左边
       showLeft() {

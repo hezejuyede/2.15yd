@@ -4,7 +4,8 @@
     <div class="ProductionExecutionDiv">
       <!-- 公共头部-->
       <div class="contentTop" ref="contentTop">
-        <div class="listSearch" v-if="this.listType ==1 || this.listType ==5 || this.listType ==4 || this.listType ==3|| this.listType ==11">
+        <div class="listSearch"
+             v-if="this.listType ==1 || this.listType ==5 || this.listType ==4 || this.listType ==3|| this.listType ==11">
           <div class="listSearchInput">
             <el-input
               v-model="searchWord"
@@ -161,14 +162,13 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList(scope.row.id,scope.row.pici)">切断表
+                  @click="seeStationExcel(scope.row.id,scope.row.pici)">切断表
                 </el-button>
               </template>
             </el-table-column>
           </template>
         </el-table>
       </div>
-
 
       <!--直管焊，短管焊，弯头切断-->
       <div class="publicPage" v-if="this.listType ==5 || this.listType ==6 ||this.listType ==3">
@@ -244,14 +244,13 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList(scope.row.id,scope.row.pici)">切断表
+                  @click="seeStationExcel(scope.row.id,scope.row.pici)">切断表
                 </el-button>
               </template>
             </el-table-column>
           </template>
         </el-table>
       </div>
-
 
       <!--43/48装配、45/46装配和大组焊-->
       <div class="publicPage" v-if="this.listType ==7 || this.listType ==8 || this.listType ==9">
@@ -352,7 +351,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList(scope.row.id,scope.row.pici)">切断表
+                  @click="seeStationExcel(scope.row.id,scope.row.pici)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -456,7 +455,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList(scope.row.id,scope.row.pici)">切断表
+                  @click="seeStationExcel(scope.row.id,scope.row.pici)">小组表
                 </el-button>
               </template>
             </el-table-column>
@@ -549,7 +548,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeCutList(scope.row.id,scope.row.pici)">切断表
+                  @click="seeStationExcel(scope.row.id,scope.row.pici)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -709,7 +708,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeXzlList(scope.row.id,scope.row.pici)">小组立表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici)">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -916,7 +915,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">正枝表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici)">正枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -996,7 +995,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">斜枝表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici)">斜枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -1076,7 +1075,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">偏心枝表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici)">偏心枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -1118,7 +1117,7 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='mgb' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -1150,13 +1149,13 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='xiaozuli'"
+                  v-if="col.prop==='mgb'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">母管开孔表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici)">母管表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -1198,7 +1197,7 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='zjg' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -1230,13 +1229,13 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='xiaozuli'"
+                  v-if="col.prop==='zjg'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">支架管表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici)">支架管表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -1430,234 +1429,19 @@
       </div>
     </el-dialog>
 
-    <!--查看切断表 -->
-    <el-dialog title="工位表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
+
+    <!--查看工位表 -->
+    <el-dialog title="小组立表查看" :visible.sync="excelVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
-        <el-button type="danger" @click="qdbVisible = false">关闭窗口</el-button>
-        <!-- <el-button type="primary" @click="gwbDoWorkEnd">报完工</el-button>-->
-      </div>
-      <div class="container" style="width: 100%;height: 100%">
-        <el-table
-          :data="qdbData"
-          height="640"
-          :header-cell-style="{
-            background:'#f0f0f0',
-            border: '1px solid #303133',
-            fontSize:'12px',
-            color:'rgba(0, 0, 0, 1)'}"
-          :cell-style="{
-             border: '1px solid #303133',
-             fontSize:'12px'
-            }"
-
-          style="width: 100%;border: 1px solid #303133">
-          <el-table-column
-            align="center"
-            prop="type"
-
-            label="管种">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="shipcode"
-            label="船番NE0"
-            width="70">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="waijingchang"
-            label="外径"
-            width="60">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="bihou"
-            label="壁厚"
-            width="55">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="waijing"
-            label="母管长"
-            width="60">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="pno"
-            label="PNo"
-            width="55">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="jiagongxilie"
-            label="加工系列"
-            width="80">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="yiguanhao"
-            label="一贯号"
-            width="65">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="codeno"
-            label="代码No"
-            width="70">
-          </el-table-column>
-          <el-table-column
-            width="70"
-            prop="qieduanchang"
-            align="center"
-            label="切断长">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="guanduan"
-            label="管端"
-            width="55">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="wanqu"
-            width="55"
-            label="弯曲">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="albl"
-            label="备注">
-          </el-table-column>
-        </el-table>
-      </div>
-    </el-dialog>
-
-    <!--查看小组立表 -->
-    <el-dialog title="小组立表查看" :visible.sync="xzlVisible" :fullscreen="true" :center="true">
-      <div class="closeBtn">
-        <el-button type="danger" @click="xzlVisible = false">关闭窗口</el-button>
+        <el-button type="danger" @click="excelVisible = false">关闭窗口</el-button>
         <el-button type="primary" @click="gwbDoWorkEnd">报完工</el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
-        <el-table
-          :data="xzlData"
-          height="640"
-          :header-cell-style="{
-            background:'#ffffff',
-            border: '1px solid #303133',
-            fontSize:'12px',
-            color:'rgba(0, 0, 0, 1)'}"
-          :cell-style="{
-             border: '1px solid #303133',
-             fontSize:'12px'
-            }"
-          style="width: 100%;border: 1px solid #303133">
-          <!--  <el-table-column
-              align="center"
-              prop="indexno"
-              label="序号"
-              width="50">
-            </el-table-column>-->
-          <el-table-column
-            align="center"
-            prop="chuanhao"
-            label="船番NE0"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="jiagongxilie"
-            label="加工系列"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="yiguanhao"
-            label="一贯番号"
-            width="57">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="daihao"
-            label="代号"
-            width="50">
-          </el-table-column>
-          <el-table-column align="center" label="管材">
-            <el-table-column
-              align="center"
-              prop="pno"
-              label="PNo"
-              width="50">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="guige"
-              label="规格"
-              width="53">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="hujing"
-              label="呼径"
-              width="51">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="houdu"
-              label="厚度"
-              width="51">
-            </el-table-column>
-            <el-table-column
-              width="70"
-              prop="qieduanchang"
-              align="center"
-              label="切断长">
-            </el-table-column>
-            <el-table-column
-              width="50"
-              prop="danwei"
-              align="center"
-              label="单位">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="guanduan"
-              label="管端"
-              width="70">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="jiaodu"
-              label="角度"
-              width="55">
-            </el-table-column>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="lianjiexinxi"
-            label="连接信息"
-            width="53">
-          </el-table-column>
-          <el-table-column align="center" label="金物">
-            <el-table-column
-              align="center"
-              prop="pinming"
-              label="品名（注番）.">
-            </el-table-column>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="guanduan2"
-            label="管端"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="beizhu"
-            label="备注"
-            width="60">
-          </el-table-column>
-        </el-table>
+        <StationExcel
+          :gwType="gwType"
+          :gongHao="dqgw"
+          :isHideStationExcel="isHideStationExcel"
+          :excelData="excelData"></StationExcel>
       </div>
     </el-dialog>
 
@@ -1727,7 +1511,7 @@
   import footerNav from '../../common/footer'
   import Loading from '../../common/loading'
   import Modal from '../../common/modal'
-
+  import StationExcel from '../../common/stationExcel'
 
   export default {
     name: 'ProductionExecution',
@@ -1738,6 +1522,7 @@
 
         message: '',  //组件弹出框的信息
         HideModal: true, //组件是否弹出
+        isHideStationExcel: false,//工位表默认是否显示
         img: [],   //转圈img数组
 
 
@@ -1750,8 +1535,7 @@
 
         tableData: [],//总数据的表数据
         cols: [],     //总数据的表头
-        xzlData: [],     //小组立表数据
-        qdbData: [],     //切断表数据
+        excelData: [],     //工位表数据
         tdTableData: [],  //特定工位的表数据
         tdCols: [
           {"prop": "chuanhao", "label": "船号"},
@@ -1786,14 +1570,13 @@
         searchWord: '',//智能检索的value
         is_search: false,
 
-        gwType: 1,//一种工位有几种类型，
+        gwType: "1",//一种工位有几种类型，
 
         screenVisible: false,   //筛选条件弹出框
         drawingVisible: false,  // 一品图弹出框
         endVisible: false,     //报完工提醒弹出框
-        qdbVisible: false,    //工位表查看弹出框
         tdVisible: false,    //特定工位提醒框
-        xzlVisible: false,   //小组里表弹出框
+        excelVisible: false,   //工位表表弹出框
 
         left: true,    //        显示最左边
         left2: false,    //      显示左二
@@ -1855,7 +1638,7 @@
       }
 
     },
-    components: {Loading, footerNav, Modal, headerNav},
+    components: {Loading, footerNav, Modal, headerNav, StationExcel},
     mounted() {
       //点击向上按钮返回头部
       this.showUp();
@@ -1876,8 +1659,8 @@
 
 
       //监听键盘的回车事件
-      document.onkeydown = (e)=>{
-        if(e.keyCode == 13){
+      document.onkeydown = (e) => {
+        if (e.keyCode == 13) {
           this.setInputFocus();
 
         }
@@ -1901,7 +1684,6 @@
     created() {
       //检索用户状态
       this.getAdminState();
-
 
 
       //转圈延迟一秒执行
@@ -2172,11 +1954,11 @@
           if (searchWord) {
             axios.post(" " + url + "/shengchan/getShaomaData",
               {
-                "stationid":this.stationId,
+                "stationid": this.stationId,
                 "shaomacode": searchWord
               })
               .then((res) => {
-                if (res.data.state=== "1") {
+                if (res.data.state === "1") {
                   if (this.dqgw === "弯管" || this.dqgw === "43/48装配" || this.dqgw === "45/46装配" || this.dqgw === "大组焊") {
                     this.id = res.data.data.id;
                     this.tdVisible = true;
@@ -2189,7 +1971,7 @@
                       "pno": res.data.data.pno
                     }];
                   }
-                  else if(this.dqgw === "弯头焊"){
+                  else if (this.dqgw === "弯头焊") {
                     this.$router.push({
                       name: 'CurrentTask',
                       params: {
@@ -2218,7 +2000,7 @@
                 }
                 else {
                   this.$message({type: 'warning', message: res.data.message});
-                  this.searchWord="";
+                  this.searchWord = "";
                 }
               })
               .catch((err) => {
@@ -2482,74 +2264,184 @@
       },
 
 
-      //查看切断表
-      seeCutList(id, pici) {
+      //查看工位表
+      seeStationExcel(id, pici) {
         this.id = id;
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
           event.stopPropagation();
-          axios.post(" " + url + "/importother/publicData", {"code": "qieduan", "pici": pici})
-            .then((res) => {
-              if (res.data) {
-                this.qdbData = res.data;
-                this.qdbVisible = true;
-              }
-              else {
-                this.message = "没有查到切断表";
-                this.HideModal = false;
-                const that = this;
-
-                function a() {
-                  that.message = "";
-                  that.HideModal = true;
+          if (this.dqgw === "小组立" || this.dqgw === "弯头焊") {
+            axios.post(" " + url + "/importother/showXiaozuliExcel", {"pici": pici})
+              .then((res) => {
+                if (res.data) {
+                  this.excelData = res.data;
+                  this.excelVisible = true;
                 }
+                else {
+                  this.message = "没有查到该工位表";
+                  this.HideModal = false;
+                  const that = this;
 
-                setTimeout(a, 2000);
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-        }
-        else {
-          //IE取消冒泡事件
-          window.event.cancelBubble = true;
+                  function a() {
+                    that.message = "";
+                    that.HideModal = true;
+                  }
 
-        }
-
-      },
-
-
-      //查看小组立表
-      seeXzlList(id, pici) {
-        this.id = id;
-        //防止冒泡
-        if (event && event.stopPropagation) {
-          //W3C取消冒泡事件
-          event.stopPropagation();
-          axios.post(" " + url + "/importother/showXiaozuliExcel", {"pici": pici})
-            .then((res) => {
-              if (res.data) {
-                this.xzlData = res.data;
-                this.xzlVisible = true;
-              }
-              else {
-                this.message = "没有查到切断表";
-                this.HideModal = false;
-                const that = this;
-
-                function a() {
-                  that.message = "";
-                  that.HideModal = true;
+                  setTimeout(a, 2000);
                 }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
+          else if (this.dqgw === "枝管切断") {
+            if (this.gwType === "1") {
+              axios.post(" " + url + "/importother/publicData", {"code": "zezz", "pici": pici})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.excelVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
 
-                setTimeout(a, 2000);
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+            else if (this.gwType === "2") {
+              axios.post(" " + url + "/importother/publicData", {"code": "zexz", "pici": pici})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.excelVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+            else if (this.gwType === "3") {
+              axios.post(" " + url + "/importother/publicData", {"code": "zzpx", "pici": pici})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.excelVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+            else if (this.gwType === "4") {
+              axios.post(" " + url + "/importother/publicData", {"code": "mgb", "pici": pici})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.excelVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+            else if (this.gwType === "5") {
+              axios.post(" " + url + "/importother/publicData", {"code": "zjg", "pici": pici, "type": this.gwType})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.excelVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+          }
+          else {
+            axios.post(" " + url + "/importother/publicData", {"code": "qieduan", "pici": pici})
+              .then((res) => {
+                if (res.data) {
+                  this.excelData = res.data;
+                  this.excelVisible = true;
+                }
+                else {
+                  this.message = "没有查到切断表";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function a() {
+                    that.message = "";
+                    that.HideModal = true;
+                  }
+
+                  setTimeout(a, 2000);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
+
         }
         else {
           //IE取消冒泡事件
@@ -3240,8 +3132,6 @@
     }
 
   }
-
-
 
   .tdContainer {
     .tdContainerDiv {

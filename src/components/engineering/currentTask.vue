@@ -1411,28 +1411,126 @@
           }
           else if(this.gongHao === "枝管切断"){
             let pici = this.titleData[0].pici;
-            axios.post(" " + url + "/importother/publicData", {"code": "qieduan", "pici": pici})
-              .then((res) => {
-                if (res.data) {
-                  this.excelData = res.data;
-                  this.qdbVisible = true;
-                }
-                else {
-                  this.message = "没有查到切断表";
-                  this.HideModal = false;
-                  const that = this;
-
-                  function a() {
-                    that.message = "";
-                    that.HideModal = true;
+            if(this.gwType==="1"){
+              axios.post(" " + url + "/importother/publicData", {"code": "zezz", "pici": pici})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.qdbVisible = true;
                   }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
 
-                  setTimeout(a, 2000);
-                }
-              })
-              .catch((err) => {
-                console.log(err)
-              })
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+            else if(this.gwType==="2"){
+              axios.post(" " + url + "/importother/publicData", {"code": "zexz", "pici": pici})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.qdbVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+            else if(this.gwType==="3"){
+              axios.post(" " + url + "/importother/publicData", {"code": "zzpx", "pici": pici})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.qdbVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+            else if(this.gwType==="4"){
+              axios.post(" " + url + "/importother/publicData", {"code": "mgb", "pici": pici})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.qdbVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
+            else if(this.gwType==="5"){
+              axios.post(" " + url + "/importother/publicData", {"code": "zjg", "pici": pici,"type":this.gwType})
+                .then((res) => {
+                  if (res.data) {
+                    this.excelData = res.data;
+                    this.qdbVisible = true;
+                  }
+                  else {
+                    this.message = "没有查到该工位表";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }
           }
           else {
             let pici = this.titleData[0].text;
