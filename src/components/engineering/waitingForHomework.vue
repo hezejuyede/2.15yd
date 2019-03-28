@@ -268,11 +268,12 @@
           @selection-change="selectChange"
           ref="moviesTable"
           style="width: 99%;margin: 0 auto">
-          <el-table-column type="expand">
+          <el-table-column type="expand"  :cell-style="{color:'blue'}">
             <template slot-scope="scope">
               <el-table class="tb-edit"
                         :data="scope.row.list"
-                        :header-cell-style="{background:'#f0f0f0',color:'rgba(0, 0, 0, 0.8)',fontSize:'20px'}"
+                        :header-cell-style="{background:'#f0f0f0',color:'blue',fontSize:'20px'}"
+                        :cell-style="{color:'blue'}"
                         border
                         highlight-current-row
                         style="width: 98%;margin: auto">
@@ -1654,9 +1655,6 @@
         this.qdWorkStationGetDataList(this.stationId)
       }, 300000);
 
-      //页面加载自动聚焦输入框
-      this.setInputFocus();
-
 
       //监听键盘的回车事件
       document.onkeydown = (e) => {
@@ -1684,6 +1682,7 @@
     created() {
       //检索用户状态
       this.getAdminState();
+
 
 
       //转圈延迟一秒执行
@@ -1770,6 +1769,8 @@
             this.listType = "11";
             this.showTableData(this.stationId, this.dqgw, 1, 1)
           }
+
+          this.setInputFocus();
         }
       },
 
@@ -1952,63 +1953,76 @@
           //W3C取消冒泡事件
           event.stopPropagation();
           if (searchWord) {
-            axios.post(" " + url + "/shengchan/getShaomaData",
-              {
-                "stationid": this.stationId,
-                "shaomacode": searchWord
-              })
-              .then((res) => {
-                if (res.data.state === "1") {
-                  if (this.dqgw === "弯管" || this.dqgw === "43/48装配" || this.dqgw === "45/46装配" || this.dqgw === "大组焊") {
-                    this.id = res.data.data.id;
-                    this.tdVisible = true;
-                    this.tdTableData = [{
-                      "jiagongxilie": res.data.data.jiagongxilie,
-                      "yiguanhao": res.data.data.yiguanhao,
-                      "codeno": res.data.data.codeno,
-                      "koujing": res.data.data.koujing,
-                      "chuanhao": res.data.data.chuanhao,
-                      "pno": res.data.data.pno
-                    }];
-                  }
-                  else if (this.dqgw === "弯头焊") {
-                    this.$router.push({
-                      name: 'CurrentTask',
-                      params: {
-                        pici: res.data.data.pici,
-                        fuhao: res.data.data.fuhao,
-                        yiguanno: res.data.data.yiguanno,
-                        codeno: res.data.data.codeno
-                      }
-                    })
-                  }
-                  else if (this.dqgw === "枝管切断") {
-                    let id = res.data.data.id;
-                    localStorage.setItem("pipeId", id);
-                    this.$router.push({
-                      name: 'CurrentTask',
-                      params: {
-                        type: res.data.data.type
-                      }
-                    })
-                  }
-                  else if(this.dqgw === "直管焊" || this.dqgw === "短管焊" || this.dqgw === "切断" ){
+            if(this.dqgw == "直管焊" || this.dqgw === "短管焊" || this.dqgw === "切断" ){
+              this.message = "无需执行端报完工";
+              this.HideModal = false;
+              const that = this;
 
+              function a() {
+                that.message = "";
+                that.HideModal = true;
+              }
+
+              setTimeout(a, 2000);
+
+            }
+            else {
+              axios.post(" " + url + "/shengchan/getShaomaData",
+                {
+                  "stationid": this.stationId,
+                  "shaomacode": searchWord
+                })
+                .then((res) => {
+                  if (res.data.state === "1") {
+                    if (this.dqgw === "弯管" || this.dqgw === "43/48装配" || this.dqgw === "45/46装配" || this.dqgw === "大组焊") {
+                      this.id = res.data.data.id;
+                      this.tdVisible = true;
+                      this.tdTableData = [{
+                        "jiagongxilie": res.data.data.jiagongxilie,
+                        "yiguanhao": res.data.data.yiguanhao,
+                        "codeno": res.data.data.codeno,
+                        "koujing": res.data.data.koujing,
+                        "chuanhao": res.data.data.chuanhao,
+                        "pno": res.data.data.pno
+                      }];
+                    }
+                    else if (this.dqgw === "弯头焊") {
+                      this.$router.push({
+                        name: 'CurrentTask',
+                        params: {
+                          pici: res.data.data.pici,
+                          fuhao: res.data.data.fuhao,
+                          yiguanno: res.data.data.yiguanno,
+                          codeno: res.data.data.codeno
+                        }
+                      })
+                    }
+                    else if (this.dqgw === "枝管切断") {
+                      let id = res.data.data.id;
+                      localStorage.setItem("pipeId", id);
+                      this.$router.push({
+                        name: 'CurrentTask',
+                        params: {
+                          type: res.data.data.type
+                        }
+                      })
+                    }
+                    else {
+                      let id = res.data.data.id;
+                      localStorage.setItem("pipeId", id);
+                      this.$router.push("/CurrentTask");
+                    }
                   }
                   else {
-                    let id = res.data.data.id;
-                    localStorage.setItem("pipeId", id);
-                    this.$router.push("/CurrentTask");
+                    this.$message({type: 'warning', message: res.data.message});
+                    this.searchWord = "";
                   }
-                }
-                else {
-                  this.$message({type: 'warning', message: res.data.message});
-                  this.searchWord = "";
-                }
-              })
-              .catch((err) => {
-                console.log(err)
-              });
+                })
+                .catch((err) => {
+                  console.log(err)
+                });
+            }
+
           }
           else {
             this.message = "扫不到管子信息";

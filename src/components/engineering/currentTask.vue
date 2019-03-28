@@ -829,9 +829,9 @@
     </div>
 
     <!--显示上报异常按钮 -->
-    <el-dialog title="上报异常按钮注" :visible.sync="abnormalBtnVisible" width="90%">
+    <el-dialog title="上报异常" :visible.sync="abnormalBtnVisible" width="90%">
       <div class="closeBtn">
-        <el-button type="danger" @click="abnormalBtnVisible = false">关闭窗口</el-button>
+        <el-button type="primary" @click="abnormalBtnVisible = false">关闭当前窗口</el-button>
       </div>
       <div class="container" style="height:350px;width: 100%">
         <div class="qualityBtn">
