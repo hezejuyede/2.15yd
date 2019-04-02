@@ -1367,9 +1367,9 @@
               placeholder="口径">
               <el-option
                 v-for="item in kjOptions"
-                :key="item.indexno"
+                :key="item.name"
                 :label="item.name"
-                :value="item.indexno">
+                :value="item.name">
               </el-option>
             </el-select>
           </div>

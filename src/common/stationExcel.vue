@@ -664,7 +664,7 @@
           </template>
         </div>
       </div>
-      <div class="" v-if="gongHao === '小组立'">
+      <div class="" v-if="gongHao === '小组立' || gongHao === '弯头焊'">
         <el-table
           :data="excelData"
           height="640"
@@ -785,7 +785,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="" v-if="gongHao !== '小组立'&& gongHao !== '枝管切断'">
+      <div class="" v-if="gongHao !== '小组立'&& gongHao !== '枝管切断' && gongHao !== '弯头焊'">
         <el-table
           :data="excelData"
           height="640"

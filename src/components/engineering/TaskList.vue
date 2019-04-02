@@ -99,6 +99,68 @@
         </el-table>
       </div>
 
+      <!--弯头焊-->
+      <div class="publicPage" v-if="this.listType ==3">
+        <el-table class="tb-edit"
+                  :data="tables"
+                  height="500"
+                  border
+                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+                  :row-class-name="tableRowClassName"
+                  ref="moviesTable"
+                  style="width: 99%;margin: 0 auto">
+          <template v-for="(col ,index) in cols">
+            <el-table-column
+              align="center"
+              v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+              :prop="col.prop"
+              :label="col.label">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yiguanno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                {{ scope.row.yiguanno }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='codeno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                {{ scope.row.codeno }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='xiaozuli'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="seeStationExcel(scope.row.pici)">小组立表
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yipintu'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                  一品图
+                </el-button>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
+      </div>
+
       <!--小组立-->
       <div class="xzlDiv" v-if="this.listType ==2">
         <div class="xzl-change">
@@ -805,9 +867,9 @@
               placeholder="口径">
               <el-option
                 v-for="item in kjOptions"
-                :key="item.indexno"
+                :key="item.name"
                 :label="item.name"
-                :value="item.indexno">
+                :value="item.name">
               </el-option>
             </el-select>
           </div>
@@ -1093,6 +1155,22 @@
                 "type": 1
               }),
               axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": this.gongwei, "yichang": 1,"type": 1})
+            ])
+              .then(axios.spread(function (title, table) {
+                that.cols = title.data.data;
+                that.tableData = table.data;
+              }));
+          }
+          else if (info.GW === "弯头焊") {
+            this.listType = 3;
+            let that = this;
+            axios.all([
+              axios.post(" " + url + "/sys/showTableTitleById", {
+                "stationid": this.stationId,
+                "weizhiid": 2,
+                "type": 1
+              }),
+              axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": this.gongwei, "yichang": 1})
             ])
               .then(axios.spread(function (title, table) {
                 that.cols = title.data.data;
