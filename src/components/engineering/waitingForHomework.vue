@@ -82,7 +82,6 @@
           </div>
           <div class="listSearchBtn">
             <button @click="showScreening">条件筛选</button>
-            <button @click="yptLook">一品图预览</button>
             <button @click="goGeneralListOfProcessing">总清单</button>
           </div>
         </div>

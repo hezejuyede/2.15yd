@@ -43,19 +43,30 @@
                   :data="tables"
                   height="500"
                   border
-                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'15px'}"
                   :row-class-name="tableRowClassName"
+                  :cell-style="{fontSize:'12px'}"
                   ref="moviesTable"
                   style="width: 99%;margin: 0 auto">
           <template v-for="(col ,index) in cols">
             <el-table-column
               align="center"
-              v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+              v-if="col.prop !=='yiguanno' && col.prop !=='codeno' && col.prop !=='pici' && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
               :prop="col.prop"
               :label="col.label">
             </el-table-column>
             <el-table-column
               align="center"
+              width="85"
+              v-if="col.prop==='pici'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                {{ scope.row.pici }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              width="70"
               v-if="col.prop==='yiguanno'"
               :prop="col.prop" :label="col.label">
               <template scope="scope">
@@ -65,6 +76,7 @@
             <el-table-column
               align="center"
               v-if="col.prop==='codeno'"
+              width="60"
               :prop="col.prop" :label="col.label">
               <template scope="scope">
                 {{ scope.row.codeno }}
@@ -105,20 +117,31 @@
                   :data="tables"
                   height="500"
                   border
-                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'15px'}"
                   :row-class-name="tableRowClassName"
+                  :cell-style="{fontSize:'12px'}"
                   ref="moviesTable"
                   style="width: 99%;margin: 0 auto">
           <template v-for="(col ,index) in cols">
             <el-table-column
               align="center"
-              v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
+              v-if="col.prop !=='yiguanno' && col.prop !=='codeno' && col.prop !=='pici' && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
               :prop="col.prop"
               :label="col.label">
             </el-table-column>
             <el-table-column
               align="center"
+              width="85"
+              v-if="col.prop==='pici'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                {{ scope.row.pici }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
               v-if="col.prop==='yiguanno'"
+              width="85"
               :prop="col.prop" :label="col.label">
               <template scope="scope">
                 {{ scope.row.yiguanno }}
@@ -127,6 +150,7 @@
             <el-table-column
               align="center"
               v-if="col.prop==='codeno'"
+              width="60"
               :prop="col.prop" :label="col.label">
               <template scope="scope">
                 {{ scope.row.codeno }}
