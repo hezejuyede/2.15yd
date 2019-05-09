@@ -139,7 +139,7 @@
               <el-table-column
                 align="center"
                 prop="chuanfan"
-                label="船番NE0"
+                label="船番NE"
                 width="55">
               </el-table-column>
               <el-table-column
@@ -274,7 +274,7 @@
               <el-table-column
                 align="center"
                 prop="chuanfan"
-                label="船番NE0"
+                label="船番NE"
                 width="50">
               </el-table-column>
               <el-table-column
@@ -409,7 +409,7 @@
               <el-table-column
                 align="center"
                 prop="chuanfan"
-                label="船番NE0"
+                label="船番NE"
                 width="55">
               </el-table-column>
               <el-table-column
@@ -544,7 +544,7 @@
               <el-table-column
                 align="center"
                 prop="chuanfan"
-                label="船番NE0"
+                label="船番NE"
                 width="55">
               </el-table-column>
               <el-table-column
@@ -687,7 +687,7 @@
           <el-table-column
             align="center"
             prop="chuanhao"
-            label="船番NE0"
+            label="船番NE"
             width="50">
           </el-table-column>
           <el-table-column
@@ -808,7 +808,7 @@
           <el-table-column
             align="center"
             prop="shipcode"
-            label="船番NE0"
+            label="船番NE"
             width="70">
           </el-table-column>
           <el-table-column

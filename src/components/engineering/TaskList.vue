@@ -1089,6 +1089,7 @@
       this.showUp();
       this.showSearch();
       this.bianse();
+
     },
     computed: {
       //模糊检索
