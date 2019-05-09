@@ -809,7 +809,7 @@
             align="center"
             prop="shipcode"
             label="船番NE"
-            width="70">
+            width="63">
           </el-table-column>
           <el-table-column
             align="center"
@@ -821,25 +821,25 @@
             align="center"
             prop="bihou"
             label="壁厚"
-            width="55">
+            width="50">
           </el-table-column>
           <el-table-column
             align="center"
             prop="waijing"
             label="母管长"
-            width="60">
+            width="58">
           </el-table-column>
           <el-table-column
             align="center"
             prop="pno"
             label="PNo"
-            width="55">
+            width="50">
           </el-table-column>
           <el-table-column
             align="center"
             prop="jiagongxilie"
             label="加工系列"
-            width="80">
+            width="72">
           </el-table-column>
           <el-table-column
             align="center"
@@ -851,10 +851,10 @@
             align="center"
             prop="codeno"
             label="代码No"
-            width="70">
+            width="63">
           </el-table-column>
           <el-table-column
-            width="70"
+            width="65"
             prop="qieduanchang"
             align="center"
             label="切断长">
@@ -863,18 +863,24 @@
             align="center"
             prop="guanduan"
             label="管端"
-            width="55">
+            width="50">
           </el-table-column>
           <el-table-column
             align="center"
             prop="wanqu"
-            width="55"
+            width="50"
             label="弯曲">
           </el-table-column>
           <el-table-column
             align="center"
             prop="albl"
             label="备注">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="canchang"
+            width="55"
+            label="残长">
           </el-table-column>
         </el-table>
       </div>
