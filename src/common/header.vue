@@ -207,7 +207,8 @@
                   message: '换岗成功!'
                 });
                 setTimeout(() => {
-                  this.$router.push("/");
+                  this.changeVisible=false;
+                  window.location.reload()
                 }, 3000);
               }
               else {
