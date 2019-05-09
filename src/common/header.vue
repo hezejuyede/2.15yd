@@ -11,6 +11,10 @@
           <i class="iconfont icon-ligang"></i>
           <span>离岗</span>
         </div>
+        <div class="headerChange fr" @click="showChangePost">
+          <i class="iconfont icon-qiehuanjiaose"></i>
+          <span>换岗</span>
+        </div>
         <div class="headerUserInfo fr">
           <div class="">
             <span class="">{{GW}}</span>
@@ -27,6 +31,37 @@
           <img src="../assets/img/avatar.png" alt="">
         </div>
       </div>
+
+      <!--换岗 -->
+      <el-dialog title="更换岗位" :visible.sync="changeVisible" width="40%">
+        <div class="container">
+          <div class="containerDiv">
+            <div class="containerDivTop">
+              <div class="select">
+                <el-select
+                  v-model="workstation"
+                  clearable
+                  filterable
+                  allow-create
+                  default-first-option
+                  placeholder="工位">
+                  <el-option
+                    v-for="item in workstationOptions"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                  </el-option>
+                </el-select>
+              </div>
+            </div>
+            <div class="containerBtn">
+              <el-button type="success" @click="doChangePost">确认换岗</el-button>
+            </div>
+          </div>
+
+        </div>
+      </el-dialog>
+
     </div>
 </template>
 <script type="text/ecmascript-6">
@@ -47,6 +82,11 @@
         LastLoginTime: "",
         cumulativeLoginTime: "",
         tableData: [],
+        changeVisible:false,
+
+        workstation:"",
+        workstationOptions:[]
+
       }
     },
     components: {timer},
@@ -141,6 +181,50 @@
           });
       },
 
+      //显示换岗位弹框
+      showChangePost() {
+        axios.post(" " + url + "/api/getPersonProcessList", {"name": this.username})
+          .then((res) => {
+            this.workstationOptions = res.data;
+            this.workstation=res.data[0].id;
+            this.changeVisible=true;
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      },
+      //进行换岗
+      doChangePost() {
+        if (this.workstation) {
+          axios.post("  " + url + "/api/changePost", {"username": this.userName, "gongwei": this.workstation})
+            .then((res) => {
+              if (res.data.state === "1") {
+                let userInfo = res.data;
+                userInfo = JSON.stringify(userInfo);
+                sessionStorage.setItem("userInfo", userInfo);
+                this.$message({
+                  type: 'success',
+                  message: '离岗成功!'
+                });
+                setTimeout(() => {
+                  this.$router.push("/");
+                }, 3000);
+              }
+              else {
+                this.$message({
+                  type: 'warning',
+                  message: '换岗失败!'
+                });
+              }
+            })
+            .catch(() => {
+              console.log(err)
+            });
+        }
+        else {
+          this.$message.warning(`工位不能为空`);
+        }
+      }
     },
 
   }
@@ -193,7 +277,55 @@
         align-items: center;
         justify-content: start;
         cursor: pointer;
+        font-size: @font-size-large;
+        .icon-ligang{
+          font-size: @font-size-large;
+          margin-right: 5px;
+        }
+      }
+      .headerChange{
+        width: 20%;
+        height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        cursor: pointer;
+        font-size: @font-size-large;
+        .icon-qiehuanjiaose{
+          font-size: @font-size-large;
+          margin-right: 5px;
+        }
+      }
 
+    }
+    .container{
+      height: 300px;
+      width: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .containerDiv{
+        width: 250px;
+        height: 250px;
+        .containerDivTop{
+          height: 120px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .containerBtn{
+          height: 130px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .el-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 200px;
+          height: 50px;
+        }
       }
 
     }

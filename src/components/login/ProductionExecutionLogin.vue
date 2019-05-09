@@ -259,7 +259,7 @@
               this.selectList = res.data;
               this.selectWorkstationName = this.selectList[0].name;
               this.selectWorkstationId = this.selectList[0].id;
-              this.selectWorkstationState = true
+              this.selectWorkstationState = true;
             })
             .catch((err) => {
               console.log(err)
