@@ -3142,8 +3142,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 20%;
-        height: 35px;
+        width: 25%;
+        height: 100px;
+        font-size: @font-size-large;
+        margin-left: 5%;
       }
     }
 

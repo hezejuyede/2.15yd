@@ -934,7 +934,7 @@
           </div>
         </div>
         <div class="containerBtn">
-          <el-button type="danger" @click="screenVisible = false">关闭窗口</el-button>
+          <el-button type="danger"   @click="screenVisible = false">关闭窗口</el-button>
           <el-button type="warning" icon="search" @click="emptyAllValue">一键清空</el-button>
           <el-button type="success" icon="search" @click="validationScreening">确认筛选</el-button>
         </div>
@@ -2301,8 +2301,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 20%;
-        height: 35px;
+        width: 25%;
+        height: 100px;
+        font-size: @font-size-large;
+        margin-left: 5%;
       }
     }
 
