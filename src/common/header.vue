@@ -204,7 +204,7 @@
                 sessionStorage.setItem("userInfo", userInfo);
                 this.$message({
                   type: 'success',
-                  message: '离岗成功!'
+                  message: '换岗成功!'
                 });
                 setTimeout(() => {
                   this.$router.push("/");

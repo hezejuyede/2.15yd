@@ -396,7 +396,7 @@
           <template v-for="(col ,index) in cols">
             <el-table-column
               align="center"
-              v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+              v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xiaozuli' && col.prop !=='yipintu'"
               :prop="col.prop"
               :label="col.label">
             </el-table-column>
@@ -449,7 +449,7 @@
             </el-table-column>
             <el-table-column
               align="center"
-              v-if="col.prop==='qieduanbiao'"
+              v-if="col.prop==='xiaozuli'"
               :prop="col.prop" :label="col.label">
               <template scope="scope">
                 <el-button
