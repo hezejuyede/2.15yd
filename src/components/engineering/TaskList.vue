@@ -932,6 +932,22 @@
           <div class="select fl" v-if=" this.n==1">
             <el-input v-model="qianzuoyezhe" placeholder="前作业者"></el-input>
           </div>
+          <div class="select fl">
+            <el-select
+              v-model="bengangzhuangtai"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="本岗状态">
+              <el-option
+                v-for="item in bengangzhuangtaiOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </div>
         </div>
         <div class="containerBtn">
           <el-button type="danger"   @click="screenVisible = false">关闭窗口</el-button>
@@ -1065,7 +1081,10 @@
         bihou: "",
         bihouOptions: [],
         qianzuoyezhe: "",
-
+        bengangzhuangtai:"",
+        bengangzhuangtaiOptions:[
+          {"name":"未开始","id":"0"},{"name":"可作业","id":"1"},{"name":"已完成","id":"2"}
+        ],
 
         a: 0,
         b: 0,
@@ -1399,7 +1418,8 @@
               "bihou": this.bihou,
               "codeN": this.codeN,
               "zuoyezhe": this.qianzuoyezhe,
-              "yichang": this.ycSearchBtn
+              "yichang": this.ycSearchBtn,
+              "bengangzhuangtai":this.bengangzhuangtai
             })
             .then((res) => {
               this.screenVisible = false;
@@ -1427,7 +1447,8 @@
               "bihou": this.bihou,
               "codeN": this.codeN,
               "zuoyezhe": this.qianzuoyezhe,
-              "daizuoye": this.dzySearchBtn
+              "daizuoye": this.dzySearchBtn,
+              "bengangzhuangtai":this.bengangzhuangtai
             })
             .then((res) => {
               this.screenVisible = false;
@@ -1455,6 +1476,7 @@
               "bihou": this.bihou,
               "codeN": this.codeN,
               "zuoyezhe": this.qianzuoyezhe,
+              "bengangzhuangtai":this.bengangzhuangtai
             })
             .then((res) => {
               this.screenVisible = false;
@@ -1482,6 +1504,7 @@
         this.scx = "";
         this.bihou = "";
         this.qianzuoyezhe = "";
+        this.bengangzhuangtai="";
       },
 
 
