@@ -196,7 +196,7 @@
       //进行换岗
       doChangePost() {
         if (this.workstation) {
-          axios.post("  " + url + "/api/changePost", {"username": this.userName, "gongwei": this.workstation})
+          axios.post("  " + url + "/api/changePost", {"username": this.userName, "stationid": this.workstation})
             .then((res) => {
               if (res.data.state === "1") {
                 let userInfo = res.data;

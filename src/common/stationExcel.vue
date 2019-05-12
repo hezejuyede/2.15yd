@@ -1,6 +1,6 @@
 <template>
   <div v-bind:class="{hideModal:isHideStationExcel}">
-    <div class="">
+    <div class="templateTop" ref="templateTop">
       <div class="" v-if="gongHao === '枝管切断'">
         <div class="" v-if="gwType === '1'">
           <template>
@@ -903,6 +903,12 @@
     created() {
 
     },
+    mounted() {
+      //点击向上按钮返回头部
+      this.showUp();
+
+
+    },
     watch: {
       excelData: {
         handler(newValue, oldValue) {
@@ -920,6 +926,15 @@
         if (row.id === this.gzId) {
           return 'red-row';
         }
+
+
+      },
+      //显示向上按钮
+      showUp() {
+        let rowDiv = this.$refs.templateTop;
+        let heightDiv = document.getElementsByClassName("red-row")[0];
+        let heightDivHeight = heightDiv.offsetTop;
+
       },
     },
     props: ['gwType','gongHao', 'isHideStationExcel','excelData','gzId']

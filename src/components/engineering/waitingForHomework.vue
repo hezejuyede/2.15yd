@@ -243,7 +243,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeStationExcel(scope.row.id,scope.row.pici)">切断表
+                  @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -351,7 +351,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeStationExcel(scope.row.id,scope.row.pici)">切断表
+                  @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -455,7 +455,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeStationExcel(scope.row.id,scope.row.pici)">小组表
+                  @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">小组表
                 </el-button>
               </template>
             </el-table-column>
@@ -548,7 +548,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeStationExcel(scope.row.id,scope.row.pici)">切断表
+                  @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -708,7 +708,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeStationExcel(scope.row.id,scope.row.pici)">小组立表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -800,7 +800,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">片付表
+                      @click="seeCutList(scope.row.id,scope.row.fileid)">片付表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -915,7 +915,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeStationExcel(scope.row.id,scope.row.pici)">正枝表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">正枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -995,7 +995,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeStationExcel(scope.row.id,scope.row.pici)">斜枝表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">斜枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -1075,7 +1075,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeStationExcel(scope.row.id,scope.row.pici)">偏心枝表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">偏心枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -1155,7 +1155,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeStationExcel(scope.row.id,scope.row.pici)">母管表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">母管表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -1235,7 +1235,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeStationExcel(scope.row.id,scope.row.pici)">支架管表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">支架管表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -2283,8 +2283,6 @@
       seeStationExcel(id, pici,fileid) {
         this.id = id;
         this.gzId= fileid;
-        console.log(this.gzId)
-
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
@@ -2466,7 +2464,6 @@
           window.event.cancelBubble = true;
 
         }
-
       },
 
 
