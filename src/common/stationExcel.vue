@@ -7,13 +7,12 @@
             <el-table
               height="640"
               :data="excelData"
+              :row-class-name="tableRowClassName"
               :header-cell-style="{
             background:'#ffffff',
             border: '1px solid #303133',
             color:'rgba(0, 0, 0, 1)'}"
-              :cell-style="{
-             border: '1px solid #303133'
-            }"
+              :cell-style="{border: '1px solid #303133'}"
               style="width: 100%;border: 1px solid #303133">
               <el-table-column
                 align="center"
@@ -128,6 +127,7 @@
             <el-table
               height="640"
               :data="excelData"
+              :row-class-name="tableRowClassName"
               :header-cell-style="{
             background:'#ffffff',
             border: '1px solid #303133',
@@ -263,6 +263,7 @@
             <el-table
               height="640"
               :data="excelData"
+              :row-class-name="tableRowClassName"
               :header-cell-style="{
             background:'#ffffff',
             border: '1px solid #303133',
@@ -398,6 +399,7 @@
             <el-table
               height="640"
               :data="excelData"
+              :row-class-name="tableRowClassName"
               :header-cell-style="{
             background:'#ffffff',
             border: '1px solid #303133',
@@ -533,6 +535,7 @@
             <el-table
               height="640"
               :data="excelData"
+              :row-class-name="tableRowClassName"
               :header-cell-style="{
             background:'#ffffff',
             border: '1px solid #303133',
@@ -677,6 +680,7 @@
              border: '1px solid #303133',
              fontSize:'12px'
             }"
+          :row-class-name="tableRowClassName"
           style="width: 100%;border: 1px solid #303133">
           <!--  <el-table-column
               align="center"
@@ -798,6 +802,7 @@
              border: '1px solid #303133',
              fontSize:'12px'
             }"
+          :row-class-name="tableRowClassName"
 
           style="width: 100%;border: 1px solid #303133">
           <el-table-column
@@ -910,9 +915,14 @@
 
     },
     methods: {
-
+      //根据状态显示不同颜色
+      tableRowClassName({row, rowIndex}) {
+        if (row.id === this.gzId) {
+          return 'red-row';
+        }
+      },
     },
-    props: ['gwType','gongHao', 'isHideStationExcel','excelData']
+    props: ['gwType','gongHao', 'isHideStationExcel','excelData','gzId']
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">

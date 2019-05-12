@@ -161,7 +161,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeStationExcel(scope.row.id,scope.row.pici)">切断表
+                  @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -1441,7 +1441,8 @@
           :gwType="gwType"
           :gongHao="dqgw"
           :isHideStationExcel="isHideStationExcel"
-          :excelData="excelData"></StationExcel>
+          :excelData="excelData"
+          :gzId="gzId"></StationExcel>
       </div>
     </el-dialog>
 
@@ -1563,7 +1564,7 @@
         listData: [],  //点击复选框中对ID的数组
 
         id: "",        //管子的ID
-
+        gzId:"",       //查看工位表匹配ID
 
         inputWord: '',//扫码的Value
 
@@ -2279,8 +2280,11 @@
 
 
       //查看工位表
-      seeStationExcel(id, pici) {
+      seeStationExcel(id, pici,fileid) {
         this.id = id;
+        this.gzId= fileid;
+        console.log(this.gzId)
+
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
