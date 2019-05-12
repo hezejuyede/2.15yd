@@ -2139,7 +2139,6 @@
             {
               "ids": this.listData,
               "zuoyezhe": this.zuoyezhe,
-              "gongwei": this.dqgw,
               "type": this.gwType,
               "stationid": this.stationId,
             })
