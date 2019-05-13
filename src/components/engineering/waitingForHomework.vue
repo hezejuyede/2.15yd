@@ -1425,11 +1425,6 @@
       <viewer :images="imgs">
         <img v-for="src in imgs" :src="src.url" :key="src.title" style="width: 100%;height: 100%">
       </viewer>
-     <!-- <div class="container" style="width: 100%;height: 100%">
-        <div class="drawingImg" style="width: 100%;height: 100%">
-          <img :src="url" alt="" style="display:block;height: 100%;width: 100%">
-        </div>
-      </div>-->
     </el-dialog>
 
 
@@ -1638,12 +1633,7 @@
         m: 0,
         n: 0,
 
-        imgs: [
-          {
-            url: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3564877025,796183547&fm=27&gp=0.jpg',
-            title: '图片2'
-          }
-        ]
+        imgs: []
       }
 
     },
@@ -2203,8 +2193,7 @@
 
       //查看一品图
       seeYiPinTu(pici, yiguanhao, code) {
-        this.drawingVisible = true;
-       /* //防止冒泡
+        //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
           event.stopPropagation();
@@ -2213,6 +2202,12 @@
               .then((res) => {
                 if (res.data.imgurl) {
                   this.url = url + res.data.imgurl;
+                  this.imgs = [
+                    {
+                      "url": this.url
+                    }
+                  ];
+
                   this.drawingVisible = true;
                 }
                 else {
@@ -2284,7 +2279,7 @@
 
             setTimeout(c, 2000);
           }
-        }*/
+        }
       },
 
 
