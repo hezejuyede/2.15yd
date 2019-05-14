@@ -37,8 +37,9 @@
         <div class="container">
           <div class="containerDiv">
             <div class="containerDivTop">
-              <div class="select">
+              <div class="select" id="gwSelect">
                 <el-select
+                  style="height: 90px;width: 350px"
                   v-model="workstation"
                   clearable
                   filterable
@@ -233,6 +234,7 @@
 <style scoped lang="less" rel="stylesheet/less">
   @import "../assets/less/base";
 
+
   .headerCommon {
     width: 100%;
     box-sizing: border-box;
@@ -301,7 +303,7 @@
     }
     .container{
       height: 300px;
-      width: 300px;
+      width:100%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -315,7 +317,7 @@
           justify-content: center;
         }
         .containerBtn{
-          height: 130px;
+          height: 200px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -324,8 +326,9 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 200px;
-          height: 50px;
+          width: 300px;
+          height: 100px;
+          font-size: @font-size-large-xxxxxx;
         }
       }
 
