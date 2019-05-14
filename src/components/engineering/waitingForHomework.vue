@@ -267,7 +267,7 @@
           @selection-change="selectChange"
           ref="moviesTable"
           style="width: 99%;margin: 0 auto">
-          <el-table-column type="expand"  :cell-style="{color:'blue'}">
+          <el-table-column type="expand" :cell-style="{color:'blue'}">
             <template slot-scope="scope">
               <el-table class="tb-edit"
                         :data="scope.row.list"
@@ -1562,7 +1562,7 @@
         listData: [],  //点击复选框中对ID的数组
 
         id: "",        //管子的ID
-        gzId:"",       //查看工位表匹配ID
+        gzId: "",       //查看工位表匹配ID
 
         inputWord: '',//扫码的Value
 
@@ -1680,7 +1680,6 @@
     created() {
       //检索用户状态
       this.getAdminState();
-
 
 
       //转圈延迟一秒执行
@@ -1951,17 +1950,23 @@
           //W3C取消冒泡事件
           event.stopPropagation();
           if (searchWord) {
-            if(this.dqgw == "直管焊" || this.dqgw === "短管焊" || this.dqgw === "切断" ){
-              this.message = "无需执行端报完工";
-              this.HideModal = false;
-              const that = this;
+            if (this.dqgw === "直管焊" || this.dqgw === "短管焊" || this.dqgw === "切断") {
+              axios.post(" " + url + "/shengchan/getShaomaData",
+                {
+                  "stationid": this.stationId,
+                  "shaomacode": searchWord
+                })
+                .then((res) => {
+                  if (res.data.state === "1") {
+                    this.showTableData(this.stationId, this.dqgw, 1, 1)
+                  }
+                  else if (res.data.state === "-1") {
 
-              function a() {
-                that.message = "";
-                that.HideModal = true;
-              }
-
-              setTimeout(a, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
 
             }
             else {
@@ -2020,7 +2025,6 @@
                   console.log(err)
                 });
             }
-
           }
           else {
             this.message = "扫不到管子信息";
@@ -2284,9 +2288,9 @@
 
 
       //查看工位表
-      seeStationExcel(id, pici,fileid) {
+      seeStationExcel(id, pici, fileid) {
         this.id = id;
-        this.gzId= fileid;
+        this.gzId = fileid;
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件
