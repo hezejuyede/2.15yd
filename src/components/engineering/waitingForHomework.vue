@@ -1415,17 +1415,17 @@
         </div>
       </div>
     </el-dialog>
+    
 
     <!--查看一品图 -->
-    <el-dialog title="一品图查看" :visible.sync="drawingVisible" :fullscreen="true" :center="true">
+    <div class="yptModal" v-if="drawingVisible===true">
       <div class="closeBtn">
         <el-button type="danger" @click="drawingVisible = false">关闭窗口</el-button>
-
       </div>
-      <viewer :images="imgs">
+      <viewer :images="imgs" style="z-index: 99999999">
         <img v-for="src in imgs" :src="src.url" :key="src.title" style="width: 100%;height: 100%">
       </viewer>
-    </el-dialog>
+    </div>
 
 
     <!--查看工位表 -->
@@ -3186,6 +3186,16 @@
     width: 100%;
     top: 50%;
     transform: translateY(-50%);
+  }
+
+  .yptModal{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: #ffffff;
+    top: 0;
+    left: 0;
+    z-index: 100;
   }
 
   @media only screen and (max-width: 900px) {
