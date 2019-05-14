@@ -1415,7 +1415,7 @@
         </div>
       </div>
     </el-dialog>
-    
+
 
     <!--查看一品图 -->
     <div class="yptModal" v-if="drawingVisible===true">
