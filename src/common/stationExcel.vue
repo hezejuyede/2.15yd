@@ -924,10 +924,8 @@
       //根据状态显示不同颜色
       tableRowClassName({row, rowIndex}) {
         if (row.id === this.gzId) {
-          return 'red-row';
+          return 'green-row';
         }
-
-
       },
       //显示向上按钮
       showUp() {

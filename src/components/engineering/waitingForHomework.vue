@@ -2053,8 +2053,7 @@
           {
             "ids": [this.id],
             "zuoyezhe": this.zuoyezhe,
-            "gongwei": this.dqgw,
-            "type": this.gwListType,
+            "type": this.gwType,
             "stationid": this.stationId
           })
           .then((res) => {
@@ -2063,8 +2062,7 @@
               this.$message.success(`报完工成功`);
               let that = this;
               setTimeout(() => {
-                that.qdbVisible = false;
-                that.xzlVisible = false;
+                that.excelVisible = false;
               }, 1000)
             }
             else {
