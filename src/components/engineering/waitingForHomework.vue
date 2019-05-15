@@ -5,7 +5,7 @@
       <!-- 公共头部-->
       <div class="contentTop" ref="contentTop">
         <div class="listSearch"
-             v-if="this.listType ==1 || this.listType ==5 || this.listType ==4 || this.listType ==3|| this.listType ==11">
+             v-if="this.listType ==1 || this.listType ==5 || this.listType ==4 || this.listType ==3">
           <div class="listSearchInput">
             <el-input
               v-model="searchWord"
@@ -21,6 +21,21 @@
             <button @click="zgMaterialStatistics">直管物料统计</button>
             <button @click="goGeneralListOfProcessing">总清单</button>
             <button @click="workEnd">报完工</button>
+          </div>
+        </div>
+        <div class="listSearch" v-if="this.listType ==11 ">
+          <div class="listSearchInput">
+            <el-input v-model="searchWord"
+                      ref="siteInput"
+                      placeholder="检索管子或扫码或手工输入"
+                      @blur="searchData(searchWord)"
+                      @input="searchEmptyData(searchWord)"
+                      @keyup.enter.native="goToPipePage(searchWord)"></el-input>
+          </div>
+          <div class="listSearchBtn">
+            <button @click="showScreening">条件筛选</button>
+            <button @click="zgMaterialStatistics">直管物料统计</button>
+            <button @click="goGeneralListOfProcessing">总清单</button>
           </div>
         </div>
         <div class="listSearch" v-if="this.listType ==6 ">
@@ -369,16 +384,10 @@
           border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           :row-class-name="tableRowClassName"
-          @select="selectList"
-          @select-all="selectAll"
           @row-click="doSelect"
           @selection-change="selectChange"
           ref="moviesTable"
           style="width: 99%;margin: 0 auto">
-          <el-table-column
-            type="selection"
-            width="30">
-          </el-table-column>
           <el-table-column type="expand">
             <template slot-scope="scope">
               <el-table class="tb-edit"
@@ -1432,7 +1441,7 @@
     <el-dialog title="工位表查看" :visible.sync="excelVisible" :fullscreen="true" :center="true">
       <div class="closeBtn" >
         <el-button type="danger" @click="excelVisible = false">关闭窗口</el-button>
-        <el-button type="primary" @click="gwbDoWorkEnd" v-if="this.listType !=='7' && this.listType !=='8' ">报完工</el-button>
+        <el-button type="primary" @click="gwbDoWorkEnd" v-if="this.listType !=='7' && this.listType !=='8' && this.listType !=='11'">报完工</el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
         <StationExcel
