@@ -1010,7 +1010,8 @@
     <!--当前工位表查看 -->
     <el-dialog title="当前工位表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
-        <el-button type="danger" @click="qdbVisible = false">关闭窗口</el-button>
+        <el-button type="danger"  @click="qdbVisible = false">关闭窗口</el-button>
+        <el-button type="primary" @click="gwbDoWorkEnd" v-if="this.gongHao !=='43/48装配' && this.gongHao !=='45/46装配' ">报完工</el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
         <StationExcel :gwType="gwType"
@@ -1880,6 +1881,32 @@
           })
         }
       },
+
+      //工位表报完工
+      gwbDoWorkEnd(){
+        axios.post(" " + url + "/shengchan/updateStatusBatch",
+          {
+            "ids": [this.id],
+            "zuoyezhe": this.zuoyezhe,
+            "type": this.gwType,
+            "stationid": this.gongwei
+          })
+          .then((res) => {
+            if (res.data === "1") {
+              this.$message.success(`报完工成功`);
+              let that = this;
+              setTimeout(() => {
+                that.qdbVisible = false;
+              }, 1000)
+            }
+            else {
+              this.$message.warning(`报完工失败`);
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      }
 
     }
   }

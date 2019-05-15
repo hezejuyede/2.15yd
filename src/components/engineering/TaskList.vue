@@ -90,7 +90,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeStationExcel(scope.row.pici)">切断表
+                  @click="seeStationExcel(scope.row.pici,scope.row.fileid)">切断表
                 </el-button>
               </template>
             </el-table-column>
@@ -164,7 +164,7 @@
                 <el-button
                   type="success"
                   style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                  @click="seeStationExcel(scope.row.pici)">小组立表
+                  @click="seeStationExcel(scope.row.pici,scope.row.fileid)">小组立表
                 </el-button>
               </template>
             </el-table-column>
@@ -296,7 +296,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeStationExcel(scope.row.pici)">小组立表
+                      @click="seeStationExcel(scope.row.pici,scope.row.fileid)">小组立表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -394,7 +394,7 @@
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeCutList(scope.row.id)">片付表
+                      @click="seeCutList(scope.row.id,scope.row.fileid)">片付表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -980,7 +980,8 @@
             :gwType="gwType"
             :gongHao="gongwei"
             :isHideStationExcel="isHideStationExcel"
-            :excelData="excelData"></StationExcel>
+            :excelData="excelData"
+            :gzId="gzId"></StationExcel>
         </div>
       </div>
     </el-dialog>
@@ -1067,7 +1068,7 @@
 
         typeSelect: "",
         typeSelectOptions: [],
-
+        gzId:"",
 
         yxj: "",
         yxjOptions: [],
@@ -1621,7 +1622,8 @@
 
 
       //查看工位表
-      seeStationExcel(pici) {
+      seeStationExcel(pici,fileid) {
+        this.gzId = fileid;
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件

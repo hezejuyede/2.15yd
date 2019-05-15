@@ -107,6 +107,9 @@
         </div>
       </div>
     </div>
+    <div class="" style="margin-top: 10px">
+      <a href="Go://D:/Program Files/nodejs/node.exe">启动PDAWIFI</a>
+    </div>
     <footer class=""> ©2019 南通中远海运川崎船舶工程有限公司</footer>
     <Modal :msg="message"
            :isHideModal="HideModal"></Modal>
