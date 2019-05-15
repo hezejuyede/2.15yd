@@ -1429,10 +1429,10 @@
 
 
     <!--查看工位表 -->
-    <el-dialog title="小组立表查看" :visible.sync="excelVisible" :fullscreen="true" :center="true">
-      <div class="closeBtn">
+    <el-dialog title="工位表查看" :visible.sync="excelVisible" :fullscreen="true" :center="true">
+      <div class="closeBtn" >
         <el-button type="danger" @click="excelVisible = false">关闭窗口</el-button>
-        <el-button type="primary" @click="gwbDoWorkEnd">报完工</el-button>
+        <el-button type="primary" @click="gwbDoWorkEnd" v-if="this.listType !=='7' && this.listType !=='8' ">报完工</el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
         <StationExcel
@@ -1958,6 +1958,7 @@
                 })
                 .then((res) => {
                   if (res.data.state === "1") {
+                    this.searchWord="";
                     this.showTableData(this.stationId, this.dqgw, 1, 1)
                   }
                   else if (res.data.state === "-1") {
