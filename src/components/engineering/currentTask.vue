@@ -1017,7 +1017,8 @@
         <StationExcel :gwType="gwType"
                        :gongHao="gongHao"
                        :isHideStationExcel="isHideStationExcel"
-                       :excelData="excelData"></StationExcel>
+                       :excelData="excelData"
+                       :gzId="id"></StationExcel>
       </div>
     </el-dialog>
 
@@ -1386,6 +1387,7 @@
         //查看各位工位表
         else if (type === "3") {
           if(this.gongHao === "小组立"){
+            console.log(this.id)
             let pici = this.titleData[0].pici;
             axios.post(" " + url + "/importother/showXiaozuliExcel", {"code": "qieduan", "pici": pici})
               .then((res) => {
@@ -1558,7 +1560,6 @@
                 console.log(err)
               })
           }
-
         }
         //显示上报异常按钮
         else if (type === "4") {
