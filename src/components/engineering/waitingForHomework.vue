@@ -2290,7 +2290,6 @@
       seeStationExcel(id, pici, fileid) {
         this.id = id;
         this.gzId = fileid;
-        console.log(this.gzId)
         //防止冒泡
         if (event && event.stopPropagation) {
           //W3C取消冒泡事件

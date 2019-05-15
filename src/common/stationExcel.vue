@@ -904,8 +904,6 @@
 
     },
     mounted() {
-      //点击向上按钮返回头部
-      this.showUp();
 
 
     },
@@ -923,17 +921,18 @@
     methods: {
       //根据状态显示不同颜色
       tableRowClassName({row, rowIndex}) {
-        if (row.id === this.gzId) {
-          return 'green-row';
+        if (typeof (this.gzId) == "object") {
+          if (row.id === this.gzId[0]) {
+            return 'green-row';
+          }
+        }
+        else {
+          if (row.id === this.gzId) {
+            return 'green-row';
+          }
         }
       },
-      //显示向上按钮
-      showUp() {
-        let rowDiv = this.$refs.templateTop;
-        let heightDiv = document.getElementsByClassName("red-row")[0];
-        let heightDivHeight = heightDiv.offsetTop;
 
-      },
     },
     props: ['gwType','gongHao', 'isHideStationExcel','excelData','gzId']
   }

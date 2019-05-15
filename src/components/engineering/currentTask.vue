@@ -1018,7 +1018,7 @@
                        :gongHao="gongHao"
                        :isHideStationExcel="isHideStationExcel"
                        :excelData="excelData"
-                       :gzId="id"></StationExcel>
+                       :gzId="gzId"></StationExcel>
       </div>
     </el-dialog>
 
@@ -1053,7 +1053,7 @@
         zuoyezhe: "",       //当前登录账户
         gwType:"1",         //工位类型，例如小组立和枝管有多个工位
         id: "",             //加工详情页面内管子的ID
-
+        gzId:"",             //工位表管子ID
         routerList: [],                   // 工艺路线的数组，里面有一个或者多个工艺路线
         titleData: [],                   //当前任务页面头部显示内容数组
         matterData: "",                 //注意事项的内容
@@ -1387,7 +1387,11 @@
         //查看各位工位表
         else if (type === "3") {
           if(this.gongHao === "小组立"){
-            console.log(this.id)
+            let arr = [];
+            for (let i = 0; i < this.topData.length; i++) {
+              arr.push(this.topData[i].id)
+            }
+            this.gzId = arr;
             let pici = this.titleData[0].pici;
             axios.post(" " + url + "/importother/showXiaozuliExcel", {"code": "qieduan", "pici": pici})
               .then((res) => {
@@ -1536,6 +1540,7 @@
             }
           }
           else {
+            this.gzId=this.id
             let pici = this.titleData[0].text;
             axios.post(" " + url + "/importother/publicData", {"code": "qieduan", "pici": pici})
               .then((res) => {
