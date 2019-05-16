@@ -1,10 +1,11 @@
 <template>
   <div class="currentTask">
     <header-nav></header-nav>
-    <div class="" @click="godd">
-      hhhh
-    </div>
     <div class="currentTaskTemplate">
+      <div class="currentTaskTemplateBack" @click="goBack">
+        <i class="iconfont icon-54"></i>
+        <span>返回</span>
+      </div>
       <div class="currentTaskTitle" v-if="this.gongHao !=='小组立' && this.gongHao !=='枝管切断'">
         <div class="titleDiv" v-for="(item,index) in titleData" :style="{'width':item.width}">
           <div class="titleDivLeft">
@@ -1111,8 +1112,8 @@
       getLoading() {
         this.img = ["1"]
       },
-      godd(){
-        localStorage.setItem("IndexUrl", index);
+      goBack(){
+       this.$router.push("/")
       },
 
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
@@ -1931,6 +1932,16 @@
     margin-bottom: 80px;
     .currentTaskTemplate {
       width: 100%;
+      .currentTaskTemplateBack{
+        height: 30px;
+        line-height: 30px;
+        padding-left: 20px;
+        font-size: 25px;
+        color: @color-green;
+        .icon-54{
+          font-size:25px;
+        }
+      }
       .currentTaskTitle {
         width: 100%;
         background-color: #D8E5F6;
@@ -1982,7 +1993,7 @@
       }
       .currentTaskDiv {
         width: 95%;
-        margin: 30px auto;
+        margin: 20px auto;
         display: flex;
         .currentTaskDivLeft {
           flex: 2;
@@ -2012,7 +2023,7 @@
       .currentTaskBtn {
         width: 95%;
         height: 60px;
-        margin: 20px auto;
+        margin: 15px auto;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -2053,7 +2064,7 @@
         }
       }
       .currentTaskRouter {
-        margin: 20px auto 0 auto;
+        margin: 15px auto 0 auto;
         width: 95%;
         .currentTaskRouterList{
           width: 100%;
