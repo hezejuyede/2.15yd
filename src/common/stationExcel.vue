@@ -812,7 +812,7 @@
           </el-table-column>
           <el-table-column
             align="waijingv"
-            prop="waijingchang"
+            prop="waijingv"
             label="外径"
             width="60">
           </el-table-column>
