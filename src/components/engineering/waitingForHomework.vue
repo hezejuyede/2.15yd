@@ -1686,6 +1686,9 @@
         return this.tableData
       }
     },
+    activated(){
+      this.$router.push("/")
+    },
     created() {
       //检索用户状态
       this.getAdminState();
@@ -1707,6 +1710,7 @@
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
+         console.log(11)
           const info = JSON.parse(userInfo);
           this.zuoyezhe = info.username;
           this.dqgw = info.GW;

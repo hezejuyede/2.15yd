@@ -1,6 +1,9 @@
 <template>
   <div class="currentTask">
     <header-nav></header-nav>
+    <div class="" @click="godd">
+      hhhh
+    </div>
     <div class="currentTaskTemplate">
       <div class="currentTaskTitle" v-if="this.gongHao !=='小组立' && this.gongHao !=='枝管切断'">
         <div class="titleDiv" v-for="(item,index) in titleData" :style="{'width':item.width}">
@@ -1107,6 +1110,9 @@
       //转圈延迟一秒执行
       getLoading() {
         this.img = ["1"]
+      },
+      godd(){
+        localStorage.setItem("IndexUrl", index);
       },
 
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面

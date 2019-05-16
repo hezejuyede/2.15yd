@@ -21,47 +21,73 @@ export default new Router({
       path: '/',
       name: 'Index',
       component: Index,
+      meta: {
+        keepAlive: true
+      }
     },
     {
       path: '/ProductionExecutionLogin',
       name: 'ProductionExecutionLogin',
       component: ProductionExecutionLogin,
-
+      meta: {
+        keepAlive: false
+      }
     },
     {
       path: '/taskList',
       name: 'TaskList',
-      component: TaskList
+      component: TaskList,
+      meta: {
+        keepAlive: false
+      }
     },
     {
       path: '/Drawing',
       name: 'Drawing',
-      component: Drawing
+      component: Drawing,
+      meta: {
+        keepAlive: false
+      }
     },
     {
       path: '/CurrentTask',
       name: 'CurrentTask',
-      component: CurrentTask
+      component: CurrentTask,
+      meta: {
+        keepAlive: false
+      }
     },
     {
       path: '/Safe',
       name: 'Safe',
-      component: Safe
+      component: Safe,
+      meta: {
+        keepAlive: false
+      }
     },
     {
       path: '/Quality',
       name: 'Quality',
-      component: Quality
+      component: Quality,
+      meta: {
+        keepAlive: false
+      }
     },
     {
       path: '/Equipment',
       name: 'Equipment',
-      component: Equipment
+      component: Equipment,
+      meta: {
+        keepAlive: false
+      }
     },
     {
       path: '/Materiel',
       name: 'Materiel',
-      component: Materiel
+      component: Materiel,
+      meta: {
+        keepAlive: false
+      }
     },
   ]
 })

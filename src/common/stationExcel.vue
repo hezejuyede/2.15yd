@@ -678,7 +678,7 @@
             color:'rgba(0, 0, 0, 1)'}"
           :cell-style="{
              border: '1px solid #303133',
-             fontSize:'12px'
+             fontSize:'11px'
             }"
           :row-class-name="tableRowClassName"
           style="width: 100%;border: 1px solid #303133">
