@@ -60,11 +60,6 @@
         localStorage.setItem("IndexUrl", 0);
         this.stopTimer = false;
         this.$router.push({path: "/"});
-        document.webkitCancelFullScreen();
-        setTimeout(()=>{
-          let element = document.documentElement;
-          element.webkitRequestFullScreen();
-        },100)
       },
       timer() {
         if (this.stopTimer) {
