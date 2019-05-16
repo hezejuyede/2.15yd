@@ -803,7 +803,6 @@
              fontSize:'11px'
             }"
           :row-class-name="tableRowClassName"
-          @row-click="doSelect"
           highlight-current-row
           style="width: 100%;border: 1px solid #303133">
           <el-table-column
@@ -945,15 +944,7 @@
             return 'green-row';
           }
         }
-      },
-
-      doSelect(row, column, cell, event) {
-        console.log(row)
-        console.log(column)
-        console.log(cell)
-        console.log(event)
       }
-
 
     },
     props: ['gwType','gongHao', 'isHideStationExcel','excelData','gzId']
