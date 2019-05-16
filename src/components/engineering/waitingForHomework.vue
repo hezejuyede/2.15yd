@@ -1710,7 +1710,6 @@
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
-         console.log(11)
           const info = JSON.parse(userInfo);
           this.zuoyezhe = info.username;
           this.dqgw = info.GW;

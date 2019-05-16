@@ -1937,7 +1937,7 @@
         line-height: 30px;
         padding-left: 20px;
         font-size: 25px;
-        color: @color-green;
+        color: #409EFF;
         .icon-54{
           font-size:25px;
         }
