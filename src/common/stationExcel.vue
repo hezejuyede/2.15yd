@@ -800,21 +800,16 @@
             color:'rgba(0, 0, 0, 1)'}"
           :cell-style="{
              border: '1px solid #303133',
-             fontSize:'12px'
+             fontSize:'11px'
             }"
           :row-class-name="tableRowClassName"
-
+          @row-click="doSelect"
+          highlight-current-row
           style="width: 100%;border: 1px solid #303133">
           <el-table-column
             align="center"
             prop="type"
             label="管种">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="shipcode"
-            label="船番NE"
-            width="63">
           </el-table-column>
           <el-table-column
             align="center"
@@ -831,20 +826,14 @@
           <el-table-column
             align="center"
             prop="waijing"
-            label="母管长"
-            width="58">
+            label="素材长"
+            width="60">
           </el-table-column>
           <el-table-column
             align="center"
-            prop="pno"
-            label="PNo"
-            width="50">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="jiagongxilie"
-            label="加工系列"
-            width="72">
+            prop="shipcode"
+            label="船号"
+            width="60">
           </el-table-column>
           <el-table-column
             align="center"
@@ -855,11 +844,23 @@
           <el-table-column
             align="center"
             prop="codeno"
-            label="代码No"
-            width="63">
+            label="codeNo"
+            width="64">
           </el-table-column>
           <el-table-column
-            width="65"
+            align="center"
+            prop="jiagongxilie"
+            label="加工系列"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="pno"
+            label="PNo"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            width="60"
             prop="qieduanchang"
             align="center"
             label="切断长">
@@ -868,13 +869,25 @@
             align="center"
             prop="guanduan"
             label="管端"
-            width="50">
+            width="47">
           </el-table-column>
           <el-table-column
             align="center"
             prop="wanqu"
+            width="47"
+            label="弯S">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="guanduanjinwu"
             width="50"
-            label="弯曲">
+            label="管端金物">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="hanjiezhuangtai"
+            width="50"
+            label="焊接状态">
           </el-table-column>
           <el-table-column
             align="center"
@@ -887,6 +900,7 @@
             width="55"
             label="残长">
           </el-table-column>
+
         </el-table>
       </div>
     </div>
@@ -932,6 +946,14 @@
           }
         }
       },
+
+      doSelect(row, column, cell, event) {
+        console.log(row)
+        console.log(column)
+        console.log(cell)
+        console.log(event)
+      }
+
 
     },
     props: ['gwType','gongHao', 'isHideStationExcel','excelData','gzId']

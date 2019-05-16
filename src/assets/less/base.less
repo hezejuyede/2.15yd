@@ -142,9 +142,11 @@ body .el-table .info-row {
 
 }
 
+/*
 body .el-table--enable-row-hover .el-table__body tr:hover>td{
   background-color:  initial !important;
 }
+*/
 
 
 
@@ -215,6 +217,21 @@ textarea {
   -webkit-appearance: none;
 }
 
+
+/* 用来设置当前页面element全局table的内间距 */
+.el-table__row td{
+  padding: 0;
+}
+/* 用来设置当前页面element全局table 选中某行时的背景色*/
+.el-table__body tr.current-row>td{
+  background-color: #f19944 !important;
+  /* color: #f19944; */  /* 设置文字颜色，可以选择不设置 */
+}
+/* 用来设置当前页面element全局table 鼠标移入某行时的背景色*/
+.el-table--enable-row-hover .el-table__body tr:hover>td {
+  background-color: #f19944;
+  /* color: #f19944; */ /* 设置文字颜色，可以选择不设置 */
+}
 
 @color-dlLan:#2A437B;
 @color-black: #333;
