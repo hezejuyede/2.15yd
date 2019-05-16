@@ -807,24 +807,24 @@
           style="width: 100%;border: 1px solid #303133">
           <el-table-column
             align="center"
-            prop="type"
+            prop="typev"
             label="管种">
           </el-table-column>
           <el-table-column
-            align="center"
+            align="waijingv"
             prop="waijingchang"
             label="外径"
             width="60">
           </el-table-column>
           <el-table-column
             align="center"
-            prop="bihou"
+            prop="bihouv"
             label="壁厚"
             width="50">
           </el-table-column>
           <el-table-column
             align="center"
-            prop="waijing"
+            prop="sucaichangv"
             label="素材长"
             width="60">
           </el-table-column>
