@@ -230,8 +230,7 @@
 
       //点击头像启动wifi
       startWifi(){
-        alert("hahhaha")
-
+        window.open('file:///C:/Windows/System32/notepad.exe');
       }
     },
 
