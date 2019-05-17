@@ -878,13 +878,13 @@
           </el-table-column>
           <el-table-column
             align="center"
-            prop="guanduanjinwu"
+            prop="gdjw"
             width="50"
             label="管端金物">
           </el-table-column>
           <el-table-column
             align="center"
-            prop="hanjiezhuangtai"
+            prop="hjzt"
             width="50"
             label="焊接状态">
           </el-table-column>
