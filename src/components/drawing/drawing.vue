@@ -5,6 +5,13 @@
       <div class="drawingTitle">
         一品图查看
       </div>
+      <div class="drawingSearchYpt">
+        <el-input
+          v-model="searchWord"
+          autofocus
+          placeholder="扫码或手工输入管子编号"
+          @keyup.enter.native="searchYpt(searchWord)"></el-input>
+      </div>
       <div class="drawingCondition">
         <div class="drawingConditionDiv">
           <el-select
@@ -13,7 +20,7 @@
             filterable
             allow-create
             default-first-option
-            placeholder="请输入或者选择批次">
+            placeholder="批次">
             <el-option
               v-for="item in batchOptions"
               :key="item.id"
@@ -29,7 +36,7 @@
             filterable
             allow-create
             default-first-option
-            placeholder="请输入或者选择加工线">
+            placeholder="加工线">
             <el-option
               v-for="item in jgxOptions"
               :key="item.id"
@@ -45,7 +52,7 @@
             filterable
             allow-create
             default-first-option
-            placeholder="请输入或者选择工位">
+            placeholder="工位">
             <el-option
               v-for="item in gwOptions"
               :key="item.id"
@@ -61,7 +68,7 @@
             filterable
             allow-create
             default-first-option
-            placeholder="请输入或者选择船号">
+            placeholder="船号">
             <el-option
               v-for="item in chOptions"
               :key="item.id"
@@ -73,7 +80,7 @@
         <div class="drawingSearch">
           <div class="drawingSearchInput">
             <div class="">
-              <el-input v-model="select_word" placeholder="管子编号"></el-input>
+              <el-input v-model="gzbh" placeholder="管子编号"></el-input>
             </div>
           </div>
           <div class="drawingSearchButton">
@@ -83,10 +90,12 @@
       </div>
     </div>
     <div class="drawingBottom">
-      <div class="drawingImg">
-        <img src="../../assets/img/ypt.jpg" alt="">
-      </div>
+      <viewer :images="imgs">
+        <img v-for="src in imgs" :src="src.url" :key="src.title" style="width: 100%;height: 100%">
+      </viewer>
     </div>
+    <Modal :msg="message"
+           :isHideModal="HideModal"></Modal>
     <div class="loading-container" v-show="!img.length">
       <loading></loading>
     </div>
@@ -100,15 +109,19 @@
   import footerNav from '../../common/footer'
   import Loading from '../../common/loading'
   import url from '../../assets/js/URL'
+  import Modal from '../../common/modal'
 
   export default {
     name: 'drawing',
     data() {
       return {
         img: "",
+        message: '',         //自己封装的弹框信息
+        HideModal: true,     //是否显示弹出框
 
-        select_word: "",
+        searchWord: "",
 
+        gzbh: "",
         batch: "",
         batchOptions: [],
 
@@ -121,11 +134,13 @@
         ch: "",
         chOptions: [],
 
-        imgUrl: ""
+        imgUrl: "",
+
+        imgs: []
       }
 
     },
-    components: {Loading, timer, footerNav, headerNav},
+    components: {Loading, timer, footerNav, headerNav, Modal},
     mounted() {
 
 
@@ -169,7 +184,104 @@
 
       },
 
+      //扫码搜索一品图
+      searchYpt(searchWord) {
+        if (searchWord) {
+          axios.post(" " + url + "/yipintu/getYipintuImg.html", {"searchWord": searchWord})
+            .then((res) => {
+              if (res.data.imgurl) {
+                let url = url + res.data.imgurl;
+                this.imgs = [{"url": url}];
+              }
+              else {
+                this.message = "没有查到一品图";
+                this.HideModal = false;
+                const that = this;
+
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                }
+                setTimeout(a, 2000);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+        else {
+          this.message = "信息不全无法查询";
+          this.HideModal = false;
+          const that = this;
+
+          function b() {
+            that.message = "";
+            that.HideModal = true;
+          }
+
+          setTimeout(b, 2000);
+        }
+      },
+
+      //条件搜索一品图
       search() {
+        axios.post(" " + url + "/shengchan/getShaomaData",
+          {
+            "pici": this.batch,
+            "jiagongxian": this.jgx,
+            "gongwei": this.gw,
+            "chuanhao": this.ch,
+            "guanzibianhao": this.gzbh
+          })
+          .then((res) => {
+            if (res.data.state === "1") {
+              if (this.dqgw === "弯管" || this.dqgw === "43/48装配" || this.dqgw === "45/46装配" || this.dqgw === "大组焊") {
+                this.id = res.data.data.id;
+                this.tdVisible = true;
+                this.tdTableData = [{
+                  "jiagongxilie": res.data.data.jiagongxilie,
+                  "yiguanhao": res.data.data.yiguanhao,
+                  "codeno": res.data.data.codeno,
+                  "koujing": res.data.data.koujing,
+                  "chuanhao": res.data.data.chuanhao,
+                  "pno": res.data.data.pno
+                }];
+              }
+              else if (this.dqgw === "弯头焊") {
+                this.$router.push({
+                  name: 'CurrentTask',
+                  params: {
+                    pici: res.data.data.pici,
+                    fuhao: res.data.data.fuhao,
+                    yiguanno: res.data.data.yiguanno,
+                    codeno: res.data.data.codeno
+                  }
+                })
+              }
+              else if (this.dqgw === "枝管切断") {
+                let id = res.data.data.id;
+                localStorage.setItem("pipeId", id);
+                this.$router.push({
+                  name: 'CurrentTask',
+                  params: {
+                    type: res.data.data.type
+                  }
+                })
+              }
+              else {
+                let id = res.data.data.id;
+                localStorage.setItem("pipeId", id);
+                this.$router.push("/CurrentTask");
+              }
+            }
+            else {
+              this.$message({type: 'warning', message: res.data.message});
+              this.searchWord = "";
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          });
       }
     }
   }
@@ -181,7 +293,8 @@
     width: 100%;
     height: 100%;
     .drawingTop {
-      height: 20%;
+      height: 25%;
+      border-bottom: 1px solid @color-F0;
       .drawingTitle {
         height: 30%;
         display: flex;
@@ -189,9 +302,14 @@
         justify-content: center;
         font-size: @font-size-large-x;
       }
+      .drawingSearchYpt {
+        height: 25%;
+        width: 90%;
+        margin: 0 auto;
+      }
       .drawingCondition {
         width: 100%;
-        height: 70%;
+        height: 40%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -242,7 +360,7 @@
 
     }
     .drawingBottom {
-      height: 50%;
+      height: 55%;
       border-top: 1px solid @color-F0;
       display: flex;
       align-items: center;
