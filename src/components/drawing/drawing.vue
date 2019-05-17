@@ -116,8 +116,8 @@
     data() {
       return {
         img: "",
-        message: '',         //自己封装的弹框信息
-        HideModal: true,     //是否显示弹出框
+        message: '',
+        HideModal: true,
 
         searchWord: "",
 
