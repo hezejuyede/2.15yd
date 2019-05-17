@@ -28,7 +28,7 @@
           </div>
         </div>
         <div class="headerAvatar fr">
-          <img src="../assets/img/avatar.png" alt="">
+          <img src="../assets/img/avatar.png" alt="" @click="startWifi">
         </div>
       </div>
 
@@ -226,6 +226,12 @@
         else {
           this.$message.warning(`工位不能为空`);
         }
+      },
+
+      //点击头像启动wifi
+      startWifi(){
+        alert("hahhaha")
+
       }
     },
 

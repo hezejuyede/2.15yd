@@ -1547,7 +1547,7 @@
             }
           }
           else {
-            this.gzId=this.id
+
             let pici = this.titleData[0].text;
             axios.post(" " + url + "/importother/publicData", {"code": "qieduan", "pici": pici})
               .then((res) => {
