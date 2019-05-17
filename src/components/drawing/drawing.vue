@@ -179,8 +179,10 @@
 
       //扫码搜索一品图
       searchYpt(searchWord) {
+
+
         if (searchWord) {
-          axios.post(" " + url + "/yipintu/getYipintuImg.html", {"searchWord": searchWord})
+          axios.post(" " + url + "/shengchan/getShaomaDataYpy", {"shaomacode": searchWord})
             .then((res) => {
               if (res.data.imgurl) {
                 let url = url + res.data.imgurl;
