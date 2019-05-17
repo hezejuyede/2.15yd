@@ -186,7 +186,6 @@
             .then((res) => {
               if (res.data.imgurl) {
                 let imgUrl = url + res.data.imgurl;
-                console.log(imgUrl)
                 this.imgs = [{"url": imgUrl}];
               }
               else {
