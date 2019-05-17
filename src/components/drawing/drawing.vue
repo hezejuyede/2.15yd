@@ -6,13 +6,13 @@
         一品图查看
       </div>
       <div class="drawingSearchYpt">
-        <el-input
-          v-model="searchWord"
-          autofocus
-          placeholder="扫码或手工输入管子编号"
-          @keyup.enter.native="searchYpt(searchWord)"></el-input>
-      </div>
-      <div class="drawingCondition">
+        <div class="drawingSearchYptYpt">
+          <el-input
+            v-model="searchWord"
+            autofocus
+            placeholder="扫码或手工输入管子编号"
+            @keyup.enter.native="searchYpt(searchWord)"></el-input>
+        </div>
         <div class="drawingConditionDiv">
           <el-select
             v-model="batch"
@@ -77,15 +77,8 @@
             </el-option>
           </el-select>
         </div>
-        <div class="drawingSearch">
-          <div class="drawingSearchInput">
-            <div class="">
-              <el-input v-model="gzbh" placeholder="管子编号"></el-input>
-            </div>
-          </div>
-          <div class="drawingSearchButton">
-            <button @click="search">搜索</button>
-          </div>
+        <div class="drawingSearchButton">
+          <el-button type="primary" @click="search">搜索</el-button>
         </div>
       </div>
     </div>
@@ -202,6 +195,7 @@
                   that.message = "";
                   that.HideModal = true;
                 }
+
                 setTimeout(a, 2000);
               }
             })
@@ -293,26 +287,27 @@
     width: 100%;
     height: 100%;
     .drawingTop {
-      height: 25%;
+      height: 20%;
       border-bottom: 1px solid @color-F0;
       .drawingTitle {
-        height: 30%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: @font-size-large-x;
-      }
-      .drawingSearchYpt {
-        height: 25%;
-        width: 90%;
-        margin: 0 auto;
-      }
-      .drawingCondition {
-        width: 100%;
         height: 40%;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: @font-size-large-x;
+        border-bottom: 1px solid @color-F0;
+      }
+      .drawingSearchYpt {
+        height: 60%;
+        width: 99%;
+        margin: 0 auto;
+        display: flex;
+        .drawingSearchYptYpt{
+          flex: 2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
         .drawingConditionDiv {
           flex: 1;
           margin-top: 2px;
@@ -322,39 +317,18 @@
           justify-content: center;
           margin-left: 1%;
         }
-        .drawingSearch {
-          flex: 2;
+        .drawingSearchButton {
+          flex: 1;
           display: flex;
           align-items: center;
           justify-content: center;
-          height: 30%;
-          .drawingSearchInput {
-            width: 80%;
+          .el-button {
             display: flex;
             align-items: center;
             justify-content: center;
-            > div {
-              width: 70%;
-            }
+            width: 90%;
+            height: 35px;
           }
-          .drawingSearchButton {
-            width: 30%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            button {
-              width: 95%;
-              height: 35px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              color: @color-white;
-              background-color: @color-bg-lan;
-              border: 0;
-              border-radius: 10%;
-            }
-          }
-
         }
       }
 
