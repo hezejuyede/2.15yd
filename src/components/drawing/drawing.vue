@@ -185,8 +185,9 @@
           axios.post(" " + url + "/shengchan/getShaomaDataYpy", {"shaomacode": searchWord})
             .then((res) => {
               if (res.data.imgurl) {
-                let url = url + res.data.imgurl;
-                this.imgs = [{"url": url}];
+                let imgUrl = url + res.data.imgurl;
+                console.log(imgUrl)
+                this.imgs = [{"url": imgUrl}];
               }
               else {
                 this.message = "没有查到一品图";
