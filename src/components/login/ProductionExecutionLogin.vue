@@ -141,8 +141,8 @@
         needKnown: "",
         contentText: "",
 
-        left: false,
-        right: true,
+        left: true,
+        right: false,
 
 
         grm: "",
