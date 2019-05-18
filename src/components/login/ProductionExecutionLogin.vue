@@ -212,7 +212,7 @@
         let changeLeft = this.$refs.changeLeft;
         changeLeft.style.borderTopRightRadius = "20px";
         this.$nextTick(function () {
-          this.$refs['rightInput'].focus();
+          this.$refs['leftInput'].focus();
         })
       },
 
@@ -757,6 +757,7 @@
       //监控回车按钮事件
       smSubmit(e) {
         if (e.keyCode == 13) {
+          this.handleFullScreen();
           this.gwmState = true;
           this.gwmErrText = "";
           if (this.grmState === true && this.gwmState === true) {
