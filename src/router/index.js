@@ -3,13 +3,16 @@ import Router from 'vue-router'
 
 
 import Index from '../components/engineering/waitingForHomework'
+
 import CurrentTask from '../components/engineering/currentTask'
 import ProductionExecutionLogin from '../components/login/ProductionExecutionLogin'
 import Drawing from '../components/drawing/drawing'
 import Safe from '../components/safe/safe'
 import Quality from '../components/quality/quality'
 import Equipment from '../components/equipment/equipment'
+
 import Materiel from '../components/materiel/materiel'
+
 import TaskList from '../components/engineering/TaskList'
 
 
@@ -87,7 +90,17 @@ export default new Router({
       component: Materiel,
       meta: {
         keepAlive: false
-      }
+      },
+     /* children: [
+        {
+          path: 'waitingForHomework',
+          name: 'waitingForHomework',
+          component: waitingForHomework,
+          meta: {
+            keepAlive: true
+          },
+        }
+      ]*/
     },
   ]
 })

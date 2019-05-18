@@ -1970,11 +1970,32 @@
                 })
                 .then((res) => {
                   if (res.data.state === "1") {
-                    this.searchWord="";
-                    this.showTableData(this.stationId, this.dqgw, 1, 1)
+                    this.message = "扫码成功";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function b() {
+                      that.message = "";
+                      that.HideModal = true;
+                      that.searchWord = "";
+                      that.showTableData(this.stationId, this.dqgw, 1, 1)
+                    }
+
+                    setTimeout(b, 5000);
                   }
                   else if (res.data.state === "-1") {
 
+                    this.message = "扫码格式不正确";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                      that.searchWord = "";
+                    }
+
+                    setTimeout(a, 5000);
                   }
                 })
                 .catch((err) => {
