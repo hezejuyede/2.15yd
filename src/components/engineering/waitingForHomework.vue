@@ -2029,7 +2029,7 @@
                         params: {
                           pici: res.data.data.pici,
                           fuhao: res.data.data.fuhao,
-                          yiguanno: res.data.data.yiguanno,
+                          yiguanno: res.data.data.yiguanhao,
                           codeno: res.data.data.codeno
                         }
                       })
