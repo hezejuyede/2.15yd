@@ -759,77 +759,92 @@
           this.gwmState = true;
           this.gwmErrText="";
           if (this.grmState === true && this.gwmState === true) {
-            axios.post(" " + url + "/api/MUserLogin", {
-              ghm: this.grm,
-              gwm: this.gwm
-            })
-              .then((res) => {
-                if (res.data.state === "1") {
-                  let userInfo = res.data;
-                  userInfo = JSON.stringify(userInfo);
-                  sessionStorage.setItem("userInfo", userInfo);
-                  this.message = "登录成功";
-                  this.HideModal = false;
-                  const that = this;
-
-                  function a() {
-                    that.message = "";
-                    that.HideModal = true;
-                  }
-
-                  function showPromptBox() {
-                    that.openPromptBox = false;
-                    that.needKnown = res.data.needKnown;
-                    that.contentText = res.data.contentText;
-                  }
-
-                  setTimeout(showPromptBox, 3000);
-                  setTimeout(a, 2000);
-                }
-                else if (res.data === "2") {
-                  this.message = "该用户没有注册";
-                  this.HideModal = false;
-                  const that = this;
-
-                  function b() {
-                    that.message = "";
-                    that.HideModal = true;
-                    that.username = '';
-                    that.password = '';
-                  }
-
-                  setTimeout(b, 2000);
-                }
-                else if (res.data === "-1") {
-                  this.message = "扫码码错误";
-                  this.HideModal = false;
-                  const that = this;
-
-                  function c() {
-                    that.message = "";
-                    that.HideModal = true;
-                    that.password = '';
-                  }
-
-                  setTimeout(c, 2000);
-                }
-                else if (res.data === "3") {
-                  this.message = "岗位不合符";
-                  this.HideModal = false;
-                  const that = this;
-
-                  function d() {
-                    that.message = "";
-                    that.HideModal = true;
-                    that.password = '';
-                  }
-
-                  setTimeout(d, 2000);
-                }
+            let smCode = this.grm+this.gwm;
+            console.log(smCode)
+            if (smCode.indexOf("ghm") != -1 && smCode.indexOf("gwm") != -1) {
+              axios.post(" " + url + "/api/MUserLoginNew", {
+                "shaomacode": smCode
               })
-              .catch((err) => {
-                console.log(err)
-              });
+                .then((res) => {
+                  if (res.data.state === "1") {
+                    let userInfo = res.data;
+                    userInfo = JSON.stringify(userInfo);
+                    sessionStorage.setItem("userInfo", userInfo);
+                    this.message = "登录成功";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    function showPromptBox() {
+                      that.openPromptBox = false;
+                      that.needKnown = res.data.needKnown;
+                      that.contentText = res.data.contentText;
+                    }
+
+                    setTimeout(showPromptBox, 3000);
+                    setTimeout(a, 2000);
+                  }
+                  else if (res.data === "2") {
+                    this.message = "该用户没有注册";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function b() {
+                      that.message = "";
+                      that.HideModal = true;
+                      that.username = '';
+                      that.password = '';
+                    }
+
+                    setTimeout(b, 2000);
+                  }
+                  else if (res.data === "-1") {
+                    this.message = "扫码码错误";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function c() {
+                      that.message = "";
+                      that.HideModal = true;
+                      that.password = '';
+                    }
+
+                    setTimeout(c, 2000);
+                  }
+                  else if (res.data === "3") {
+                    this.message = "岗位不合符";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function d() {
+                      that.message = "";
+                      that.HideModal = true;
+                      that.password = '';
+                    }
+
+                    setTimeout(d, 2000);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                });
+            }
+            else {
+              this.message = "请扫码正确的码";
+              this.HideModal = false;
+              const that = this;
+
+              function b() {
+                that.message = "";
+                that.HideModal = true;
+              }
+
+              setTimeout(b, 2000);
+            }
           }
           else {
             this.message = "请正确填写信息";
