@@ -9,6 +9,7 @@
         <div class="drawingSearchYptYpt">
           <el-input
             v-model="searchWord"
+            ref="siteInput"
             autofocus
             placeholder="扫码或手工输入管子编号"
             @keyup.enter.native="searchYpt(searchWord)"></el-input>
@@ -135,7 +136,7 @@
     },
     components: {Loading, timer, footerNav, headerNav, Modal},
     mounted() {
-
+      this.setInputFocus();
 
     },
     created() {
@@ -177,9 +178,16 @@
 
       },
 
+      //自动聚焦输入框
+      setInputFocus() {
+        this.$nextTick(() => {
+          this.$refs['siteInput'].focus();
+        })
+      },
+
+
       //扫码搜索一品图
       searchYpt(searchWord) {
-
 
         if (searchWord) {
           axios.post(" " + url + "/shengchan/getShaomaDataYpy", {"shaomacode": searchWord})
@@ -187,6 +195,7 @@
               if (res.data.imgurl) {
                 let imgUrl = url + res.data.imgurl;
                 this.imgs = [{"url": imgUrl}];
+                this.searchWord="";
               }
               else {
                 this.message = "没有查到一品图";
@@ -196,6 +205,7 @@
                 function a() {
                   that.message = "";
                   that.HideModal = true;
+                  that.searchWord = "";
                 }
 
                 setTimeout(a, 2000);
@@ -213,6 +223,7 @@
           function b() {
             that.message = "";
             that.HideModal = true;
+            that.searchWord="";
           }
 
           setTimeout(b, 2000);
