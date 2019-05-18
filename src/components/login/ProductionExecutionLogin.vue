@@ -754,14 +754,13 @@
       },
 
       //监控回车按钮事件
-      smSubmit(e){
+      smSubmit(e) {
         if (e.keyCode == 13) {
           this.gwmState = true;
-          this.gwmErrText="";
+          this.gwmErrText = "";
           if (this.grmState === true && this.gwmState === true) {
-            let smCode = this.grm+this.gwm;
-            console.log(smCode)
-            if (smCode.indexOf("ghm") != -1 && smCode.indexOf("gwm") != -1) {
+            let smCode = this.grm + this.gwm;
+            if (smCode.indexOf("ghm") != -1 && smCode.indexOf("ghm") != -1) {
               axios.post(" " + url + "/api/MUserLoginNew", {
                 "shaomacode": smCode
               })
@@ -834,7 +833,7 @@
                 });
             }
             else {
-              this.message = "请扫码正确的码";
+              this.message = "扫码不正确";
               this.HideModal = false;
               const that = this;
 
