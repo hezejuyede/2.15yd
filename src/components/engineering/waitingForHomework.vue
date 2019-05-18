@@ -1520,27 +1520,18 @@
   import Loading from '../../common/loading'
   import Modal from '../../common/modal'
   import StationExcel from '../../common/stationExcel'
-
   export default {
     name: 'ProductionExecution',
     data() {
       return {
         listType: "",   //根据工位控制显示与隐藏内容模块
-
-
         message: '',  //组件弹出框的信息
         HideModal: true, //组件是否弹出
         isHideStationExcel: false,//工位表默认是否显示
         img: [],   //转圈img数组
-
-
         arrAll: [],//优化页面的，第一次加载需要容器数据
-
         num: 1,
-
         znSearch: true,   //是否查询
-
-
         tableData: [],//总数据的表数据
         cols: [],     //总数据的表头
         excelData: [],     //工位表数据
@@ -1559,75 +1550,49 @@
           {"prop": "codeno", "label": "Code"},
           {"prop": "jiagongxilie", "label": "加工系列"},
         ],    //特定工位的表头
-
-
         zuoyezhe: "",   //用户名
         dqgw: "",       //中文工位名字
         stationId: "",  //工位对应的ID
-
-
         url: "",   //一品图和切断表的URL地址
-
         listData: [],  //点击复选框中对ID的数组
-
         id: "",        //管子的ID
         gzId: "",       //查看工位表匹配ID
-
         inputWord: '',//扫码的Value
-
         searchWord: '',//智能检索的value
         is_search: false,
-
         gwType: "1",//一种工位有几种类型，
-
         screenVisible: false,   //筛选条件弹出框
         drawingVisible: false,  // 一品图弹出框
         endVisible: false,     //报完工提醒弹出框
         tdVisible: false,    //特定工位提醒框
         excelVisible: false,   //工位表表弹出框
-
         left: true,    //        显示最左边
         left2: false,    //      显示左二
         zgCenter: false,    //   显示中间
         right: false,    //      显示最右边
         right2: false,    //     显示右二
-
-
         batch: "",
         batchOptions: [],
-
         ch: "",
         chOptions: [],
-
         gw: "",
         gwOptions: [],
-
         ygh: "",
         codeN: "",
         PNO: "",
-
-
         xl: "",
         xlOptions: [],
-
         typeSelect: "",
         typeSelectOptions: [],
-
-
         yxj: "",
         yxjOptions: [],
-
         kj: "",
         kjOptions: [],
-
         scx: "",
         scxOptions: [],
-
         bihou: "",
         bihouOptions: [],
         qianzuoyezhe: "",
-
-
         a: 0,
         b: 0,
         c: 0,
@@ -1641,36 +1606,27 @@
         l: 0,
         m: 0,
         n: 0,
-
         imgs: []
       }
-
     },
     components: {Loading, footerNav, Modal, headerNav, StationExcel},
     mounted() {
       //点击向上按钮返回头部
       this.showUp();
-
       //往下滑动动态固定搜索框
       this.showSearch();
-
       //搜索框颜色变化
       this.bianse();
-
       //切断工位每隔5分钟刷新一下数据
       setInterval(() => {
         this.qdWorkStationGetDataList(this.stationId)
       }, 300000);
-
-
       //监听键盘的回车事件
       document.onkeydown = (e) => {
         if (e.keyCode == 13) {
           this.setInputFocus();
-
         }
       }
-
     },
     computed: {
       //模糊检索
@@ -1692,19 +1648,14 @@
     created() {
       //检索用户状态
       this.getAdminState();
-
-
       //转圈延迟一秒执行
       setTimeout(() => {
         this.getLoading();
       }, 100);
-
     },
     methods: {
-
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
-
         const userInfo = sessionStorage.getItem("userInfo");
         if (userInfo === null) {
           this.$router.push("/ProductionExecutionLogin")
@@ -1714,7 +1665,6 @@
           this.zuoyezhe = info.username;
           this.dqgw = info.GW;
           this.stationId = info.GH;
-
           if (info.GW === "切断") {
             this.listType = "1";
             let that = this;
@@ -1778,24 +1728,19 @@
             this.listType = "11";
             this.showTableData(this.stationId, this.dqgw, 1, 1)
           }
-
           this.setInputFocus();
         }
       },
-
       //自动聚焦输入框
       setInputFocus() {
         this.$nextTick(() => {
           this.$refs['siteInput'].focus();
         })
       },
-
-
       //转圈延迟一秒执行
       getLoading() {
         this.img = ["1"]
       },
-
       //切断工位每隔5分钟刷新一下数据
       qdWorkStationGetDataList(workStation) {
         if (workStation === 1) {
@@ -1815,7 +1760,6 @@
             }));
         }
       },
-
       //公共方法显示根据不同工位显示不同的表头和表数据
       showTableData(id, name, wz, type) {
         let that = this;
@@ -1828,7 +1772,6 @@
             that.tableData = table.data;
           }));
       },
-
       //失去焦点后进行智能检索
       searchData(search) {
         if (this.dqgw === "切断") {
@@ -1852,7 +1795,6 @@
           }
         }
       },
-
       //输入框为空值时需要执行的数据
       searchEmptyData(search) {
         if (this.dqgw === "切断") {
@@ -1868,8 +1810,6 @@
           }
         }
       },
-
-
       //每次往表格数据里添加数据
       addData(index) {
         let arr = [];
@@ -1880,7 +1820,6 @@
         }
         this.tableData = arr;
       },
-
       //每次到底部给计算出需要下次添加的数据
       tableLoadingMore() {
         if (this.dqgw === "切断" && this.znSearch === true && this.tableData.length < this.arrAll.length) {
@@ -1889,8 +1828,6 @@
           this.addData(index)
         }
       },
-
-
       //列表单独选择
       selectList(val) {
         if (val.length) {
@@ -1905,7 +1842,6 @@
           this.listData = [];
         }
       },
-
       //列表全部选择
       selectAll(val) {
         if (val.length) {
@@ -1920,12 +1856,10 @@
           this.listData = [];
         }
       },
-
       //点击每行进行select的选择
       doSelect(val, column, event) {
         this.$refs.moviesTable.toggleRowSelection(val);
       },
-
       //当点击列表选择改变时对数组的增加和删除
       selectChange(val) {
         if (val.length) {
@@ -1940,8 +1874,6 @@
           this.listData = [];
         }
       },
-
-
       //根据状态显示不同颜色
       tableRowClassName({row, rowIndex}) {
         if (row.level === 2) {
@@ -1954,8 +1886,6 @@
           return 'gray-row';
         }
       },
-
-
       //扫码直接前往任务页面
       goToPipePage(searchWord) {
         if (event && event.stopPropagation) {
@@ -1973,35 +1903,29 @@
                     this.message = "扫码成功";
                     this.HideModal = false;
                     const that = this;
-
                     function b() {
                       that.message = "";
                       that.HideModal = true;
                       that.searchWord = "";
                       that.showTableData(this.stationId, this.dqgw, 1, 1)
                     }
-
                     setTimeout(b, 5000);
                   }
                   else if (res.data.state === "-1") {
-
                     this.message = "扫码格式不正确";
                     this.HideModal = false;
                     const that = this;
-
                     function a() {
                       that.message = "";
                       that.HideModal = true;
                       that.searchWord = "";
                     }
-
                     setTimeout(a, 5000);
                   }
                 })
                 .catch((err) => {
                   console.log(err)
                 })
-
             }
             else {
               axios.post(" " + url + "/shengchan/getShaomaData",
@@ -2029,7 +1953,7 @@
                         params: {
                           pici: res.data.data.pici,
                           fuhao: res.data.data.fuhao,
-                          yiguanno: res.data.data.yiguanhao,
+                          yiguanno: res.data.data.yiguanno,
                           codeno: res.data.data.codeno
                         }
                       })
@@ -2064,23 +1988,18 @@
             this.message = "扫不到管子信息";
             this.HideModal = false;
             const that = this;
-
             function a() {
               that.message = "";
               that.HideModal = true;
             }
-
             setTimeout(a, 2000);
-
           }
         }
         else {
           //IE取消冒泡事件
           window.event.cancelBubble = true;
-
         }
       },
-
       //在工位表里报完工
       gwbDoWorkEnd() {
         axios.post(" " + url + "/shengchan/updateStatusBatch",
@@ -2107,7 +2026,6 @@
             console.log(err)
           })
       },
-
       //加工完成
       workEnd() {
         if (this.listData.length) {
@@ -2117,16 +2035,13 @@
           this.message = "请勾选完成的管子";
           this.HideModal = false;
           const that = this;
-
           function a() {
             that.message = "";
             that.HideModal = true;
           }
-
           setTimeout(a, 2000);
         }
       },
-
       //进行加工完成
       doWorkEnd() {
         if (this.dqgw === "切断") {
@@ -2143,7 +2058,6 @@
                 this.message = "已经完成";
                 this.HideModal = false;
                 const that = this;
-
                 function a() {
                   that.message = "";
                   that.HideModal = true;
@@ -2161,7 +2075,6 @@
                       that.tableData = arr;
                     }));
                 }
-
                 setTimeout(a, 2000);
               }
             })
@@ -2183,13 +2096,11 @@
                 this.message = "已经完成";
                 this.HideModal = false;
                 const that = this;
-
                 function a() {
                   that.message = "";
                   that.HideModal = true;
                   that.showTableData(that.stationId, that.dqgw, 1, that.gwType)
                 }
-
                 setTimeout(a, 2000);
               }
             })
@@ -2198,35 +2109,22 @@
             })
         }
       },
-
-
       //直管物料统计
       zgMaterialStatistics() {
-
       },
-
       //短管物料统计
       dgMaterialStatistics() {
-
       },
-
       // 物料统计
       materialStatistics() {
-
       },
-
       //一拼图预览
       yptLook() {
-
       },
-
       //前往总清单
       goGeneralListOfProcessing() {
         this.$router.push("/taskList");
-
       },
-
-
       //查看一品图
       seeYiPinTu(pici, yiguanhao, code) {
         //防止冒泡
@@ -2243,19 +2141,16 @@
                       "url": this.url
                     }
                   ];
-
                   this.drawingVisible = true;
                 }
                 else {
                   this.message = "没有查到一品图";
                   this.HideModal = false;
                   const that = this;
-
                   function a() {
                     that.message = "";
                     that.HideModal = true;
                   }
-
                   setTimeout(a, 2000);
                 }
               })
@@ -2267,12 +2162,10 @@
             this.message = "信息不全无法查询";
             this.HideModal = false;
             const that = this;
-
             function b() {
               that.message = "";
               that.HideModal = true;
             }
-
             setTimeout(b, 2000);
           }
         }
@@ -2290,12 +2183,10 @@
                   this.message = "没有查到一品图";
                   this.HideModal = false;
                   const that = this;
-
                   function a() {
                     that.message = "";
                     that.HideModal = true;
                   }
-
                   setTimeout(a, 2000);
                 }
               })
@@ -2307,18 +2198,14 @@
             this.message = "信息不全无法查询";
             this.HideModal = false;
             const that = this;
-
             function c() {
               that.message = "";
               that.HideModal = true;
             }
-
             setTimeout(c, 2000);
           }
         }
       },
-
-
       //查看工位表
       seeStationExcel(id, pici, fileid) {
         this.id = id;
@@ -2338,12 +2225,10 @@
                   this.message = "没有查到该工位表";
                   this.HideModal = false;
                   const that = this;
-
                   function a() {
                     that.message = "";
                     that.HideModal = true;
                   }
-
                   setTimeout(a, 2000);
                 }
               })
@@ -2363,12 +2248,10 @@
                     this.message = "没有查到该工位表";
                     this.HideModal = false;
                     const that = this;
-
                     function a() {
                       that.message = "";
                       that.HideModal = true;
                     }
-
                     setTimeout(a, 2000);
                   }
                 })
@@ -2387,12 +2270,10 @@
                     this.message = "没有查到该工位表";
                     this.HideModal = false;
                     const that = this;
-
                     function a() {
                       that.message = "";
                       that.HideModal = true;
                     }
-
                     setTimeout(a, 2000);
                   }
                 })
@@ -2411,12 +2292,10 @@
                     this.message = "没有查到该工位表";
                     this.HideModal = false;
                     const that = this;
-
                     function a() {
                       that.message = "";
                       that.HideModal = true;
                     }
-
                     setTimeout(a, 2000);
                   }
                 })
@@ -2435,12 +2314,10 @@
                     this.message = "没有查到该工位表";
                     this.HideModal = false;
                     const that = this;
-
                     function a() {
                       that.message = "";
                       that.HideModal = true;
                     }
-
                     setTimeout(a, 2000);
                   }
                 })
@@ -2459,12 +2336,10 @@
                     this.message = "没有查到该工位表";
                     this.HideModal = false;
                     const that = this;
-
                     function a() {
                       that.message = "";
                       that.HideModal = true;
                     }
-
                     setTimeout(a, 2000);
                   }
                 })
@@ -2484,12 +2359,10 @@
                   this.message = "没有查到切断表";
                   this.HideModal = false;
                   const that = this;
-
                   function a() {
                     that.message = "";
                     that.HideModal = true;
                   }
-
                   setTimeout(a, 2000);
                 }
               })
@@ -2497,16 +2370,12 @@
                 console.log(err)
               })
           }
-
         }
         else {
           //IE取消冒泡事件
           window.event.cancelBubble = true;
-
         }
       },
-
-
       //显示条件筛选
       showScreening() {
         this.screenVisible = true;
@@ -2554,7 +2423,6 @@
                 this.n = 1;
               }
             }
-
             let that = this;
             axios.all([
               axios.post(" " + url + "/sys/getPiciList"),
@@ -2579,10 +2447,8 @@
           })
           .catch((err) => {
             console.log(err)
-
           });
       },
-
       //进行筛选查询
       validationScreening() {
         if (this.dqgw === "切断") {
@@ -2646,11 +2512,7 @@
               console.log(err)
             })
         }
-
-
       },
-
-
       //清空筛选条件
       emptyAllValue() {
         this.batch = "";
@@ -2667,8 +2529,6 @@
         this.bihou = "";
         this.qianzuoyezhe = "";
       },
-
-
       //点击一贯号,Code号，前往前往任务页面
       goToCurrentTask(id, jiagongxilie, koujing, shipcode, yiguanno, codeno, pno) {
         //防止冒泡
@@ -2713,7 +2573,6 @@
           }
         }
       },
-
       //弯头焊进行详情页面
       wthGoToCurrentTask(pici, fuhao, yiguanno, codeno) {
         if (pici && fuhao && yiguanno && codeno) {
@@ -2731,8 +2590,6 @@
           this.$message.warning(`信息不全，无法进行加工详情`);
         }
       },
-
-
       //特定工位进行确认后要执行的方法
       tdGoToCurrentTask() {
         if (this.id) {
@@ -2749,9 +2606,7 @@
               console.log(err)
             })
         }
-
       },
-
       //小组立显示左边
       showLeft() {
         if (this.left !== true) {
@@ -2762,7 +2617,6 @@
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
-
       //小组立显示右边
       showRight() {
         if (this.right !== true) {
@@ -2773,7 +2627,6 @@
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
-
       //支管显示正枝
       zgShowLeft() {
         if (this.left !== true) {
@@ -2786,9 +2639,7 @@
           this.gwType = "1";
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
-
       },
-
       //支管显示斜枝
       zgShowLeft2() {
         if (this.left2 !== true) {
@@ -2801,9 +2652,7 @@
           this.gwType = "2";
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
-
       },
-
       //支管显示偏心枝
       zgShowCenter() {
         if (this.zgCenter !== true) {
@@ -2816,9 +2665,7 @@
           this.gwType = "3";
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
-
       },
-
       //支管显示母管开孔
       zgShowRight() {
         if (this.right !== true) {
@@ -2831,9 +2678,7 @@
           this.gwType = "4";
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
-
       },
-
       //支管显示支架管
       zgShowRight2() {
         if (this.right2 !== true) {
@@ -2846,10 +2691,7 @@
           this.gwType = "5";
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
-
       },
-
-
       //移动显示搜索框
       showSearch() {
         let search = this.$refs.contentTop;
@@ -2866,7 +2708,6 @@
           }
         })
       },
-
       //搜索框变色
       bianse() {
         let search = this.$refs.contentTop;
@@ -2886,9 +2727,7 @@
             }
           }
         })
-
       },
-
       //显示向上按钮
       showUp() {
         let height = this.$refs.contentTop.offsetHeight;
@@ -2902,22 +2741,17 @@
             upTop.style.display = "none"
           }
         });
-
       },
-
       //点击向上
       upToTop() {
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 0;
       },
-
-
     }
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
   @import "../../assets/less/base";
-
   .ProductionExecutionDiv {
     margin-bottom: 80px;
     .contentTop {
@@ -2936,7 +2770,6 @@
           display: flex;
           align-items: center;
           justify-content: center;
-
         }
         .listSearchBtn {
           flex: 1;
@@ -2956,7 +2789,6 @@
             border-radius: 10px;
           }
         }
-
       }
     }
     .xzlDiv {
@@ -3090,7 +2922,6 @@
             background-color: @color-white;
             border: none;
           }
-
         }
         .change-right2 {
           flex: 1;
@@ -3108,12 +2939,10 @@
             background-color: @color-white;
             border: none;
           }
-
         }
       }
     }
   }
-
   .closeBtn {
     width: 100%;
     height: 70px;
@@ -3133,7 +2962,6 @@
       height: 50px;
     }
   }
-
   .upTop {
     width: 50px;
     height: 50px;
@@ -3151,9 +2979,7 @@
     i {
       font-size: @font-size-large-xxx;
     }
-
   }
-
   .container {
     .containerDiv {
       width: 95%;
@@ -3167,7 +2993,6 @@
           width: 100%;
           font-size: 12px;
         }
-
       }
     }
     .containerBtn {
@@ -3187,9 +3012,7 @@
         margin-left: 5%;
       }
     }
-
   }
-
   .tdContainer {
     .tdContainerDiv {
       width: 95%;
@@ -3214,14 +3037,12 @@
       }
     }
   }
-
   .loading-container {
     position: absolute;
     width: 100%;
     top: 50%;
     transform: translateY(-50%);
   }
-
   .yptModal{
     width: 100%;
     height: 100%;
@@ -3231,7 +3052,6 @@
     left: 0;
     z-index: 100;
   }
-
   @media only screen and (max-width: 900px) {
     .container {
       .containerDiv {
@@ -3244,10 +3064,8 @@
           width: 35%;
         }
       }
-
     }
   }
-
   @media only screen and (max-width: 400px) {
     .container {
       .containerDiv {
@@ -3262,10 +3080,8 @@
           width: 50%;
         }
       }
-
     }
   }
-
   @media only screen and (max-width: 800px) {
     .ProductionExecutionDiv {
       .listSearch {
@@ -3276,9 +3092,7 @@
             font-size: @font-size-small-s;
           }
         }
-
       }
     }
   }
-
 </style>
