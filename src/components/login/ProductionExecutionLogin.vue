@@ -200,7 +200,7 @@
       //监控回车按钮事件
       nextSubmit(e) {
         if (e.keyCode == 13) {
-          this.$nextTick(function(){
+          this.$nextTick(function () {
             this.$refs['Input2'].focus();
             this.$refs['Input3'].focus();
           })
@@ -211,7 +211,7 @@
       getState() {
         let changeLeft = this.$refs.changeLeft;
         changeLeft.style.borderTopRightRadius = "20px";
-        this.$nextTick(function(){
+        this.$nextTick(function () {
           this.$refs['rightInput'].focus();
         })
       },
@@ -290,8 +290,8 @@
       },
 
 
-      enterSubmit(e){
-        if(e.keyCode == 13){
+      enterSubmit(e) {
+        if (e.keyCode == 13) {
           this.passwordErrText = "";
           this.passwordState = true;
           if (this.userNameState === true && this.passwordState === true && this.selectWorkstationState === true) {
@@ -862,11 +862,10 @@
       },
 
 
-
       showLeft() {
         this.left = true;
         this.right = false;
-        this.$nextTick(function(){
+        this.$nextTick(function () {
           this.$refs['leftInput'].focus();
         })
 
@@ -876,7 +875,7 @@
         this.right = true;
         let changeLeft = this.$refs.changeLeft;
         changeLeft.style.borderTopRightRadius = "20px";
-        this.$nextTick(function(){
+        this.$nextTick(function () {
           this.$refs['rightInput'].focus();
         })
       }
