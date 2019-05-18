@@ -760,7 +760,7 @@
           this.gwmErrText = "";
           if (this.grmState === true && this.gwmState === true) {
             let smCode = this.grm + this.gwm;
-            if (smCode.indexOf("ghm") != -1 && smCode.indexOf("ghm") != -1) {
+            if (smCode.indexOf("ghm") != -1 && smCode.indexOf("gwm") != -1) {
               axios.post(" " + url + "/api/MUserLoginNew", {
                 "shaomacode": smCode
               })
