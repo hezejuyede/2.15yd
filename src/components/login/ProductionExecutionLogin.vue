@@ -141,8 +141,8 @@
         needKnown: "",
         contentText: "",
 
-        left: false,
-        right: true,
+        left: true,
+        right: false,
 
 
         grm: "",
@@ -217,6 +217,7 @@
       },
 
       grmBlur(grm) {
+        this.handleFullScreen();
         if (grm.length === 0) {
           this.grmErrText = "工牌码扫描不能为空";
         }
