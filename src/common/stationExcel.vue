@@ -696,19 +696,19 @@
           </el-table-column>
           <el-table-column
             align="center"
-            prop="jiagongxilie"
+            prop="jiagongxiliev"
             label="加工系列"
             width="50">
           </el-table-column>
           <el-table-column
             align="center"
-            prop="yiguanhao"
+            prop="yiguanhaov"
             label="一贯番号"
             width="57">
           </el-table-column>
           <el-table-column
             align="center"
-            prop="daihao"
+            prop="codenov"
             label="代号"
             width="50">
           </el-table-column>
