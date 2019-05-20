@@ -1439,9 +1439,11 @@
 
     <!--查看工位表 -->
     <el-dialog title="工位表查看" :visible.sync="excelVisible" :fullscreen="true" :center="true">
-      <div class="closeBtn" >
+      <div class="closeBtn">
         <el-button type="danger" @click="excelVisible = false">关闭窗口</el-button>
-        <el-button type="primary" @click="gwbDoWorkEnd" v-if="this.listType !=='7' && this.listType !=='8' && this.listType !=='11'">报完工</el-button>
+        <el-button type="primary" @click="gwbDoWorkEnd"
+                   v-if="this.listType !=='7' && this.listType !=='8' && this.listType !=='11'">报完工
+        </el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
         <StationExcel
@@ -1520,6 +1522,7 @@
   import Loading from '../../common/loading'
   import Modal from '../../common/modal'
   import StationExcel from '../../common/stationExcel'
+
   export default {
     name: 'ProductionExecution',
     data() {
@@ -1642,7 +1645,7 @@
         return this.tableData
       }
     },
-    activated(){
+    activated() {
       this.$router.push("/")
     },
     created() {
@@ -1903,23 +1906,27 @@
                     this.message = "扫码成功";
                     this.HideModal = false;
                     const that = this;
+
                     function b() {
                       that.message = "";
                       that.HideModal = true;
                       that.searchWord = "";
                       that.showTableData(this.stationId, this.dqgw, 1, 1)
                     }
+
                     setTimeout(b, 5000);
                   }
                   else if (res.data.state === "-1") {
                     this.message = "扫码格式不正确";
                     this.HideModal = false;
                     const that = this;
+
                     function a() {
                       that.message = "";
                       that.HideModal = true;
                       that.searchWord = "";
                     }
+
                     setTimeout(a, 5000);
                   }
                 })
@@ -1988,10 +1995,12 @@
             this.message = "扫不到管子信息";
             this.HideModal = false;
             const that = this;
+
             function a() {
               that.message = "";
               that.HideModal = true;
             }
+
             setTimeout(a, 2000);
           }
         }
@@ -2035,10 +2044,12 @@
           this.message = "请勾选完成的管子";
           this.HideModal = false;
           const that = this;
+
           function a() {
             that.message = "";
             that.HideModal = true;
           }
+
           setTimeout(a, 2000);
         }
       },
@@ -2058,6 +2069,7 @@
                 this.message = "已经完成";
                 this.HideModal = false;
                 const that = this;
+
                 function a() {
                   that.message = "";
                   that.HideModal = true;
@@ -2075,6 +2087,7 @@
                       that.tableData = arr;
                     }));
                 }
+
                 setTimeout(a, 2000);
               }
             })
@@ -2096,11 +2109,13 @@
                 this.message = "已经完成";
                 this.HideModal = false;
                 const that = this;
+
                 function a() {
                   that.message = "";
                   that.HideModal = true;
                   that.showTableData(that.stationId, that.dqgw, 1, that.gwType)
                 }
+
                 setTimeout(a, 2000);
               }
             })
@@ -2147,10 +2162,12 @@
                   this.message = "没有查到一品图";
                   this.HideModal = false;
                   const that = this;
+
                   function a() {
                     that.message = "";
                     that.HideModal = true;
                   }
+
                   setTimeout(a, 2000);
                 }
               })
@@ -2162,10 +2179,12 @@
             this.message = "信息不全无法查询";
             this.HideModal = false;
             const that = this;
+
             function b() {
               that.message = "";
               that.HideModal = true;
             }
+
             setTimeout(b, 2000);
           }
         }
@@ -2183,10 +2202,12 @@
                   this.message = "没有查到一品图";
                   this.HideModal = false;
                   const that = this;
+
                   function a() {
                     that.message = "";
                     that.HideModal = true;
                   }
+
                   setTimeout(a, 2000);
                 }
               })
@@ -2198,10 +2219,12 @@
             this.message = "信息不全无法查询";
             this.HideModal = false;
             const that = this;
+
             function c() {
               that.message = "";
               that.HideModal = true;
             }
+
             setTimeout(c, 2000);
           }
         }
@@ -2225,10 +2248,12 @@
                   this.message = "没有查到该工位表";
                   this.HideModal = false;
                   const that = this;
+
                   function a() {
                     that.message = "";
                     that.HideModal = true;
                   }
+
                   setTimeout(a, 2000);
                 }
               })
@@ -2248,10 +2273,12 @@
                     this.message = "没有查到该工位表";
                     this.HideModal = false;
                     const that = this;
+
                     function a() {
                       that.message = "";
                       that.HideModal = true;
                     }
+
                     setTimeout(a, 2000);
                   }
                 })
@@ -2270,10 +2297,12 @@
                     this.message = "没有查到该工位表";
                     this.HideModal = false;
                     const that = this;
+
                     function a() {
                       that.message = "";
                       that.HideModal = true;
                     }
+
                     setTimeout(a, 2000);
                   }
                 })
@@ -2292,10 +2321,12 @@
                     this.message = "没有查到该工位表";
                     this.HideModal = false;
                     const that = this;
+
                     function a() {
                       that.message = "";
                       that.HideModal = true;
                     }
+
                     setTimeout(a, 2000);
                   }
                 })
@@ -2314,10 +2345,12 @@
                     this.message = "没有查到该工位表";
                     this.HideModal = false;
                     const that = this;
+
                     function a() {
                       that.message = "";
                       that.HideModal = true;
                     }
+
                     setTimeout(a, 2000);
                   }
                 })
@@ -2336,10 +2369,12 @@
                     this.message = "没有查到该工位表";
                     this.HideModal = false;
                     const that = this;
+
                     function a() {
                       that.message = "";
                       that.HideModal = true;
                     }
+
                     setTimeout(a, 2000);
                   }
                 })
@@ -2359,10 +2394,12 @@
                   this.message = "没有查到切断表";
                   this.HideModal = false;
                   const that = this;
+
                   function a() {
                     that.message = "";
                     that.HideModal = true;
                   }
+
                   setTimeout(a, 2000);
                 }
               })
@@ -2752,6 +2789,7 @@
 </script>
 <style scoped lang="less" rel="stylesheet/less">
   @import "../../assets/less/base";
+
   .ProductionExecutionDiv {
     margin-bottom: 80px;
     .contentTop {
@@ -2943,6 +2981,7 @@
       }
     }
   }
+
   .closeBtn {
     width: 100%;
     height: 70px;
@@ -2962,6 +3001,7 @@
       height: 50px;
     }
   }
+
   .upTop {
     width: 50px;
     height: 50px;
@@ -2980,6 +3020,7 @@
       font-size: @font-size-large-xxx;
     }
   }
+
   .container {
     .containerDiv {
       width: 95%;
@@ -3013,6 +3054,7 @@
       }
     }
   }
+
   .tdContainer {
     .tdContainerDiv {
       width: 95%;
@@ -3037,13 +3079,15 @@
       }
     }
   }
+
   .loading-container {
     position: absolute;
     width: 100%;
     top: 50%;
     transform: translateY(-50%);
   }
-  .yptModal{
+
+  .yptModal {
     width: 100%;
     height: 100%;
     position: fixed;
@@ -3052,6 +3096,7 @@
     left: 0;
     z-index: 100;
   }
+
   @media only screen and (max-width: 900px) {
     .container {
       .containerDiv {
@@ -3066,6 +3111,7 @@
       }
     }
   }
+
   @media only screen and (max-width: 400px) {
     .container {
       .containerDiv {
@@ -3082,6 +3128,7 @@
       }
     }
   }
+
   @media only screen and (max-width: 800px) {
     .ProductionExecutionDiv {
       .listSearch {
