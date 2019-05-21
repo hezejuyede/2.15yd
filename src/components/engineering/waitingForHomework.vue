@@ -5,7 +5,7 @@
       <!-- 公共头部-->
       <div class="contentTop" ref="contentTop">
         <div class="listSearch"
-             v-if="this.listType ==1 || this.listType ==5 || this.listType ==4 || this.listType ==3">
+             v-if="this.listType ==1 || this.listType ==5 || this.listType ==4 || this.listType ==3 ||this.listType ==11">
           <div class="listSearchInput">
             <el-input
               v-model="searchWord"
@@ -21,21 +21,6 @@
             <button @click="zgMaterialStatistics">直管物料统计</button>
             <button @click="goGeneralListOfProcessing">总清单</button>
             <button @click="workEnd">报完工</button>
-          </div>
-        </div>
-        <div class="listSearch" v-if="this.listType ==11 ">
-          <div class="listSearchInput">
-            <el-input v-model="searchWord"
-                      ref="siteInput"
-                      placeholder="检索管子或扫码或手工输入"
-                      @blur="searchData(searchWord)"
-                      @input="searchEmptyData(searchWord)"
-                      @keyup.enter.native="goToPipePage(searchWord)"></el-input>
-          </div>
-          <div class="listSearchBtn">
-            <button @click="showScreening">条件筛选</button>
-            <button @click="zgMaterialStatistics">直管物料统计</button>
-            <button @click="goGeneralListOfProcessing">总清单</button>
           </div>
         </div>
         <div class="listSearch" v-if="this.listType ==6 ">
@@ -382,12 +367,18 @@
           :data="tables"
           height="500"
           border
+          @select="selectListWTH"
+          @select-all="selectAllWTH"
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           :row-class-name="tableRowClassName"
           @row-click="doSelect"
           @selection-change="selectChange"
           ref="moviesTable"
           style="width: 99%;margin: 0 auto">
+          <el-table-column
+            type="selection"
+            width="30">
+          </el-table-column>
           <el-table-column type="expand">
             <template slot-scope="scope">
               <el-table class="tb-edit"
@@ -1734,16 +1725,19 @@
           this.setInputFocus();
         }
       },
+
       //自动聚焦输入框
       setInputFocus() {
         this.$nextTick(() => {
           this.$refs['siteInput'].focus();
         })
       },
+
       //转圈延迟一秒执行
       getLoading() {
         this.img = ["1"]
       },
+
       //切断工位每隔5分钟刷新一下数据
       qdWorkStationGetDataList(workStation) {
         if (workStation === 1) {
@@ -1763,6 +1757,7 @@
             }));
         }
       },
+
       //公共方法显示根据不同工位显示不同的表头和表数据
       showTableData(id, name, wz, type) {
         let that = this;
@@ -1775,6 +1770,7 @@
             that.tableData = table.data;
           }));
       },
+
       //失去焦点后进行智能检索
       searchData(search) {
         if (this.dqgw === "切断") {
@@ -1798,6 +1794,7 @@
           }
         }
       },
+
       //输入框为空值时需要执行的数据
       searchEmptyData(search) {
         if (this.dqgw === "切断") {
@@ -1813,6 +1810,7 @@
           }
         }
       },
+
       //每次往表格数据里添加数据
       addData(index) {
         let arr = [];
@@ -1823,6 +1821,7 @@
         }
         this.tableData = arr;
       },
+
       //每次到底部给计算出需要下次添加的数据
       tableLoadingMore() {
         if (this.dqgw === "切断" && this.znSearch === true && this.tableData.length < this.arrAll.length) {
@@ -1831,6 +1830,8 @@
           this.addData(index)
         }
       },
+
+
       //列表单独选择
       selectList(val) {
         if (val.length) {
@@ -1845,6 +1846,7 @@
           this.listData = [];
         }
       },
+
       //列表全部选择
       selectAll(val) {
         if (val.length) {
@@ -1859,6 +1861,39 @@
           this.listData = [];
         }
       },
+
+      //弯头焊单选
+      selectListWTH(val){
+        if (val.length) {
+          let data = [];
+          for (let i = 0; i < val.length; i++) {
+            let a = {"pici":val[i].pici,"fuhao":val[i].fuhao,"yiguanno":val[i].yiguanno,"codeno":val[i].codeno,"zuoyezhe":this.zuoyezhe};
+            data.push(a)
+          }
+          this.listData = data;
+        }
+        else {
+          this.listData = [];
+        }
+
+      },
+
+      //弯头焊全选
+      selectAllWTH(val){
+        if (val.length) {
+          let data = [];
+          for (let i = 0; i < val.length; i++) {
+            let a = {"pici":val[i].pici,"fuhao":val[i].fuhao,"yiguanno":val[i].yiguanno,"codeno":val[i].codeno,"zuoyezhe":this.zuoyezhe};
+            data.push(a)
+          }
+          this.listData = data;
+          console.log( this.listData)
+        }
+        else {
+          this.listData = [];
+        }
+      },
+
       //点击每行进行select的选择
       doSelect(val, column, event) {
         this.$refs.moviesTable.toggleRowSelection(val);
@@ -2009,6 +2044,7 @@
           window.event.cancelBubble = true;
         }
       },
+
       //在工位表里报完工
       gwbDoWorkEnd() {
         axios.post(" " + url + "/shengchan/updateStatusBatch",
@@ -2035,6 +2071,7 @@
             console.log(err)
           })
       },
+
       //加工完成
       workEnd() {
         if (this.listData.length) {
@@ -2053,6 +2090,7 @@
           setTimeout(a, 2000);
         }
       },
+
       //进行加工完成
       doWorkEnd() {
         if (this.dqgw === "切断") {
@@ -2095,6 +2133,30 @@
               console.log(err)
             })
         }
+        if (this.dqgw === "弯头焊") {
+          axios.post(" " + url + "/shengchan/updateStatusWthBatch",
+            {
+              "list":[{"wthList": this.listData}]
+            })
+            .then((res) => {
+              if (res.data === "1") {
+                this.endVisible = false;
+                this.message = "已经完成";
+                this.HideModal = false;
+                const that = this;
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                  that.listData=[];
+                  that.showTableData(that.stationId, that.dqgw, 1, that.gwType)
+                }
+                setTimeout(a, 2000);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
         else {
           axios.post(" " + url + "/shengchan/updateStatusBatch",
             {
@@ -2124,22 +2186,28 @@
             })
         }
       },
+
       //直管物料统计
       zgMaterialStatistics() {
       },
+
       //短管物料统计
       dgMaterialStatistics() {
       },
+
       // 物料统计
       materialStatistics() {
       },
+
       //一拼图预览
       yptLook() {
       },
+
       //前往总清单
       goGeneralListOfProcessing() {
         this.$router.push("/taskList");
       },
+
       //查看一品图
       seeYiPinTu(pici, yiguanhao, code) {
         //防止冒泡
@@ -2229,6 +2297,7 @@
           }
         }
       },
+
       //查看工位表
       seeStationExcel(id, pici, fileid) {
         this.id = id;
@@ -2413,6 +2482,7 @@
           window.event.cancelBubble = true;
         }
       },
+
       //显示条件筛选
       showScreening() {
         this.screenVisible = true;
@@ -2486,6 +2556,7 @@
             console.log(err)
           });
       },
+
       //进行筛选查询
       validationScreening() {
         if (this.dqgw === "切断") {
@@ -2550,6 +2621,7 @@
             })
         }
       },
+
       //清空筛选条件
       emptyAllValue() {
         this.batch = "";
@@ -2566,6 +2638,7 @@
         this.bihou = "";
         this.qianzuoyezhe = "";
       },
+
       //点击一贯号,Code号，前往前往任务页面
       goToCurrentTask(id, jiagongxilie, koujing, shipcode, yiguanno, codeno, pno) {
         //防止冒泡
@@ -2610,6 +2683,7 @@
           }
         }
       },
+
       //弯头焊进行详情页面
       wthGoToCurrentTask(pici, fuhao, yiguanno, codeno) {
         if (pici && fuhao && yiguanno && codeno) {
@@ -2627,6 +2701,7 @@
           this.$message.warning(`信息不全，无法进行加工详情`);
         }
       },
+
       //特定工位进行确认后要执行的方法
       tdGoToCurrentTask() {
         if (this.id) {
@@ -2644,6 +2719,7 @@
             })
         }
       },
+
       //小组立显示左边
       showLeft() {
         if (this.left !== true) {
@@ -2654,6 +2730,7 @@
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
+
       //小组立显示右边
       showRight() {
         if (this.right !== true) {
@@ -2664,6 +2741,7 @@
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
+
       //支管显示正枝
       zgShowLeft() {
         if (this.left !== true) {
@@ -2677,6 +2755,7 @@
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
+
       //支管显示斜枝
       zgShowLeft2() {
         if (this.left2 !== true) {
@@ -2690,6 +2769,7 @@
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
+
       //支管显示偏心枝
       zgShowCenter() {
         if (this.zgCenter !== true) {
@@ -2703,6 +2783,7 @@
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
+
       //支管显示母管开孔
       zgShowRight() {
         if (this.right !== true) {
@@ -2716,6 +2797,7 @@
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
+
       //支管显示支架管
       zgShowRight2() {
         if (this.right2 !== true) {
@@ -2729,6 +2811,7 @@
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
+
       //移动显示搜索框
       showSearch() {
         let search = this.$refs.contentTop;
@@ -2745,6 +2828,7 @@
           }
         })
       },
+
       //搜索框变色
       bianse() {
         let search = this.$refs.contentTop;
@@ -2765,6 +2849,7 @@
           }
         })
       },
+
       //显示向上按钮
       showUp() {
         let height = this.$refs.contentTop.offsetHeight;
@@ -2779,6 +2864,7 @@
           }
         });
       },
+
       //点击向上
       upToTop() {
         document.body.scrollTop = 0;
