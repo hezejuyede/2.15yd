@@ -3181,6 +3181,7 @@
     top: 0;
     left: 0;
     z-index: 100;
+    overflow: auto;
   }
 
   @media only screen and (max-width: 900px) {
