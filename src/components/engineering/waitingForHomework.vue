@@ -2134,10 +2134,7 @@
             })
         }
         if (this.dqgw === "弯头焊") {
-          axios.post(" " + url + "/shengchan/updateStatusWthBatch",
-            {
-              "list":[{"wthList": this.listData}]
-            })
+          axios.post(" " + url + "/shengchan/updateStatusWthBatch", {"list":this.listData})
             .then((res) => {
               if (res.data === "1") {
                 this.endVisible = false;
