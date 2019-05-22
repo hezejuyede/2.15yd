@@ -721,19 +721,19 @@
             </el-table-column>
             <el-table-column
               align="center"
-              prop="guige"
+              prop="guigev"
               label="规格"
               width="53">
             </el-table-column>
             <el-table-column
               align="center"
-              prop="hujing"
+              prop="hujingv"
               label="呼径"
               width="51">
             </el-table-column>
             <el-table-column
               align="center"
-              prop="houdu"
+              prop="houduv"
               label="厚度"
               width="51">
             </el-table-column>
