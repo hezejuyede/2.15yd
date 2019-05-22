@@ -1930,7 +1930,7 @@
           //W3C取消冒泡事件
           event.stopPropagation();
           if (searchWord) {
-            if (this.dqgw === "直管焊" || this.dqgw === "短管焊" || this.dqgw === "切断") {
+            if (this.dqgw === "直管焊" || this.dqgw === "短管焊" || this.dqgw === "切断" || this.dqgw === "弯头焊") {
               axios.post(" " + url + "/shengchan/getShaomaData",
                 {
                   "stationid": this.stationId,
@@ -1988,17 +1988,6 @@
                         "chuanhao": res.data.data.chuanhao,
                         "pno": res.data.data.pno
                       }];
-                    }
-                    else if (this.dqgw === "弯头焊") {
-                      this.$router.push({
-                        name: 'CurrentTask',
-                        params: {
-                          pici: res.data.data.pici,
-                          fuhao: res.data.data.fuhao,
-                          yiguanno: res.data.data.yiguanno,
-                          codeno: res.data.data.codeno
-                        }
-                      })
                     }
                     else if (this.dqgw === "枝管切断") {
                       let id = res.data.data.id;
