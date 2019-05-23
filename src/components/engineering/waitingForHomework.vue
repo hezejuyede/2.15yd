@@ -1946,7 +1946,7 @@
                       that.message = "";
                       that.HideModal = true;
                       that.searchWord = "";
-                      that.showTableData(this.stationId, this.dqgw, 1, 1)
+                      that.showTableData(that.stationId, that.dqgw, 1, 1)
                     }
 
                     setTimeout(b, 5000);
