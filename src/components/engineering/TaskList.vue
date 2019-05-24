@@ -43,7 +43,7 @@
                   :data="tables"
                   height="500"
                   border
-                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'15px'}"
+                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'14px'}"
                   :row-class-name="tableRowClassName"
                   :cell-style="{fontSize:'12px'}"
                   ref="moviesTable"
@@ -117,7 +117,7 @@
                   :data="tables"
                   height="500"
                   border
-                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'15px'}"
+                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'14px'}"
                   :row-class-name="tableRowClassName"
                   :cell-style="{fontSize:'12px'}"
                   ref="moviesTable"
