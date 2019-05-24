@@ -184,10 +184,7 @@
           @row-click="doSelect"
           @selection-change="selectChange"
           ref="moviesTable"
-          :cell-style="{
-             border: '1px solid #303133',
-             fontSize:'12px'
-            }"
+          :cell-style="{fontSize:'12px'}"
           style="width: 99%;margin: 0 auto">
           <el-table-column
             type="selection"
