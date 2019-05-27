@@ -38,7 +38,7 @@
       bottom: 0;
       right: 0;
       color: @color-white;
-      font-size: 20px;
+      font-size: 16px;
       text-align: center;
       line-height: 100px;
       border-radius: 10%;

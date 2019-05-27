@@ -1939,7 +1939,7 @@
                 })
                 .then((res) => {
                   if (res.data.state === "1") {
-                    this.message = "扫码成功";
+                    this.message = res.data.message;
                     this.HideModal = false;
                     const that = this;
 
@@ -1953,10 +1953,9 @@
                     setTimeout(b, 5000);
                   }
                   else if (res.data.state === "-1") {
-                    this.message = "扫码格式不正确";
+                    this.message = res.data.message;
                     this.HideModal = false;
                     const that = this;
-
                     function a() {
                       that.message = "";
                       that.HideModal = true;
