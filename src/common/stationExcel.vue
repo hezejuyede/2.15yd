@@ -671,6 +671,7 @@
         <el-table
           :data="excelData"
           height="640"
+          ref="Table"
           :header-cell-style="{
             background:'#ffffff',
             border: '1px solid #303133',
@@ -681,6 +682,7 @@
              fontSize:'10px'
             }"
           :row-class-name="tableRowClassName"
+          @selection-change="selectChange"
           @select="selectList"
           @select-all="selectAll"
           style="width: 100%;border: 1px solid #303133">
@@ -907,10 +909,15 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
+  import url from '../assets/js/URL'
   export default {
     name: 'modal',
     data() {
       return {
+        bsID:"",
+        rowId:"",
+        selectState:false
       }
     },
     created() {
@@ -939,6 +946,9 @@
             return 'green-row';
           }
         }
+        else if (row.id === this.bsID) {
+          return 'xzl-row';
+        }
         else {
           if (row.id === this.gzId) {
             return 'green-row';
@@ -946,13 +956,56 @@
         }
       },
 
+      selectChange (val) {
+        if (val.length > 1) {
+          this.$refs.Table.clearSelection();
+          this.$refs.Table.toggleRowSelection(val.pop());
+          console.log(val[0].id)
+        }
+        else {
+
+        }
+      },
+
       //小组立单选
-      selectList(){
-        alert("hahahah")
+      selectList(val, row) {
+        if (row.id == this.rowId) {
+          this.rowId = "";
+          axios.post(" " + url + "/importother/markXiaozuliExcel", {"id": row.id, "status":0})
+            .then((res) => {
+              if (res.data.state === "1") {
+                this.bsID=row.id;
+                this.tableRowClassName({row})
+              }
+              else if (res.data.state === "-1") {
+                this.$message.warning(res.data.message);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+        else {
+          this.rowId = row.id;
+           axios.post(" " + url + "/importother/markXiaozuliExcel", {"id": row.id, "status": 1})
+            .then((res) => {
+              if (res.data.state === "1") {
+                this.bsID=row.id;
+                this.tableRowClassName({row})
+              }
+              else if (res.data.state === "-1") {
+                this.$message.warning(res.data.message);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+
       },
       //小组立全选
-      selectAll(){
-        alert("all")
+      selectAll(val) {
+        console.log(val)
       },
 
 
