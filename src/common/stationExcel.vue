@@ -678,16 +678,16 @@
             color:'rgba(0, 0, 0, 1)'}"
           :cell-style="{
              border: '1px solid #303133',
-             fontSize:'11px'
+             fontSize:'10px'
             }"
           :row-class-name="tableRowClassName"
+          @select="selectList"
+          @select-all="selectAll"
           style="width: 100%;border: 1px solid #303133">
-          <!--  <el-table-column
-              align="center"
-              prop="indexno"
-              label="序号"
-              width="50">
-            </el-table-column>-->
+          <el-table-column
+            type="selection"
+            width="30">
+          </el-table-column>
           <el-table-column
             align="center"
             prop="chuanhao"
@@ -717,7 +717,7 @@
               align="center"
               prop="pno"
               label="PNo"
-              width="50">
+              width="47">
             </el-table-column>
             <el-table-column
               align="center"
@@ -738,13 +738,13 @@
               width="51">
             </el-table-column>
             <el-table-column
-              width="70"
+              width="59"
               prop="qieduanchang"
               align="center"
               label="切断长">
             </el-table-column>
             <el-table-column
-              width="50"
+              width="47"
               prop="danwei"
               align="center"
               label="单位">
@@ -766,7 +766,7 @@
             align="center"
             prop="lianjiexinxi"
             label="连接信息"
-            width="53">
+            width="47">
           </el-table-column>
           <el-table-column align="center" label="金物">
             <el-table-column
@@ -944,7 +944,17 @@
             return 'green-row';
           }
         }
-      }
+      },
+
+      //小组立单选
+      selectList(){
+        alert("hahahah")
+      },
+      //小组立全选
+      selectAll(){
+        alert("all")
+      },
+
 
     },
     props: ['gwType','gongHao', 'isHideStationExcel','excelData','gzId']
