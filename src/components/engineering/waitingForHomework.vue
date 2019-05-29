@@ -2593,9 +2593,7 @@
               "pno": this.PNO,
               "bihou": this.bihou,
               "codeN": this.codeN,
-              "zuoyezhe": this.qianzuoyezhe,
-              "zgwj":this.zgwj,
-              "mgwj":this.mgwj
+              "zuoyezhe": this.qianzuoyezhe
             })
             .then((res) => {
               this.screenVisible = false;
@@ -2629,7 +2627,9 @@
               "pno": this.PNO,
               "bihou": this.bihou,
               "codeN": this.codeN,
-              "zuoyezhe": this.qianzuoyezhe
+              "zuoyezhe": this.qianzuoyezhe,
+              "zgwj":this.zgwj,
+              "mgwj":this.mgwj
             })
             .then((res) => {
               this.screenVisible = false;
