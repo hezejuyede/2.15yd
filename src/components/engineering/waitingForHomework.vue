@@ -1430,11 +1430,10 @@
 
 
     <!--查看工位表 -->
-    <el-dialog title="工位表查看" :visible.sync="excelVisible" :fullscreen="true" :center="true">
+    <el-dialog  :visible.sync="excelVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
         <el-button type="danger" @click="excelVisible = false">关闭窗口</el-button>
-        <el-button type="primary" @click="gwbDoWorkEnd"
-                   v-if="this.listType !=='7' && this.listType !=='8' && this.listType !=='11'">报完工
+        <el-button type="primary" @click="gwbDoWorkEnd" v-if="this.listType !=='7' && this.listType !=='8' && this.listType !=='11'">报完工
         </el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
@@ -3062,7 +3061,7 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 0;
+    top: -8px;
     left: 0;
     z-index: 999;
     .el-button {

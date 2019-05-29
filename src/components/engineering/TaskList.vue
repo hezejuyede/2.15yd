@@ -970,7 +970,7 @@
     </el-dialog>
 
     <!--查看工位表 -->
-    <el-dialog title="工位查看" :visible.sync="excelVisible" :fullscreen="true" :center="true">
+    <el-dialog title="" :visible.sync="excelVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
         <el-button type="danger" @click="excelVisible = false">关闭窗口</el-button>
       </div>
@@ -2370,7 +2370,7 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 0;
+    top: -8px;
     left: 0;
     z-index: 999;
     .el-button {

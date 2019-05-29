@@ -907,17 +907,17 @@
     </div>
   </div>
 </template>
-
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import url from '../assets/js/URL'
+
   export default {
     name: 'modal',
     data() {
       return {
-        bsID:"",
-        rowId:"",
-        selectState:false
+        bsID: "",
+        rowId: "",
+        selectState: false
       }
     },
     created() {
@@ -956,7 +956,7 @@
         }
       },
 
-      selectChange (val) {
+      selectChange(val) {
         if (val.length > 1) {
           this.$refs.Table.clearSelection();
           this.$refs.Table.toggleRowSelection(val.pop());
@@ -971,10 +971,10 @@
       selectList(val, row) {
         if (row.id == this.rowId) {
           this.rowId = "";
-          axios.post(" " + url + "/importother/markXiaozuliExcel", {"id": row.id, "status":0})
+          axios.post(" " + url + "/importother/markXiaozuliExcel", {"id": row.id, "status": 0})
             .then((res) => {
               if (res.data.state === "1") {
-                this.bsID=row.id;
+                this.bsID = row.id;
                 this.tableRowClassName({row})
               }
               else if (res.data.state === "-1") {
@@ -987,10 +987,10 @@
         }
         else {
           this.rowId = row.id;
-           axios.post(" " + url + "/importother/markXiaozuliExcel", {"id": row.id, "status": 1})
+          axios.post(" " + url + "/importother/markXiaozuliExcel", {"id": row.id, "status": 1})
             .then((res) => {
               if (res.data.state === "1") {
-                this.bsID=row.id;
+                this.bsID = row.id;
                 this.tableRowClassName({row})
               }
               else if (res.data.state === "-1") {
@@ -1010,7 +1010,7 @@
 
 
     },
-    props: ['gwType','gongHao', 'isHideStationExcel','excelData','gzId']
+    props: ['gwType', 'gongHao', 'isHideStationExcel', 'excelData', 'gzId']
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">

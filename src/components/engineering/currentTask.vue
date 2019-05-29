@@ -1012,7 +1012,7 @@
     </el-dialog>
 
     <!--当前工位表查看 -->
-    <el-dialog title="当前工位表查看" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
+    <el-dialog title="" :visible.sync="qdbVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
         <el-button type="danger"  @click="qdbVisible = false">关闭窗口</el-button>
         <el-button type="primary" @click="gwbDoWorkEnd" v-if="this.gongHao !=='43/48装配' && this.gongHao !=='45/46装配' ">报完工</el-button>
@@ -2210,7 +2210,7 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 0;
+    top: -8px;
     left: 0;
     z-index: 999;
     .el-button {
