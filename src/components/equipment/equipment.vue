@@ -24,7 +24,7 @@
         <textarea placeholder="请描述设备什么故障" v-model="remarks"></textarea>
       </div>
       <div class="equipmentDivBtn">
-        <el-button type="primary" icon="search" @click="submitAbnormal">设备故障上报</el-button>
+        <el-button type="success"  @click="submitAbnormal">设备故障上报</el-button>
       </div>
     </div>
     <div class="loading-container" v-show="!img.length">
@@ -47,8 +47,14 @@
     data() {
       return {
         img: "",
+        userId:"",
         equipment:"",
-        equipmentOptions: [],
+        equipmentOptions: [
+          {"name": "设备1", "id": "1"},
+          {"name": "设备2", "id": "2"},
+          {"name": "设备3", "id": "3"},
+          {"name": "设备4", "id": "4"}
+        ],
 
         remarks:"",
 
@@ -60,12 +66,13 @@
     mounted() {
     },
     created() {
+      //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       this.getAdminState();
 
       //转圈延迟一秒执行
       setTimeout(() => {
         this.getLoading();
-      }, 100);
+      }, 1000);
     },
     methods: {
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
@@ -76,15 +83,12 @@
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
-          setTimeout(() => {
-            axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
-              .then((res) => {
-                this.options = res.data;
-              })
-              .catch((err) => {
-                console.log(err)
-              })
-          }, 1000);
+          const userInfo = sessionStorage.getItem("userInfo");
+          const info = JSON.parse(userInfo);
+          this.userId =info.username;
+
+
+
         }
       },
       //转圈延迟一秒执行
@@ -95,12 +99,10 @@
       //上报设备异常
       submitAbnormal() {
         if (this.equipment && this.remarks) {
-          const userInfo = sessionStorage.getItem("userInfo");
-          const id = localStorage.getItem("pipeId");
-          const info = JSON.parse(userInfo);
-          const userId =info.username;
+
           axios.post(" " + url + "/shengchanError/errorEvent", {
-            "userId": userId, "errorId":this.equipment,
+            "userId": this.userId,
+            "errorId":this.equipment,
             "context":this.remarks,
             "id":id
           })
@@ -160,9 +162,9 @@
     height: 100%;
     .equipmentDiv {
       width: 100%;
-      height: 100%;
+      height: 90%;
       .equipmentDivTitle {
-        height: 15%;
+        height: 20%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -182,15 +184,19 @@
         }
       }
       .equipmentDivBtn {
-        height: 20%;
+        height: 15%;
         display: flex;
         align-items: center;
         justify-content: center;
         .el-button {
-          width: 150px;
-          height: 40px;
-          text-align: center;
-          line-height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40%;
+          height: 80px;
+          margin-right: 10%;
+          margin-left: 10%;
+          font-size: @font-size-large-xxxxxx;
         }
       }
     }
