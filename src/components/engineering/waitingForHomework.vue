@@ -1609,14 +1609,18 @@
     mounted() {
       //点击向上按钮返回头部
       this.showUp();
+
       //往下滑动动态固定搜索框
       this.showSearch();
+
       //搜索框颜色变化
       this.bianse();
+
       //切断工位每隔5分钟刷新一下数据
       setInterval(() => {
         this.qdWorkStationGetDataList(this.stationId)
       }, 300000);
+
       //监听键盘的回车事件
       document.onkeydown = (e) => {
         if (e.keyCode == 13) {
@@ -1644,6 +1648,7 @@
     created() {
       //检索用户状态
       this.getAdminState();
+
       //转圈延迟一秒执行
       setTimeout(() => {
         this.getLoading();

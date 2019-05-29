@@ -1,165 +1,204 @@
+
 <template>
-    <div class="equipment">
-        <header-nav></header-nav>
-        <div class="ProductionExecutionDiv">
-            <div class="IconTemplate" v-for="(item , index) in iconData" @click="goToPage(index,item.url)">
-                <i :class=" item.icon"></i>
-                <span>{{item.text}}</span>
-            </div>
-        </div>
-        <div class="loading-container" v-show="!img.length">
-            <loading></loading>
-        </div>
-        <footer-nav></footer-nav>
+  <div class="equipment">
+    <header-nav></header-nav>
+    <div class="equipmentDiv">
+      <div class="equipmentDivTitle" id="sbSelect">
+        <el-select
+          style="height: 100px;width: 350px"
+          v-model="equipment"
+          clearable
+          filterable
+          allow-create
+          default-first-option
+          placeholder="请选择设备名称">
+          <el-option
+            v-for="item in equipmentOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </div>
+      <div class="equipmentDivContent">
+        <textarea placeholder="请描述设备什么故障" v-model="remarks"></textarea>
+      </div>
+      <div class="equipmentDivBtn">
+        <el-button type="primary" icon="search" @click="submitAbnormal">设备故障上报</el-button>
+      </div>
     </div>
+    <div class="loading-container" v-show="!img.length">
+      <loading></loading>
+    </div>
+    <Modal :msg="message"
+           :isHideModal="HideModal"></Modal>
+    <footer-nav></footer-nav>
+  </div>
 </template>
 <script type="text/ecmascript-6">
-    import axios from 'axios'
-    import timer from '../../common/timer'
-    import headerNav from '../../common/header'
-    import footerNav from '../../common/footer'
-    import Loading from '../../common/loading'
+  import axios from 'axios'
+  import url from '../../assets/js/URL'
+  import  Modal from '../../common/modal'
+  import headerNav from '../../common/header'
+  import footerNav from '../../common/footer'
+  import Loading from '../../common/loading'
+  export default {
+    name: 'quality',
+    data() {
+      return {
+        img: "",
+        equipment:"",
+        equipmentOptions: [],
 
-    export default {
-        name: 'equipment',
-        data() {
-            return {
-                img:"",
-                iconData: [
-                    {"icon": "iconfont icon-kaishi", "text": "加工开始", "url": "/"},
-                    {"icon": "iconfont icon-zhilianganquan", "text": "质量评定", "url": "/"},
-                    {"icon": "iconfont icon-tuihui", "text": "回退上道工序", "url": "/"},
-                    {"icon": "iconfont icon-zanting", "text": "缺料暂停", "url": "/"},
-                    {"icon": "iconfont icon-wancheng", "text": "加工完成", "url": "/"},
-                ]
-            }
+        remarks:"",
 
-        },
-        components: {Loading, timer,footerNav,headerNav},
-        mounted() {
+        message: '',
+        HideModal: true
+      }
+    },
+    components: {Loading, Modal, footerNav, headerNav},
+    mounted() {
+    },
+    created() {
+      this.getAdminState();
 
-
-
-        },
-        created() {
-            this.getAdminState();
-
-            setTimeout(() => {
-                this.getLoading();
-            }, 1000);
-
-        },
-        methods: {
-            getLoading() {
-                this.img = ["1"]
-            },
-            //页面加载检查用户是否登陆，没有登陆就加载登陆页面
-            getAdminState() {
-                this.$router.replace;
-                const userInfo = sessionStorage.getItem("userInfo");
-                const info = JSON.parse(userInfo);
-                if (info === null) {
-                    this.$router.push("/ProductionExecutionLogin")
-                }
-            },
-            goToPage(){
-
-            }
-
+      //转圈延迟一秒执行
+      setTimeout(() => {
+        this.getLoading();
+      }, 100);
+    },
+    methods: {
+      //页面加载检查用户是否登陆，没有登陆就加载登陆页面
+      getAdminState() {
+        const userInfo = sessionStorage.getItem("userInfo");
+        const info = JSON.parse(userInfo);
+        if (info === null) {
+          this.$router.push("/ProductionExecutionLogin")
         }
+        else {
+          setTimeout(() => {
+            axios.post(" " + url + "/sys/dictionaryList", {"id": "1"})
+              .then((res) => {
+                this.options = res.data;
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }, 1000);
+        }
+      },
+      //转圈延迟一秒执行
+      getLoading() {
+        this.img = ["1"]
+      },
+
+      //上报设备异常
+      submitAbnormal() {
+        if (this.equipment && this.remarks) {
+          const userInfo = sessionStorage.getItem("userInfo");
+          const id = localStorage.getItem("pipeId");
+          const info = JSON.parse(userInfo);
+          const userId =info.username;
+          axios.post(" " + url + "/shengchanError/errorEvent", {
+            "userId": userId, "errorId":this.equipment,
+            "context":this.remarks,
+            "id":id
+          })
+            .then((res) => {
+              if (res.data === "1") {
+                this.message = "提交成功";
+                this.HideModal = false;
+                const that = this;
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                }
+                setTimeout(a, 2000);
+              }
+              else {
+                this.message = "提交失败因";
+                this.HideModal = false;
+                const that = this;
+                function b() {
+                  that.message = "";
+                  that.HideModal = true;
+                }
+                setTimeout(b, 2000);
+              }
+            })
+            .catch((err) => {
+            })
+        }
+        else if (!this.equipment) {
+          this.message = "请选择异常设备";
+          this.HideModal = false;
+          const that = this;
+          function a() {
+            that.message = "";
+            that.HideModal = true;
+          }
+          setTimeout(a, 2000);
+        }
+        else if (!this.remarks) {
+          this.message = "请输入异常备注";
+          this.HideModal = false;
+          const that = this;
+          function b() {
+            that.message = "";
+            that.HideModal = true;
+          }
+          setTimeout(b, 2000);
+        }
+      }
     }
+  }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
-    @import "../../assets/less/base";
-
-    .equipment {
-        width: 100%;
-        height: 100%;
-        .ProductionExecutionDiv {
-            width: 100%;
-            height: 60%;
-            margin-top: 2%;
+  @import "../../assets/less/base";
+  .equipment {
+    width: 100%;
+    height: 100%;
+    .equipmentDiv {
+      width: 100%;
+      height: 100%;
+      .equipmentDivTitle {
+        height: 15%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 20px;
+      }
+      .equipmentDivContent {
+        height: 40%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        textarea {
+          width: 90%;
+          height: 90%;
+          border: 1px solid @color-bg-hei;
+          border-radius: 2%;
+          padding: 5%;
         }
-        .IconTemplate {
-            float: left;
-            width: 30%;
-            height: 40%;
-            margin-bottom: 5%;
-            margin-left: 3%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            cursor: pointer;
-
-            .icon-kaishi {
-                display: block;
-                background-color: #F56C6C;
-                color: @color-white;
-                border-radius: 20%;
-                width: 60px;
-                height: 60px;
-                line-height: 60px;
-                font-size: 300%;
-                text-align: center;
-            }
-            .icon-zhilianganquan {
-                display: block;
-                background-color: @color-bg-lan;
-                color: @color-white;
-                border-radius: 20%;
-                width: 60px;
-                height: 60px;
-                line-height: 60px;
-                font-size: 300%;
-                text-align: center;
-            }
-            .icon-tuihui {
-                display: block;
-                background-color: @color-bg-cs;
-                color: @color-white;
-                border-radius: 20%;
-                width: 60px;
-                height: 60px;
-                line-height: 60px;
-                font-size: 300%;
-                text-align: center;
-            }
-            .icon-zanting {
-                display: block;
-                background-color: #409EFF;
-                color: @color-white;
-                border-radius: 20%;
-                width: 60px;
-                height: 60px;
-                line-height: 60px;
-                font-size: 300%;
-                text-align: center;
-            }
-            .icon-wancheng {
-                display: block;
-                background-color: #67C23A;
-                color: @color-white;
-                border-radius: 20%;
-                width: 60px;
-                height: 60px;
-                line-height: 60px;
-                font-size: 300%;
-                text-align: center;
-            }
-            span {
-                margin-top: 5%;
-                color: #909399
-            }
+      }
+      .equipmentDivBtn {
+        height: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .el-button {
+          width: 150px;
+          height: 40px;
+          text-align: center;
+          line-height: 40px;
         }
+      }
     }
-
-    .loading-container {
-        position: absolute;
-        width: 100%;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-
-
+  }
+  .loading-container {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 </style>
