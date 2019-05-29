@@ -679,7 +679,7 @@
             color:'rgba(0, 0, 0, 1)'}"
           :cell-style="{
              border: '1px solid #303133',
-             fontSize:'10px'
+             fontSize:'11px'
             }"
           :row-class-name="tableRowClassName"
           @selection-change="selectChange"
@@ -946,7 +946,7 @@
             return 'green-row';
           }
         }
-        else if (row.id === this.bsID) {
+        else if (row.status === 1) {
           return 'xzl-row';
         }
         else {
@@ -992,6 +992,7 @@
               if (res.data.state === "1") {
                 this.bsID = row.id;
                 this.tableRowClassName({row})
+
               }
               else if (res.data.state === "-1") {
                 this.$message.warning(res.data.message);
@@ -1003,6 +1004,7 @@
         }
 
       },
+
       //小组立全选
       selectAll(val) {
         console.log(val)

@@ -1329,6 +1329,9 @@
                   this.bottomButton[0].disabled = "0";
                   this.bottomButton[1].disabled = "0";
                   this.jobLogVisible = false;
+                  setTimeout(() => {
+                    this.$router.push("/")
+                  }, 1000);
                 }
                 else {
                   this.$message({
