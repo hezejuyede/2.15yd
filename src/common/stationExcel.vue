@@ -915,7 +915,6 @@
     name: 'modal',
     data() {
       return {
-        bsID: "",
         rowId: "",
         selectState: false
       }
@@ -990,9 +989,8 @@
           axios.post(" " + url + "/importother/markXiaozuliExcel", {"id": row.id, "status": 1})
             .then((res) => {
               if (res.data.state === "1") {
-                this.bsID = row.id;
+                this.xzlDataChange();
                 this.tableRowClassName({row})
-
               }
               else if (res.data.state === "-1") {
                 this.$message.warning(res.data.message);
@@ -1010,6 +1008,11 @@
         console.log(val)
       },
 
+      //小组立数据更新
+      xzlDataChange(){
+        let flag = true;
+        this.$emit('xzlChange', flag);
+      }
 
     },
     props: ['gwType', 'gongHao', 'isHideStationExcel', 'excelData', 'gzId']

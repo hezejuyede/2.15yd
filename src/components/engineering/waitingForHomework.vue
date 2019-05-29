@@ -1442,7 +1442,8 @@
           :gongHao="dqgw"
           :isHideStationExcel="isHideStationExcel"
           :excelData="excelData"
-          :gzId="gzId"></StationExcel>
+          :gzId="gzId"
+          v-on:xzlChange="xzlDataChange"></StationExcel>
       </div>
     </el-dialog>
 
@@ -1898,6 +1899,7 @@
       doSelect(val, column, event) {
         this.$refs.moviesTable.toggleRowSelection(val);
       },
+
       //当点击列表选择改变时对数组的增加和删除
       selectChange(val) {
         if (val.length) {
@@ -1912,6 +1914,7 @@
           this.listData = [];
         }
       },
+
       //根据状态显示不同颜色
       tableRowClassName({row, rowIndex}) {
         if (row.level === 2) {
@@ -1924,6 +1927,7 @@
           return 'gray-row';
         }
       },
+
       //扫码直接前往任务页面
       goToPipePage(searchWord) {
         if (event && event.stopPropagation) {
@@ -2466,6 +2470,11 @@
           //IE取消冒泡事件
           window.event.cancelBubble = true;
         }
+      },
+
+      //工位表中小组立数据更新
+      xzlDataChange(){
+
       },
 
       //显示条件筛选
