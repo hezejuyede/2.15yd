@@ -1408,6 +1408,12 @@
           <div class="select fl" v-if=" this.n==1">
             <el-input v-model="qianzuoyezhe" placeholder="前作业者"></el-input>
           </div>
+          <div class="select fl" >
+            <el-input v-model="zgwj" placeholder="枝管外径"></el-input>
+          </div>
+          <div class="select fl" >
+            <el-input v-model="mgwj" placeholder="母管外径"></el-input>
+          </div>
         </div>
         <div class="containerBtn">
           <el-button type="danger" @click="screenVisible = false">关闭窗口</el-button>
@@ -1589,6 +1595,8 @@
         bihou: "",
         bihouOptions: [],
         qianzuoyezhe: "",
+        zgwj:"",
+        mgwj:"",
         a: 0,
         b: 0,
         c: 0,
@@ -2585,7 +2593,9 @@
               "pno": this.PNO,
               "bihou": this.bihou,
               "codeN": this.codeN,
-              "zuoyezhe": this.qianzuoyezhe
+              "zuoyezhe": this.qianzuoyezhe,
+              "zgwj":this.zgwj,
+              "mgwj":this.mgwj
             })
             .then((res) => {
               this.screenVisible = false;
@@ -2646,6 +2656,8 @@
         this.scx = "";
         this.bihou = "";
         this.qianzuoyezhe = "";
+        this.zgwj="";
+        this.mgwj="";
       },
 
       //点击一贯号,Code号，前往前往任务页面
