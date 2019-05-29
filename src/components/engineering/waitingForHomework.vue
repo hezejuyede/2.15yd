@@ -1547,6 +1547,7 @@
         ],    //特定工位的表头
         zuoyezhe: "",   //用户名
         dqgw: "",       //中文工位名字
+        gwbpici:"",        // 单击选中工位表的批次
         stationId: "",  //工位对应的ID
         url: "",   //一品图和切断表的URL地址
         listData: [],  //点击复选框中对ID的数组
@@ -2289,6 +2290,7 @@
 
       //查看工位表
       seeStationExcel(id, pici, fileid) {
+        this.gwbpici=pici;
         this.id = id;
         this.gzId = fileid;
         //防止冒泡
@@ -2473,8 +2475,16 @@
       },
 
       //工位表中小组立数据更新
-      xzlDataChange(){
-
+      xzlDataChange(val){
+        if (val === true) {
+          axios.post(" " + url + "/importother/showXiaozuliExcel", {"pici": this.gwbpici})
+            .then((res) => {
+              this.excelData = res.data;
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
       },
 
       //显示条件筛选

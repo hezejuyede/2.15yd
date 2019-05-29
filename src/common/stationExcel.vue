@@ -956,14 +956,14 @@
       },
 
       selectChange(val) {
-        if (val.length > 1) {
+        /*if (val.length > 1) {
           this.$refs.Table.clearSelection();
           this.$refs.Table.toggleRowSelection(val.pop());
           console.log(val[0].id)
         }
         else {
 
-        }
+        }*/
       },
 
       //小组立单选
@@ -973,7 +973,7 @@
           axios.post(" " + url + "/importother/markXiaozuliExcel", {"id": row.id, "status": 0})
             .then((res) => {
               if (res.data.state === "1") {
-                this.bsID = row.id;
+                this.xzlDataChange();
                 this.tableRowClassName({row})
               }
               else if (res.data.state === "-1") {
