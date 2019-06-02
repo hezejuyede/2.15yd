@@ -9,7 +9,12 @@ import ProductionExecutionLogin from '../components/login/ProductionExecutionLog
 import Drawing from '../components/drawing/drawing'
 import Safe from '../components/safe/safe'
 import Quality from '../components/quality/quality'
+
 import Equipment from '../components/equipment/equipment'
+
+import equipmentInspection from '../components/equipment/equipmentInspection'
+
+import abnormalReporting from '../components/equipment/abnormalReporting'
 
 import Materiel from '../components/materiel/materiel'
 
@@ -82,25 +87,34 @@ export default new Router({
       component: Equipment,
       meta: {
         keepAlive: false
-      }
+      },
+      children: [
+        {
+          path: 'equipmentInspection',
+          name: 'equipmentInspection',
+          component: equipmentInspection,
+          meta: {
+            keepAlive: true
+          },
+        },
+        {
+          path: 'abnormalReporting',
+          name: 'abnormalReporting',
+          component: abnormalReporting,
+          meta: {
+            keepAlive: true
+          },
+        }
+      ]
     },
+
     {
       path: '/Materiel',
       name: 'Materiel',
       component: Materiel,
       meta: {
         keepAlive: false
-      },
-     /* children: [
-        {
-          path: 'waitingForHomework',
-          name: 'waitingForHomework',
-          component: waitingForHomework,
-          meta: {
-            keepAlive: true
-          },
-        }
-      ]*/
+      }
     },
   ]
 })

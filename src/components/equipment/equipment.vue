@@ -26,8 +26,8 @@
       return {
         img:"",
         iconData: [
-          {"icon": "iconfont icon-jianchafuwu", "text": "设备点检", "url": "/"},
-          {"icon": "iconfont icon-shangbaowenti", "text": "异常上报", "url": "/"},
+          {"icon": "iconfont icon-jianchafuwu", "text": "设备点检", "url": "/Equipment/equipmentInspection"},
+          {"icon": "iconfont icon-shangbaowenti", "text": "异常上报", "url": "/Equipment/abnormalReporting"},
           {"icon": "iconfont icon-fenlei", "text": "定义分类", "url": "/"},
           {"icon": "iconfont icon-suppliesinvoice", "text": "定义耗材", "url": "/"},
           {"icon": "iconfont icon-chuku", "text": "耗材出库", "url": "/"},
@@ -57,15 +57,15 @@
       },
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
-        this.$router.replace;
         const userInfo = sessionStorage.getItem("userInfo");
         const info = JSON.parse(userInfo);
         if (info === null) {
           this.$router.push("/ProductionExecutionLogin")
         }
       },
-      goToPage(){
-
+      goToPage(index, url){
+        console.log(url)
+       /* this.$router.push(url);*/
       }
 
     }
