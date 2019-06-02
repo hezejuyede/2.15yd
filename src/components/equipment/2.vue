@@ -1,0 +1,334 @@
+<template>
+  <div class="equipment">
+    <header-nav></header-nav>
+    <div class="equipmentTable">
+      <div class="handle-box">
+        <label style="margin-right: 5px">
+          <span>检索上报记录</span>
+          <span>:</span>
+          <el-input v-model="select_word" placeholder="检索上报记录" class="handle-input mr10" style="width: 200px"></el-input>
+        </label>
+        <label style="margin-right: 5px;margin-left: 5px">
+          <span>时间</span>
+          <span>:</span>
+          <el-date-picker
+            style="width: 240px"
+            v-model="examineTime"
+            type="daterange"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd">
+          </el-date-picker>
+        </label>
+        <el-button type="success" class="handle-del mr10" @click="doSearchJl">查询记录</el-button>
+        <el-button type="primary" class="handle-del mr10" @click="showYc">上报异常</el-button>
+      </div>
+      <div class="handle-content">
+        <el-table class="tb-edit"
+                  :data="tables"
+                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
+                  border
+                  height="500"
+                  highlight-current-row
+                  style="width: 98%;margin: auto">
+          <template v-for="(col ,index) in cols">
+            <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
+          </template>
+        </el-table>
+      </div>
+    </div>
+
+
+    <!-- 设备上报异常弹出框 -->
+    <el-dialog  :visible.sync="sbVisible" width="80%">
+      <div class="equipmentDiv">
+        <div class="closeBtn">
+          <el-button type="danger" @click="sbVisible = false">关闭窗口</el-button>
+        </div>
+        <div class="equipmentDivTitle" id="sbSelect">
+          <el-select
+            style="height: 100px;width: 350px"
+            v-model="equipment"
+            clearable
+            filterable
+            allow-create
+            default-first-option
+            placeholder="请选择设备名称">
+            <el-option
+              v-for="item in equipmentOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="equipmentDivContent">
+          <textarea placeholder="请描述设备什么故障" v-model="remarks"></textarea>
+        </div>
+        <div class="equipmentDivBtn">
+          <el-button type="success"  @click="submitAbnormal">设备故障上报</el-button>
+        </div>
+      </div>
+    </el-dialog>
+
+    <div class="loading-container" v-show="!img.length">
+      <loading></loading>
+    </div>
+    <Modal :msg="message"
+           :isHideModal="HideModal"></Modal>
+    <footer-nav></footer-nav>
+  </div>
+</template>
+<script type="text/ecmascript-6">
+  import axios from 'axios'
+  import url from '../../assets/js/URL'
+  import  Modal from '../../common/modal'
+  import headerNav from '../../common/header'
+  import footerNav from '../../common/footer'
+  import Loading from '../../common/loading'
+  import {getNowTime} from '../../assets/js/api'
+  export default {
+    name: 'quality',
+    data() {
+      return {
+        img: "",
+        userId:"",
+
+        sbVisible:false,
+
+        examineTime:"",
+        select_word:"",
+        cols: [],
+
+        tableData: [],
+
+
+        equipment:"",
+        equipmentOptions: [
+          {"name": "设备1", "id": "1"},
+          {"name": "设备2", "id": "2"},
+          {"name": "设备3", "id": "3"},
+          {"name": "设备4", "id": "4"}
+        ],
+
+        remarks:"",
+
+        message: '',
+        HideModal: true
+      }
+    },
+    components: {Loading, Modal, footerNav, headerNav},
+    computed: {
+      //模糊检索
+      tables: function () {
+        var search = this.select_word;
+        if (search) {
+          return this.tableData.filter(function (dataNews) {
+            return Object.keys(dataNews).some(function (key) {
+              return String(dataNews[key]).indexOf(search) > -1
+            })
+          })
+        }
+        return this.tableData
+      }
+    },
+    mounted() {
+    },
+    created() {
+      //页面加载检查用户是否登陆，没有登陆就加载登陆页面
+      this.getAdminState();
+
+      //转圈延迟一秒执行
+      setTimeout(() => {
+        this.getLoading();
+      }, 1000);
+    },
+    methods: {
+      //页面加载检查用户是否登陆，没有登陆就加载登陆页面
+      getAdminState() {
+        const userInfo = sessionStorage.getItem("userInfo");
+        const info = JSON.parse(userInfo);
+        if (info === null) {
+          this.$router.push("/ProductionExecutionLogin")
+        }
+        else {
+
+          const userInfo = sessionStorage.getItem("userInfo");
+          const info = JSON.parse(userInfo);
+          this.userId =info.username;
+          let time = getNowTime();
+          let times = [];
+          for (let i = 0; i < 2; i++) {
+            times.push(time)
+          }
+          this.examineTime = times;
+
+          let that = this;
+          axios.all([
+            axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
+            axios.post(" " + url + "/api/getPersonProcessList", {"name": ""}),
+          ])
+            .then(axios.spread(function (line,workStation) {
+              that.lineOptions = line.data;
+              that.line = line.data[0].indexno;
+              that.workStation = workStation.data[0].id;
+              that.workStationOptions = workStation.data;
+              that.loadingShowData(1);
+            }));
+
+
+
+        }
+      },
+
+      //瞬间加载数据
+      loadingShowData(data) {
+        let that = this;
+        axios.all([
+          axios.post(" " + url + "/sys/showTableTitle", {"name": "sbgzclgz"}),
+          axios.post(" " + url + "/padShow/buttonList", {"id": data})
+        ])
+          .then(axios.spread(function (title, table) {
+            that.cols = title.data;
+            that.tableData = table.data.data;
+          }));
+      },
+
+      //转圈延迟一秒执行
+      getLoading() {
+        this.img = ["1"]
+      },
+
+      //根据时间查询上报记录
+      doSearchJl(){
+
+      },
+
+      //显示上报异常弹出框
+      showYc() {
+        this.sbVisible = true;
+        this.equipment = "";
+        this.remarks = "";
+      },
+
+      //上报设备异常
+      submitAbnormal() {
+        if (this.equipment && this.remarks) {
+
+          axios.post(" " + url + "/shengchanError/errorEvent", {
+            "userId": this.userId,
+            "errorId":this.equipment,
+            "context":this.remarks,
+            "id":id
+          })
+            .then((res) => {
+              if (res.data === "1") {
+                this.$message.success(`提交成功`);
+              }
+              else {
+                this.$message.warning(`提交失败`);
+              }
+            })
+            .catch((err) => {
+            })
+        }
+        else if (!this.equipment) {
+          this.$message.warning(`异常设备必须选择`);
+        }
+        else if (!this.remarks) {
+          this.$message.warning(`必须输入设备出现什么故障`);
+        }
+      }
+    }
+  }
+</script>
+<style scoped lang="less" rel="stylesheet/less">
+  @import "../../assets/less/base";
+  .equipment {
+    width: 100%;
+    height: 100%;
+    .equipmentTable{
+      width: 100%;
+      height: 85%;
+      .handle-box {
+        line-height:100px;
+        padding-left: 20px;
+        .handle-input {
+          width: 300px;
+          display: inline-block;
+        }
+        .el-button {
+          width:150px;
+          height: 40px;
+          font-size: @font-size-large;
+        }
+      }
+    }
+
+    .equipmentDiv {
+      width: 100%;
+      height:350px;
+      .closeBtn{
+        width: 100%;
+        height: 15%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        .el-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 30%;
+          height: 50px;
+        }
+      }
+      .equipmentDivTitle {
+        height: 30%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 5%;
+      }
+      .equipmentDivContent {
+        height: 40%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        textarea {
+          width: 90%;
+          height: 90%;
+          border: 1px solid @color-bg-hei;
+          border-radius: 2%;
+          padding: 5%;
+        }
+      }
+      .equipmentDivBtn {
+        height: 25%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .el-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40%;
+          height: 80px;
+          margin-right: 10%;
+          margin-left: 10%;
+          font-size: @font-size-large-xxxxxx;
+        }
+      }
+    }
+  }
+  .loading-container {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+</style>
