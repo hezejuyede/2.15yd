@@ -50,9 +50,29 @@
                   height="500"
                   highlight-current-row
                   style="width: 98%;margin: auto">
-          <template v-for="(col ,index) in cols">
-            <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
-          </template>
+          <el-table-column
+            align="center"
+            prop="bujianname"
+            label="时间">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="bujianname"
+            label="设备">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="bujianname"
+            label="明细">
+            <template scope="scope">
+              <el-button
+                type="success"
+                style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                @click="showMx(scope.row.id)">
+                明细
+              </el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </div>
@@ -146,6 +166,27 @@
     </el-dialog>
 
 
+    <!--点检明细 -->
+    <el-dialog  :visible.sync="mxVisible" :fullscreen="true" :center="true">
+      <div class="closeBtn">
+        <el-button type="danger" @click="mxVisible = false">关闭窗口</el-button>
+      </div>
+      <div class="djDiv">
+        <el-table class="tb-edit"
+                  :data="mxData"
+                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
+                  border
+                  height="600"
+                  highlight-current-row
+                  style="width: 98%;margin: auto">
+          <template v-for="(col ,index) in mxCols">
+            <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
+          </template>
+        </el-table>
+      </div>
+    </el-dialog>
+
+
 
 
 
@@ -175,6 +216,7 @@
         radio1:"3",
 
         jlVisible:false,
+        mxVisible:false,
 
         examineTime:"",
         select_word:"",
@@ -184,6 +226,9 @@
 
         djData:[],
         djCols:[],
+
+        mxData:[],
+        mxCols:[],
 
         shebei:"",
         shebeiOptions:"",
@@ -259,7 +304,7 @@
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "zxdsbdjjlcx"}),
-          axios.post(" " + url + "/shebei/contentListByShebei", {"shebeid": data})
+          axios.post(" " + url + "/shebei/contentListByShebei", {"shebeid": data,"time":this.examineTime})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
@@ -292,6 +337,7 @@
           })
       },
 
+      //显示添加点检记录
       addDJ() {
         this.jlVisible = true;
         let that = this;
@@ -305,6 +351,8 @@
           }));
 
       },
+
+      //进行点检
       addDJjL(){
         for (let i = 0; i < this.djData.length; i++) {
           if (this.djData[i].jieguo === null) {
@@ -335,6 +383,7 @@
         }
       },
 
+      //更改设备切换数据
       changeSB(){
         let that = this;
         axios.all([
@@ -346,7 +395,22 @@
             that.djData = table.data.data;
           }));
 
-      }
+      },
+
+      //查看明细
+      showMx(id) {
+        this.mxVisible = true;
+        this.id = id;
+        let that = this;
+        axios.all([
+          axios.post(" " + url + "/sys/showTableTitle", {"name": "zxdsbdjjlcx"}),
+          axios.post(" " + url + "/shebei/contentListByShebei", {"shebeid": data})
+        ])
+          .then(axios.spread(function (title, table) {
+            that.cols = title.data;
+            that.tableData = table.data.data;
+          }));
+      },
     }
   }
 </script>

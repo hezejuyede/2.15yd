@@ -4,8 +4,6 @@
     <div class="equipmentTable">
       <div class="handle-box">
         <label style="margin-right: 5px">
-          <span>检索上报记录</span>
-          <span>:</span>
           <el-input v-model="select_word" placeholder="检索上报记录" class="handle-input mr10" style="width: 200px"></el-input>
         </label>
         <label style="margin-right: 5px;margin-left: 5px">
@@ -19,6 +17,25 @@
             end-placeholder="结束日期"
             value-format="yyyy-MM-dd">
           </el-date-picker>
+        </label>
+        <label style="margin-right: 5px;margin-left: 5px">
+          <span>设备</span>
+          <span>:</span>
+          <el-select
+            style="width: 150px"
+            v-model="equipment"
+            clearable
+            filterable
+            allow-create
+            default-first-option
+            placeholder="请选择设备">
+            <el-option
+              v-for="item in equipmentOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </label>
         <el-button type="success" class="handle-del mr10" @click="doSearchJl">查询记录</el-button>
         <el-button type="primary" class="handle-del mr10" @click="showYc">上报异常</el-button>
@@ -164,15 +181,13 @@
             times.push(time)
           }
           this.examineTime = times;
-
           let that = this;
           axios.all([
             axios.post(" " + url + "/shebei/shebeiList", {"stationid": this.stationid}),
           ])
             .then(axios.spread(function (shebei) {
-              that.equipment = shebei.data[0].id;
               that.equipmentOptions = shebei.data;
-              that.loadingShowData(that.equipment);
+              that.loadingShowData(that.examineTime,that.equipment);
             }));
         }
       },
@@ -182,7 +197,7 @@
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "sbgzclgz"}),
-          axios.post(" " + url + "/shebei/errorList", {"shebeiid": data})
+          axios.post(" " + url + "/shebei/errorList", {"time":this.examineTime,"shebeiid": data})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
@@ -196,7 +211,13 @@
       },
 
       //根据时间查询上报记录
-      doSearchJl(){
+      doSearchJl() {
+        if (this.examineTime) {
+          this.loadingShowData(this.examineTime, this.equipment);
+        }
+        else {
+          this.$message.warning("请选择查询时间");
+        }
 
       },
 
@@ -214,11 +235,12 @@
             "finduserid": this.userId,
             "shebeiid":this.equipment,
             "beizhu":this.remarks,
-            "errortypeid":id
           })
             .then((res) => {
               if (res.data === "1") {
                 this.$message.success(`提交成功`);
+                this.sbVisible = false;
+                this.loadingShowData();
               }
               else {
                 this.$message.warning(`提交失败`);
@@ -253,7 +275,7 @@
           display: inline-block;
         }
         .el-button {
-          width:150px;
+          width:100px;
           height: 40px;
           font-size: @font-size-large;
         }
