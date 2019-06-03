@@ -93,6 +93,7 @@
       return {
         img: "",
         userId:"",
+        stationid:"",
 
         sbVisible:false,
 
@@ -156,6 +157,7 @@
           const userInfo = sessionStorage.getItem("userInfo");
           const info = JSON.parse(userInfo);
           this.userId =info.username;
+          this.stationid =info.roleid;
           let time = getNowTime();
           let times = [];
           for (let i = 0; i < 2; i++) {
@@ -165,19 +167,13 @@
 
           let that = this;
           axios.all([
-            axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
-            axios.post(" " + url + "/api/getPersonProcessList", {"name": ""}),
+            axios.post(" " + url + "/shebei/shebeiList", {"stationid": this.stationid}),
           ])
-            .then(axios.spread(function (line,workStation) {
-              that.lineOptions = line.data;
-              that.line = line.data[0].indexno;
-              that.workStation = workStation.data[0].id;
-              that.workStationOptions = workStation.data;
-              that.loadingShowData(1);
+            .then(axios.spread(function (shebei) {
+              that.equipment = shebei.data[0].id;
+              that.equipmentOptions = shebei.data;
+              that.loadingShowData(that.equipment);
             }));
-
-
-
         }
       },
 
@@ -186,7 +182,7 @@
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "sbgzclgz"}),
-          axios.post(" " + url + "/padShow/buttonList", {"id": data})
+          axios.post(" " + url + "/shebei/errorList", {"shebeiid": data})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
@@ -214,12 +210,11 @@
       //上报设备异常
       submitAbnormal() {
         if (this.equipment && this.remarks) {
-
-          axios.post(" " + url + "/shengchanError/errorEvent", {
-            "userId": this.userId,
-            "errorId":this.equipment,
-            "context":this.remarks,
-            "id":id
+          axios.post(" " + url + "/shebei/finderrorAdd", {
+            "finduserid": this.userId,
+            "shebeiid":this.equipment,
+            "beizhu":this.remarks,
+            "errortypeid":id
           })
             .then((res) => {
               if (res.data === "1") {
