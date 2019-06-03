@@ -16,6 +16,16 @@ import equipmentInspection from '../components/equipment/equipmentInspection'
 
 import abnormalReporting from '../components/equipment/abnormalReporting'
 
+import fenlei from '../components/equipment/fenlei'
+
+import haocairuk from '../components/equipment/haocairuk.vue'
+
+import haocaichuku from '../components/equipment/haocaichuku.vue'
+
+import guzhangchuli from '../components/equipment/guzhangchuli.vue'
+
+import haocai from '../components/equipment/haocai'
+
 import Materiel from '../components/materiel/materiel'
 
 import TaskList from '../components/engineering/TaskList'
@@ -101,6 +111,48 @@ export default new Router({
       path: '/abnormalReporting',
       name: 'abnormalReporting',
       component: abnormalReporting,
+      meta: {
+        keepAlive: false
+      }
+    },
+
+    {
+      path: '/fenlei',
+      name: 'fenlei',
+      component: fenlei,
+      meta: {
+        keepAlive: false
+      }
+    },
+
+    {
+      path: '/haocai',
+      name: 'haocai',
+      component: haocai,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/haocairuk',
+      name: 'haocairuk',
+      component: haocairuk,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/haocaichuku',
+      name: 'haocaichuku',
+      component: haocaichuku,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/guzhangchuli',
+      name: 'guzhangchuli',
+      component: guzhangchuli,
       meta: {
         keepAlive: false
       }
