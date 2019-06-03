@@ -87,25 +87,23 @@ export default new Router({
       component: Equipment,
       meta: {
         keepAlive: false
-      },
-      children: [
-        {
-          path: 'equipmentInspection',
-          name: 'equipmentInspection',
-          component: equipmentInspection,
-          meta: {
-            keepAlive: true
-          },
-        },
-        {
-          path: 'abnormalReporting',
-          name: 'abnormalReporting',
-          component: abnormalReporting,
-          meta: {
-            keepAlive: true
-          },
-        }
-      ]
+      }
+    },
+    {
+      path: '/equipmentInspection',
+      name: 'equipmentInspection',
+      component: equipmentInspection,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/abnormalReporting',
+      name: 'abnormalReporting',
+      component: abnormalReporting,
+      meta: {
+        keepAlive: false
+      }
     },
 
     {

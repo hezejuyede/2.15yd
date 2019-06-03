@@ -26,8 +26,8 @@
       return {
         img:"",
         iconData: [
-          {"icon": "iconfont icon-jianchafuwu", "text": "设备点检", "url": "/Equipment/equipmentInspection"},
-          {"icon": "iconfont icon-shangbaowenti", "text": "异常上报", "url": "/Equipment/abnormalReporting"},
+          {"icon": "iconfont icon-jianchafuwu", "text": "设备点检", "url": "/equipmentInspection"},
+          {"icon": "iconfont icon-shangbaowenti", "text": "异常上报", "url": "/abnormalReporting"},
           {"icon": "iconfont icon-fenlei", "text": "定义分类", "url": "/"},
           {"icon": "iconfont icon-suppliesinvoice", "text": "定义耗材", "url": "/"},
           {"icon": "iconfont icon-chuku", "text": "耗材出库", "url": "/"},
@@ -64,8 +64,7 @@
         }
       },
       goToPage(index, url){
-        console.log(url)
-       /* this.$router.push(url);*/
+        this.$router.push(url);
       }
 
     }

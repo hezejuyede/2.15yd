@@ -1,178 +1,78 @@
 <template>
-  <div class="template">
-    <div class="crumbs">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item>设备管理</el-breadcrumb-item>
-        <el-breadcrumb-item>工位点检记录</el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
-    <div class="template-content">
-      <div class="container">
-        <div class="handle-box">
-          <label style="margin-right: 5px">
-            <span>检索点检记录</span>
-            <span>:</span>
-            <el-input v-model="select_word" placeholder="检索点检记录" class="handle-input mr10" style="width: 150px"></el-input>
-          </label>
-          <label style="margin-right: 5px;margin-left: 5px">
-            <span>时间</span>
-            <span>:</span>
-            <el-date-picker
-              style="width: 240px"
-              v-model="examineTime"
-              type="daterange"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd">
-            </el-date-picker>
-          </label>
-          <label style="margin-right: 5px;margin-left: 5px">
-            <span>生产线</span>
-            <span>:</span>
-            <el-select
-              style="width: 120px"
-              v-model="line"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              @change="changeSCX"
-              placeholder="请选择生产线">
-              <el-option
-                v-for="item in lineOptions"
-                :key="item.indexno"
-                :label="item.name"
-                :value="item.indexno">
-              </el-option>
-            </el-select>
-          </label>
-          <label style="margin-right: 10px;margin-left:5px">
-            <span>工位</span>
-            <span>:</span>
-            <el-select
-              style="width: 120px"
-              v-model="workStation"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              @change="changeSelect"
-              placeholder="请选择工位">
-              <el-option
-                v-for="item in workStationOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </label>
-          <el-button type="primary" icon="delete" class="handle-del mr10" @click="showAdd">进行点检</el-button>
-        </div>
-        <div class="">
-          <el-table class="tb-edit"
-                    :data="tables"
-                    :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'20px'}"
-                    border
-                    height="450"
-                    @select-all="selectAll"
-                    @select="selectList"
-                    @row-dblclick="edit"
-                    highlight-current-row
-                    style="width: 98%;margin: auto">
-            <el-table-column
-              type="selection"
-              width="30">
-            </el-table-column>
-            <template v-for="(col ,index) in cols">
-              <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
-            </template>
-          </el-table>
-        </div>
+  <div class="equipment">
+    <header-nav></header-nav>
+    <div class="equipmentTable">
+      <div class="handle-box">
+        <label style="margin-right: 5px">
+          <span>检索点检记录</span>
+          <span>:</span>
+          <el-input v-model="select_word" placeholder="检索点检记录" class="handle-input mr10" style="width: 200px"></el-input>
+        </label>
+        <label style="margin-right: 5px;margin-left: 5px">
+          <span>时间</span>
+          <span>:</span>
+          <el-date-picker
+            style="width: 240px"
+            v-model="examineTime"
+            type="daterange"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd">
+          </el-date-picker>
+        </label>
+        <el-button type="success" class="handle-del mr10" @click="doSearchJl">查询点检记录</el-button>
       </div>
-      <!--新增弹出框 -->
-      <el-dialog title="进行点检" :visible.sync="addVisible" width="40%">
-        <el-form ref="form"  label-width="100px">
-          <el-form-item label="记录内容">
-            <el-input v-model="jvnr" style="width: 200px"></el-input>
-          </el-form-item>
-          <el-form-item label="点检状态">
-            <el-input v-model="djzt" style="width: 200px"></el-input>
-          </el-form-item>
-          <el-form-item label="备注">
-            <el-input v-model="beizhu" style="width: 200px"></el-input>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false" style="height:30px;width:80px">取 消</el-button>
-                <el-button type="primary" @click="doAdd" style="height:30px;width:80px">确 定</el-button>
-            </span>
-      </el-dialog>
-      <!-- 编辑弹出框 -->
-      <el-dialog title="修改点击记录" :visible.sync="editVisible" width="40%">
-        <el-form ref="form"  label-width="100px">
-          <el-form-item label="记录内容">
-            <el-input v-model="jvnr" style="width: 200px"></el-input>
-          </el-form-item>
-          <el-form-item label="点检状态">
-            <el-input v-model="djzt" style="width: 200px"></el-input>
-          </el-form-item>
-          <el-form-item label="备注">
-            <el-input v-model="beizhu" style="width: 200px"></el-input>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false" style="height:30px;width:80px">取 消</el-button>
-                <el-button type="primary" @click="saveEdit" style="height:30px;width:80px">确 定</el-button>
-            </span>
-      </el-dialog>
-      <!-- 删除提示框 -->
-      <el-dialog title="删除点检记录" :visible.sync="delVisible" width="300px" center>
-        <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
-        <span slot="footer" class="dialog-footer">
-                <el-button @click="delVisible = false" style="height:30px;width:80px">取 消</el-button>
-                <el-button type="primary" @click="deleteRow" style="height:30px;width:80px">确 定</el-button>
-            </span>
-      </el-dialog>
-
-      <Modal :msg="message"
-             :isHideModal="HideModal"></Modal>
+      <div class="handle-content">
+        <el-table class="tb-edit"
+                  :data="tables"
+                  :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
+                  border
+                  height="500"
+                  highlight-current-row
+                  style="width: 98%;margin: auto">
+          <template v-for="(col ,index) in cols">
+            <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
+          </template>
+        </el-table>
+      </div>
     </div>
+    <div class="loading-container" v-show="!img.length">
+      <loading></loading>
+    </div>
+    <Modal :msg="message"
+           :isHideModal="HideModal"></Modal>
+    <footer-nav></footer-nav>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import url from '../../assets/js/URL'
-  import Modal from '../../common/modal'
-
+  import  Modal from '../../common/modal'
+  import headerNav from '../../common/header'
+  import footerNav from '../../common/footer'
+  import Loading from '../../common/loading'
+  import {getNowTime} from '../../assets/js/api'
   export default {
-    name: 'WorkingProcedure',
+    name: 'quality',
     data() {
       return {
-        message: '',
-        HideModal: true,
-        listData:[],
-        id:"",
+        img: "",
+        userId:"",
 
+
+
+        examineTime:"",
+        select_word:"",
 
         cols: [],
         tableData: [],
 
-        select_word: '',
 
-        addVisible: false,
-        editVisible: false,
-
-        examineTime:"",
-        workStation:"",
-        workStationOptions:[],
-        line: '',
-        lineOptions: [],
-
-        jvnr:"",
-        djzt:"",
-        beizhu:"",
+        message: '',
+        HideModal: true
       }
     },
+    components: {Loading, Modal, footerNav, headerNav},
     computed: {
       //模糊检索
       tables: function () {
@@ -187,23 +87,37 @@
         return this.tableData
       }
     },
-    components: {Modal},
     mounted() {
-
-
     },
     created() {
+      //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       this.getAdminState();
+
+      //转圈延迟一秒执行
+      setTimeout(() => {
+        this.getLoading();
+      }, 1000);
     },
     methods: {
-
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
-        const userInfo = localStorage.getItem("userInfo");
-        if (userInfo === null) {
-          this.$router.push("/")
+        const userInfo = sessionStorage.getItem("userInfo");
+        const info = JSON.parse(userInfo);
+        if (info === null) {
+          this.$router.push("/ProductionExecutionLogin")
         }
         else {
+
+          const userInfo = sessionStorage.getItem("userInfo");
+          const info = JSON.parse(userInfo);
+          this.userId =info.username;
+          let time = getNowTime();
+          let times = [];
+          for (let i = 0; i < 2; i++) {
+            times.push(time)
+          }
+          this.examineTime = times;
+
           let that = this;
           axios.all([
             axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
@@ -216,6 +130,9 @@
               that.workStationOptions = workStation.data;
               that.loadingShowData(1);
             }));
+
+
+
         }
       },
 
@@ -223,7 +140,7 @@
       loadingShowData(data) {
         let that = this;
         axios.all([
-          axios.post(" " + url + "/sys/showTableTitle", {"name": "gwdjjv"}),
+          axios.post(" " + url + "/sys/showTableTitle", {"name": "sbgzclgz"}),
           axios.post(" " + url + "/padShow/buttonList", {"id": data})
         ])
           .then(axios.spread(function (title, table) {
@@ -232,199 +149,141 @@
           }));
       },
 
-      changeSCX(){
-        axios.post(" " + url + "/sysconfig/getGongxuList", {"id": this.line})
-          .then((res) => {
-            this.workStation = res.data[0].id;
-            this.workStationOptions = res.data;
-            this.loadingShowData(this.workStation)
-          });
+      //转圈延迟一秒执行
+      getLoading() {
+        this.img = ["1"]
       },
 
-      //根据工位选择
-      changeSelect() {
-        this.loadingShowData(this.workStation)
+      //根据时间查询上报记录
+      doSearchJl(){
+
       },
 
-      //选择那个一个
-      selectList(val) {
-        if (val.length) {
-          let data = [];
-          for (let i = 0; i < val.length; i++) {
-            let a = val[i].id;
-            data.push(a)
-          }
-          this.listData = data;
-        }
-        else {
-          this.listData=[];
-        }
+      //显示上报异常弹出框
+      showYc() {
+        this.sbVisible = true;
+        this.equipment = "";
+        this.remarks = "";
       },
 
-      //列表全部选择
-      selectAll(val) {
-        if (val.length) {
-          let data = [];
-          for (let i = 0; i < val.length; i++) {
-            let a = val[i].id;
-            data.push(a)
-          }
-          this.listData = data;
-        }
-        else {
-          this.listData = [];
-        }
-      },
+      //上报设备异常
+      submitAbnormal() {
+        if (this.equipment && this.remarks) {
 
-      //显示新增
-      showAdd(){
-
-        if (this.listData.length) {
-          this.addVisible = true;
-        }
-        else {
-          this.message = "请勾选要点检的工位";
-          this.HideModal = false;
-          const that = this;
-
-          function a() {
-            that.message = "";
-            that.HideModal = true;
-          }
-
-          setTimeout(a, 2000);
-        }
-      },
-
-      //进行新增
-      doAdd() {
-        if (this.name && this.type && this.disabled &&this.backgroundColor&&this.showHide) {
-          axios.post(" " + url + "/padShow/buttonAdd",
-            {
-              "gongxuid": this.workStation,
-              "name": this.name,
-              "type": this.type,
-              "disabled": this.disabled,
-              "backgroundcolor": this.backgroundColor,
-              "show": this.showHide,
-            }
-          )
-            .then((res) => {
-              if (res.data.state === "1") {
-                this.$message.success(`新增成功`);
-                this.addVisible = false;
-                this.loadingShowData(this.workStation)
-
-              }
-              else {
-                this.$message.warning(`新增失败`);
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-        }
-        else {
-          this.$message.warning(`输入不能为空`);
-        }
-      },
-
-      //双击点击行内编辑
-      edit(row, column, cell, event) {
-        this.editVisible = true;
-        this.id = row.id;
-        axios.post(" " + url + "/padShow/buttonDetail", {"id": this.id})
-          .then((res) => {
-            this.workStation = res.data.data.gongxuid;
-            this.name = res.data.data.name;
-            this.type = Number(res.data.data.type);
-            this.disabled = res.data.data.disabled;
-            this.backgroundColor = res.data.data.backgroundcolor;
-            this.showHide = res.data.data.show;
+          axios.post(" " + url + "/shengchanError/errorEvent", {
+            "userId": this.userId,
+            "errorId":this.equipment,
+            "context":this.remarks,
+            "id":id
           })
-          .catch((err) => {
-            console.log(err)
-          });
-      },
-
-      // 保存编辑
-      saveEdit() {
-        if (this.name && this.type && this.disabled &&this.backgroundColor&&this.showHide) {
-          axios.post(" " + url + "/padShow/buttonUpdate",
-            {
-              "id":this.id,
-              "gongweiid": this.workStation,
-              "name": this.name,
-              "type": this.type,
-              "disabled": this.disabled,
-              "backgroundcolor": this.backgroundColor,
-              "show": this.showHide,
-            }
-          )
             .then((res) => {
-              if (res.data.state === "1") {
-                this.editVisible = false;
-                this.$message.success(`修改成功`);
-                this.loadingShowData(this.workStation)
+              if (res.data === "1") {
+                this.$message.success(`提交成功`);
               }
               else {
-                this.$message.warning(`新增失败`);
+                this.$message.warning(`提交失败`);
               }
             })
             .catch((err) => {
-              console.log(err)
             })
         }
-        else {
-          this.$message.warning(`输入不能为空`);
+        else if (!this.equipment) {
+          this.$message.warning(`异常设备必须选择`);
         }
-
-      },
-
-
+        else if (!this.remarks) {
+          this.$message.warning(`必须输入设备出现什么故障`);
+        }
+      }
     }
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
   @import "../../assets/less/base";
-
-  .template {
+  .equipment {
     width: 100%;
     height: 100%;
-    background-color: @color-white;
-    .crumbs {
-      height: 50px;
-      padding-top: 20px;
-      padding-left: 20px;
-    }
-    .template-content {
+    .equipmentTable{
+      width: 100%;
+      height: 85%;
       .handle-box {
-        height: 80px;
-        line-height:80px;
-        padding-left: 50px;
+        line-height:100px;
+        padding-left: 20px;
         .handle-input {
           width: 300px;
           display: inline-block;
         }
         .el-button {
-          width:100px;
-          height: 30px;
+          width:150px;
+          height: 40px;
+          font-size: @font-size-large;
         }
       }
-      .del-dialog-cnt {
-        font-size: 16px;
-        text-align: center
-      }
-      .table {
-        width: 100%;
-        font-size: 14px;
-      }
-      .red {
-        color: #ff0000;
-      }
+    }
 
+    .equipmentDiv {
+      width: 100%;
+      height:350px;
+      .closeBtn{
+        width: 100%;
+        height: 15%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        .el-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 30%;
+          height: 50px;
+        }
+      }
+      .equipmentDivTitle {
+        height: 30%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 5%;
+      }
+      .equipmentDivContent {
+        height: 40%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        textarea {
+          width: 90%;
+          height: 90%;
+          border: 1px solid @color-bg-hei;
+          border-radius: 2%;
+          padding: 5%;
+        }
+      }
+      .equipmentDivBtn {
+        height: 25%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .el-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40%;
+          height: 80px;
+          margin-right: 10%;
+          margin-left: 10%;
+          font-size: @font-size-large-xxxxxx;
+        }
+      }
     }
   }
-
-
+  .loading-container {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 </style>
