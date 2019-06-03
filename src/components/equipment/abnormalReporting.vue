@@ -174,7 +174,7 @@
           const userInfo = sessionStorage.getItem("userInfo");
           const info = JSON.parse(userInfo);
           this.userId =info.username;
-          this.stationid =info.roleid;
+          this.stationid =info.GH;
           let time = getNowTime();
           let times = [];
           for (let i = 0; i < 2; i++) {
@@ -187,21 +187,21 @@
           ])
             .then(axios.spread(function (shebei) {
               that.equipmentOptions = shebei.data;
-              that.loadingShowData(that.examineTime,that.equipment);
+              that.loadingShowData(that.examineTime,that.stationid,that.equipment);
             }));
         }
       },
 
       //瞬间加载数据
-      loadingShowData(data) {
+      loadingShowData(data1,data2,data3) {
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "sbgzclgz"}),
-          axios.post(" " + url + "/shebei/errorList", {"time":this.examineTime,"shebeiid": data})
+          axios.post(" " + url + "/shebei/errorList", {"time":data1,"stationid":data2,"shebeiid": data3})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
-            that.tableData = table.data.data;
+            that.tableData = table.data;
           }));
       },
 
@@ -213,7 +213,7 @@
       //根据时间查询上报记录
       doSearchJl() {
         if (this.examineTime) {
-          this.loadingShowData(this.examineTime, this.equipment);
+          this.loadingShowData(this.examineTime,this.stationid,this.equipment);
         }
         else {
           this.$message.warning("请选择查询时间");
