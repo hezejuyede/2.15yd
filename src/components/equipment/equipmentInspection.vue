@@ -395,14 +395,15 @@
       showMx(id) {
         this.mxVisible = true;
         this.id = id;
+        this.mxVisible = true;
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "zxdsbdjjlcx"}),
-          axios.post(" " + url + "/shebei/contentListByShebei", {"shebeid": data})
+          axios.post(" " + url + "/shebei/getShebeiRecordDetail", {"id": this.id})
         ])
           .then(axios.spread(function (title, table) {
-            that.cols = title.data;
-            that.tableData = table.data.data;
+            that.mxCols = title.data;
+            that.mxData = table.data.data;
           }));
       },
     }
