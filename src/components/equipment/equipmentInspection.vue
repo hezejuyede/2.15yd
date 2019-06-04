@@ -214,6 +214,7 @@
         img: "",
         userId:"",
         radio1:"3",
+        stationid:"",
 
         jlVisible:false,
         mxVisible:false,
@@ -277,6 +278,7 @@
           const userInfo = sessionStorage.getItem("userInfo");
           const info = JSON.parse(userInfo);
           this.userId =info.username;
+          this.stationid =info.GH;
           let time = getNowTime();
           let times = [];
           for (let i = 0; i < 2; i++) {
@@ -286,12 +288,12 @@
 
           let that = this;
           axios.all([
-            axios.post(" " + url + "/shebei/shebeiList", {"jiagongxian": "","stationid":that.workStation})
+            axios.post(" " + url + "/shebei/shebeiList", {"jiagongxian": "","stationid":that.stationid})
           ])
             .then(axios.spread(function (shebei) {
               that.shebei =shebei.data[0].id;
               that.shebeiOptions = shebei.data;
-              that.loadingShowData(that.shebei)
+              that.loadingShowData(that.shebei,that.examineTime)
             }));
 
 
@@ -300,11 +302,11 @@
       },
 
       //瞬间加载数据
-      loadingShowData(data) {
+      loadingShowData(data1,data2) {
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "zxdsbdjjlcx"}),
-          axios.post(" " + url + "/shebei/contentListByShebei", {"shebeid": data,"time":this.examineTime})
+          axios.post(" " + url + "/shebei/getShebeiRecord", {"id":data1,"times":data2})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
@@ -319,22 +321,12 @@
 
       //根据时间查询上报记录
       doSearchJl(){
-        axios.post(" " + url + "/shebei/insertRecord", {
-          "userId": this.userId,
-          "errorId":this.equipment,
-          "context":this.remarks,
-          "id":id
-        })
-          .then((res) => {
-            if (res.data === "1") {
-              this.$message.success(`提交成功`);
-            }
-            else {
-              this.$message.warning(`提交失败`);
-            }
-          })
-          .catch((err) => {
-          })
+        if(this.examineTime && this.shebei){
+          this.loadingShowData(this.shebei,this.examineTime)
+        }
+        else {
+          this.$message.warning(`必须选择设备和时间`);
+        }
       },
 
       //显示添加点检记录
@@ -368,11 +360,15 @@
             "list":this.djData,
           })
             .then((res) => {
-              if (res.data === "1") {
-                this.$message.success(`提交成功`);
+              if (res.data.state === "1") {
+                this.$message.success("提交成功");
+                let that = this;
+                setTimeout(() => {
+                  that.jlVisible = false;
+                }, 1000)
               }
               else {
-                this.$message.warning(`提交失败`);
+                this.$message.warning(res.data.message);
               }
             })
             .catch((err) => {

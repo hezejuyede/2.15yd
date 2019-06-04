@@ -351,9 +351,9 @@
           display: inline-block;
         }
         .el-button {
-          width:80px;
-          height: 40px;
-          font-size: @font-size-medium;
+          width:150px;
+          height: 50px;
+          font-size: @font-size-large;
         }
       }
     }

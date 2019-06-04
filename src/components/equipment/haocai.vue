@@ -4,9 +4,7 @@
     <div class="equipmentTable">
       <div class="handle-box">
         <label style="margin-right: 10px">
-          <span>智能检索耗材</span>
-          <span>:</span>
-          <el-input v-model="select_word" placeholder="智能检索耗材" class="handle-input mr10"></el-input>
+          <el-input v-model="select_word" placeholder="智能检索耗材" class="handle-input mr10" style="width: 200px"></el-input>
         </label>
         <label style="margin-right: 10px;margin-left: 5px">
           <span>分类</span>
@@ -433,9 +431,9 @@
           display: inline-block;
         }
         .el-button {
-          width:80px;
-          height: 40px;
-          font-size: @font-size-medium;
+          width:150px;
+          height: 50px;
+          font-size: @font-size-large;
         }
       }
     }
