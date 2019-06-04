@@ -4,8 +4,6 @@
     <div class="equipmentTable">
       <div class="handle-box">
         <label style="margin-right: 5px">
-          <span>检索点检记录</span>
-          <span>:</span>
           <el-input v-model="select_word" placeholder="检索点检记录" class="handle-input mr10" style="width: 200px"></el-input>
         </label>
         <label style="margin-right: 5px;margin-left: 5px">
@@ -426,9 +424,9 @@
           display: inline-block;
         }
         .el-button {
-          width:80px;
+          width:120px;
           height: 40px;
-          font-size: @font-size-medium;
+          font-size: @font-size-large;
         }
       }
     }

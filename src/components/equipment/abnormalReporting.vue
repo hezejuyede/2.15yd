@@ -275,7 +275,7 @@
           display: inline-block;
         }
         .el-button {
-          width:100px;
+          width:120px;
           height: 40px;
           font-size: @font-size-large;
         }
