@@ -50,12 +50,12 @@
                   style="width: 98%;margin: auto">
           <el-table-column
             align="center"
-            prop="bujianname"
+            prop="intime"
             label="时间">
           </el-table-column>
           <el-table-column
             align="center"
-            prop="bujianname"
+            prop="shebeiname"
             label="设备">
           </el-table-column>
           <el-table-column
