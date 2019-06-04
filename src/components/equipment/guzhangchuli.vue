@@ -13,11 +13,11 @@
             value-format="yyyy-MM-dd">
           </el-date-picker>
         </label>
-        <label style="margin-right: 5px;margin-left: 5px">
+        <label style="margin-right: 5px;margin-left: 2px">
           <span>生产线</span>
           <span>:</span>
           <el-select
-            style="width: 120px"
+            style="width: 110px"
             v-model="line"
             clearable
             filterable
@@ -33,11 +33,11 @@
             </el-option>
           </el-select>
         </label>
-        <label style="margin-right: 10px;margin-left:5px">
+        <label style="margin-right: 5px;margin-left:2px">
           <span>工位</span>
           <span>:</span>
           <el-select
-            style="width: 120px"
+            style="width: 110px"
             v-model="workStation"
             clearable
             filterable
@@ -53,18 +53,18 @@
             </el-option>
           </el-select>
         </label>
-        <label style="margin-right: 10px;margin-left:5px">
+        <label style="margin-right:5px;margin-left:2px">
           <span>设备</span>
           <span>:</span>
           <el-select
-            style="width: 120px"
+            style="width: 110px"
             v-model="shebei"
             clearable
             filterable
             allow-create
             default-first-option
             @change="changeSB"
-            placeholder="请选择设备">
+            placeholder="设备">
             <el-option
               v-for="item in shebeiOptions"
               :key="item.id"
@@ -473,13 +473,13 @@
       height: 85%;
       .handle-box {
         line-height:100px;
-        padding-left: 20px;
+        padding-left: 10px;
         .handle-input {
           width: 300px;
           display: inline-block;
         }
         .el-button {
-          width:80px;
+          width:110px;
           height: 40px;
           font-size: @font-size-medium;
         }
