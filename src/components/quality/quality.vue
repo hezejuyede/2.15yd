@@ -26,11 +26,9 @@
       return {
         img:"",
         iconData: [
-          {"icon": "iconfont icon-kaishi", "text": "加工开始", "url": "/"},
-          {"icon": "iconfont icon-zhilianganquan", "text": "质量评定", "url": "/"},
-          {"icon": "iconfont icon-tuihui", "text": "回退上道工序", "url": "/"},
-          {"icon": "iconfont icon-zanting", "text": "缺料暂停", "url": "/"},
-          {"icon": "iconfont icon-wancheng", "text": "加工完成", "url": "/"},
+          {"icon": "iconfont icon-customer", "text": "客户反馈", "url": "/equipmentInspection"},
+          {"icon": "iconfont icon-neibufankui", "text": "内部反馈", "url": "/abnormalReporting"},
+          {"icon": "iconfont icon-xuexi", "text": "基准学习", "url": "/fenlei"},
         ]
       }
 
@@ -55,15 +53,14 @@
       },
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       getAdminState() {
-        this.$router.replace;
         const userInfo = sessionStorage.getItem("userInfo");
         const info = JSON.parse(userInfo);
         if (info === null) {
           this.$router.push("/ProductionExecutionLogin")
         }
       },
-      goToPage(){
-
+      goToPage(index, url){
+        this.$router.push(url);
       }
 
     }
@@ -77,14 +74,14 @@
     height: 100%;
     .ProductionExecutionDiv {
       width: 100%;
-      height: 60%;
+      height: 70%;
       margin-top: 2%;
     }
     .IconTemplate {
       float: left;
       width: 30%;
-      height: 40%;
-      margin-bottom: 5%;
+      height: 30%;
+      margin-bottom: 2%;
       margin-left: 3%;
       display: flex;
       align-items: center;
@@ -92,62 +89,97 @@
       flex-direction: column;
       cursor: pointer;
 
-      .icon-kaishi {
+      .icon-customer {
         display: block;
         background-color: #F56C6C;
         color: @color-white;
         border-radius: 20%;
-        width: 60px;
-        height: 60px;
-        line-height: 60px;
-        font-size: 300%;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        font-size: 500%;
         text-align: center;
       }
-      .icon-zhilianganquan {
+      .icon-neibufankui {
         display: block;
         background-color: @color-bg-lan;
         color: @color-white;
         border-radius: 20%;
-        width: 60px;
-        height: 60px;
-        line-height: 60px;
-        font-size: 300%;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        font-size: 500%;
         text-align: center;
       }
-      .icon-tuihui {
+      .icon-xuexi {
         display: block;
         background-color: @color-bg-cs;
         color: @color-white;
         border-radius: 20%;
-        width: 60px;
-        height: 60px;
-        line-height: 60px;
-        font-size: 300%;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        font-size: 500%;
         text-align: center;
       }
-      .icon-zanting {
+      .icon-suppliesinvoice {
         display: block;
         background-color: #409EFF;
         color: @color-white;
         border-radius: 20%;
-        width: 60px;
-        height: 60px;
-        line-height: 60px;
-        font-size: 300%;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        font-size: 500%;
         text-align: center;
       }
-      .icon-wancheng {
+      .icon-chuku {
         display: block;
         background-color: #67C23A;
         color: @color-white;
         border-radius: 20%;
-        width: 60px;
-        height: 60px;
-        line-height: 60px;
-        font-size: 300%;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        font-size: 500%;
+        text-align: center;
+      }
+      .icon-chuku {
+        display: block;
+        background-color: #67C23A;
+        color: @color-white;
+        border-radius: 20%;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        font-size: 500%;
+        text-align: center;
+      }
+      .icon-ruku {
+        display: block;
+        background-color: @color-bg-anLv;
+        color: @color-white;
+        border-radius: 20%;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        font-size: 500%;
+        text-align: center;
+      }
+
+      .icon-chuli {
+        display: block;
+        background-color: @color-red;
+        color: @color-white;
+        border-radius: 20%;
+        width: 100px;
+        height: 100px;
+        line-height: 100px;
+        font-size: 500%;
         text-align: center;
       }
       span {
+        font-size: @font-size-large;
         margin-top: 5%;
         color: #909399
       }
