@@ -177,16 +177,16 @@
                   align="center"
                   prop="waijing"
                   label="外径"
-                  width="51">
+                  width="80">
                 </el-table-column>
                 <el-table-column
                   align="center"
                   prop="bihou"
                   label="壁厚"
-                  width="50">
+                  width="60">
                 </el-table-column>
                 <el-table-column
-                  width="50"
+                  width="60"
                   prop="changdu"
                   align="center"
                   label="长度">
@@ -221,19 +221,19 @@
               <el-table-column align="center" label="输入">
                 <el-table-column
                   align="center"
-                  width="51"
+                  width="70"
                   prop="atext"
                   label="A">
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  width="51"
+                  width="70"
                   prop="btext"
                   label="B">
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  width="51"
+                  width="70"
                   prop="ktext"
                   label="K">
                 </el-table-column>
@@ -242,7 +242,7 @@
                 align="center"
                 prop="jinwu"
                 label="管端金物"
-                width="80">
+                width="100">
               </el-table-column>
               <el-table-column
                 align="center"
@@ -585,7 +585,7 @@
                   align="center"
                   prop="waijing"
                   label="外径"
-                  width="51">
+                  width="80">
                 </el-table-column>
                 <el-table-column
                   align="center"
