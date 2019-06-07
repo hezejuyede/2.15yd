@@ -8,7 +8,14 @@ import CurrentTask from '../components/engineering/currentTask'
 import ProductionExecutionLogin from '../components/login/ProductionExecutionLogin'
 import Drawing from '../components/drawing/drawing'
 import Safe from '../components/safe/safe'
+
+//质量管理
 import Quality from '../components/quality/quality'
+import jizhunxuexi from '../components/quality/jizhunxuexi.vue'
+import kehuwuzuo from '../components/quality/kehuwuzuo.vue'
+import neibuwuzuo from '../components/quality/neibuwuzuo.vue'
+import tixiangxuexi from '../components/quality/tixiangxuexi.vue'
+
 
 import Equipment from '../components/equipment/equipment'
 
@@ -83,6 +90,7 @@ export default new Router({
         keepAlive: false
       }
     },
+
     {
       path: '/Quality',
       name: 'Quality',
@@ -91,6 +99,41 @@ export default new Router({
         keepAlive: false
       }
     },
+    {
+      path: '/jizhunxuexi',
+      name: 'jizhunxuexi',
+      component: jizhunxuexi,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/kehuwuzuo',
+      name: 'kehuwuzuo',
+      component: kehuwuzuo,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/neibuwuzuo',
+      name: 'neibuwuzuo',
+      component: neibuwuzuo,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/tixiangxuexi',
+      name: 'tixiangxuexi',
+      component: tixiangxuexi,
+      meta: {
+        keepAlive: false
+      }
+    },
+
+
+
     {
       path: '/Equipment',
       name: 'Equipment',
@@ -115,7 +158,6 @@ export default new Router({
         keepAlive: false
       }
     },
-
     {
       path: '/fenlei',
       name: 'fenlei',
@@ -124,7 +166,6 @@ export default new Router({
         keepAlive: false
       }
     },
-
     {
       path: '/haocai',
       name: 'haocai',

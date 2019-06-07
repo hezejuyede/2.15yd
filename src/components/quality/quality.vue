@@ -26,10 +26,10 @@
       return {
         img:"",
         iconData: [
-          {"icon": "iconfont icon-customer", "text": "客户反馈", "url": "/equipmentInspection"},
-          {"icon": "iconfont icon-neibufankui", "text": "内部反馈", "url": "/abnormalReporting"},
-          {"icon": "iconfont icon-xuexi", "text": "基准学习", "url": "/fenlei"},
-          {"icon": "iconfont icon-xuexi1", "text": "提醒学习", "url": "/fenlei"},
+          {"icon": "iconfont icon-customer", "text": "客户反馈", "url": "/kehuwuzuo"},
+          {"icon": "iconfont icon-neibufankui", "text": "内部反馈", "url": "/neibuwuzuo"},
+          {"icon": "iconfont icon-xuexi", "text": "基准学习", "url": "/jizhunxuexi"},
+          {"icon": "iconfont icon-xuexi1", "text": "提醒学习", "url": "/tixiangxuexi"},
         ]
       }
 
