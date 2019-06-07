@@ -86,12 +86,18 @@
         </div>
         <div class="equipmentDivTitle" id="sbSelect">
           <label style="margin-right: 5px;margin-left: 5px">
+            <span>责任人</span>
+            <span>:</span>
             <el-input v-model="wuzuoren" style="width: 200px" placeholder="责任人"></el-input>
           </label>
           <label style="margin-right: 5px;margin-left: 5px">
+            <span>损失材料</span>
+            <span>:</span>
             <el-input v-model="sunshicailiao" style="width: 200px" placeholder="损失材料"></el-input>
           </label>
           <label style="margin-right: 5px;margin-left: 5px">
+            <span style="font-size: 18px;">损失工时</span>
+            <span>:</span>
             <el-input v-model="sunshigongshi" style="width: 200px" placeholder="损失工时"></el-input>
           </label>
         </div>
@@ -390,7 +396,7 @@
 
     .equipmentDiv {
       width: 100%;
-      height: 350px;
+      height: 500px;
       .closeBtn {
         width: 100%;
         height: 15%;
