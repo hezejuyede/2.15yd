@@ -84,26 +84,41 @@
         <div class="closeBtn">
           <el-button type="danger" @click="sbVisible = false">关闭窗口</el-button>
         </div>
-        <div class="equipmentDivTitle" id="sbSelect">
+        <div class="equipmentDivTitle" id="sbInput">
           <label style="margin-right: 5px;margin-left: 5px">
-            <span>责任人</span>
+            <span style="font-size: 20px;">责任人</span>
             <span>:</span>
-            <el-input v-model="wuzuoren" style="width: 200px" placeholder="责任人"></el-input>
+            <el-input v-model="wuzuoren" style="width: 160px" placeholder="责任人"></el-input>
           </label>
           <label style="margin-right: 5px;margin-left: 5px">
-            <span>损失材料</span>
+            <span style="font-size: 20px;">损失材料</span>
             <span>:</span>
-            <el-input v-model="sunshicailiao" style="width: 200px" placeholder="损失材料"></el-input>
+            <el-input v-model="sunshicailiao" style="width: 160px" placeholder="损失材料"></el-input>
           </label>
           <label style="margin-right: 5px;margin-left: 5px">
-            <span style="font-size: 18px;">损失工时</span>
+            <span style="font-size: 20px;">损失工时</span>
             <span>:</span>
-            <el-input v-model="sunshigongshi" style="width: 200px" placeholder="损失工时"></el-input>
+            <el-input v-model="sunshigongshi" style="width: 160px" placeholder="损失工时"></el-input>
           </label>
         </div>
         <div class="equipmentDivContent">
-          <textarea placeholder="误做原因" v-model="wuzuoyuanyin"></textarea>
-          <textarea placeholder="处理对策" v-model="chuliduice"></textarea>
+          <div class="equipmentDivContentLeft">
+            <div class="equipmentTitle">
+              误做原因
+            </div>
+            <div class="equipmentInput">
+              <textarea placeholder="误做原因" v-model="wuzuoyuanyin"></textarea>
+            </div>
+          </div>
+          <div class="equipmentDivContentRight">
+            <div class="equipmentTitle">
+              误做原因
+            </div>
+            <div class="equipmentInput">
+              <textarea placeholder="处理对策" v-model="chuliduice"></textarea>
+            </div>
+          </div>
+
         </div>
         <div class="equipmentDivBtn">
           <el-button type="success" @click="submitAbnormal">设备故障上报</el-button>
@@ -135,15 +150,18 @@
     data() {
       return {
         img: "",
+        message: '',
+        HideModal: true,
+
         cols: [],
         tableData: [],
         listData: [],
+        stationid:"",
 
+        select_word: "",
         sbVisible: false,
 
         examineTime: "",
-        select_word: "",
-
         workStation: "",
         workStationOptions: [],
         line: '',
@@ -155,8 +173,7 @@
         wuzuoyuanyin: "",
         chuliduice: "",
 
-        message: '',
-        HideModal: true
+
       }
     },
     components: {Loading, Modal, footerNav, headerNav},
@@ -220,7 +237,7 @@
               that.line = line.data[0].indexno;
               that.workStation = workStation.data[0].id;
               that.workStationOptions = workStation.data;
-              that.loadingShowData(that.examineTime, 1);
+              that.loadingShowData(that.examineTime, that.stationid);
             }));
         }
       },
@@ -230,7 +247,7 @@
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "khfkdwz"}),
-          axios.post(" " + url + "/devType/devTypeList", {"times": data1, "type": data2})
+          axios.post(" " + url + "/devType/devTypeList", {"times": data1, "stationid": data2})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
@@ -322,6 +339,17 @@
           }
           else {
             this.sbVisible = true;
+            axios.post(" " + url + "/devType/devTypeList", {"times": this.examineTime, "stationid": this.stationid})
+              .then((res) => {
+                this.wuzuoren = res.data.da;
+                this.wuzuoyuanyin = res.data.da;
+                this.sunshicailiao = res.data.da;
+                this.sunshigongshi = res.data.da;
+                this.chuliduice = res.data.da;
+              })
+              .catch((err) => {
+                console.log(err)
+              })
           }
         }
         else {
@@ -341,30 +369,30 @@
 
       //上报设备异常
       submitAbnormal() {
-        if (this.equipment && this.remarks) {
+        if (this.wuzuoren && this.wuzuoyuanyin && this.sunshicailiao && this.sunshigongshi  && this.chuliduice) {
           axios.post(" " + url + "/shebei/finderrorAdd", {
-            "finduserid": this.userId,
-            "shebeiid": this.equipment,
-            "beizhu": this.remarks,
+            "wuzuoren": this.wuzuoren,
+            "shebeiid": this.wuzuoyuanyin,
+            "wuzuoyuanyin": this.sunshicailiao,
+            "sunshigongshi": this.sunshigongshi,
+            "chuliduice": this.chuliduice,
           })
             .then((res) => {
               if (res.data === "1") {
+                this.loadingShowData(this.examineTime,this.stationid);
                 this.$message.success(`提交成功`);
                 this.sbVisible = false;
-                this.loadingShowData();
               }
               else {
                 this.$message.warning(`提交失败`);
               }
             })
             .catch((err) => {
+              console.log(err)
             })
         }
-        else if (!this.equipment) {
-          this.$message.warning(`异常设备必须选择`);
-        }
-        else if (!this.remarks) {
-          this.$message.warning(`必须输入设备出现什么故障`);
+        else {
+          this.$message.warning("请填写完全，不能有空");
         }
       }
     }
@@ -421,20 +449,62 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding-top: 5%;
       }
       .equipmentDivContent {
         height: 40%;
         display: flex;
         align-items: center;
         justify-content: center;
-        textarea {
-          width: 90%;
-          height: 90%;
-          border: 1px solid @color-bg-hei;
-          border-radius: 2%;
-          padding: 5%;
+        .equipmentDivContentLeft{
+          height: 100%;
+          width: 50%;
+          .equipmentTitle{
+            height: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: @font-size-large;
+          }
+          .equipmentInput{
+            height: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            textarea {
+              width: 90%;
+              height: 100%;
+              border: 1px solid @color-bg-hei;
+              border-radius: 2%;
+              padding: 5%;
+            }
+          }
+
         }
+        .equipmentDivContentRight{
+          height: 100%;
+          width: 50%;
+          .equipmentTitle{
+            height: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: @font-size-large;
+          }
+          .equipmentInput{
+            height: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            textarea {
+              width: 90%;
+              height: 100%;
+              border: 1px solid @color-bg-hei;
+              border-radius: 2%;
+              padding: 5%;
+            }
+          }
+        }
+
       }
       .equipmentDivBtn {
         height: 25%;
