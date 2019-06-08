@@ -37,7 +37,7 @@
         </label>
         <el-button type="success" class="handle-del mr10" @click="doSearch">查询</el-button>
         <el-button type="primary" class="handle-del mr10" @click="showDetails">详情</el-button>
-        <el-button type="danger" class="handle-del mr10" @click="doLearn">学习</el-button>
+        <el-button type="danger"  class="handle-del mr10" @click="doLearn">批量学习</el-button>
       </div>
       <div class="handle-content">
         <el-table class="tb-edit"
@@ -69,10 +69,10 @@
           <el-button type="danger" @click="sbVisible = false">关闭窗口</el-button>
         </div>
         <div class="equipmentDivContent">
-
+          <div class="" v-html="htmlData"></div>
         </div>
         <div class="equipmentDivBtn">
-          <el-button type="success" @click="submitAbnormal">学习</el-button>
+          <el-button type="success" @click="doLearn">学习</el-button>
         </div>
       </div>
     </el-dialog>
@@ -96,6 +96,7 @@
   import Loading from '../../common/loading'
   import {getNowTime} from '../../assets/js/api'
 
+
   export default {
     name: 'quality',
     data() {
@@ -116,7 +117,7 @@
         examineTime: "",
         learn: "1",
         learnOptions: [{"name": "已学习", "id": "1"}, {"name": "未学习", "id": "2"}],
-
+        htmlData:'',
 
       }
     },
@@ -232,7 +233,7 @@
       showDetails() {
         if (this.listData.length) {
           if (this.listData.length > 1) {
-            this.message = "只能删除一个";
+            this.message = "只能查看一个";
             this.HideModal = false;
             const that = this;
 
@@ -247,11 +248,7 @@
             this.sbVisible = true;
             axios.post(" " + url + "/devType/devTypeList", {"times": this.examineTime, "stationid": this.stationid})
               .then((res) => {
-                this.wuzuoren = res.data.da;
-                this.wuzuoyuanyin = res.data.da;
-                this.sunshicailiao = res.data.da;
-                this.sunshigongshi = res.data.da;
-                this.chuliduice = res.data.da;
+                this.htmlData = res.data.da;
               })
               .catch((err) => {
                 console.log(err)
@@ -275,7 +272,7 @@
       //根据时间查询上报记录
       doSearch() {
         if (this.examineTime) {
-          this.loadingShowData(this.examineTime, this.stationid, this.equipment);
+          this.loadingShowData(this.examineTime, this.stationid);
         }
         else {
           this.$message.warning("请选择查询时间");
@@ -283,69 +280,15 @@
 
       },
 
-      //显示上报异常弹出框
-      showYc() {
-        if (this.listData.length) {
-          if (this.listData.length > 1) {
-            this.message = "只能删除一个";
-            this.HideModal = false;
-            const that = this;
-
-            function a() {
-              that.message = "";
-              that.HideModal = true;
-            }
-
-            setTimeout(a, 2000);
-          }
-          else {
-            this.sbVisible = true;
-            axios.post(" " + url + "/devType/devTypeList", {"times": this.examineTime, "stationid": this.stationid})
-              .then((res) => {
-                this.wuzuoren = res.data.da;
-                this.wuzuoyuanyin = res.data.da;
-                this.sunshicailiao = res.data.da;
-                this.sunshigongshi = res.data.da;
-                this.chuliduice = res.data.da;
-              })
-              .catch((err) => {
-                console.log(err)
-              })
-          }
-        }
-        else {
-          this.message = "请勾选要学习的内容";
-          this.HideModal = false;
-          const that = this;
-
-          function b() {
-            that.message = "";
-            that.HideModal = true;
-          }
-
-          setTimeout(b, 2000);
-        }
-
-      },
-
-      //上报设备异常
+      //上报学习
       doLearn() {
-        if (this.wuzuoren && this.wuzuoyuanyin && this.sunshicailiao && this.sunshigongshi && this.chuliduice) {
-          axios.post(" " + url + "/shebei/finderrorAdd", {
-            "wuzuoren": this.wuzuoren,
-            "shebeiid": this.wuzuoyuanyin,
-            "wuzuoyuanyin": this.sunshicailiao,
-            "sunshigongshi": this.sunshigongshi,
-            "chuliduice": this.chuliduice,
-          })
+        if (this.listData.length) {
+          axios.post(" " + url + "/devType/devTypeList", {"ids": this.listData})
             .then((res) => {
-              if (res.data === "1") {
+              if(res.data==="1"){
                 this.loadingShowData(this.examineTime, this.stationid);
-                this.$message.success(`提交成功`);
                 this.sbVisible = false;
-              }
-              else {
-                this.$message.warning(`提交失败`);
+                this.$message.success("上报学习成功");
               }
             })
             .catch((err) => {
@@ -353,9 +296,10 @@
             })
         }
         else {
-          this.$message.warning("请填写完全，不能有空");
+          this.$message.warning("请勾选要学习的内容");
         }
-      }
+      },
+
     }
   }
 </script>
@@ -394,7 +338,7 @@
         align-items: center;
         justify-content: center;
         position: absolute;
-        top: 0;
+        top: -10px;
         left: 0;
         z-index: 999;
         .el-button {
@@ -412,60 +356,11 @@
         justify-content: center;
       }
       .equipmentDivContent {
-        height: 40%;
+        height: 400px;
         display: flex;
         align-items: center;
         justify-content: center;
-        .equipmentDivContentLeft {
-          height: 100%;
-          width: 50%;
-          .equipmentTitle {
-            height: 20%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: @font-size-large;
-          }
-          .equipmentInput {
-            height: 80%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            textarea {
-              width: 90%;
-              height: 100%;
-              border: 1px solid @color-bg-hei;
-              border-radius: 2%;
-              padding: 5%;
-            }
-          }
-
-        }
-        .equipmentDivContentRight {
-          height: 100%;
-          width: 50%;
-          .equipmentTitle {
-            height: 20%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: @font-size-large;
-          }
-          .equipmentInput {
-            height: 80%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            textarea {
-              width: 90%;
-              height: 100%;
-              border: 1px solid @color-bg-hei;
-              border-radius: 2%;
-              padding: 5%;
-            }
-          }
-        }
-
+        overflow: auto;
       }
       .equipmentDivBtn {
         height: 25%;
