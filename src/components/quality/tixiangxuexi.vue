@@ -4,8 +4,7 @@
     <div class="equipmentTable">
       <div class="handle-box">
         <label style="margin-right: 5px">
-          <el-input v-model="select_word" placeholder="检索上报记录" class="handle-input mr10"
-                    style="width: 150px"></el-input>
+          <el-input v-model="select_word" placeholder="检索上报记录" style="width:120px"></el-input>
         </label>
         <label style="margin-right: 5px;margin-left: 5px">
           <el-date-picker
@@ -18,42 +17,27 @@
           </el-date-picker>
         </label>
         <label style="margin-right: 10px;margin-left: 5px">
+          <span>学习状态</span>
+          <span>:</span>
           <el-select
             style="width: 120px"
-            v-model="line"
+            v-model="learn"
             clearable
             filterable
             allow-create
             default-first-option
-            @change="changeSCX"
-            placeholder="请选择生产线">
+            placeholder="请选择学习状态">
             <el-option
-              v-for="item in lineOptions"
-              :key="item.indexno"
-              :label="item.name"
-              :value="item.indexno">
-            </el-option>
-          </el-select>
-        </label>
-        <label style="margin-right: 10px;margin-left: 5px">
-          <el-select
-            style="width: 120px"
-            v-model="workStation"
-            clearable
-            filterable
-            allow-create
-            default-first-option
-            placeholder="请选择工位">
-            <el-option
-              v-for="item in workStationOptions"
+              v-for="item in learnOptions"
               :key="item.id"
               :label="item.name"
               :value="item.id">
             </el-option>
           </el-select>
         </label>
-        <el-button type="success" class="handle-del mr10" @click="doSearchJl">查询</el-button>
-        <el-button type="primary" class="handle-del mr10" @click="showYc">上报</el-button>
+        <el-button type="success" class="handle-del mr10" @click="doSearch">查询</el-button>
+        <el-button type="primary" class="handle-del mr10" @click="showDetails">详情</el-button>
+        <el-button type="danger" class="handle-del mr10" @click="doLearn">学习</el-button>
       </div>
       <div class="handle-content">
         <el-table class="tb-edit"
@@ -84,23 +68,11 @@
         <div class="closeBtn">
           <el-button type="danger" @click="sbVisible = false">关闭窗口</el-button>
         </div>
-        <div class="equipmentDivTitle" id="sbSelect">
-          <label style="margin-right: 5px;margin-left: 5px">
-            <el-input v-model="wuzuoren" style="width: 200px" placeholder="责任人"></el-input>
-          </label>
-          <label style="margin-right: 5px;margin-left: 5px">
-            <el-input v-model="sunshicailiao" style="width: 200px" placeholder="损失材料"></el-input>
-          </label>
-          <label style="margin-right: 5px;margin-left: 5px">
-            <el-input v-model="sunshigongshi" style="width: 200px" placeholder="损失工时"></el-input>
-          </label>
-        </div>
         <div class="equipmentDivContent">
-          <textarea placeholder="误做原因" v-model="wuzuoyuanyin"></textarea>
-          <textarea placeholder="处理对策" v-model="chuliduice"></textarea>
+
         </div>
         <div class="equipmentDivBtn">
-          <el-button type="success" @click="submitAbnormal">设备故障上报</el-button>
+          <el-button type="success" @click="submitAbnormal">学习</el-button>
         </div>
       </div>
     </el-dialog>
@@ -129,28 +101,23 @@
     data() {
       return {
         img: "",
+        message: '',
+        HideModal: true,
+
         cols: [],
         tableData: [],
         listData: [],
+        id: "",
+        stationid: "",
 
+        select_word: "",
         sbVisible: false,
 
         examineTime: "",
-        select_word: "",
+        learn: "1",
+        learnOptions: [{"name": "已学习", "id": "1"}, {"name": "未学习", "id": "2"}],
 
-        workStation: "",
-        workStationOptions: [],
-        line: '',
-        lineOptions: [],
 
-        wuzuoren: "",
-        sunshicailiao: "",
-        sunshigongshi: "",
-        wuzuoyuanyin: "",
-        chuliduice: "",
-
-        message: '',
-        HideModal: true
       }
     },
     components: {Loading, Modal, footerNav, headerNav},
@@ -204,18 +171,7 @@
             times.push(time)
           }
           this.examineTime = times;
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
-            axios.post(" " + url + "/api/getPersonProcessList", {"name": ""}),
-          ])
-            .then(axios.spread(function (line, workStation) {
-              that.lineOptions = line.data;
-              that.line = line.data[0].indexno;
-              that.workStation = workStation.data[0].id;
-              that.workStationOptions = workStation.data;
-              that.loadingShowData(that.examineTime, 1);
-            }));
+          this.loadingShowData(this.examineTime, this.stationid);
         }
       },
 
@@ -223,7 +179,7 @@
       loadingShowData(data1, data2) {
         let that = this;
         axios.all([
-          axios.post(" " + url + "/sys/showTableTitle", {"name": "khfkdwz"}),
+          axios.post(" " + url + "/sys/showTableTitle", {"name": "xuexibaogaotongji"}),
           axios.post(" " + url + "/devType/devTypeList", {"times": data1, "type": data2})
         ])
           .then(axios.spread(function (title, table) {
@@ -272,24 +228,52 @@
 
       },
 
-      //更改生产线
-      changeSCX() {
-        axios.post(" " + url + "/sysconfig/getGongxuList", {"id": this.line})
-          .then((res) => {
-            if (res.data === "-1") {
-              this.workStation = "";
-              this.workStationOptions = [];
+      //查看详情
+      showDetails() {
+        if (this.listData.length) {
+          if (this.listData.length > 1) {
+            this.message = "只能删除一个";
+            this.HideModal = false;
+            const that = this;
+
+            function a() {
+              that.message = "";
+              that.HideModal = true;
             }
-            else {
-              this.workStation = res.data[0].id;
-              this.workStationOptions = res.data;
-            }
-          });
+
+            setTimeout(a, 2000);
+          }
+          else {
+            this.sbVisible = true;
+            axios.post(" " + url + "/devType/devTypeList", {"times": this.examineTime, "stationid": this.stationid})
+              .then((res) => {
+                this.wuzuoren = res.data.da;
+                this.wuzuoyuanyin = res.data.da;
+                this.sunshicailiao = res.data.da;
+                this.sunshigongshi = res.data.da;
+                this.chuliduice = res.data.da;
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
+        }
+        else {
+          this.message = "请勾选要学习的内容";
+          this.HideModal = false;
+          const that = this;
+
+          function b() {
+            that.message = "";
+            that.HideModal = true;
+          }
+
+          setTimeout(b, 2000);
+        }
       },
 
-
       //根据时间查询上报记录
-      doSearchJl() {
+      doSearch() {
         if (this.examineTime) {
           this.loadingShowData(this.examineTime, this.stationid, this.equipment);
         }
@@ -316,10 +300,21 @@
           }
           else {
             this.sbVisible = true;
+            axios.post(" " + url + "/devType/devTypeList", {"times": this.examineTime, "stationid": this.stationid})
+              .then((res) => {
+                this.wuzuoren = res.data.da;
+                this.wuzuoyuanyin = res.data.da;
+                this.sunshicailiao = res.data.da;
+                this.sunshigongshi = res.data.da;
+                this.chuliduice = res.data.da;
+              })
+              .catch((err) => {
+                console.log(err)
+              })
           }
         }
         else {
-          this.message = "请勾选要上报内容";
+          this.message = "请勾选要学习的内容";
           this.HideModal = false;
           const that = this;
 
@@ -334,31 +329,31 @@
       },
 
       //上报设备异常
-      submitAbnormal() {
-        if (this.equipment && this.remarks) {
+      doLearn() {
+        if (this.wuzuoren && this.wuzuoyuanyin && this.sunshicailiao && this.sunshigongshi && this.chuliduice) {
           axios.post(" " + url + "/shebei/finderrorAdd", {
-            "finduserid": this.userId,
-            "shebeiid": this.equipment,
-            "beizhu": this.remarks,
+            "wuzuoren": this.wuzuoren,
+            "shebeiid": this.wuzuoyuanyin,
+            "wuzuoyuanyin": this.sunshicailiao,
+            "sunshigongshi": this.sunshigongshi,
+            "chuliduice": this.chuliduice,
           })
             .then((res) => {
               if (res.data === "1") {
+                this.loadingShowData(this.examineTime, this.stationid);
                 this.$message.success(`提交成功`);
                 this.sbVisible = false;
-                this.loadingShowData();
               }
               else {
                 this.$message.warning(`提交失败`);
               }
             })
             .catch((err) => {
+              console.log(err)
             })
         }
-        else if (!this.equipment) {
-          this.$message.warning(`异常设备必须选择`);
-        }
-        else if (!this.remarks) {
-          this.$message.warning(`必须输入设备出现什么故障`);
+        else {
+          this.$message.warning("请填写完全，不能有空");
         }
       }
     }
@@ -390,7 +385,7 @@
 
     .equipmentDiv {
       width: 100%;
-      height: 350px;
+      height: 500px;
       .closeBtn {
         width: 100%;
         height: 15%;
@@ -415,20 +410,62 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding-top: 5%;
       }
       .equipmentDivContent {
         height: 40%;
         display: flex;
         align-items: center;
         justify-content: center;
-        textarea {
-          width: 90%;
-          height: 90%;
-          border: 1px solid @color-bg-hei;
-          border-radius: 2%;
-          padding: 5%;
+        .equipmentDivContentLeft {
+          height: 100%;
+          width: 50%;
+          .equipmentTitle {
+            height: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: @font-size-large;
+          }
+          .equipmentInput {
+            height: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            textarea {
+              width: 90%;
+              height: 100%;
+              border: 1px solid @color-bg-hei;
+              border-radius: 2%;
+              padding: 5%;
+            }
+          }
+
         }
+        .equipmentDivContentRight {
+          height: 100%;
+          width: 50%;
+          .equipmentTitle {
+            height: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: @font-size-large;
+          }
+          .equipmentInput {
+            height: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            textarea {
+              width: 90%;
+              height: 100%;
+              border: 1px solid @color-bg-hei;
+              border-radius: 2%;
+              padding: 5%;
+            }
+          }
+        }
+
       }
       .equipmentDivBtn {
         height: 25%;
