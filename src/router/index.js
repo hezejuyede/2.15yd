@@ -7,14 +7,20 @@ import Index from '../components/engineering/waitingForHomework'
 import CurrentTask from '../components/engineering/currentTask'
 import ProductionExecutionLogin from '../components/login/ProductionExecutionLogin'
 import Drawing from '../components/drawing/drawing'
+//安全模块
 import Safe from '../components/safe/safe'
+import aqtixiangxuexi from '../components/safe/tixiangxuexi.vue'
+import aqjizhunxuexi from '../components/safe/jizhunxuexi.vue'
+
+
+
 
 //质量管理
 import Quality from '../components/quality/quality'
-import jizhunxuexi from '../components/quality/jizhunxuexi.vue'
 import kehuwuzuo from '../components/quality/kehuwuzuo.vue'
 import neibuwuzuo from '../components/quality/neibuwuzuo.vue'
 import tixiangxuexi from '../components/quality/tixiangxuexi.vue'
+import jizhunxuexi from '../components/quality/jizhunxuexi.vue'
 
 
 import Equipment from '../components/equipment/equipment'
@@ -86,6 +92,22 @@ export default new Router({
       path: '/Safe',
       name: 'Safe',
       component: Safe,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/aqtixiangxuexi',
+      name: 'aqtixiangxuexi',
+      component: aqtixiangxuexi,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/aqjizhunxuexi',
+      name: 'aqjizhunxuexi',
+      component: aqjizhunxuexi,
       meta: {
         keepAlive: false
       }
