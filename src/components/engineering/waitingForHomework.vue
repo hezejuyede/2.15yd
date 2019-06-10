@@ -2633,7 +2633,54 @@
             })
             .then((res) => {
               this.screenVisible = false;
-              this.tableData = res.data;
+              if (this.listType === "4" && this.left2===true){
+                let data =[];
+                for (let i=0;i<res.data.length;i++){
+                  let json = {
+                    "xuhao": i + 1,
+                    "linename": res.data[i].linename,
+                    "qieduan": res.data[i].qieduan,
+                    "atext": res.data[i].atext,
+                    "jiagongxian":res.data[i].jiagongxian,
+                    "indexno": res.data[i].indexno,
+                    "neijing": res.data[i].neijing,
+                    "type": res.data[i].type,
+                    "waijing":res.data[i].waijing,
+                    "yiguanno": res.data[i].yiguanno,
+                    "btext": res.data[i].btext,
+                    "codeno": res.data[i].codeno,
+                    "quanchang":res.data[i].quanchang,
+                    "id": res.data[i].id,
+                    "chuanfan": res.data[i].chuanfan,
+                    "shipcode": res.data[i].shipcode,
+                    "zuox": res.data[i].zuox,
+                    "fileid": res.data[i].fileid,
+                    "createtime": res.data[i].createtime,
+                    "jiagongxilie": res.data[i].jiagongxilie,
+                    "daihao": res.data[i].daihao,
+                    "jinwu": res.data[i].jinwu,
+                    "pici": res.data[i].pici,
+                    "changdu":res.data[i].changdu,
+                    "pno":res.data[i].pno,
+                    "bihou": res.data[i].bihou,
+                    "pianxinliang": res.data[i].pianxinliang,
+                    "shenpiStatus": res.data[i].shenpiStatus,
+                    "muguanwaijing": res.data[i].muguanwaijing,
+                    "denglizi":res.data[i].denglizi,
+                    "beizhu": res.data[i].beizhu,
+                    "fanhao":res.data[i].fanhao,
+                    "guige": res.data[i].guige,
+                    "jiancha":res.data[i].jiancha,
+                    "kxtext": res.data[i].kxtext
+                  };
+                  data.push(json)
+                }
+                this.tableData =data;
+              }
+              else {
+                this.tableData = res.data;
+              }
+
             })
             .catch((err) => {
               console.log(err)
@@ -2799,6 +2846,7 @@
                 for (let i=0;i<table.data.length;i++){
                   let json = {
                     "xuhao": i + 1,
+                    "linename": table.data[i].linename,
                     "qieduan": table.data[i].qieduan,
                     "atext": table.data[i].atext,
                     "jiagongxian": table.data[i].jiagongxian,
