@@ -17,7 +17,7 @@
             value-format="yyyy-MM-dd">
           </el-date-picker>
         </label>
-        <label style="margin-right: 10px;margin-left: 5px">
+      <!--  <label style="margin-right: 10px;margin-left: 5px">
           <el-select
             style="width: 120px"
             v-model="line"
@@ -51,7 +51,7 @@
               :value="item.id">
             </el-option>
           </el-select>
-        </label>
+        </label>-->
         <el-button type="success" class="handle-del mr10" @click="doSearchJl">查询</el-button>
         <el-button type="primary" class="handle-del mr10" @click="showYc">上报</el-button>
       </div>
@@ -98,7 +98,7 @@
           <label style="margin-right: 5px;margin-left: 5px">
             <span style="font-size: 20px;">损失工时</span>
             <span>:</span>
-            <el-input v-model="sunshigongshi" style="width: 160px" placeholder="损失工时"></el-input>
+            <el-input v-model="sunshigongshi" style="width: 160px" type="number" placeholder="损失工时"></el-input>
           </label>
         </div>
         <div class="equipmentDivContent">
@@ -121,7 +121,7 @@
 
         </div>
         <div class="equipmentDivBtn">
-          <el-button type="success" @click="submitAbnormal">设备故障上报</el-button>
+          <el-button type="success" @click="submitAbnormal">进行上报</el-button>
         </div>
       </div>
     </el-dialog>
@@ -162,6 +162,7 @@
         sbVisible: false,
 
         examineTime: "",
+
         workStation: "",
         workStationOptions: [],
         line: '',
@@ -237,7 +238,7 @@
               that.line = line.data[0].indexno;
               that.workStation = workStation.data[0].id;
               that.workStationOptions = workStation.data;
-              that.loadingShowData(that.examineTime, that.stationid);
+              that.loadingShowData(that.examineTime,1);
             }));
         }
       },
@@ -247,11 +248,11 @@
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "khfkdwz"}),
-          axios.post(" " + url + "/devType/devTypeList", {"times": data1, "stationid": data2})
+          axios.post(" " + url + "/fankui/fankuiList",{"times":data1,"type":data2})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
-            that.tableData = table.data;
+            that.tableData = table.data.data;
           }));
       },
 
@@ -314,7 +315,7 @@
       //根据时间查询上报记录
       doSearchJl() {
         if (this.examineTime) {
-          this.loadingShowData(this.examineTime, this.stationid, this.equipment);
+          this.loadingShowData(this.examineTime, 2);
         }
         else {
           this.$message.warning("请选择查询时间");
@@ -326,7 +327,7 @@
       showYc() {
         if (this.listData.length) {
           if (this.listData.length > 1) {
-            this.message = "只能删除一个";
+            this.message = "只能选择一个";
             this.HideModal = false;
             const that = this;
 
@@ -338,14 +339,20 @@
             setTimeout(a, 2000);
           }
           else {
-            this.sbVisible = true;
-            axios.post(" " + url + "/devType/devTypeList", {"times": this.examineTime, "stationid": this.stationid})
+            axios.post(" " + url + "/fankui/fankuiDetail", {"id": this.listData[0]})
               .then((res) => {
-                this.wuzuoren = res.data.da;
-                this.wuzuoyuanyin = res.data.da;
-                this.sunshicailiao = res.data.da;
-                this.sunshigongshi = res.data.da;
-                this.chuliduice = res.data.da;
+                if (res.data.state === "1") {
+                  this.wuzuoren = res.data.data.wuzuoren;
+                  this.wuzuoyuanyin = res.data.data.wuzuoyuanyin;
+                  this.sunshicailiao = res.data.data.sunshicailiao;
+                  this.sunshigongshi = res.data.data.sunshigongshi;
+                  this.chuliduice = res.data.data.chuliduice;
+                  this.sbVisible = true;
+                }
+                else {
+                  this.$message.warning(res.data.message);
+                }
+
               })
               .catch((err) => {
                 console.log(err)
@@ -370,21 +377,22 @@
       //上报设备异常
       submitAbnormal() {
         if (this.wuzuoren && this.wuzuoyuanyin && this.sunshicailiao && this.sunshigongshi  && this.chuliduice) {
-          axios.post(" " + url + "/shebei/finderrorAdd", {
-            "wuzuoren": this.wuzuoren,
-            "shebeiid": this.wuzuoyuanyin,
-            "wuzuoyuanyin": this.sunshicailiao,
+          axios.post(" " + url + "/fankui/updateFankui", {
+            "id":this.listData[0],
+            "zerenren": this.wuzuoren,
+            "wuzuoyuanyin": this.wuzuoyuanyin,
+            "sunshicailiao": this.sunshicailiao,
             "sunshigongshi": this.sunshigongshi,
-            "chuliduice": this.chuliduice,
+            "chuliduiche": this.chuliduice,
           })
             .then((res) => {
-              if (res.data === "1") {
-                this.loadingShowData(this.examineTime,this.stationid);
-                this.$message.success(`提交成功`);
+              if (res.data.state === "1") {
+                this.loadingShowData(this.examineTime,1);
+                this.$message.success(res.data.message);
                 this.sbVisible = false;
               }
               else {
-                this.$message.warning(`提交失败`);
+                this.$message.warning(res.data.message);
               }
             })
             .catch((err) => {
