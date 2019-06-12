@@ -207,7 +207,7 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  width="51"
+                  width="80"
                   prop="qieduan"
                   label="切断">
                 </el-table-column>
@@ -216,7 +216,7 @@
                 align="center"
                 prop="wjuhao"
                 label="ω"
-                width="120">
+                width="100">
               </el-table-column>
               <el-table-column align="center" label="输入">
                 <el-table-column
