@@ -169,8 +169,8 @@
         </el-table>
       </div>
 
-      <!--直管焊，短管焊，弯头切断-->
-      <div class="publicPage" v-if="this.listType ==5 || this.listType ==6 ||this.listType ==3">
+      <!--直管焊，短管焊-->
+      <div class="publicPage" v-if="this.listType ==5 || this.listType ==6">
         <el-table
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
@@ -196,6 +196,107 @@
               v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
               :prop="col.prop"
               :label="col.label">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yiguanno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="goToCurrentTask(scope.row.id)">
+                  {{ scope.row.yiguanno }}
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='codeno'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="goToCurrentTask(scope.row.id)">
+                  {{ scope.row.codeno }}
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='yipintu'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                  一品图
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='qieduanbiao'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <el-button
+                  type="success"
+                  style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                  @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">切断表
+                </el-button>
+              </template>
+            </el-table-column>
+          </template>
+        </el-table>
+      </div>
+
+      <!--弯头切断-->
+      <div class="publicPage" v-if="this.listType ==3">
+        <el-table
+          class="tb-edit"
+          v-tableLoadingMore="tableLoadingMore"
+          :data="tables"
+          height="500"
+          border
+          :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'20px'}"
+          :row-class-name="tableRowClassName"
+          @select="selectList"
+          @select-all="selectAll"
+          @row-click="doSelect"
+          @selection-change="selectChange"
+          ref="moviesTable"
+          :cell-style="{fontSize:'20px'}"
+          style="width: 99%;margin: 0 auto">
+          <el-table-column
+            type="selection"
+            width="30">
+          </el-table-column>
+          <template v-for="(col ,index) in cols">
+            <el-table-column
+              align="center"
+              v-if="col.prop !=='yiguanno' && col.prop !=='codeno' && col.prop !=='koujing' && col.prop !=='guanliqufen' && col.prop !=='jiaodu' && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+              :prop="col.prop"
+              :label="col.label">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              width="90"
+              v-if="col.prop==='koujing'"
+              :prop="col.prop" :label="col.label">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              width="65"
+              v-if="col.prop==='jiaodu'"
+              :prop="col.prop" :label="col.label">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              width="250"
+              v-if="col.prop==='guanliqufen'"
+              :prop="col.prop" :label="col.label">
             </el-table-column>
             <el-table-column
               align="center"
@@ -2336,7 +2437,7 @@
           }
           else if (this.dqgw === "枝管切断") {
             if (this.gwType === "1") {
-              axios.post(" " + url + "/importother/publicData", {"code": "zezz", "pici": pici})
+              axios.post(" " + url + "/importother/publicData", {"code": "zezz", "pici": pici,"fileid":this.gzId})
                 .then((res) => {
                   if (res.data) {
                     this.excelData = res.data;
@@ -2360,7 +2461,7 @@
                 })
             }
             else if (this.gwType === "2") {
-              axios.post(" " + url + "/importother/publicData", {"code": "zexz", "pici": pici})
+              axios.post(" " + url + "/importother/publicData", {"code": "zexz", "pici": pici,"fileid":this.gzId})
                 .then((res) => {
                   if (res.data) {
                     this.excelData = res.data;
@@ -2384,7 +2485,7 @@
                 })
             }
             else if (this.gwType === "3") {
-              axios.post(" " + url + "/importother/publicData", {"code": "zzpx", "pici": pici})
+              axios.post(" " + url + "/importother/publicData", {"code": "zzpx", "pici": pici,"fileid":this.gzId})
                 .then((res) => {
                   if (res.data) {
                     this.excelData = res.data;
