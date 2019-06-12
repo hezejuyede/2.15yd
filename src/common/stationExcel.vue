@@ -216,24 +216,24 @@
                 align="center"
                 prop="wjuhao"
                 label="ω"
-                width="40">
+                width="120">
               </el-table-column>
               <el-table-column align="center" label="输入">
                 <el-table-column
                   align="center"
-                  width="70"
+                  width="50"
                   prop="atext"
                   label="A">
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  width="70"
+                  width="50"
                   prop="btext"
                   label="B">
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  width="70"
+                  width="50"
                   prop="kxtext"
                   label="K">
                 </el-table-column>
@@ -242,7 +242,7 @@
                 align="center"
                 prop="jinwu"
                 label="管端金物"
-                width="100">
+                width="80">
               </el-table-column>
               <el-table-column
                 align="center"
