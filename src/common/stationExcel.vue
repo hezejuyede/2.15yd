@@ -370,7 +370,7 @@
                 <el-table-column
                   align="center"
                   width="51"
-                  prop="ktext"
+                  prop="kxtext"
                   label="K">
                 </el-table-column>
               </el-table-column>
@@ -382,7 +382,7 @@
               </el-table-column>
               <el-table-column
                 align="center"
-                prop="jiaodu"
+                prop="zuox"
                 label="角度"
                 width="51">
               </el-table-column>
@@ -506,7 +506,7 @@
                 <el-table-column
                   align="center"
                   width="51"
-                  prop="ktext"
+                  prop="kxtext"
                   label="K">
                 </el-table-column>
               </el-table-column>
@@ -518,7 +518,7 @@
               </el-table-column>
               <el-table-column
                 align="center"
-                prop="jiaodu"
+                prop="zuox"
                 label="角度"
                 width="60">
               </el-table-column>
@@ -642,7 +642,7 @@
                 <el-table-column
                   align="center"
                   width="51"
-                  prop="ktext"
+                  prop="kxtext"
                   label="K">
                 </el-table-column>
               </el-table-column>
@@ -654,7 +654,7 @@
               </el-table-column>
               <el-table-column
                 align="center"
-                prop="jiaodu"
+                prop="zuox"
                 label="角度"
                 width="60">
               </el-table-column>
