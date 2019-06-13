@@ -1879,8 +1879,8 @@
           this.gwType = "1";
           let that = this;
           axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": this.gwType}),
-            axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "3"})
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": that.stationId, "weizhiid": 2, "type": that.gwType}),
+            axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": "枝管切断", "type":that.gwType,"yichang": that.ycSearchBtn})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
@@ -1903,8 +1903,8 @@
           this.gwType = "2";
           let that = this;
           axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": this.gwType}),
-            axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "5"})
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": that.stationId, "weizhiid": 2, "type": that.gwType}),
+            axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": "枝管切断", "type": that.gwType,  "yichang": that.ycSearchBtn,})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
@@ -1927,8 +1927,8 @@
           this.gwType = "3";
           let that = this;
           axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type":that.gwType}),
-            axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": "4"})
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": that.stationId, "weizhiid": 2, "type":that.gwType}),
+            axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": "枝管切断", "type":that.gwType ,"yichang": that.ycSearchBtn,})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
@@ -1951,8 +1951,8 @@
           this.gwType = "4";
           let that = this;
           axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": that.gwType}),
-            axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": that.gwType})
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": that.stationId, "weizhiid": 2, "type": that.gwType}),
+            axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": "枝管切断", "type": that.gwType,"yichang": that.ycSearchBtn})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
@@ -1974,8 +1974,8 @@
           this.gwType = "5";
           let that = this;
           axios.all([
-            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 2, "type": that.gwType}),
-            axios.post(" " + url + "/importother/showOtherZgbExcelPadAll", {"gongxu": "枝管切断", "type": that.gwType})
+            axios.post(" " + url + "/sys/showTableTitleById", {"stationid": that.stationId, "weizhiid": 2, "type": that.gwType}),
+            axios.post(" " + url + "/shengchan/shengchanListAll", {"gongxu": "枝管切断", "type": that.gwType,"yichang": that.ycSearchBtn})
           ])
             .then(axios.spread(function (title, table) {
               that.cols = title.data.data;
