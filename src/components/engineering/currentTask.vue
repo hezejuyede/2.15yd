@@ -1623,9 +1623,9 @@
               })
           }
           else if(this.gongHao === "枝管切断"){
-            let pici = this.titleData[0].pici;
-            let yiguanhao = this.titleData[0].yiguanhao;
-            let code = this.titleData[0].daihao;
+            let pici = this.topData[0].pici;
+            let yiguanhao = this.topData[0].fanhao;
+            let code = this.topData[0].daihao;
             axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
               .then((res) => {
                 if (res.data.imgurl) {
@@ -1650,9 +1650,9 @@
               })
           }
           else {
-            let pici = this.titleData[0].text;
-            let yiguanhao = this.titleData[2].text;
-            let code = this.titleData[3].text;
+            let pici = this.titleData[0].pici;
+            let yiguanhao = this.titleData[0].yiguanhao;
+            let code = this.titleData[0].daihao;
             axios.post(" " + url + "/yipintu/getYipintuImg.html", {"pici": pici, "yiguanhao": yiguanhao, "code": code})
               .then((res) => {
                 if (res.data.imgurl) {

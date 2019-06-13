@@ -979,7 +979,7 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='zzb' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xzb' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -1011,13 +1011,13 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='zzb'"
+                  v-if="col.prop==='xzb'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">正枝表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">斜枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -1059,7 +1059,7 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xzb' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='zzb' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
@@ -1091,13 +1091,13 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='xzb'"
+                  v-if="col.prop==='zzb'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">斜枝表
+                      @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">正枝表
                     </el-button>
                   </template>
                 </el-table-column>
@@ -1663,7 +1663,7 @@
         inputWord: '',//扫码的Value
         searchWord: '',//智能检索的value
         is_search: false,
-        gwType: "1",//一种工位有几种类型，
+        gwType: "2",//一种工位有几种类型，
         screenVisible: false,   //筛选条件弹出框
         drawingVisible: false,  // 一品图弹出框
         endVisible: false,     //报完工提醒弹出框
