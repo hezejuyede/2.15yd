@@ -920,7 +920,7 @@
               :style="{
              'background-color':this.left ? '#2A437B':'',
              'color':this.left ? '#ffffff':''}">
-              正枝
+              斜枝
             </button>
           </div>
           <div class="change-left2" @click="zgShowLeft2">
@@ -928,7 +928,7 @@
               :style="{
              'background-color':this.left2 ? '#2A437B':'',
              'color':this.left2 ? '#ffffff':''}">
-              斜枝
+              正枝
             </button>
           </div>
           <div class="change-center" @click="zgShowCenter">
@@ -1812,7 +1812,58 @@
           }
           else if (info.GW === "枝管切断") {
             this.listType = "4";
-            this.showTableData(this.stationId, this.dqgw, 1, 1)
+            let that = this;
+            axios.all([
+              axios.post(" " + url + "/sys/showTableTitleById", {"stationid": this.stationId, "weizhiid": 1, "type": 2}),
+              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": this.dqgw, "type": 2})
+            ])
+              .then(axios.spread(function (title, table) {
+                that.cols = title.data.data;
+                if(table.data.length>0){
+                  let data =[];
+                  for (let i=0;i<table.data.length;i++){
+                    let json = {
+                      "xuhao": i + 1,
+                      "linename": table.data[i].linename,
+                      "qieduan": table.data[i].qieduan,
+                      "atext": table.data[i].atext,
+                      "jiagongxian": table.data[i].jiagongxian,
+                      "indexno": table.data[i].indexno,
+                      "neijing": table.data[i].neijing,
+                      "type": table.data[i].type,
+                      "waijing": table.data[i].waijing,
+                      "yiguanno": table.data[i].yiguanno,
+                      "btext": table.data[i].btext,
+                      "codeno": table.data[i].codeno,
+                      "quanchang":table.data[i].quanchang,
+                      "id": table.data[i].id,
+                      "chuanfan": table.data[i].chuanfan,
+                      "shipcode": table.data[i].shipcode,
+                      "zuox": table.data[i].zuox,
+                      "fileid": table.data[i].fileid,
+                      "createtime": table.data[i].createtime,
+                      "jiagongxilie": table.data[i].jiagongxilie,
+                      "daihao": table.data[i].daihao,
+                      "jinwu": table.data[i].jinwu,
+                      "pici": table.data[i].pici,
+                      "changdu": table.data[i].changdu,
+                      "pno": table.data[i].pno,
+                      "bihou": table.data[i].bihou,
+                      "pianxinliang": table.data[i].pianxinliang,
+                      "shenpiStatus": table.data[i].shenpiStatus,
+                      "muguanwaijing": table.data[i].muguanwaijing,
+                      "denglizi":table.data[i].denglizi,
+                      "beizhu": table.data[i].beizhu,
+                      "fanhao":table.data[i].fanhao,
+                      "guige": table.data[i].guige,
+                      "jiancha":table.data[i].jiancha,
+                      "kxtext": table.data[i].kxtext
+                    };
+                    data.push(json)
+                  }
+                  that.tableData =data
+                }
+              }));
           }
           else if (info.GW === "弯头切断") {
             this.listType = "3";
@@ -2734,7 +2785,7 @@
             })
             .then((res) => {
               this.screenVisible = false;
-              if (this.listType === "4" && this.left2===true){
+              if (this.listType === "4" && this.left===true){
                 let data =[];
                 for (let i=0;i<res.data.length;i++){
                   let json = {
@@ -2920,20 +2971,6 @@
           this.zgCenter = false;
           this.right = false;
           this.right2 = false;
-          this.gwType = "1";
-          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
-        }
-      },
-
-      //支管显示斜枝
-      zgShowLeft2() {
-        if (this.left2 !== true) {
-          this.cols = [];
-          this.left = false;
-          this.left2 = true;
-          this.zgCenter = false;
-          this.right = false;
-          this.right2 = false;
           this.gwType = "2";
           let that = this;
           axios.all([
@@ -2987,6 +3024,20 @@
                 that.tableData =data
               }
             }));
+        }
+      },
+
+      //支管显示斜枝
+      zgShowLeft2() {
+        if (this.left2 !== true) {
+          this.cols = [];
+          this.left = false;
+          this.left2 = true;
+          this.zgCenter = false;
+          this.right = false;
+          this.right2 = false;
+          this.gwType = "1";
+          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
 
