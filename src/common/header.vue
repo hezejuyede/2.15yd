@@ -15,6 +15,13 @@
           <i class="iconfont icon-qiehuanjiaose"></i>
           <span>换岗</span>
         </div>
+        <div class="headerMessage fr">
+          <i class="iconfont icon-xiaoxi"></i>
+          <span>消息</span>
+          <div class="messageNumber" @click="showMessage" v-if="this.messageNumber===1">
+            {{messageNumber}}
+          </div>
+        </div>
         <div class="headerUserInfo fr">
           <div class="">
             <span class="">{{GW}}</span>
@@ -63,6 +70,54 @@
         </div>
       </el-dialog>
 
+
+      <!--消息选择框 -->
+      <el-dialog title="消息提醒框" :visible.sync="messageVisible" width="50%">
+        <div class="messageDiv">
+          <div class="wdDiv" v-if="this.aqwdMessage>0">
+            <div class="">{{aqwdMessage}}</div>
+            <div class="">条未读安全提醒</div>
+            <div class=""><el-button type="success" @click="goToAQ">前往查看</el-button></div>
+          </div>
+          <div class="wdDiv" v-if="this.zlwdMessage>0">
+            <div class="">{{zlwdMessage}}</div>
+            <div class="">条未读质量提醒</div>
+            <div class=""><el-button type="success" @click="goToZl">前往查看</el-button></div>
+          </div>
+        </div>
+      </el-dialog>
+
+      <el-dialog title="质量提醒框" :visible.sync="zlMessageVisible" width="90%">
+        <div class="messageDiv">
+          <div class="wdDiv" v-if="this.aqwdMessage>0">
+            <div class="">{{aqwdMessage}}</div>
+            <div class="">条未读安全提醒</div>
+            <div class=""><el-button type="success" @click="goToAQ">前往查看</el-button></div>
+          </div>
+          <div class="wdDiv" v-if="this.zlwdMessage>0">
+            <div class="">{{zlwdMessage}}</div>
+            <div class="">条未读质量提醒</div>
+            <div class=""><el-button type="success" @click="goToZl">前往查看</el-button></div>
+          </div>
+        </div>
+      </el-dialog>
+
+
+      <el-dialog title="安全提醒框" :visible.sync="aqMessageVisible" width="90%">
+        <div class="messageDiv">
+          <div class="wdDiv" v-if="this.aqwdMessage>0">
+            <div class="">{{aqwdMessage}}</div>
+            <div class="">条未读安全提醒</div>
+            <div class=""><el-button type="success" @click="goToAQ">前往查看</el-button></div>
+          </div>
+          <div class="wdDiv" v-if="this.zlwdMessage>0">
+            <div class="">{{zlwdMessage}}</div>
+            <div class="">条未读质量提醒</div>
+            <div class=""><el-button type="success" @click="goToZl">前往查看</el-button></div>
+          </div>
+        </div>
+      </el-dialog>
+
     </div>
 </template>
 <script type="text/ecmascript-6">
@@ -84,10 +139,15 @@
         cumulativeLoginTime: "",
         tableData: [],
         changeVisible:false,
+        messageVisible:false,
+        zlMessageVisible:false,
+        aqMessageVisible:false,
 
         workstation:"",
-        workstationOptions:[]
-
+        workstationOptions:[],
+        messageNumber:1,
+        aqwdMessage:1,
+        zlwdMessage:1,
       }
     },
     components: {timer},
@@ -228,6 +288,21 @@
         }
       },
 
+      //显示消息弹出框
+      showMessage(){
+        this.messageVisible=true;
+      },
+
+      //查看安全提醒
+      goToAQ(){
+        this.$router.push("/aqtixiangxuexi")
+      },
+
+      //查看质量
+      goToZl(){
+        this.$router.push("/tixiangxuexi")
+      },
+
       //点击头像启动wifi
       startWifi(){
         window.open('file:///C:/Windows/System32/notepad.exe');
@@ -238,14 +313,12 @@
 </script>
 <style scoped lang="less" rel="stylesheet/less">
   @import "../assets/less/base";
-
-
   .headerCommon {
     width: 100%;
     box-sizing: border-box;
     background-color: rgba(56, 65, 87, 1);
     .header-left {
-      width: 50%;
+      width: 40%;
       height: 70px;
       padding-left: 5%;
       display: flex;
@@ -254,7 +327,7 @@
       color: @color-white;
     }
     .header-right {
-      width: 50%;
+      width: 60%;
       height: 70px;
       color: @color-white;
       .headerAvatar {
@@ -278,8 +351,34 @@
         padding-left: 1%;
 
       }
+      .headerMessage{
+        height: 70px;
+        width: 15%;
+        display: flex;
+        align-items: center;
+        justify-items: start;
+        position: relative;
+        font-size: @font-size-large;
+        .icon-xiaoxi{
+          font-size: @font-size-large-xx;
+          margin-right: 5px;
+        }
+        .messageNumber{
+          width: 25px;
+          height: 25px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #d93f30;
+          border-radius: 50%;
+          position: absolute;
+          top: 10px;
+          left: -15px;
+          font-size: @font-size-large-x;
+        }
+      }
       .headerOut {
-        width: 20%;
+        width: 15%;
         height: 70px;
         display: flex;
         align-items: center;
@@ -292,7 +391,7 @@
         }
       }
       .headerChange{
-        width: 20%;
+        width: 15%;
         height: 70px;
         display: flex;
         align-items: center;
@@ -337,6 +436,27 @@
         }
       }
 
+    }
+    .messageDiv{
+      height: 300px;
+      width: 100%;
+      .wdDiv{
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: @font-size-large-xx;
+        div{
+          margin-right: 10px;
+        }
+        .el-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width:150px;
+          height: 40px;
+        }
+      }
     }
 
   }

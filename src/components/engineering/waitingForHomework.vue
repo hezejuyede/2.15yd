@@ -1664,6 +1664,7 @@
         searchWord: '',//智能检索的value
         is_search: false,
         gwType: "2",//一种工位有几种类型，
+        xzlGwType:"1",//小工位状态
         screenVisible: false,   //筛选条件弹出框
         drawingVisible: false,  // 一品图弹出框
         endVisible: false,     //报完工提醒弹出框
@@ -2762,6 +2763,35 @@
               console.log(err)
             })
         }
+        else if(this.dqgw==="小组立"){
+          axios.post(" " + url + "/shengchan/shengchanList.html",
+            {
+              "type": this.xzlGwType,
+              "gongxu": this.dqgw,
+              "jiagongxian": this.scx,
+              "pici": this.batch,
+              "preGongxu": this.gw,
+              "jiagongxilie": this.xl,
+              "chuanhao": this.ch,
+              "yiguanhao": this.ygh,
+              "typeSelect": this.typeSelect,
+              "koujing": this.kj,
+              "youxianji": this.yxj,
+              "pno": this.PNO,
+              "bihou": this.bihou,
+              "codeN": this.codeN,
+              "zuoyezhe": this.qianzuoyezhe,
+              "zgwj":this.zgwj,
+              "mgwj":this.mgwj
+            })
+            .then((res) => {
+              this.screenVisible = false;
+              this.tableData = res.data;
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
         else {
           axios.post(" " + url + "/shengchan/shengchanList.html",
             {
@@ -2946,8 +2976,8 @@
           this.cols = [];
           this.left = true;
           this.right = false;
-          this.gwType = 1;
-          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
+          this.xzlGwType = 1;
+          this.showTableData(this.stationId, this.dqgw, 1, this.xzlGwType);
         }
       },
 
@@ -2957,8 +2987,8 @@
           this.cols = [];
           this.right = true;
           this.left = false;
-          this.gwType = 2;
-          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
+          this.xzlGwType = 2;
+          this.showTableData(this.stationId, this.dqgw, 1, this.xzlGwType);
         }
       },
 
