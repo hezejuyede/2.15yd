@@ -26,7 +26,7 @@
       return {
         img:"",
         iconData: [
-          {"icon": "iconfont icon-xuexi1", "text": "提醒学习", "url": "/aqtixiangxuexi"},
+          {"icon": "iconfont icon-xuexi1", "text": "提醒查看", "url": "/aqtixiangxuexi"},
           {"icon": "iconfont icon-xuexi", "text": "基准学习", "url": "/aqjizhunxuexi"},
         ]
       }

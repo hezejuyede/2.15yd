@@ -4,7 +4,7 @@
     <div class="equipmentTable">
       <div class="handle-box">
         <label style="margin-right: 5px">
-          <el-input v-model="select_word" placeholder="检索上报记录" style="width:120px"></el-input>
+          <el-input v-model="select_word" placeholder="检索提醒" style="width:120px"></el-input>
         </label>
         <label style="margin-right: 5px;margin-left: 5px">
           <el-date-picker
@@ -17,7 +17,7 @@
           </el-date-picker>
         </label>
         <label style="margin-right: 10px;margin-left: 5px">
-          <span>学习状态</span>
+          <span>查看状态</span>
           <span>:</span>
           <el-select
             style="width: 120px"
@@ -26,7 +26,7 @@
             filterable
             allow-create
             default-first-option
-            placeholder="请选择学习状态">
+            placeholder="请选择查看状态">
             <el-option
               v-for="item in learnOptions"
               :key="item.id"
@@ -37,7 +37,7 @@
         </label>
         <el-button type="success" class="handle-del mr10" @click="doSearch">查询</el-button>
         <el-button type="primary" class="handle-del mr10" @click="showDetails">详情</el-button>
-        <el-button type="danger"  class="handle-del mr10" @click="doLearn">批量学习</el-button>
+        <el-button type="danger"  class="handle-del mr10" @click="doLearn">查看</el-button>
       </div>
       <div class="handle-content">
         <el-table class="tb-edit"
@@ -62,17 +62,24 @@
     </div>
 
 
-    <!-- 设备上报 -->
-    <el-dialog :visible.sync="sbVisible" width="80%" @close='cancelDelete'>
+    <!-- 学校详情 -->
+    <el-dialog :visible.sync="sbVisible" width="80%" @close='cancel'>
       <div class="equipmentDiv">
         <div class="closeBtn">
           <el-button type="danger" @click="sbVisible = false">关闭窗口</el-button>
         </div>
         <div class="equipmentDivContent">
+          <div class="containerDivTop2" style="width:100%;height:50px;display: flex;align-items: center;justify-items: center">
+            <div style="width: 600px;height: 40px;margin: 0 auto">
+              <span>标题</span>
+              <span>:</span>
+              <el-input v-model="titilename" style="width:500px"   :disabled="true"   placeholder="标题"></el-input>
+            </div>
+          </div>
           <div class="" v-html="htmlData"></div>
         </div>
         <div class="equipmentDivBtn">
-          <el-button type="success" @click="doLearn">学习</el-button>
+          <el-button type="success" @click="doLearn">查看</el-button>
         </div>
       </div>
     </el-dialog>
@@ -104,10 +111,12 @@
         img: "",
         message: '',
         HideModal: true,
+        userId:"",
 
         cols: [],
         tableData: [],
         listData: [],
+        glData:[],
         id: "",
         stationid: "",
 
@@ -116,8 +125,9 @@
 
         examineTime: "",
         learn: "1",
-        learnOptions: [{"name": "已学习", "id": "1"}, {"name": "未学习", "id": "2"}],
+        learnOptions: [{"name": "未学习", "id": "1"}, {"name": "已学习", "id": "2"}],
         htmlData:'',
+        titilename:"",
 
       }
     },
@@ -172,20 +182,20 @@
             times.push(time)
           }
           this.examineTime = times;
-          this.loadingShowData(this.examineTime, this.stationid);
+          this.loadingShowData(this.examineTime, this.stationid,this.learn);
         }
       },
 
       //瞬间加载数据
-      loadingShowData(data1, data2) {
+      loadingShowData(data1, data2,data3) {
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "xuexibaogaotongji"}),
-          axios.post(" " + url + "/devType/devTypeList", {"times": data1, "type": data2})
+          axios.post(" " + url + "/xuexi/xuexiList", {"times": data1,"stationid":data2,"status":data3})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
-            that.tableData = table.data;
+            that.tableData = table.data.data;
           }));
       },
 
@@ -194,11 +204,15 @@
         this.val = val;
         if (val.length) {
           let data = [];
+          let gl =[]
           for (let i = 0; i < val.length; i++) {
             let a = val[i].id;
-            data.push(a)
+            let b = val[i].relaid;
+            data.push(a);
+            gl.push(b)
           }
           this.listData = data;
+          this.glData = gl;
 
         }
         else {
@@ -218,7 +232,7 @@
       },
 
       //取消
-      cancelDelete() {
+      cancel() {
         this.sbVisible = false;
         this.listData = [];
         if (this.val.length === 1) {
@@ -241,18 +255,37 @@
               that.message = "";
               that.HideModal = true;
             }
-
             setTimeout(a, 2000);
           }
           else {
-            this.sbVisible = true;
-            axios.post(" " + url + "/devType/devTypeList", {"times": this.examineTime, "stationid": this.stationid})
+            axios.post(" " + url + "/xuexi/xuexiDetail", {"id": this.listData[0]})
               .then((res) => {
-                this.htmlData = res.data.da;
+                if(res.data.state==="1"){
+                  if(JSON.stringify(res.data.data) !== "{}"){
+                    this.sbVisible = true;
+                    this.titilename = res.data.data.titilename;
+                    this.htmlData = res.data.data.context;
+                  }
+                  else {
+                    this.message = "暂无数据";
+                    this.HideModal = false;
+                    const that = this;
+
+                    function b() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(b, 2000);
+                  }
+                }
+                else {
+                  this.$message.warning(res.data.message);
+                }
               })
               .catch((err) => {
                 console.log(err)
-              })
+              });
           }
         }
         else {
@@ -272,7 +305,7 @@
       //根据时间查询上报记录
       doSearch() {
         if (this.examineTime) {
-          this.loadingShowData(this.examineTime, this.stationid);
+          this.loadingShowData(this.examineTime, this.stationid,this.learn);
         }
         else {
           this.$message.warning("请选择查询时间");
@@ -283,17 +316,31 @@
       //上报学习
       doLearn() {
         if (this.listData.length) {
-          axios.post(" " + url + "/devType/devTypeList", {"ids": this.listData})
-            .then((res) => {
-              if(res.data==="1"){
-                this.loadingShowData(this.examineTime, this.stationid);
-                this.sbVisible = false;
-                this.$message.success("上报学习成功");
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
+          if (this.listData.length > 1) {
+            this.message = "只能查看一个";
+            this.HideModal = false;
+            const that = this;
+
+            function a() {
+              that.message = "";
+              that.HideModal = true;
+            }
+
+            setTimeout(a, 2000);
+          }
+          else {
+            axios.post(" " + url + "/xuexi/updateStatus", {"id": this.glData[0],"xuexiuser":this.userId})
+              .then((res) => {
+                if (res.data.state === "1") {
+                  this.$message.success("上报学习成功");
+                  this.loadingShowData(this.examineTime, this.stationid, this.learn);
+                  this.sbVisible = false;
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
         }
         else {
           this.$message.warning("请勾选要学习的内容");
@@ -359,7 +406,7 @@
         height: 400px;
         display: flex;
         align-items: center;
-        justify-content: center;
+        flex-direction: column;
         overflow: auto;
       }
       .equipmentDivBtn {
