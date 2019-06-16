@@ -12,7 +12,7 @@
       </div>
       <div class="promptBoxDivContent">
         <div class="" v-if="contentText.length>0">
-          <div class="" v-html="contentText[0].contexthtml"></div>
+          <div  style="font-size: 22px" v-html="contentText[0].contexthtml"></div>
         </div>
       </div>
       <div class="promptBoxDivBottom">
@@ -201,3 +201,4 @@
   }
 
 </style>
+
