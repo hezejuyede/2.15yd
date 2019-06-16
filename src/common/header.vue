@@ -475,7 +475,7 @@
         }
       }
       .headerOut {
-        width: 15%;
+        width: 10%;
         height: 70px;
         display: flex;
         align-items: center;
@@ -610,18 +610,26 @@
     }
   }
 
-  @media only screen and (max-width: 1250px) {
+  @media only screen and (max-width: 1400px) {
     .headerCommon {
 
       .header-right {
-
+        .headerAvatar {
+          width: 10%;
+        }
         .headerUserInfo {
-          width: 20%;
+          width: 25%;
 
         }
         .headerOut {
-          width: 20%;
+          width: 15%;
 
+        }
+        .headerChange{
+          width: 15%;
+        }
+        .headerMessage{
+          width: 15%;
         }
 
       }
@@ -638,15 +646,21 @@
       }
       .header-right {
         .headerAvatar {
-          width: 20%;
+          width: 10%;
         }
         .headerUserInfo {
           width: 25%;
 
         }
         .headerOut {
-          width: 20%;
+          width: 15%;
 
+        }
+        .headerChange{
+          width: 15%;
+        }
+        .headerMessage{
+          width: 15%;
         }
 
       }
