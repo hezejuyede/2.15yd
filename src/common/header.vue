@@ -283,6 +283,7 @@
           axios.post("  " + url + "/api/changePost", {"username": this.userName, "stationid": this.workstation})
             .then((res) => {
               if (res.data.state === "1") {
+                sessionStorage.removeItem("screeningConditions");
                 let userInfo = res.data;
                 userInfo = JSON.stringify(userInfo);
                 sessionStorage.setItem("userInfo", userInfo);
