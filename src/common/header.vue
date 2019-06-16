@@ -449,7 +449,6 @@
             -webkit-transform: translateY(2px);
           }
         }
-
         @keyframes bounce-down {
           25% {
             transform: translateY(-2px);
