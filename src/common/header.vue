@@ -386,6 +386,7 @@
       font-size: @font-size-large-xx;
       color: @color-white;
     }
+
     .header-right {
       width: 60%;
       height: 70px;
@@ -440,24 +441,34 @@
         }
         @-webkit-keyframes bounce-down {
           25% {
-            -webkit-transform: translateY(-2px);
-          }
-          50%, 100% {
-            -webkit-transform: translateY(0);
-          }
-          75% {
-            -webkit-transform: translateY(2px);
-          }
-        }
-        @keyframes bounce-down {
-          25% {
             transform: translateY(-2px);
           }
-          50%, 100% {
-            transform: translateY(0);
+          50% {
+            transform: translateX(2px);
           }
           75% {
             transform: translateY(2px);
+          }
+          100% {
+            transform: translateX(-2px);
+          }
+        }
+        @keyframes bounce-down {
+
+          25% {
+            transform: translateY(-2px);
+          }
+
+          50% {
+            transform: translateX(2px);
+          }
+
+          75% {
+            transform: translateY(2px);
+          }
+
+          100% {
+            transform: translateX(-2px);
           }
         }
       }
@@ -488,6 +499,7 @@
         }
       }
     }
+
     .container {
       height: 300px;
       width: 100%;
@@ -520,6 +532,7 @@
       }
 
     }
+
     .messageDiv {
       height: 300px;
       width: 100%;
@@ -541,13 +554,15 @@
         }
       }
     }
+
     .zlMessageDiv {
       height: 650px;
     }
+
     .aqMessageDiv {
       height: 650px;
-      background-color: #d93f30;
     }
+
     .closeBtn {
       width: 100%;
       height: 70px;
