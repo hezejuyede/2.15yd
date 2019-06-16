@@ -1,129 +1,135 @@
 <template>
-    <div class="headerCommon clearfix">
-      <div class="header-left fl">
-        <div class="collapse-btn" @click="handleFullScreen">
-          <i class="el-icon-menu"></i>
-        </div>
-        <div class="logo">中二线管加工生产执行系统</div>
+  <div class="headerCommon clearfix">
+    <div class="header-left fl">
+      <div class="collapse-btn" @click="handleFullScreen">
+        <i class="el-icon-menu"></i>
       </div>
-      <div class="header-right fl" >
-        <div class="headerOut fr" @click="LeavePost">
-          <i class="iconfont icon-ligang"></i>
-          <span>离岗</span>
-        </div>
-        <div class="headerChange fr" @click="showChangePost">
-          <i class="iconfont icon-qiehuanjiaose"></i>
-          <span>换岗</span>
-        </div>
-        <div class="headerMessage fr">
-          <i class="iconfont icon-xiaoxi"></i>
-          <span>消息</span>
-          <div class="messageNumber" @click="showMessage" v-if="this.messageNumber===1">
-            {{messageNumber}}
-          </div>
-        </div>
-        <div class="headerUserInfo fr">
-          <div class="">
-            <span class="">{{GW}}</span>
-            <span class="">:</span>
-            <span class="">{{userName}}</span>
-          </div>
-          <div class="">
-            <span>工时</span>
-            <span>:</span>
-            <span>{{cumulativeLoginTime}}</span>
-          </div>
-        </div>
-        <div class="headerAvatar fr">
-          <img src="../assets/img/avatar.png" alt="" @click="startWifi">
-        </div>
-      </div>
-
-      <!--换岗 -->
-      <el-dialog title="更换岗位" :visible.sync="changeVisible" width="40%">
-        <div class="container">
-          <div class="containerDiv">
-            <div class="containerDivTop">
-              <div class="select" id="gwSelect">
-                <el-select
-                  style="height: 90px;width: 350px"
-                  v-model="workstation"
-                  clearable
-                  filterable
-                  allow-create
-                  default-first-option
-                  placeholder="工位">
-                  <el-option
-                    v-for="item in workstationOptions"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
-                  </el-option>
-                </el-select>
-              </div>
-            </div>
-            <div class="containerBtn">
-              <el-button type="success" @click="doChangePost">确认换岗</el-button>
-            </div>
-          </div>
-
-        </div>
-      </el-dialog>
-
-
-      <!--消息选择框 -->
-      <el-dialog title="消息提醒框" :visible.sync="messageVisible" width="50%">
-        <div class="messageDiv">
-          <div class="wdDiv" v-if="this.aqwdMessage>0">
-            <div class="">{{aqwdMessage}}</div>
-            <div class="">条未读安全提醒</div>
-            <div class=""><el-button type="success" @click="goToAQ">前往查看</el-button></div>
-          </div>
-          <div class="wdDiv" v-if="this.zlwdMessage>0">
-            <div class="">{{zlwdMessage}}</div>
-            <div class="">条未读质量提醒</div>
-            <div class=""><el-button type="success" @click="goToZl">前往查看</el-button></div>
-          </div>
-        </div>
-      </el-dialog>
-
-      <el-dialog title="紧急质量通知" :visible.sync="zlMessageVisible"  :fullscreen="true" :center="true">
-        <div class="closeBtn">
-          <el-button type="danger" @click="zlMessageVisible = false">关闭窗口</el-button>
-        </div>
-        <div class="zlMessageDiv">
-          <div class="containerDivTop2" style="width:100%;height:50px;display: flex;align-items: center;justify-items: center">
-            <div style="width: 500px;height: 50px;margin: 0 auto">
-              <el-input v-model="titilename" style="width:500px"   :disabled="true"></el-input>
-            </div>
-          </div>
-          <div class="" style="width:100%;height:550px;overflow: auto" v-html="htmlData"></div>
-          <div class="" style="width:100%;height:50px;display: flex;align-items: center;justify-content: center">
-            <el-button type="success" style="width: 200px;height: 40px;font-size: 30px" @click="readZL">进行学习</el-button>
-          </div>
-        </div>
-
-      </el-dialog>
-
-
-      <el-dialog title="安全提醒框" :visible.sync="aqMessageVisible" :fullscreen="true" :center="true">
-        <div class="closeBtn">
-          <el-button type="danger" @click="aqMessageVisible = false">关闭窗口</el-button>
-        </div>
-        <div class="aqMessageDiv">
-          <div class="containerDivTop2" style="width:100%;height:50px;display: flex;align-items: center;justify-items: center">
-            <div style="width: 500px;height: 40px;margin: 0 auto">
-              <el-input v-model="titilename" style="width:500px"   :disabled="true"></el-input>
-            </div>
-          </div>
-          <div class="" style="width:100%;height:550px;overflow: auto" v-html="htmlData"></div>
-          <div class="" style="width:100%;height:50px;display: flex;align-items: center;justify-content: center">
-            <el-button type="success" style="width: 200px;height: 40px;font-size: 30px" @click="readAQ">进行学习</el-button>
-          </div>
-        </div>
-      </el-dialog>
-
+      <div class="logo">中二线管加工生产执行系统</div>
     </div>
+    <div class="header-right fl">
+      <div class="headerOut fr" @click="LeavePost">
+        <i class="iconfont icon-ligang"></i>
+        <span>离岗</span>
+      </div>
+      <div class="headerChange fr" @click="showChangePost">
+        <i class="iconfont icon-qiehuanjiaose"></i>
+        <span>换岗</span>
+      </div>
+      <div class="headerMessage fr">
+        <i class="iconfont icon-xiaoxi"></i>
+        <span>消息</span>
+        <div class="messageNumber" @click="showMessage" v-if="this.messageNumber===1">
+          {{messageNumber}}
+        </div>
+      </div>
+      <div class="headerUserInfo fr">
+        <div class="">
+          <span class="">{{GW}}</span>
+          <span class="">:</span>
+          <span class="">{{userName}}</span>
+        </div>
+        <div class="">
+          <span>工时</span>
+          <span>:</span>
+          <span>{{cumulativeLoginTime}}</span>
+        </div>
+      </div>
+      <div class="headerAvatar fr">
+        <img src="../assets/img/avatar.png" alt="" @click="startWifi">
+      </div>
+    </div>
+
+    <!--换岗 -->
+    <el-dialog title="更换岗位" :visible.sync="changeVisible" width="40%">
+      <div class="container">
+        <div class="containerDiv">
+          <div class="containerDivTop">
+            <div class="select" id="gwSelect">
+              <el-select
+                style="height: 90px;width: 350px"
+                v-model="workstation"
+                clearable
+                filterable
+                allow-create
+                default-first-option
+                placeholder="工位">
+                <el-option
+                  v-for="item in workstationOptions"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </div>
+          </div>
+          <div class="containerBtn">
+            <el-button type="success" @click="doChangePost">确认换岗</el-button>
+          </div>
+        </div>
+
+      </div>
+    </el-dialog>
+
+
+    <!--消息选择框 -->
+    <el-dialog title="消息提醒框" :visible.sync="messageVisible" width="50%">
+      <div class="messageDiv">
+        <div class="wdDiv" v-if="this.aqwdMessage>0">
+          <div class="">{{aqwdMessage}}</div>
+          <div class="">条未读安全提醒</div>
+          <div class="">
+            <el-button type="success" @click="goToAQ">前往查看</el-button>
+          </div>
+        </div>
+        <div class="wdDiv" v-if="this.zlwdMessage>0">
+          <div class="">{{zlwdMessage}}</div>
+          <div class="">条未读质量提醒</div>
+          <div class="">
+            <el-button type="success" @click="goToZl">前往查看</el-button>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="紧急质量通知" :visible.sync="zlMessageVisible" :fullscreen="true" :center="true">
+      <div class="closeBtn">
+        <el-button type="danger" @click="zlMessageVisible = false">关闭窗口</el-button>
+      </div>
+      <div class="zlMessageDiv">
+        <div class="containerDivTop2"
+             style="width:100%;height:50px;display: flex;align-items: center;justify-items: center">
+          <div style="width: 500px;height: 50px;margin: 0 auto">
+            <el-input v-model="titilename" style="width:500px" :disabled="true"></el-input>
+          </div>
+        </div>
+        <div class="" style="width:100%;height:550px;overflow: auto" v-html="htmlData"></div>
+        <div class="" style="width:100%;height:50px;display: flex;align-items: center;justify-content: center">
+          <el-button type="success" style="width: 200px;height: 40px;font-size: 30px" @click="readZL">进行学习</el-button>
+        </div>
+      </div>
+
+    </el-dialog>
+
+
+    <el-dialog title="安全提醒框" :visible.sync="aqMessageVisible" :fullscreen="true" :center="true">
+      <div class="closeBtn">
+        <el-button type="danger" @click="aqMessageVisible = false">关闭窗口</el-button>
+      </div>
+      <div class="aqMessageDiv">
+        <div class="containerDivTop2"
+             style="width:100%;height:50px;display: flex;align-items: center;justify-items: center">
+          <div style="width: 500px;height: 40px;margin: 0 auto">
+            <el-input v-model="titilename" style="width:500px" :disabled="true"></el-input>
+          </div>
+        </div>
+        <div class="" style="width:100%;height:550px;overflow: auto" v-html="htmlData"></div>
+        <div class="" style="width:100%;height:50px;display: flex;align-items: center;justify-content: center">
+          <el-button type="success" style="width: 200px;height: 40px;font-size: 30px" @click="readAQ">进行学习</el-button>
+        </div>
+      </div>
+    </el-dialog>
+
+  </div>
 </template>
 <script type="text/ecmascript-6">
   import axios from 'axios'
@@ -143,19 +149,19 @@
         LastLoginTime: "",
         cumulativeLoginTime: "",
         tableData: [],
-        changeVisible:false,
-        messageVisible:false,
-        zlMessageVisible:false,
-        aqMessageVisible:false,
+        changeVisible: false,
+        messageVisible: false,
+        zlMessageVisible: false,
+        aqMessageVisible: false,
 
-        workstation:"",
-        workstationOptions:[],
-        messageNumber:1,
-        aqwdMessage:1,
-        zlwdMessage:1,
+        workstation: "",
+        workstationOptions: [],
+        messageNumber: 1,
+        aqwdMessage: 1,
+        zlwdMessage: 1,
 
-        titilename:"",
-        htmlData:"",
+        titilename: "",
+        htmlData: "",
 
 
       }
@@ -189,7 +195,8 @@
           this.LastLoginTime = info.LastLoginTime;
         }
       },
-       // 全屏事件
+
+      // 全屏事件
       handleFullScreen() {
         let element = document.documentElement;
         if (this.fullscreen) {
@@ -216,6 +223,7 @@
         }
         this.fullscreen = !this.fullscreen;
       },
+
       //离开岗位
       LeavePost() {
         this.$confirm('是否确认离开岗位?', '提示', {
@@ -261,13 +269,14 @@
         axios.post(" " + url + "/api/getPersonProcessList", {"name": this.username})
           .then((res) => {
             this.workstationOptions = res.data;
-            this.workstation=res.data[0].id;
-            this.changeVisible=true;
+            this.workstation = res.data[0].id;
+            this.changeVisible = true;
           })
           .catch((err) => {
             console.log(err)
           })
       },
+
       //进行换岗
       doChangePost() {
         if (this.workstation) {
@@ -282,7 +291,7 @@
                   message: '换岗成功!'
                 });
                 setTimeout(() => {
-                  this.changeVisible=false;
+                  this.changeVisible = false;
                   window.location.reload()
                 }, 3000);
               }
@@ -303,37 +312,37 @@
       },
 
       //显示消息弹出框
-      showMessage(){
-        this.messageVisible=true;
+      showMessage() {
+        this.messageVisible = true;
       },
 
       //查看安全提醒
-      goToAQ(){
+      goToAQ() {
         this.$router.push("/aqtixiangxuexi")
       },
 
       //查看质量
-      goToZl(){
+      goToZl() {
         this.$router.push("/tixiangxuexi")
       },
 
       //定时请求质量消息
-      getZLMessage(){
+      getZLMessage() {
 
       },
 
       //定时请求安全消息
-      getQAMessage(){
+      getQAMessage() {
 
       },
 
       //阅读质量
-      readZL(){
+      readZL() {
         axios.post(" " + url + "/api/getPersonProcessList", {"name": this.username})
           .then((res) => {
             this.workstationOptions = res.data;
-            this.workstation=res.data[0].id;
-            this.changeVisible=true;
+            this.workstation = res.data[0].id;
+            this.changeVisible = true;
           })
           .catch((err) => {
             console.log(err)
@@ -341,12 +350,12 @@
       },
 
       //阅读安全
-      readAQ(){
+      readAQ() {
         axios.post(" " + url + "/api/getPersonProcessList", {"name": this.username})
           .then((res) => {
             this.workstationOptions = res.data;
-            this.workstation=res.data[0].id;
-            this.changeVisible=true;
+            this.workstation = res.data[0].id;
+            this.changeVisible = true;
           })
           .catch((err) => {
             console.log(err)
@@ -354,7 +363,7 @@
       },
 
       //点击头像启动wifi
-      startWifi(){
+      startWifi() {
         window.open('file:///C:/Windows/System32/notepad.exe');
       }
     },
@@ -363,6 +372,7 @@
 </script>
 <style scoped lang="less" rel="stylesheet/less">
   @import "../assets/less/base";
+
   .headerCommon {
     width: 100%;
     box-sizing: border-box;
@@ -401,7 +411,7 @@
         padding-left: 1%;
 
       }
-      .headerMessage{
+      .headerMessage {
         height: 70px;
         width: 15%;
         display: flex;
@@ -409,11 +419,11 @@
         justify-items: start;
         position: relative;
         font-size: @font-size-large;
-        .icon-xiaoxi{
+        .icon-xiaoxi {
           font-size: @font-size-large-xx;
           margin-right: 5px;
         }
-        .messageNumber{
+        .messageNumber {
           width: 25px;
           height: 25px;
           display: flex;
@@ -425,6 +435,31 @@
           top: 10px;
           left: -15px;
           font-size: @font-size-large-x;
+          -webkit-animation: bounce-down 1.5s linear infinite;
+          animation: bounce-down 1.5s linear infinite;
+        }
+        @-webkit-keyframes bounce-down {
+          25% {
+            -webkit-transform: translateY(-2px);
+          }
+          50%, 100% {
+            -webkit-transform: translateY(0);
+          }
+          75% {
+            -webkit-transform: translateY(2px);
+          }
+        }
+
+        @keyframes bounce-down {
+          25% {
+            transform: translateY(-2px);
+          }
+          50%, 100% {
+            transform: translateY(0);
+          }
+          75% {
+            transform: translateY(2px);
+          }
         }
       }
       .headerOut {
@@ -435,12 +470,12 @@
         justify-content: start;
         cursor: pointer;
         font-size: @font-size-large;
-        .icon-ligang{
+        .icon-ligang {
           font-size: @font-size-large;
           margin-right: 5px;
         }
       }
-      .headerChange{
+      .headerChange {
         width: 15%;
         height: 70px;
         display: flex;
@@ -448,29 +483,28 @@
         justify-content: start;
         cursor: pointer;
         font-size: @font-size-large;
-        .icon-qiehuanjiaose{
+        .icon-qiehuanjiaose {
           font-size: @font-size-large;
           margin-right: 5px;
         }
       }
-
     }
-    .container{
+    .container {
       height: 300px;
-      width:100%;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      .containerDiv{
+      .containerDiv {
         width: 250px;
         height: 250px;
-        .containerDivTop{
+        .containerDivTop {
           height: 120px;
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        .containerBtn{
+        .containerBtn {
           height: 200px;
           display: flex;
           align-items: center;
@@ -487,31 +521,31 @@
       }
 
     }
-    .messageDiv{
+    .messageDiv {
       height: 300px;
       width: 100%;
-      .wdDiv{
+      .wdDiv {
         height: 100px;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: @font-size-large-xx;
-        div{
+        div {
           margin-right: 10px;
         }
         .el-button {
           display: flex;
           align-items: center;
           justify-content: center;
-          width:150px;
+          width: 150px;
           height: 40px;
         }
       }
     }
-    .zlMessageDiv{
+    .zlMessageDiv {
       height: 650px;
     }
-    .aqMessageDiv{
+    .aqMessageDiv {
       height: 650px;
       background-color: #d93f30;
     }
@@ -536,13 +570,37 @@
     }
   }
 
+  @-webkit-keyframes messageNumber {
+    25% {
+      -webkit-transform: translateY(-10px);
+    }
+    50%, 100% {
+      -webkit-transform: translateY(0);
+    }
+    75% {
+      -webkit-transform: translateY(10px);
+    }
+  }
+
+  @keyframes messageNumber {
+    25% {
+      transform: translateY(-10px);
+    }
+    50%, 100% {
+      transform: translateY(0);
+    }
+    75% {
+      transform: translateY(10px);
+    }
+  }
+
   @media only screen and (max-width: 1250px) {
     .headerCommon {
 
       .header-right {
 
         .headerUserInfo {
-          width:20%;
+          width: 20%;
 
         }
         .headerOut {
@@ -581,7 +639,6 @@
 
   }
 
-
   @media only screen and (max-width: 700px) {
     .headerCommon {
       .header-left {
@@ -607,7 +664,7 @@
 
   }
 
-  @media only screen and (max-width:540px) {
+  @media only screen and (max-width: 540px) {
     .headerCommon {
       .header-left {
         font-size: @font-size-small;
@@ -622,12 +679,11 @@
 
       }
 
-
     }
 
   }
 
-  @media only screen and (max-width:410px) {
+  @media only screen and (max-width: 410px) {
     .headerCommon {
       .header-left {
         font-size: @font-size-small-s
@@ -635,19 +691,16 @@
       }
       .header-right {
         .headerAvatar {
-         img{
-           height: 40px;
-         }
+          img {
+            height: 40px;
+          }
         }
         .headerUserInfo {
           width: 50%;
 
-
         }
 
-
       }
-
 
     }
 
