@@ -8,6 +8,7 @@
       <div class="drawingSearchYpt">
         <div class="drawingSearchYptYpt">
           <el-input
+            style="width: 200px"
             v-model="searchWord"
             ref="siteInput"
             autofocus
@@ -37,12 +38,13 @@
             filterable
             allow-create
             default-first-option
+            @change="changeSCX"
             placeholder="加工线">
             <el-option
               v-for="item in jgxOptions"
-              :key="item.id"
+              :key="item.indexno"
               :label="item.name"
-              :value="item.id">
+              :value="item.indexno">
             </el-option>
           </el-select>
         </div>
@@ -63,20 +65,7 @@
           </el-select>
         </div>
         <div class="drawingConditionDiv">
-          <el-select
-            v-model="ch"
-            clearable
-            filterable
-            allow-create
-            default-first-option
-            placeholder="船号">
-            <el-option
-              v-for="item in chOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
-            </el-option>
-          </el-select>
+          <el-input v-model="ch" placeholder="船号"></el-input>
         </div>
         <div class="drawingSearchButton">
           <el-button type="primary" @click="search">搜索</el-button>
@@ -162,14 +151,12 @@
           let that = this;
           axios.all([
             axios.post(" " + url + "/sys/getPiciList"),
-            axios.post(" " + url + "/sys/getPiciList"),
+            axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
             axios.post(" " + url + "/api/getPersonProcessList", {"name": ""}),
-            axios.post(" " + url + "/sys/getPiciList"),
-          ]).then(axios.spread(function (batch, jgx, gw, ch) {
+          ]).then(axios.spread(function (batch, jgx, gw) {
             that.batchOptions = batch.data;
             that.jgxOptions = jgx.data;
             that.gwOptions = gw.data;
-            that.chOptions = ch.data;
           }))
 
 
@@ -185,6 +172,20 @@
         })
       },
 
+      //更改生产线
+      changeSCX() {
+        axios.post(" " + url + "/sysconfig/getGongxuList", {"id": this.jgx})
+          .then((res) => {
+            if (res.data ==="-1") {
+              this.gw = "";
+              this.gwOptions =[];
+            }
+            else {
+              this.gw = res.data[0].id;
+              this.gwOptions = res.data;
+            }
+          });
+      },
 
       //扫码搜索一品图
       searchYpt(searchWord) {
@@ -316,7 +317,7 @@
         margin: 0 auto;
         display: flex;
         .drawingSearchYptYpt{
-          flex: 2;
+          flex: 1.5;
           display: flex;
           align-items: center;
           justify-content: center;
