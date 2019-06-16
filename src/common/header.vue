@@ -318,11 +318,13 @@
 
       //查看安全提醒
       goToAQ() {
+        localStorage.setItem("IndexUrl", 3);
         this.$router.push("/aqtixiangxuexi")
       },
 
       //查看质量
       goToZl() {
+        localStorage.setItem("IndexUrl", 4);
         this.$router.push("/tixiangxuexi")
       },
 
