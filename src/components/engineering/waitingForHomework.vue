@@ -70,7 +70,24 @@
             <button @click="goGeneralListOfProcessing">总清单</button>
           </div>
         </div>
-        <div class="listSearch" v-if="this.listType ==7 || this.listType ==8 || this.listType ==10">
+        <div class="listSearch" v-if="this.listType ==7 || this.listType ==8">
+          <div class="listSearchInput">
+            <el-input
+              v-model="searchWord"
+              ref="siteInput"
+              placeholder="检索管子或扫码或手工输入"
+              @blur="searchData(searchWord)"
+              @input="searchEmptyData(searchWord)"
+              @keyup.enter.native="goToPipePage(searchWord)"></el-input>
+          </div>
+          <div class="listSearchBtn">
+            <button @click="showScreening">条件筛选</button>
+            <button @click="goGeneralListOfProcessing">总清单</button>
+            <button @click="showYYPipe">预约管</button>
+            <button @click="selectYYList">预约清单</button>
+          </div>
+        </div>
+        <div class="listSearch" v-if="this.listType ==10">
           <div class="listSearchInput">
             <el-input
               v-model="searchWord"
@@ -1601,15 +1618,64 @@
       </div>
     </el-dialog>
 
+    <!--一品图预览筛选 -->
+    <el-dialog  :visible.sync="yptSelectVisible" :fullscreen="true" :center="true">
+      <div class="closeBtn">
+        <el-button type="danger" @click="yptSelectVisible = false">关闭窗口</el-button>
+      </div>
+      <div class="yptContainer">
+        <div class="yptContainerExcel">
+          <el-table
+            :data="yptListData"
+            v-tableLoadingMore="addYptList"
+            :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'20px'}"
+            border
+            height="630"
+            highlight-current-row
+            @select="selectList"
+            @select-all="selectAll"
+            style="width: 98%;margin: auto">
+            <el-table-column
+              type="selection"
+              align="center"
+              width="50">
+            </el-table-column>
+            <el-table-column
+              prop="djz"
+              align="center"
+              width="90"
+              label="第几张">
+            </el-table-column>
+            <el-table-column
+              prop="yipintu"
+              align="center"
+              label="一品图">
+              <template scope="scope">
+                <div class=""  style="height: 310px">
+                  <img :src="scope.row.yipintu" alt="" style="height: 310px;width: 60%">
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="yptContainerBtn">
+          <el-button type="primary" @click="doWorkEnd" style="height:50px;width:300px;font-size: 40px">确 定</el-button>
+        </div>
+      </div>
+
+    </el-dialog>
+
 
     <div class="upTop" ref="upTop" @click="upToTop">
       <i class="iconfont icon-xiangshang1"></i>
     </div>
-    <Modal :msg="message"
-           :isHideModal="HideModal"></Modal>
+
+    <Modal :msg="message" :isHideModal="HideModal"></Modal>
+
     <div class="loading-container" v-show="!img.length">
       <loading></loading>
     </div>
+
     <footer-nav></footer-nav>
   </div>
 </template>
@@ -1670,11 +1736,22 @@
         endVisible: false,     //报完工提醒弹出框
         tdVisible: false,    //特定工位提醒框
         excelVisible: false,   //工位表表弹出框
-        left: true,    //        显示最左边
-        left2: false,    //      显示左二
-        zgCenter: false,    //   显示中间
-        right: false,    //      显示最右边
-        right2: false,    //     显示右二
+        yptSelectVisible:false, //一品图预约筛选
+        yptListData:[
+          {"yipintu": "/img/20190505/newC1895_11.png", "id": 1},
+          {"yipintu": "/img/20190505/newC1895_11.png", "id": 2},
+          {"yipintu": "/img/20190505/newC1895_11.png", "id": 3},
+          {"yipintu": "/img/20190505/newC1895_11.png", "id": 4},
+          {"yipintu": "/img/20190505/newC1895_11.png", "id": 5},
+          {"yipintu": "/img/20190505/newC1895_11.png", "id": 6},
+          {"yipintu": "/img/20190505/newC1895_11.png", "id": 7},
+          {"yipintu": "/img/20190505/newC1895_11.png", "id": 7},
+          ],         //一品图预览列表数据
+        left: true,           //显示最左边
+        left2: false,         //显示左二
+        zgCenter: false,      //显示中间
+        right: false,         //显示最右边
+        right2: false,        //显示右二
         batch: "",
         batchOptions: [],
         ch: "",
@@ -2504,6 +2581,7 @@
 
       //一拼图预览
       yptLook() {
+
       },
 
       //前往总清单
@@ -3229,6 +3307,35 @@
         }
       },
 
+      //显示一品图预约列表
+      showYYPipe() {
+        this.yptSelectVisible = true;
+        let data = [];
+        for (let i = 0; i < this.yptListData.length; i++) {
+          let json = {
+            "id": i + 1,
+            "djz": i + 1,
+            "yipintu": url + this.yptListData[i].yipintu
+          };
+          data.push(json)
+        }
+        this.yptListData = data;
+
+
+      },
+
+      //选择那个一品图
+      selectYYList() {
+
+      },
+
+      //往下拉逐步添加一品图
+      addYptList() {
+
+      },
+
+
+
       //移动显示搜索框
       showSearch() {
         let search = this.$refs.contentTop;
@@ -3555,6 +3662,21 @@
         font-size: @font-size-large;
         margin-left: 5%;
       }
+    }
+  }
+
+  .yptContainer{
+    height: 680px;
+    width: 100%;
+    .yptContainerExcel{
+      overflow: auto;
+      height: 630px;
+    }
+    .yptContainerBtn{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50px;
     }
   }
 
