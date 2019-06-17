@@ -2537,6 +2537,34 @@
               console.log(err)
             })
         }
+        if (this.dqgw === "小组立") {
+          axios.post(" " + url + "/shengchan/updateStatusBatch",
+            {
+              "ids": this.listData,
+              "zuoyezhe": this.zuoyezhe,
+              "type": this.xzlGwType,
+              "stationid": this.stationId,
+            })
+            .then((res) => {
+              if (res.data === "1") {
+                this.endVisible = false;
+                this.message = "已经完成";
+                this.HideModal = false;
+                const that = this;
+
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                  that.showTableData(that.stationId, that.dqgw, 1, that.xzlGwType)
+                }
+
+                setTimeout(a, 2000);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
         else {
           axios.post(" " + url + "/shengchan/updateStatusBatch",
             {

@@ -92,9 +92,6 @@
     </el-dialog>
 
     <el-dialog title="紧急质量通知" :visible.sync="zlMessageVisible" :fullscreen="true" :center="true">
-      <div class="closeBtn">
-        <el-button type="danger" @click="zlMessageVisible = false">关闭窗口</el-button>
-      </div>
       <div class="zlMessageDiv">
         <div class="containerDivTop2"
              style="width:100%;height:50px;display: flex;align-items: center;justify-items: center">
@@ -102,7 +99,7 @@
             <el-input v-model="titilename" style="width:500px" :disabled="true"></el-input>
           </div>
         </div>
-        <div class="" style="width:100%;height:550px;overflow: auto" v-html="htmlData"></div>
+        <quill-editor ref="myTextEditor" v-model="htmlData" :options="editorOption" height="500" :disabled="true"></quill-editor>
         <div class="" style="width:100%;height:50px;display: flex;align-items: center;justify-content: center">
           <el-button type="success" style="width: 200px;height: 40px;font-size: 30px" @click="readZL">进行学习</el-button>
         </div>
@@ -112,9 +109,6 @@
 
 
     <el-dialog title="安全提醒框" :visible.sync="aqMessageVisible" :fullscreen="true" :center="true">
-      <div class="closeBtn">
-        <el-button type="danger" @click="aqMessageVisible = false">关闭窗口</el-button>
-      </div>
       <div class="aqMessageDiv">
         <div class="containerDivTop2"
              style="width:100%;height:50px;display: flex;align-items: center;justify-items: center">
@@ -122,7 +116,9 @@
             <el-input v-model="titilename" style="width:500px" :disabled="true"></el-input>
           </div>
         </div>
-        <div class="" style="width:100%;height:550px;overflow: auto" v-html="htmlData"></div>
+        <div class="" style="height: 500px">
+          <quill-editor ref="myTextEditor" v-model="htmlData" :options="editorOption" height="500" :disabled="true"></quill-editor>
+        </div>
         <div class="" style="width:100%;height:50px;display: flex;align-items: center;justify-content: center">
           <el-button type="success" style="width: 200px;height: 40px;font-size: 30px" @click="readAQ">进行学习</el-button>
         </div>
@@ -135,6 +131,10 @@
   import axios from 'axios'
   import url from '../assets/js/URL'
 
+  import 'quill/dist/quill.core.css';
+  import 'quill/dist/quill.snow.css';
+  import 'quill/dist/quill.bubble.css';
+  import { quillEditor } from 'vue-quill-editor';
   import timer from './timer'
 
   export default {
@@ -158,15 +158,18 @@
         workstationOptions: [],
         messageNumber: 1,
         aqwdMessage: 1,
+        aqState:false,
         zlwdMessage: 1,
 
         titilename: "",
         htmlData: "",
-
+        editorOption: {
+          placeholder: ''
+        },
 
       }
     },
-    components: {timer},
+    components: {timer,quillEditor},
     mounted() {
       //切断工位每隔5分钟刷新一下数据
       setInterval(() => {
@@ -336,7 +339,31 @@
 
       //定时请求安全消息
       getQAMessage() {
+        if(this.aqState===false){
+          axios.post("  " + url + "/anquan/getTuisongJinji", { "stationid": this.GH})
+            .then((res) => {
+              if (res.data.state === "1") {
+                if (JSON.stringify(res.data.data) !== "{}") {
+                  this.aqState = true;
+                  this.aqMessageVisible = true;
+                  this.titilename = res.data.data.title;
+                  this.htmlData = res.data.data.neirong;
+                }
+                else {
 
+                }
+              }
+              else {
+
+              }
+            })
+            .catch(() => {
+              console.log(err)
+            });
+        }
+        else {
+
+        }
       },
 
       //阅读质量
