@@ -12,7 +12,7 @@
       </div>
       <div class="promptBoxDivContent">
         <div class="" v-if="contentText.length>0">
-          <div  style="font-size: 22px" v-html="contentText[0].contexthtml"></div>
+          <quill-editor ref="myTextEditor" v-model="contentText[0].contexthtml" :options="editorOption" :disabled="true"></quill-editor>
         </div>
       </div>
       <div class="promptBoxDivBottom">
@@ -29,14 +29,24 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
+  import 'quill/dist/quill.core.css';
+  import 'quill/dist/quill.snow.css';
+  import 'quill/dist/quill.bubble.css';
+  import { quillEditor } from 'vue-quill-editor';
   export default {
     name: 'promptBox',
     data() {
       return {
         time:0,
-        stopTimer: true
+        stopTimer: true,
+        editorOption: {
+          modules: {
+            toolbar: '',
+          },
+        },
       }
     },
+    components: {quillEditor},
     mounted() {
 
     },

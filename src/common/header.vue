@@ -91,16 +91,15 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="紧急质量通知" :visible.sync="zlMessageVisible" :fullscreen="true" :center="true">
+    <el-dialog title="紧急质量通知" :visible.sync="zlMessageVisible" :fullscreen="true" :center="true" :show-close="false">
       <div class="zlMessageDiv">
-        <div class="containerDivTop2"
-             style="width:100%;height:50px;display: flex;align-items: center;justify-items: center">
-          <div style="width: 500px;height: 50px;margin: 0 auto">
-            <el-input v-model="titilename" style="width:500px" :disabled="true"></el-input>
-          </div>
+        <div style="height:70px;display:flex;align-items: center;justify-content: center;font-size: 24px">
+          {{titilename}}
         </div>
-        <quill-editor ref="myTextEditor" v-model="htmlData" :options="editorOption" height="500" :disabled="true"></quill-editor>
-        <div class="" style="width:100%;height:50px;display: flex;align-items: center;justify-content: center">
+        <div style="height: 530px;overflow: auto">
+          <quill-editor ref="myTextEditor" v-model="htmlData" :options="editorOption" height="530" :disabled="true"></quill-editor>
+        </div>
+        <div style="height:50px;display:flex;align-items: center;justify-content: center">
           <el-button type="success" style="width: 200px;height: 40px;font-size: 30px" @click="readZL">进行学习</el-button>
         </div>
       </div>
@@ -108,18 +107,15 @@
     </el-dialog>
 
 
-    <el-dialog title="安全提醒框" :visible.sync="aqMessageVisible" :fullscreen="true" :center="true">
+    <el-dialog title="紧急安全通知" :visible.sync="aqMessageVisible" :fullscreen="true" :center="true" :show-close="false">
       <div class="aqMessageDiv">
-        <div class="containerDivTop2"
-             style="width:100%;height:50px;display: flex;align-items: center;justify-items: center">
-          <div style="width: 500px;height: 40px;margin: 0 auto">
-            <el-input v-model="titilename" style="width:500px" :disabled="true"></el-input>
-          </div>
+        <div style="height:70px;display:flex;align-items: center;justify-content: center;font-size: 24px">
+          {{titilename}}
         </div>
-        <div class="" style="height: 500px">
-          <quill-editor ref="myTextEditor" v-model="htmlData" :options="editorOption" height="500" :disabled="true"></quill-editor>
+        <div style="height: 530px;overflow: auto">
+          <quill-editor ref="myTextEditor" v-model="htmlData" :options="editorOption" height="530" :disabled="true"></quill-editor>
         </div>
-        <div class="" style="width:100%;height:50px;display: flex;align-items: center;justify-content: center">
+        <div style="height:50px;display: flex;align-items: center;justify-content: center">
           <el-button type="success" style="width: 200px;height: 40px;font-size: 30px" @click="readAQ">进行学习</el-button>
         </div>
       </div>
@@ -164,7 +160,10 @@
         titilename: "",
         htmlData: "",
         editorOption: {
-          placeholder: ''
+          placeholder: '',
+          modules: {
+            toolbar: '',
+          },
         },
 
       }
@@ -365,6 +364,7 @@
 
         }
       },
+
 
       //阅读质量
       readZL() {
@@ -587,10 +587,12 @@
 
     .zlMessageDiv {
       height: 650px;
+
     }
 
     .aqMessageDiv {
       height: 650px;
+
     }
 
     .closeBtn {
