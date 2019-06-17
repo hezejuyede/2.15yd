@@ -165,6 +165,7 @@
             toolbar: '',
           },
         },
+        relationid:"",
 
       }
     },
@@ -174,7 +175,8 @@
       setInterval(() => {
         this.getZLMessage();
         this.getQAMessage();
-      }, 1000);
+        this.getAQPMessage();
+      }, 100000);
 
     },
     created() {
@@ -244,6 +246,8 @@
                   setTimeout(() => {
                     localStorage.setItem("IndexUrl", 0);
                     sessionStorage.removeItem("userInfo");
+                    sessionStorage.removeItem("screeningConditions");
+                    window.location.reload();
                     this.$router.push("/ProductionExecutionLogin");
                   }, 3000);
                 }
@@ -336,7 +340,7 @@
 
       },
 
-      //定时请求安全消息
+      //定时请求紧急安全消息
       getQAMessage() {
         if(this.aqState===false){
           axios.post("  " + url + "/anquan/getTuisongJinji", { "stationid": this.GH})
@@ -347,14 +351,13 @@
                   this.aqMessageVisible = true;
                   this.titilename = res.data.data.title;
                   this.htmlData = res.data.data.neirong;
+                  this.relationid=res.data.data.relationid
                 }
                 else {
 
                 }
               }
-              else {
-
-              }
+              else {}
             })
             .catch(() => {
               console.log(err)
@@ -366,9 +369,16 @@
       },
 
 
+      //定时请求普通消息
+      getAQPMessage(){
+
+      },
+
+
+
       //阅读质量
       readZL() {
-        axios.post(" " + url + "/api/getPersonProcessList", {"name": this.username})
+        axios.post(" " + url + "/anquan/updateLevel", {"name": this.username})
           .then((res) => {
             this.workstationOptions = res.data;
             this.workstation = res.data[0].id;
@@ -381,11 +391,16 @@
 
       //阅读安全
       readAQ() {
-        axios.post(" " + url + "/api/getPersonProcessList", {"name": this.username})
+        axios.post(" " + url + "/anquan/updateLevel", {"id": this.relationid})
           .then((res) => {
-            this.workstationOptions = res.data;
-            this.workstation = res.data[0].id;
-            this.changeVisible = true;
+            if (res.data.state === "1") {
+              this.$message.success("阅读成功");
+              this.aqState = false;
+              this.aqMessageVisible = false;
+            }
+            else {
+              this.$message.warning(res.data.message);
+            }
           })
           .catch((err) => {
             console.log(err)

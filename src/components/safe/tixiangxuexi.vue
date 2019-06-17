@@ -3,9 +3,6 @@
     <header-nav></header-nav>
     <div class="equipmentTable">
       <div class="handle-box">
-        <label style="margin-right: 5px">
-          <el-input v-model="select_word" placeholder="检索提醒" style="width:120px"></el-input>
-        </label>
         <label style="margin-right: 5px;margin-left: 5px">
           <el-date-picker
             style="width: 240px"
@@ -17,10 +14,29 @@
           </el-date-picker>
         </label>
         <label style="margin-right: 10px;margin-left: 5px">
-          <span>查看状态</span>
+          <span>程度</span>
           <span>:</span>
           <el-select
-            style="width: 120px"
+            style="width: 100px"
+            v-model="state"
+            clearable
+            filterable
+            allow-create
+            default-first-option
+            placeholder="请选择紧急程度">
+            <el-option
+              v-for="item in stateOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </label>
+        <label style="margin-right: 10px;margin-left: 5px">
+          <span>状态</span>
+          <span>:</span>
+          <el-select
+            style="width: 100px"
             v-model="learn"
             clearable
             filterable
@@ -126,6 +142,8 @@
         examineTime: "",
         learn: "1",
         learnOptions: [{"name": "未查看", "id": "1"}, {"name": "已查看", "id": "2"}],
+        state: "1",
+        stateOptions: [{"name": "紧急", "id": "1"}, {"name": "普通", "id": "2"}],
         htmlData:'',
         titilename:"",
 
@@ -182,16 +200,16 @@
             times.push(time)
           }
           this.examineTime = times;
-          this.loadingShowData(this.examineTime, this.stationid,this.learn);
+          this.loadingShowData(this.examineTime, this.stationid,this.learn,this.state);
         }
       },
 
       //瞬间加载数据
-      loadingShowData(data1, data2,data3) {
+      loadingShowData(data1, data2,data3,data4) {
         let that = this;
         axios.all([
-          axios.post(" " + url + "/sys/showTableTitle", {"name": "xuexibaogaotongji"}),
-          axios.post(" " + url + "/anquan/xuexiList", {"times": data1,"stationid":data2,"status":data3})
+          axios.post(" " + url + "/sys/showTableTitle", {"name": "zhixingduananquanchaxunjilv"}),
+          axios.post(" " + url + "/anquan/tuisongForPadList", {"times": data1,"stationid":data2,"status":data3,"type":data4})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
@@ -305,7 +323,7 @@
       //根据时间查询上报记录
       doSearch() {
         if (this.examineTime) {
-          this.loadingShowData(this.examineTime, this.stationid,this.learn);
+          this.loadingShowData(this.examineTime, this.stationid,this.learn,this.state);
         }
         else {
           this.$message.warning("请选择查询时间");
@@ -361,11 +379,7 @@
       height: 85%;
       .handle-box {
         line-height: 100px;
-        padding-left: 20px;
-        .handle-input {
-          width: 300px;
-          display: inline-block;
-        }
+        padding-left: 10px;
         .el-button {
           width: 120px;
           height: 40px;
