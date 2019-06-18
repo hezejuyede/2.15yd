@@ -69,14 +69,12 @@
           <el-button type="danger" @click="sbVisible = false">关闭窗口</el-button>
         </div>
         <div class="equipmentDivContent">
-          <div class="containerDivTop2" style="width:100%;height:50px;display: flex;align-items: center;justify-items: center">
-            <div style="width: 600px;height: 40px;margin: 0 auto">
-              <span>学习标题</span>
-              <span>:</span>
-              <el-input v-model="titilename" style="width:500px"   :disabled="true"   placeholder="学习标题"></el-input>
-            </div>
+          <div style="width:100%;height:50px;display: flex;align-items: center;justify-content: center">
+            {{titilename}}
           </div>
-          <div class="" v-html="htmlData"></div>
+          <div style="width:100%;height: 350px;overflow: auto;">
+            <quill-editor ref="myTextEditor" v-model="htmlData" :options="editorOption" height="530" :disabled="true"></quill-editor>
+          </div>
         </div>
         <div class="equipmentDivBtn">
           <el-button type="success" @click="doLearn">学习</el-button>
@@ -102,6 +100,10 @@
   import footerNav from '../../common/footer'
   import Loading from '../../common/loading'
   import {getNowTime} from '../../assets/js/api'
+  import 'quill/dist/quill.core.css';
+  import 'quill/dist/quill.snow.css';
+  import 'quill/dist/quill.bubble.css';
+  import { quillEditor } from 'vue-quill-editor';
 
 
   export default {
@@ -128,10 +130,16 @@
         learnOptions: [{"name": "未学习", "id": "1"}, {"name": "已学习", "id": "2"}],
         htmlData:'',
         titilename:"",
+        editorOption: {
+          placeholder: '',
+          modules: {
+            toolbar: '',
+          },
+        },
 
       }
     },
-    components: {Loading, Modal, footerNav, headerNav},
+    components: {Loading, Modal, footerNav, headerNav,quillEditor},
     computed: {
       //模糊检索
       tables: function () {
