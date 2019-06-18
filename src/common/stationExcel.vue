@@ -952,25 +952,25 @@
           if (row.id === this.gzId) {
             return 'green-row';
           }
-          else if  (row.id === "4") {
+          else if  (row.status === "4") {
             return 'xzl-row';
           }
 
-          else if  (row.id === "5") {
+          else if  (row.status === "5") {
             return 'xzl-row';
           }
         }
       },
 
       tableRowClassNameZGQD({row, rowIndex}) {
-        if (row.id === "2") {
+        if (row.status === 2) {
           return 'green-row';
         }
-        else if  (row.id === "4") {
+        else if  (row.status === "4") {
           return 'xzl-row';
         }
 
-        else if  (row.id === "5") {
+        else if  (row.status === "5") {
           return 'xzl-row';
         }
       },

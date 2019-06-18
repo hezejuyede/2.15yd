@@ -937,7 +937,7 @@
               :style="{
              'background-color':this.left ? '#2A437B':'',
              'color':this.left ? '#ffffff':''}">
-              斜枝
+              正枝
             </button>
           </div>
           <div class="change-left2" @click="zgShowLeft2">
@@ -945,7 +945,7 @@
               :style="{
              'background-color':this.left2 ? '#2A437B':'',
              'color':this.left2 ? '#ffffff':''}">
-              正枝
+              斜枝
             </button>
           </div>
           <div class="change-center" @click="zgShowCenter">
@@ -975,86 +975,6 @@
         </div>
         <div class="zg-list">
           <div class="saoMa" v-if="left === true">
-            <el-table
-              :key="0"
-              class="tb-edit"
-              :data="tables"
-              height="450"
-              border
-              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
-              :row-class-name="tableRowClassName"
-              @select="selectList"
-              @select-all="selectAll"
-              @row-click="doSelect"
-              @selection-change="selectChange"
-              ref="moviesTable"
-              style="width: 99%;margin: 0 auto">
-              <el-table-column
-                type="selection"
-                width="30">
-              </el-table-column>
-              <template v-for="(col ,index) in cols">
-                <el-table-column
-                  align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xzb' && col.prop !=='yipintu'"
-                  :prop="col.prop"
-                  :label="col.label">
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop==='yiguanno'"
-                  :prop="col.prop" :label="col.label">
-                  <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.yiguanno }}
-                    </el-button>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop==='codeno'"
-                  :prop="col.prop" :label="col.label">
-                  <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.codeno }}
-                    </el-button>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop==='xzb'"
-                  :prop="col.prop" :label="col.label">
-                  <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">斜枝表
-                    </el-button>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop==='yipintu'"
-                  :prop="col.prop" :label="col.label">
-                  <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
-                      一品图
-                    </el-button>
-                  </template>
-                </el-table-column>
-              </template>
-            </el-table>
-          </div>
-          <div class="saoMa" v-if="left2 === true">
             <el-table
               :key="0"
               class="tb-edit"
@@ -1134,9 +1054,89 @@
               </template>
             </el-table>
           </div>
+          <div class="saoMa" v-if="left2 === true">
+            <el-table
+              :key="1"
+              class="tb-edit"
+              :data="tables"
+              height="450"
+              border
+              :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
+              :row-class-name="tableRowClassName"
+              @select="selectList"
+              @select-all="selectAll"
+              @row-click="doSelect"
+              @selection-change="selectChange"
+              ref="moviesTable"
+              style="width: 99%;margin: 0 auto">
+              <el-table-column
+                type="selection"
+                width="30">
+              </el-table-column>
+              <template v-for="(col ,index) in cols">
+                <el-table-column
+                  align="center"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='xzb' && col.prop !=='yipintu'"
+                  :prop="col.prop"
+                  :label="col.label">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yiguanno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.yiguanno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='codeno'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="goToCurrentTask(scope.row.id)">
+                      {{ scope.row.codeno }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='xzb'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeStationExcel(scope.row.id,scope.row.pici,scope.row.fileid)">斜枝表
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  v-if="col.prop==='yipintu'"
+                  :prop="col.prop" :label="col.label">
+                  <template scope="scope">
+                    <el-button
+                      type="success"
+                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                      @click="seeYiPinTu(scope.row.pici,scope.row.yiguanno,scope.row.codeno)">
+                      一品图
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </template>
+            </el-table>
+          </div>
           <div class="account" v-if="zgCenter === true">
             <el-table
-              :key="0"
+              :key="2"
               class="tb-edit"
               :data="tables"
               height="450"
@@ -1216,7 +1216,7 @@
           </div>
           <div class="account" v-if="right === true">
             <el-table
-              :key="0"
+              :key="3"
               class="tb-edit"
               :data="tables"
               height="450"
@@ -1296,7 +1296,7 @@
           </div>
           <div class="account" v-if="right2 === true">
             <el-table
-              :key="0"
+              :key="4"
               class="tb-edit"
               :data="tables"
               height="450"
@@ -1526,10 +1526,10 @@
           <div class="select fl" v-if=" this.n==1">
             <el-input v-model="qianzuoyezhe" placeholder="前作业者"></el-input>
           </div>
-          <div class="select fl" >
+          <div class="select fl">
             <el-input v-model="zgwj" placeholder="枝管外径"></el-input>
           </div>
-          <div class="select fl" >
+          <div class="select fl">
             <el-input v-model="mgwj" placeholder="母管外径"></el-input>
           </div>
         </div>
@@ -1554,10 +1554,11 @@
 
 
     <!--查看工位表 -->
-    <el-dialog  :visible.sync="excelVisible" :fullscreen="true" :center="true">
+    <el-dialog :visible.sync="excelVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
         <el-button type="danger" @click="excelVisible = false">关闭窗口</el-button>
-        <el-button type="primary" @click="gwbDoWorkEnd" v-if="this.listType !=='7' && this.listType !=='8' && this.listType !=='11'">报完工
+        <el-button type="primary" @click="gwbDoWorkEnd"
+                   v-if="this.listType !=='7' && this.listType !=='8' && this.listType !=='11'">报完工
         </el-button>
       </div>
       <div class="container" style="width: 100%;height: 100%">
@@ -1619,7 +1620,7 @@
     </el-dialog>
 
     <!--一品图预览筛选 -->
-    <el-dialog  :visible.sync="yptSelectVisible" :fullscreen="true" :center="true">
+    <el-dialog :visible.sync="yptSelectVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
         <el-button type="danger" @click="yptSelectVisible = false">关闭窗口</el-button>
       </div>
@@ -1651,7 +1652,7 @@
               align="center"
               label="一品图">
               <template scope="scope">
-                <div class=""  style="height: 310px">
+                <div class="" style="height: 310px">
                   <img :src="scope.row.yipintu" alt="" style="height: 310px;width: 60%">
                 </div>
               </template>
@@ -1720,7 +1721,7 @@
         ],    //特定工位的表头
         zuoyezhe: "",   //用户名
         dqgw: "",       //中文工位名字
-        gwbpici:"",        // 单击选中工位表的批次
+        gwbpici: "",        // 单击选中工位表的批次
         stationId: "",  //工位对应的ID
         url: "",   //一品图和切断表的URL地址
         listData: [],  //点击复选框中对ID的数组
@@ -1729,15 +1730,16 @@
         inputWord: '',//扫码的Value
         searchWord: '',//智能检索的value
         is_search: false,
-        gwType: "2",//一种工位有几种类型，
-        xzlGwType:"1",//小工位状态
+        gwType: "1",//一种工位有几种类型，
+        zgStation: "1",//枝管切断默认显示那个一个
+        xzlStation: "1",//小组立默认显示左右
         screenVisible: false,   //筛选条件弹出框
         drawingVisible: false,  // 一品图弹出框
         endVisible: false,     //报完工提醒弹出框
         tdVisible: false,    //特定工位提醒框
         excelVisible: false,   //工位表表弹出框
-        yptSelectVisible:false, //一品图预约筛选
-        yptListData:[
+        yptSelectVisible: false, //一品图预约筛选
+        yptListData: [
           {"yipintu": "/img/20190505/newC1895_11.png", "id": 1},
           {"yipintu": "/img/20190505/newC1895_11.png", "id": 2},
           {"yipintu": "/img/20190505/newC1895_11.png", "id": 3},
@@ -1746,7 +1748,7 @@
           {"yipintu": "/img/20190505/newC1895_11.png", "id": 6},
           {"yipintu": "/img/20190505/newC1895_11.png", "id": 7},
           {"yipintu": "/img/20190505/newC1895_11.png", "id": 7},
-          ],         //一品图预览列表数据
+        ],         //一品图预览列表数据
         left: true,           //显示最左边
         left2: false,         //显示左二
         zgCenter: false,      //显示中间
@@ -1774,8 +1776,8 @@
         bihou: "",
         bihouOptions: [],
         qianzuoyezhe: "",
-        zgwj:"",
-        mgwj:"",
+        zgwj: "",
+        mgwj: "",
         a: 0,
         b: 0,
         c: 0,
@@ -1867,11 +1869,70 @@
           }
           else if (info.GW === "小组立") {
             this.listType = "2";
-            this.showTableData(this.stationId, this.dqgw, 1, 1)
+            let xzlStation = sessionStorage.getItem("xzlStation");
+            if (xzlStation === null) {
+              this.showTableData(this.stationId, this.dqgw, 1, this.gwType)
+            }
+            else {
+              this.gwType = xzlStation;
+              if (this.gwType === "1") {
+                this.left = true;
+                this.right = false;
+              }
+              else if (this.gwType === "2") {
+                this.left = false;
+                this.right = true;
+              }
+              this.showTableData(this.stationId, this.dqgw, 1,this.gwType)
+            }
+
           }
           else if (info.GW === "枝管切断") {
             this.listType = "4";
-            this.showTableData(this.stationId, this.dqgw, 1,2)
+            let zgStation = sessionStorage.getItem("zgStation");
+            if (zgStation === null) {
+              this.showTableData(this.stationId, this.dqgw, 1, this.gwType)
+            }
+            else {
+              this.gwType = zgStation;
+              if (zgStation === "1") {
+                this.left = true;
+                this.left2 = false;
+                this.zgCenter = false;
+                this.right = false;
+                this.right2 = false;
+              }
+              else if (zgStation === "2") {
+                this.left = false;
+                this.left2 = true;
+                this.zgCenter = false;
+                this.right = false;
+                this.right2 = false;
+              }
+              else if (zgStation === "3") {
+                this.left = false;
+                this.left2 = false;
+                this.zgCenter = true;
+                this.right = false;
+                this.right2 = false;
+              }
+              else if (zgStation === "4") {
+                this.left = false;
+                this.left2 = false;
+                this.zgCenter = false;
+                this.right = true;
+                this.right2 = false;
+              }
+              else if (zgStation === "5") {
+                this.left = false;
+                this.left2 = false;
+                this.zgCenter = false;
+                this.right = false;
+                this.right2 = true;
+              }
+              this.showTableData(this.stationId, this.dqgw, 1, this.gwType)
+            }
+
           }
           else if (info.GW === "弯头切断") {
             this.listType = "3";
@@ -1937,8 +1998,8 @@
       showTableData(id, name, wz, type) {
         let that = this;
         let screeningConditions = sessionStorage.getItem("screeningConditions");
-        if(screeningConditions ===null){
-          if(this.dqgw === "切断"){
+        if (screeningConditions === null) {
+          if (this.dqgw === "切断") {
             axios.all([
               axios.post(" " + url + "/sys/showTableTitleById", {"stationid": id, "weizhiid": wz, "type": type}),
               axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": name, "type": type})
@@ -1955,57 +2016,14 @@
                 that.tableData = arr;
               }));
           }
-          else if(this.dqgw === "枝管切断"){
+          else if (this.dqgw === "枝管切断") {
             axios.all([
               axios.post(" " + url + "/sys/showTableTitleById", {"stationid": id, "weizhiid": wz, "type": type}),
-              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu":name, "type": type})
+              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": name, "type": type})
             ])
               .then(axios.spread(function (title, table) {
                 that.cols = title.data.data;
-                if(table.data.length>0){
-                  let data =[];
-                  for (let i=0;i<table.data.length;i++){
-                    let json = {
-                      "xuhao": i + 1,
-                      "linename": table.data[i].linename,
-                      "qieduan": table.data[i].qieduan,
-                      "atext": table.data[i].atext,
-                      "jiagongxian": table.data[i].jiagongxian,
-                      "indexno": table.data[i].indexno,
-                      "neijing": table.data[i].neijing,
-                      "type": table.data[i].type,
-                      "waijing": table.data[i].waijing,
-                      "yiguanno": table.data[i].yiguanno,
-                      "btext": table.data[i].btext,
-                      "codeno": table.data[i].codeno,
-                      "quanchang":table.data[i].quanchang,
-                      "id": table.data[i].id,
-                      "chuanfan": table.data[i].chuanfan,
-                      "shipcode": table.data[i].shipcode,
-                      "zuox": table.data[i].zuox,
-                      "fileid": table.data[i].fileid,
-                      "createtime": table.data[i].createtime,
-                      "jiagongxilie": table.data[i].jiagongxilie,
-                      "daihao": table.data[i].daihao,
-                      "jinwu": table.data[i].jinwu,
-                      "pici": table.data[i].pici,
-                      "changdu": table.data[i].changdu,
-                      "pno": table.data[i].pno,
-                      "bihou": table.data[i].bihou,
-                      "pianxinliang": table.data[i].pianxinliang,
-                      "shenpiStatus": table.data[i].shenpiStatus,
-                      "muguanwaijing": table.data[i].muguanwaijing,
-                      "denglizi":table.data[i].denglizi,
-                      "beizhu": table.data[i].beizhu,
-                      "fanhao":table.data[i].fanhao,
-                      "guige": table.data[i].guige,
-                      "jiancha":table.data[i].jiancha,
-                      "kxtext": table.data[i].kxtext
-                    };
-                    data.push(json)
-                  }
-                  that.tableData =data
-                }
+                that.tableData =table.data;
               }));
           }
           else {
@@ -2020,7 +2038,7 @@
           }
         }
         else {
-          let ScreeningConditions=JSON.parse(screeningConditions);
+          let ScreeningConditions = JSON.parse(screeningConditions);
           if (this.dqgw === "切断") {
             axios.all([
               axios.post(" " + url + "/sys/showTableTitleById", {"stationid": id, "weizhiid": wz, "type": type}),
@@ -2056,7 +2074,7 @@
                 that.tableData = arr;
               }));
           }
-          else if(this.dqgw === "小组立"){
+          else if (this.dqgw === "小组立") {
             axios.all([
               axios.post(" " + url + "/sys/showTableTitleById", {"stationid": id, "weizhiid": wz, "type": type}),
               axios.post(" " + url + "/shengchan/shengchanList.html",
@@ -2076,8 +2094,8 @@
                   "bihou": ScreeningConditions.bihou,
                   "codeN": ScreeningConditions.codeN,
                   "zuoyezhe": ScreeningConditions.zuoyezhe,
-                  "zgwj":ScreeningConditions.zgwj,
-                  "mgwj":ScreeningConditions.mgwj
+                  "zgwj": ScreeningConditions.zgwj,
+                  "mgwj": ScreeningConditions.mgwj
                 })
             ]).then(axios.spread(function (title, table) {
               that.cols = title.data.data;
@@ -2093,7 +2111,7 @@
                   "gongxu": name,
                   "jiagongxian": ScreeningConditions.jiagongxian,
                   "pici": ScreeningConditions.pici,
-                  "preGongxu":ScreeningConditions.preGongxu,
+                  "preGongxu": ScreeningConditions.preGongxu,
                   "jiagongxilie": ScreeningConditions.jiagongxilie,
                   "chuanhao": ScreeningConditions.chuanhao,
                   "yiguanhao": ScreeningConditions.yiguanhao,
@@ -2103,16 +2121,16 @@
                   "pno": ScreeningConditions.pno,
                   "bihou": ScreeningConditions.bihou,
                   "codeN": ScreeningConditions.codeN,
-                  "zuoyezhe":ScreeningConditions.zuoyezhe,
-                  "zgwj":ScreeningConditions.zgwj,
-                  "mgwj":ScreeningConditions.mgwj
+                  "zuoyezhe": ScreeningConditions.zuoyezhe,
+                  "zgwj": ScreeningConditions.zgwj,
+                  "mgwj": ScreeningConditions.mgwj
                 })
             ]).then(axios.spread(function (title, table) {
               that.cols = title.data.data;
-              if (that.listType === "4" && that.left===true){
-                if(table.data.length>0){
-                  let data =[];
-                  for (let i=0;i<table.data.length;i++){
+              if (that.listType === "4" && that.left2 === true) {
+                if (table.data.length > 0) {
+                  let data = [];
+                  for (let i = 0; i < table.data.length; i++) {
                     let json = {
                       "xuhao": i + 1,
                       "linename": table.data[i].linename,
@@ -2126,7 +2144,7 @@
                       "yiguanno": table.data[i].yiguanno,
                       "btext": table.data[i].btext,
                       "codeno": table.data[i].codeno,
-                      "quanchang":table.data[i].quanchang,
+                      "quanchang": table.data[i].quanchang,
                       "id": table.data[i].id,
                       "chuanfan": table.data[i].chuanfan,
                       "shipcode": table.data[i].shipcode,
@@ -2143,16 +2161,16 @@
                       "pianxinliang": table.data[i].pianxinliang,
                       "shenpiStatus": table.data[i].shenpiStatus,
                       "muguanwaijing": table.data[i].muguanwaijing,
-                      "denglizi":table.data[i].denglizi,
+                      "denglizi": table.data[i].denglizi,
                       "beizhu": table.data[i].beizhu,
-                      "fanhao":table.data[i].fanhao,
+                      "fanhao": table.data[i].fanhao,
                       "guige": table.data[i].guige,
-                      "jiancha":table.data[i].jiancha,
+                      "jiancha": table.data[i].jiancha,
                       "kxtext": table.data[i].kxtext
                     };
                     data.push(json)
                   }
-                  that.tableData =data
+                  that.tableData = data
                 }
               }
               else {
@@ -2255,11 +2273,17 @@
       },
 
       //弯头焊单选
-      selectListWTH(val){
+      selectListWTH(val) {
         if (val.length) {
           let data = [];
           for (let i = 0; i < val.length; i++) {
-            let a = {"pici":val[i].pici,"fuhao":val[i].fuhao,"yiguanno":val[i].yiguanno,"codeno":val[i].codeno,"zuoyezhe":this.zuoyezhe};
+            let a = {
+              "pici": val[i].pici,
+              "fuhao": val[i].fuhao,
+              "yiguanno": val[i].yiguanno,
+              "codeno": val[i].codeno,
+              "zuoyezhe": this.zuoyezhe
+            };
             data.push(a)
           }
           this.listData = data;
@@ -2271,15 +2295,21 @@
       },
 
       //弯头焊全选
-      selectAllWTH(val){
+      selectAllWTH(val) {
         if (val.length) {
           let data = [];
           for (let i = 0; i < val.length; i++) {
-            let a = {"pici":val[i].pici,"fuhao":val[i].fuhao,"yiguanno":val[i].yiguanno,"codeno":val[i].codeno,"zuoyezhe":this.zuoyezhe};
+            let a = {
+              "pici": val[i].pici,
+              "fuhao": val[i].fuhao,
+              "yiguanno": val[i].yiguanno,
+              "codeno": val[i].codeno,
+              "zuoyezhe": this.zuoyezhe
+            };
             data.push(a)
           }
           this.listData = data;
-          console.log( this.listData)
+          console.log(this.listData)
         }
         else {
           this.listData = [];
@@ -2350,6 +2380,7 @@
                     this.message = res.data.message;
                     this.HideModal = false;
                     const that = this;
+
                     function a() {
                       that.message = "";
                       that.HideModal = true;
@@ -2516,35 +2547,8 @@
               console.log(err)
             })
         }
-        if (this.dqgw === "弯头焊") {
-          axios.post(" " + url + "/shengchan/updateStatusWthBatch", {"list":this.listData})
-            .then((res) => {
-              if (res.data === "1") {
-                this.endVisible = false;
-                this.message = "已经完成";
-                this.HideModal = false;
-                const that = this;
-                function a() {
-                  that.message = "";
-                  that.HideModal = true;
-                  that.listData=[];
-                  that.showTableData(that.stationId, that.dqgw, 1, that.gwType)
-                }
-                setTimeout(a, 2000);
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
-        }
-        if (this.dqgw === "小组立") {
-          axios.post(" " + url + "/shengchan/updateStatusBatch",
-            {
-              "ids": this.listData,
-              "zuoyezhe": this.zuoyezhe,
-              "type": this.xzlGwType,
-              "stationid": this.stationId,
-            })
+        else if (this.dqgw === "弯头焊") {
+          axios.post(" " + url + "/shengchan/updateStatusWthBatch", {"list": this.listData})
             .then((res) => {
               if (res.data === "1") {
                 this.endVisible = false;
@@ -2555,7 +2559,8 @@
                 function a() {
                   that.message = "";
                   that.HideModal = true;
-                  that.showTableData(that.stationId, that.dqgw, 1, that.xzlGwType)
+                  that.listData = [];
+                  that.showTableData(that.stationId, that.dqgw, 1, that.gwType)
                 }
 
                 setTimeout(a, 2000);
@@ -2709,7 +2714,7 @@
 
       //查看工位表
       seeStationExcel(id, pici, fileid) {
-        this.gwbpici=pici;
+        this.gwbpici = pici;
         this.id = id;
         this.gzId = fileid;
         //防止冒泡
@@ -2742,7 +2747,7 @@
           }
           else if (this.dqgw === "枝管切断") {
             if (this.gwType === "1") {
-              axios.post(" " + url + "/importother/publicData", {"code": "zezz", "pici": pici,"fileid":this.gzId})
+              axios.post(" " + url + "/importother/publicData", {"code": "zezz", "pici": pici, "fileid": this.gzId})
                 .then((res) => {
                   if (res.data) {
                     this.excelData = res.data;
@@ -2766,7 +2771,7 @@
                 })
             }
             else if (this.gwType === "2") {
-              axios.post(" " + url + "/importother/publicData", {"code": "zexz", "pici": pici,"fileid":this.gzId})
+              axios.post(" " + url + "/importother/publicData", {"code": "zexz", "pici": pici, "fileid": this.gzId})
                 .then((res) => {
                   if (res.data) {
                     this.excelData = res.data;
@@ -2790,7 +2795,7 @@
                 })
             }
             else if (this.gwType === "3") {
-              axios.post(" " + url + "/importother/publicData", {"code": "zzpx", "pici": pici,"fileid":this.gzId})
+              axios.post(" " + url + "/importother/publicData", {"code": "zzpx", "pici": pici, "fileid": this.gzId})
                 .then((res) => {
                   if (res.data) {
                     this.excelData = res.data;
@@ -2894,7 +2899,7 @@
       },
 
       //工位表中小组立数据更新
-      xzlDataChange(val){
+      xzlDataChange(val) {
         if (val === true) {
           axios.post(" " + url + "/importother/showXiaozuliExcel", {"pici": this.gwbpici})
             .then((res) => {
@@ -2996,11 +3001,11 @@
           "bihou": this.bihou,
           "codeN": this.codeN,
           "zuoyezhe": this.qianzuoyezhe,
-          "zgwj":this.zgwj,
-          "mgwj":this.mgwj,
+          "zgwj": this.zgwj,
+          "mgwj": this.mgwj,
         };
-        let Json =JSON.stringify(json);
-        sessionStorage.setItem("screeningConditions",Json);
+        let Json = JSON.stringify(json);
+        sessionStorage.setItem("screeningConditions", Json);
         if (this.dqgw === "切断") {
           axios.post(" " + url + "/shengchan/shengchanList.html",
             {
@@ -3035,10 +3040,10 @@
               console.log(err)
             })
         }
-        else if(this.dqgw==="小组立"){
+        else if (this.dqgw === "小组立") {
           axios.post(" " + url + "/shengchan/shengchanList.html",
             {
-              "type": this.xzlGwType,
+              "type": this.gwType,
               "gongxu": this.dqgw,
               "jiagongxian": this.scx,
               "pici": this.batch,
@@ -3053,8 +3058,8 @@
               "bihou": this.bihou,
               "codeN": this.codeN,
               "zuoyezhe": this.qianzuoyezhe,
-              "zgwj":this.zgwj,
-              "mgwj":this.mgwj
+              "zgwj": this.zgwj,
+              "mgwj": this.mgwj
             })
             .then((res) => {
               this.screenVisible = false;
@@ -3082,28 +3087,28 @@
               "bihou": this.bihou,
               "codeN": this.codeN,
               "zuoyezhe": this.qianzuoyezhe,
-              "zgwj":this.zgwj,
-              "mgwj":this.mgwj
+              "zgwj": this.zgwj,
+              "mgwj": this.mgwj
             })
             .then((res) => {
               this.screenVisible = false;
-              if (this.listType === "4" && this.left===true){
-                let data =[];
-                for (let i=0;i<res.data.length;i++){
+              if (this.listType === "4" && this.left2 === true) {
+                let data = [];
+                for (let i = 0; i < res.data.length; i++) {
                   let json = {
                     "xuhao": i + 1,
                     "linename": res.data[i].linename,
                     "qieduan": res.data[i].qieduan,
                     "atext": res.data[i].atext,
-                    "jiagongxian":res.data[i].jiagongxian,
+                    "jiagongxian": res.data[i].jiagongxian,
                     "indexno": res.data[i].indexno,
                     "neijing": res.data[i].neijing,
                     "type": res.data[i].type,
-                    "waijing":res.data[i].waijing,
+                    "waijing": res.data[i].waijing,
                     "yiguanno": res.data[i].yiguanno,
                     "btext": res.data[i].btext,
                     "codeno": res.data[i].codeno,
-                    "quanchang":res.data[i].quanchang,
+                    "quanchang": res.data[i].quanchang,
                     "id": res.data[i].id,
                     "chuanfan": res.data[i].chuanfan,
                     "shipcode": res.data[i].shipcode,
@@ -3114,22 +3119,22 @@
                     "daihao": res.data[i].daihao,
                     "jinwu": res.data[i].jinwu,
                     "pici": res.data[i].pici,
-                    "changdu":res.data[i].changdu,
-                    "pno":res.data[i].pno,
+                    "changdu": res.data[i].changdu,
+                    "pno": res.data[i].pno,
                     "bihou": res.data[i].bihou,
                     "pianxinliang": res.data[i].pianxinliang,
                     "shenpiStatus": res.data[i].shenpiStatus,
                     "muguanwaijing": res.data[i].muguanwaijing,
-                    "denglizi":res.data[i].denglizi,
+                    "denglizi": res.data[i].denglizi,
                     "beizhu": res.data[i].beizhu,
-                    "fanhao":res.data[i].fanhao,
+                    "fanhao": res.data[i].fanhao,
                     "guige": res.data[i].guige,
-                    "jiancha":res.data[i].jiancha,
+                    "jiancha": res.data[i].jiancha,
                     "kxtext": res.data[i].kxtext
                   };
                   data.push(json)
                 }
-                this.tableData =data;
+                this.tableData = data;
               }
               else {
                 this.tableData = res.data;
@@ -3158,8 +3163,8 @@
         this.scx = "";
         this.bihou = "";
         this.qianzuoyezhe = "";
-        this.zgwj="";
-        this.mgwj="";
+        this.zgwj = "";
+        this.mgwj = "";
       },
 
       //点击一贯号,Code号，前往前往任务页面
@@ -3249,8 +3254,10 @@
           this.cols = [];
           this.left = true;
           this.right = false;
-          this.xzlGwType = 1;
-          this.showTableData(this.stationId, this.dqgw, 1, this.xzlGwType);
+          this.gwType = 1;
+          this.xzlStation = "1";
+          sessionStorage.setItem("xzlStation", this.xzlStation);
+          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
 
@@ -3260,8 +3267,10 @@
           this.cols = [];
           this.right = true;
           this.left = false;
-          this.xzlGwType = 2;
-          this.showTableData(this.stationId, this.dqgw, 1, this.xzlGwType);
+          this.gwType = 2;
+          this.xzlStation = "2";
+          sessionStorage.setItem("xzlStation", this.xzlStation);
+          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
 
@@ -3274,8 +3283,10 @@
           this.zgCenter = false;
           this.right = false;
           this.right2 = false;
-          this.gwType = "2";
-          this.showTableData(this.stationId, this.dqgw, 1,2);
+          this.gwType = "1";
+          this.zgStation = "1";
+          sessionStorage.setItem("zgStation", this.zgStation);
+          this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
 
@@ -3288,7 +3299,9 @@
           this.zgCenter = false;
           this.right = false;
           this.right2 = false;
-          this.gwType = "1";
+          this.gwType = "2";
+          this.zgStation = "2";
+          sessionStorage.setItem("zgStation", this.zgStation);
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
@@ -3303,6 +3316,8 @@
           this.right = false;
           this.right2 = false;
           this.gwType = "3";
+          this.zgStation = "3";
+          sessionStorage.setItem("zgStation", this.zgStation);
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
@@ -3317,6 +3332,8 @@
           this.right = true;
           this.right2 = false;
           this.gwType = "4";
+          this.zgStation = "4";
+          sessionStorage.setItem("zgStation", this.zgStation);
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
@@ -3331,6 +3348,8 @@
           this.right = false;
           this.right2 = true;
           this.gwType = "5";
+          this.zgStation = "5";
+          sessionStorage.setItem("zgStation", this.zgStation);
           this.showTableData(this.stationId, this.dqgw, 1, this.gwType);
         }
       },
@@ -3361,7 +3380,6 @@
       addYptList() {
 
       },
-
 
 
       //移动显示搜索框
@@ -3693,14 +3711,14 @@
     }
   }
 
-  .yptContainer{
+  .yptContainer {
     height: 680px;
     width: 100%;
-    .yptContainerExcel{
+    .yptContainerExcel {
       overflow: auto;
       height: 630px;
     }
-    .yptContainerBtn{
+    .yptContainerBtn {
       display: flex;
       align-items: center;
       justify-content: center;
