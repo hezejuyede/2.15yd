@@ -953,9 +953,9 @@
                     placeholder="请选择表名">
                     <el-option
                       v-for="item in scope.row.relatableOptions"
-                      :key="item.code"
+                      :key="item.indexno"
                       :label="item.name"
-                      :value="item.code">
+                      :value="item.indexno">
                     </el-option>
                   </el-select>
                 </div>
@@ -1350,11 +1350,10 @@
               axios.post(" " + url + "/sysconfig/opreaRecordTypeList", {"station": that.gongwei}),
             ])
               .then(axios.spread(function (listData) {
-
                 if (listData.data.length > 0) {
                   let data = [];
                   for (let i = 0; i < listData.data.length; i++) {
-                    if (listData.data[i].code == 2) {
+                    if (listData.data[i].ctype === 2) {
                       axios.post(" " + url + "/sys/dictionaryList", {"id": listData.data[i].code})
                         .then((res) => {
                           var list = {
