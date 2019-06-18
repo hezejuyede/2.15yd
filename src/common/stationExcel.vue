@@ -127,7 +127,7 @@
             <el-table
               height="640"
               :data="excelData"
-              :row-class-name="tableRowClassName"
+              :row-class-name="tableRowClassNameZGQD"
               :header-cell-style="{
             background:'#ffffff',
             border: '1px solid #303133',
@@ -952,6 +952,26 @@
           if (row.id === this.gzId) {
             return 'green-row';
           }
+          else if  (row.id === "4") {
+            return 'xzl-row';
+          }
+
+          else if  (row.id === "5") {
+            return 'xzl-row';
+          }
+        }
+      },
+
+      tableRowClassNameZGQD({row, rowIndex}) {
+        if (row.id === "2") {
+          return 'green-row';
+        }
+        else if  (row.id === "4") {
+          return 'xzl-row';
+        }
+
+        else if  (row.id === "5") {
+          return 'xzl-row';
         }
       },
 
