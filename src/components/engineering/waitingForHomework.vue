@@ -1901,6 +1901,7 @@
                 this.zgCenter = false;
                 this.right = false;
                 this.right2 = false;
+                this.showTableData(this.stationId, this.dqgw, 1, this.gwType)
               }
               else if (zgStation === "2") {
                 this.left = false;
@@ -1908,6 +1909,7 @@
                 this.zgCenter = false;
                 this.right = false;
                 this.right2 = false;
+                this.showTableData(this.stationId, this.dqgw, 1, this.gwType)
               }
               else if (zgStation === "3") {
                 this.left = false;
@@ -1915,6 +1917,7 @@
                 this.zgCenter = true;
                 this.right = false;
                 this.right2 = false;
+                this.showTableData(this.stationId, this.dqgw, 1, this.gwType)
               }
               else if (zgStation === "4") {
                 this.left = false;
@@ -1922,6 +1925,7 @@
                 this.zgCenter = false;
                 this.right = true;
                 this.right2 = false;
+                this.showTableData(this.stationId, this.dqgw, 1, this.gwType)
               }
               else if (zgStation === "5") {
                 this.left = false;
@@ -1929,8 +1933,9 @@
                 this.zgCenter = false;
                 this.right = false;
                 this.right2 = true;
+                this.showTableData(this.stationId, this.dqgw, 1, this.gwType)
               }
-              this.showTableData(this.stationId, this.dqgw, 1, this.gwType)
+
             }
 
           }
@@ -2016,16 +2021,6 @@
                 that.tableData = arr;
               }));
           }
-          else if (this.dqgw === "枝管切断") {
-            axios.all([
-              axios.post(" " + url + "/sys/showTableTitleById", {"stationid": id, "weizhiid": wz, "type": type}),
-              axios.post(" " + url + "/shengchan/shengchanList.html", {"gongxu": name, "type": type})
-            ])
-              .then(axios.spread(function (title, table) {
-                that.cols = title.data.data;
-                that.tableData =table.data;
-              }));
-          }
           else {
             axios.all([
               axios.post(" " + url + "/sys/showTableTitleById", {"stationid": id, "weizhiid": wz, "type": type}),
@@ -2033,7 +2028,55 @@
             ])
               .then(axios.spread(function (title, table) {
                 that.cols = title.data.data;
-                that.tableData = table.data;
+                if (that.listType === "4" && that.left2 === true) {
+                  if (table.data.length > 0) {
+                    let data = [];
+                    for (let i = 0; i < table.data.length; i++) {
+                      let json = {
+                        "xuhao": i + 1,
+                        "linename": table.data[i].linename,
+                        "qieduan": table.data[i].qieduan,
+                        "atext": table.data[i].atext,
+                        "jiagongxian": table.data[i].jiagongxian,
+                        "indexno": table.data[i].indexno,
+                        "neijing": table.data[i].neijing,
+                        "type": table.data[i].type,
+                        "waijing": table.data[i].waijing,
+                        "yiguanno": table.data[i].yiguanno,
+                        "btext": table.data[i].btext,
+                        "codeno": table.data[i].codeno,
+                        "quanchang": table.data[i].quanchang,
+                        "id": table.data[i].id,
+                        "chuanfan": table.data[i].chuanfan,
+                        "shipcode": table.data[i].shipcode,
+                        "zuox": table.data[i].zuox,
+                        "fileid": table.data[i].fileid,
+                        "createtime": table.data[i].createtime,
+                        "jiagongxilie": table.data[i].jiagongxilie,
+                        "daihao": table.data[i].daihao,
+                        "jinwu": table.data[i].jinwu,
+                        "pici": table.data[i].pici,
+                        "changdu": table.data[i].changdu,
+                        "pno": table.data[i].pno,
+                        "bihou": table.data[i].bihou,
+                        "pianxinliang": table.data[i].pianxinliang,
+                        "shenpiStatus": table.data[i].shenpiStatus,
+                        "muguanwaijing": table.data[i].muguanwaijing,
+                        "denglizi": table.data[i].denglizi,
+                        "beizhu": table.data[i].beizhu,
+                        "fanhao": table.data[i].fanhao,
+                        "guige": table.data[i].guige,
+                        "jiancha": table.data[i].jiancha,
+                        "kxtext": table.data[i].kxtext
+                      };
+                      data.push(json)
+                    }
+                    that.tableData = data
+                  }
+                }
+                else {
+                  that.tableData = table.data;
+                }
               }));
           }
         }
