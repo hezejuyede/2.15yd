@@ -73,18 +73,20 @@
         <div class="listSearch" v-if="this.listType ==7 || this.listType ==8">
           <div class="listSearchInput">
             <el-input
+              style="width: 350px"
               v-model="searchWord"
               ref="siteInput"
               placeholder="检索管子或扫码或手工输入"
               @blur="searchData(searchWord)"
               @input="searchEmptyData(searchWord)"
               @keyup.enter.native="goToPipePage(searchWord)"></el-input>
+            <button @click="showAllList">可作业清单</button>
           </div>
           <div class="listSearchBtn">
             <button @click="showScreening">条件筛选</button>
             <button @click="goGeneralListOfProcessing">总清单</button>
             <button @click="showYYPipe">预约管</button>
-            <button @click="appointmentList">预约清单</button>
+            <button @click="appointmentList" :style="{'background-color':this.yyQDState===2 ? '#d93f30':''}">预约清单</button>
           </div>
         </div>
         <div class="listSearch" v-if="this.listType ==10">
@@ -404,9 +406,25 @@
           <template v-for="(col ,index) in cols">
             <el-table-column
               align="center"
-              v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
+              v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='shipcode' && col.prop !=='qieduanbiao' && col.prop !=='yipintu'"
               :prop="col.prop"
               :label="col.label">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              v-if="col.prop==='shipcode'"
+              :prop="col.prop" :label="col.label">
+              <template scope="scope">
+                <div v-if="scope.row.flag ===2 ">
+                  <el-button
+                    type="danger"
+                    style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
+                    @click="cancelYpt(scope.row.id)">
+                    {{ scope.row.shipcode }}
+                  </el-button>
+                </div>
+                <div v-if="scope.row.flag ===1">{{ scope.row.shipcode }}</div>
+              </template>
             </el-table-column>
             <el-table-column
               align="center"
@@ -1624,11 +1642,12 @@
       <div class="closeBtn">
         <el-button type="danger" @click="yptSelectVisible = false">关闭窗口</el-button>
       </div>
-      <div class="">
-        <div class="">选择{{yptList}}</div>
-        <div class="">一共多少个{{yptNumber}}</div>
-      </div>
+
       <div class="yptContainer">
+        <div class="numberDiv">
+          <span>选择了</span><span style="font-size: 40px;color: #dd6161">{{selectYptNumber}}</span><span>,</span>
+          <span>一共多少</span><span style="font-size: 40px;color: #dd6161">{{yptNumber}}</span><span>个</span>
+        </div>
         <div class="yptContainerExcel">
           <el-table
             :data="yptListData"
@@ -1639,6 +1658,7 @@
             highlight-current-row
             @select="selectOneYYList"
             @select-all="selectAllYYList"
+            @selection-change="selectYPTChange"
             style="width: 98%;margin: auto">
             <el-table-column
               type="selection"
@@ -1667,7 +1687,6 @@
           <el-button type="primary" @click="selectYpt" style="height:50px;width:300px;font-size: 40px">确 定</el-button>
         </div>
       </div>
-
     </el-dialog>
 
 
@@ -1747,6 +1766,7 @@
         yptList:[],              //一品图选择的ID
         yptNumber:[],            //一品图总数
         selectYptNumber:0,     //选择的一品图数量
+        yyQDState:1,          //预约清单的状态
 
         left: true,           //显示最左边
         left2: false,         //显示左二
@@ -1944,11 +1964,66 @@
           }
           else if (info.GW === "43/48装配") {
             this.listType = "7";
-            this.showTableData(this.stationId, this.dqgw, 1, 1)
+            let zpType = sessionStorage.getItem("zpType");
+            if(zpType===null){
+              this.showTableData(this.stationId, this.dqgw, 1, 1)
+            }
+            else {
+              let that = this;
+              axios.all([
+                axios.post(" " + url + "/sys/showTableTitleById", {"stationid": that.stationId, "weizhiid": 1, "type": 1}),
+                axios.post(" " + url + "/zhuangpeiPre/getZpProShengchanList", {"stationid": that.stationId, "username": that.zuoyezhe})
+              ])
+                .then(axios.spread(function (title, table) {
+                  that.cols = title.data.data;
+                  if (table.data.length > 0) {
+                    that.yyQDState = 2;
+                    that.tableData =table.data;
+                  }
+                  else {
+                    that.message = "暂无数据";
+                    that.HideModal = false;
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                }));
+            }
+
           }
           else if (info.GW === "45/46装配") {
             this.listType = "8";
-            this.showTableData(this.stationId, this.dqgw, 1, 1)
+            let zpType = sessionStorage.getItem("zpType");
+            if(zpType===null){
+              this.showTableData(this.stationId, this.dqgw, 1, 1)
+            }
+            else {
+              let that = this;
+              axios.all([
+                axios.post(" " + url + "/sys/showTableTitleById", {"stationid": that.stationId, "weizhiid": 1, "type": 1}),
+                axios.post(" " + url + "/zhuangpeiPre/getZpProShengchanList", {"stationid": that.stationId, "username": that.zuoyezhe})
+              ])
+                .then(axios.spread(function (title, table) {
+                  that.cols = title.data.data;
+                  if (table.data.length > 0) {
+                    that.yyQDState = 2;
+                    that.tableData =table.data;
+                  }
+                  else {
+                    that.message = "暂无数据";
+                    that.HideModal = false;
+                    function a() {
+                      that.message = "";
+                      that.HideModal = true;
+                    }
+
+                    setTimeout(a, 2000);
+                  }
+                }));
+            }
           }
           else if (info.GW === "大组焊") {
             this.listType = "9";
@@ -3398,20 +3473,26 @@
 
       //显示一品图预约列表
       showYYPipe() {
-        axios.post(" " + url + "/zhuangpeiPre/getZpYipintuList", {"stationid": this.stationId, "username": this.zuoyezhe})
+        axios.post(" " + url + "/zhuangpeiPre/getZpYipintuList", {"stationid": this.stationId})
           .then((res) => {
-            if (res.data.data.length>0) {
+            if (res.data.length>0) {
               this.yptSelectVisible = true;
               let data = [];
-              for (let i = 0; i < this.yptListData.length; i++) {
-                let json = {
-                  "id": i + 1,
-                  "djz": i + 1,
-                  "yipintu": url + this.yptListData[i].yipintu
-                };
-                data.push(json)
+              for (let i = 0; i < res.data.length; i++) {
+                let imgUrl =res.data[i].yipintuMap;
+                if(res.data[i].yipintuMap !==null){
+                  let json = {
+                    "id": res.data[i].id,
+                    "djz": i + 1,
+                    "yipintu": url + imgUrl.imgurl
+                  };
+                  data.push(json)
+                }
+                else {
+                  console.log(2)
+                }
               }
-              this.yptNumber = data.length=1;
+              this.yptNumber = data.length;
               this.yptListData = data;
             }
             else {
@@ -3432,16 +3513,17 @@
 
       //预约一品图清单
       appointmentList() {
-        axios.post(" " + url + "/zhuangpeiPre/getZpYipintuList", {
+        axios.post(" " + url + "/zhuangpeiPre/getZpProShengchanList", {
           "stationid": this.stationId,
           "username": this.zuoyezhe,
         })
           .then((res) => {
-            if (res.data.data.length > 0) {
+            if (res.data.length > 0) {
+              this.yyQDState = 2;
               this.tableData = res.data;
             }
             else {
-              this.message = "没有查到数据";
+              this.message = "暂无数据";
               this.HideModal = false;
               const that = this;
 
@@ -3458,6 +3540,7 @@
           });
       },
 
+      //选择一个一品图
       selectOneYYList(val) {
         if (val.length) {
           let data = [];
@@ -3465,17 +3548,23 @@
             let a = val[i].id;
             data.push(a)
           }
-          this.selectYptNumber= data.length=1;
+          this.selectYptNumber= data.length;
           this.yptList = data;
         }
         else {
           this.yptList = [];
+          this.selectYptNumber=this.yptList.length;
         }
       },
 
-      //全部选择
-      selectAllYYList() {
-        this.selectOneYYList();
+      //全部选择一品图
+      selectAllYYList(val) {
+        this.selectOneYYList(val)
+      },
+
+      //选择改变一品图
+      selectYPTChange(val){
+       this.selectOneYYList(val)
       },
 
       //选择的一品图
@@ -3487,18 +3576,11 @@
             "ids":this.yptList
           })
             .then((res) => {
-              if (res.data.data.length > 0) {
-                this.yptSelectVisible = true;
-                let data = [];
-                for (let i = 0; i < this.yptListData.length; i++) {
-                  let json = {
-                    "id": i + 1,
-                    "djz": i + 1,
-                    "yipintu": url + this.yptListData[i].yipintu
-                  };
-                  data.push(json)
-                }
-                this.yptListData = data;
+              if (res.data.state === "1") {
+                this.appointmentList();
+                this.$message.success("添加成功");
+                this.yptSelectVisible = false;
+                sessionStorage.setItem("zpType","1")
               }
               else {
                 this.message = "没有查到一品图";
@@ -3521,6 +3603,50 @@
           this.$message.warning("选择不能为空");
         }
 
+      },
+
+      //取消选择的一品图
+      cancelYpt(id){
+        if (id) {
+          axios.post(" " + url + "/zhuangpeiPre/cancelYipintu", {"id":id})
+            .then((res) => {
+              if (res.data.state === "1") {
+                this.$message.success("去除成功");
+                axios.post(" " + url + "/zhuangpeiPre/getZpProShengchanList", {
+                  "stationid": this.stationId,
+                  "username": this.zuoyezhe,
+                })
+                  .then((res) => {
+                    if (res.data.length > 0) {
+                      this.yyQDState = 2;
+                      this.tableData = res.data;
+                    }
+                    else {
+                      sessionStorage.removeItem("zpType");
+                      this.tableData =[];
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  });
+              }
+              else {
+                this.$message.warning(res.data.message);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            });
+        }
+        else {
+          this.$message.warning("找不到ID");
+        }
+      },
+
+      //显示总清单
+      showAllList(){
+        this.yyQDState=1;
+        this.showTableData(this.stationId, this.dqgw, 1, 1)
       },
 
       //往下拉逐步添加一品图
@@ -3611,6 +3737,18 @@
           display: flex;
           align-items: center;
           justify-content: center;
+          button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 120px;
+            height: 50px;
+            margin-left: 2%;
+            background-color: @color-dlLan;
+            border: none;
+            color: @color-white;
+            border-radius: 10px;
+          }
         }
         .listSearchBtn {
           flex: 1;
@@ -3861,6 +3999,19 @@
   .yptContainer {
     height: 680px;
     width: 100%;
+    position: relative;
+    .numberDiv{
+      position: absolute;
+      top: -40px;
+      left: 0;
+      z-index: 999;
+      width: 200px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: @font-size-medium-x;
+    }
     .yptContainerExcel {
       overflow: auto;
       height: 630px;
