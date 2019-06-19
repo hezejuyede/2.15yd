@@ -1590,14 +1590,7 @@
       </div>
     </el-dialog>
 
-    <!-- 报完工提醒框 -->
-    <el-dialog title="报完工提醒" :visible.sync="endVisible" width="300px" center>
-      <div class="del-dialog-cnt">完成不可恢复，是否确定完成？</div>
-      <span slot="footer" class="dialog-footer">
-                <el-button @click="endVisible = false" style="height:30px;width:80px">取 消</el-button>
-                <el-button type="primary" @click="doWorkEnd" style="height:30px;width:80px">确 定</el-button>
-            </span>
-    </el-dialog>
+
 
     <!--  特定工位提醒框 -->
     <el-dialog title="当前管信息确认" :visible.sync="tdVisible" width="80%" center>
@@ -1669,7 +1662,7 @@
               prop="djz"
               align="center"
               width="90"
-              label="第几张">
+              label="序号">
             </el-table-column>
             <el-table-column
               prop="yipintu"
@@ -1687,6 +1680,15 @@
           <el-button type="primary" @click="selectYpt" style="height:50px;width:300px;font-size: 40px">确 定</el-button>
         </div>
       </div>
+    </el-dialog>
+
+    <!-- 一品图取消提醒框 -->
+    <el-dialog title=" 一品图取消提醒" :visible.sync="cenCelVisible" width="300px" center>
+      <div class="del-dialog-cnt">取消不可恢复，是否确定取消？</div>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="cenCelVisible = false" style="height:30px;width:80px">取 消</el-button>
+                <el-button type="primary" @click="doCancelYpt" style="height:30px;width:80px">确 定</el-button>
+            </span>
     </el-dialog>
 
 
@@ -1762,6 +1764,8 @@
         tdVisible: false,    //特定工位提醒框
         excelVisible: false,   //工位表表弹出框
         yptSelectVisible: false, //一品图预约筛选
+        cenCelVisible:false,    //一品图取消提醒框
+        yptId:"",                 //一品图ID
         yptListData: [],         //一品图预览列表数据
         yptList:[],              //一品图选择的ID
         yptNumber:[],            //一品图总数
@@ -3476,6 +3480,7 @@
         axios.post(" " + url + "/zhuangpeiPre/getZpYipintuList", {"stationid": this.stationId})
           .then((res) => {
             if (res.data.length>0) {
+              this.yptList=[];
               this.yptSelectVisible = true;
               let data = [];
               for (let i = 0; i < res.data.length; i++) {
@@ -3483,7 +3488,7 @@
                 if(res.data[i].yipintuMap !==null){
                   let json = {
                     "id": res.data[i].id,
-                    "djz": i + 1,
+                    "djz": res.data[i].xuhao,
                     "yipintu": url + imgUrl.imgurl
                   };
                   data.push(json)
@@ -3605,13 +3610,14 @@
 
       },
 
-      //取消选择的一品图
-      cancelYpt(id){
-        if (id) {
-          axios.post(" " + url + "/zhuangpeiPre/cancelYipintu", {"id":id})
+      //显示一拼图取消
+      doCancelYpt(){
+        if (this.yptId) {
+          axios.post(" " + url + "/zhuangpeiPre/cancelYipintu", {"id":this.yptId})
             .then((res) => {
               if (res.data.state === "1") {
                 this.$message.success("去除成功");
+                this.cenCelVisible=false;
                 axios.post(" " + url + "/zhuangpeiPre/getZpProShengchanList", {
                   "stationid": this.stationId,
                   "username": this.zuoyezhe,
@@ -3637,6 +3643,17 @@
             .catch((err) => {
               console.log(err)
             });
+        }
+        else {
+          this.$message.warning("找不到ID");
+        }
+      },
+
+      //取消选择的一品图
+      cancelYpt(id) {
+        if (id) {
+          this.yptId = id;
+          this.cenCelVisible = true;
         }
         else {
           this.$message.warning("找不到ID");
@@ -4005,7 +4022,7 @@
       top: -40px;
       left: 0;
       z-index: 999;
-      width: 200px;
+      width: 300px;
       height: 40px;
       display: flex;
       align-items: center;
