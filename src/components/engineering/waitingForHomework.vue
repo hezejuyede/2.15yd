@@ -84,7 +84,7 @@
             <button @click="showScreening">条件筛选</button>
             <button @click="goGeneralListOfProcessing">总清单</button>
             <button @click="showYYPipe">预约管</button>
-            <button @click="selectYYList">预约清单</button>
+            <button @click="appointmentList">预约清单</button>
           </div>
         </div>
         <div class="listSearch" v-if="this.listType ==10">
@@ -1624,6 +1624,10 @@
       <div class="closeBtn">
         <el-button type="danger" @click="yptSelectVisible = false">关闭窗口</el-button>
       </div>
+      <div class="">
+        <div class="">选择{{yptList}}</div>
+        <div class="">一共多少个{{yptNumber}}</div>
+      </div>
       <div class="yptContainer">
         <div class="yptContainerExcel">
           <el-table
@@ -1633,8 +1637,8 @@
             border
             height="630"
             highlight-current-row
-            @select="selectList"
-            @select-all="selectAll"
+            @select="selectOneYYList"
+            @select-all="selectAllYYList"
             style="width: 98%;margin: auto">
             <el-table-column
               type="selection"
@@ -1660,7 +1664,7 @@
           </el-table>
         </div>
         <div class="yptContainerBtn">
-          <el-button type="primary" @click="doWorkEnd" style="height:50px;width:300px;font-size: 40px">确 定</el-button>
+          <el-button type="primary" @click="selectYpt" style="height:50px;width:300px;font-size: 40px">确 定</el-button>
         </div>
       </div>
 
@@ -1739,16 +1743,11 @@
         tdVisible: false,    //特定工位提醒框
         excelVisible: false,   //工位表表弹出框
         yptSelectVisible: false, //一品图预约筛选
-        yptListData: [
-          {"yipintu": "/img/20190505/newC1895_11.png", "id": 1},
-          {"yipintu": "/img/20190505/newC1895_11.png", "id": 2},
-          {"yipintu": "/img/20190505/newC1895_11.png", "id": 3},
-          {"yipintu": "/img/20190505/newC1895_11.png", "id": 4},
-          {"yipintu": "/img/20190505/newC1895_11.png", "id": 5},
-          {"yipintu": "/img/20190505/newC1895_11.png", "id": 6},
-          {"yipintu": "/img/20190505/newC1895_11.png", "id": 7},
-          {"yipintu": "/img/20190505/newC1895_11.png", "id": 7},
-        ],         //一品图预览列表数据
+        yptListData: [],         //一品图预览列表数据
+        yptList:[],              //一品图选择的ID
+        yptNumber:[],            //一品图总数
+        selectYptNumber:0,     //选择的一品图数量
+
         left: true,           //显示最左边
         left2: false,         //显示左二
         zgCenter: false,      //显示中间
@@ -3399,23 +3398,128 @@
 
       //显示一品图预约列表
       showYYPipe() {
-        this.yptSelectVisible = true;
-        let data = [];
-        for (let i = 0; i < this.yptListData.length; i++) {
-          let json = {
-            "id": i + 1,
-            "djz": i + 1,
-            "yipintu": url + this.yptListData[i].yipintu
-          };
-          data.push(json)
-        }
-        this.yptListData = data;
-
-
+        axios.post(" " + url + "/zhuangpeiPre/getZpYipintuList", {"stationid": this.stationId, "username": this.zuoyezhe})
+          .then((res) => {
+            if (res.data.data.length>0) {
+              this.yptSelectVisible = true;
+              let data = [];
+              for (let i = 0; i < this.yptListData.length; i++) {
+                let json = {
+                  "id": i + 1,
+                  "djz": i + 1,
+                  "yipintu": url + this.yptListData[i].yipintu
+                };
+                data.push(json)
+              }
+              this.yptNumber = data.length=1;
+              this.yptListData = data;
+            }
+            else {
+              this.message = "没有查到一品图";
+              this.HideModal = false;
+              const that = this;
+              function a() {
+                that.message = "";
+                that.HideModal = true;
+              }
+              setTimeout(a, 2000);
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          });
       },
 
-      //选择那个一品图
-      selectYYList() {
+      //预约一品图清单
+      appointmentList() {
+        axios.post(" " + url + "/zhuangpeiPre/getZpYipintuList", {
+          "stationid": this.stationId,
+          "username": this.zuoyezhe,
+        })
+          .then((res) => {
+            if (res.data.data.length > 0) {
+              this.tableData = res.data;
+            }
+            else {
+              this.message = "没有查到数据";
+              this.HideModal = false;
+              const that = this;
+
+              function a() {
+                that.message = "";
+                that.HideModal = true;
+              }
+
+              setTimeout(a, 2000);
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          });
+      },
+
+      selectOneYYList(val) {
+        if (val.length) {
+          let data = [];
+          for (let i = 0; i < val.length; i++) {
+            let a = val[i].id;
+            data.push(a)
+          }
+          this.selectYptNumber= data.length=1;
+          this.yptList = data;
+        }
+        else {
+          this.yptList = [];
+        }
+      },
+
+      //全部选择
+      selectAllYYList() {
+        this.selectOneYYList();
+      },
+
+      //选择的一品图
+      selectYpt(){
+        if (this.yptList.length > 0) {
+          axios.post(" " + url + "/zhuangpeiPre/updateProYipintu", {
+            "stationid": this.stationId,
+            "username": this.zuoyezhe,
+            "ids":this.yptList
+          })
+            .then((res) => {
+              if (res.data.data.length > 0) {
+                this.yptSelectVisible = true;
+                let data = [];
+                for (let i = 0; i < this.yptListData.length; i++) {
+                  let json = {
+                    "id": i + 1,
+                    "djz": i + 1,
+                    "yipintu": url + this.yptListData[i].yipintu
+                  };
+                  data.push(json)
+                }
+                this.yptListData = data;
+              }
+              else {
+                this.message = "没有查到一品图";
+                this.HideModal = false;
+                const that = this;
+
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                }
+
+                setTimeout(a, 2000);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            });
+        }
+        else {
+          this.$message.warning("选择不能为空");
+        }
 
       },
 
