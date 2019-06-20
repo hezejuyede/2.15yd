@@ -1586,6 +1586,7 @@
           :isHideStationExcel="isHideStationExcel"
           :excelData="excelData"
           :gzId="gzId"
+          v-on:dghList="dghList"
           v-on:xzlChange="xzlDataChange"></StationExcel>
       </div>
     </el-dialog>
@@ -1702,8 +1703,6 @@
     </el-dialog>
 
 
-
-
     <div class="upTop" ref="upTop" @click="upToTop">
       <i class="iconfont icon-xiangshang1"></i>
     </div>
@@ -1763,6 +1762,8 @@
         url: "",   //一品图和切断表的URL地址
         listData: [],  //点击复选框中对ID的数组
         id: "",        //管子的ID
+        dgID:[],       //短管工位表报完工ID
+        pici:"",        //批次
         gzId: "",       //查看工位表匹配ID
         inputWord: '',//扫码的Value
         searchWord: '',//智能检索的value
@@ -2594,29 +2595,83 @@
 
       //在工位表里报完工
       gwbDoWorkEnd() {
-        axios.post(" " + url + "/shengchan/updateStatusBatch",
-          {
-            "ids": [this.id],
-            "zuoyezhe": this.zuoyezhe,
-            "type": this.gwType,
-            "stationid": this.stationId
-          })
-          .then((res) => {
-            if (res.data === "1") {
-              this.showTableData(this.stationId, this.dqgw, 1, 1);
-              this.$message.success(`报完工成功`);
-              let that = this;
-              setTimeout(() => {
-                that.excelVisible = false;
-              }, 1000)
+        if (this.dqgw === "短管焊") {
+          if(this.dgID.length>0){
+            if(this.dgID.length>1){
+              this.$message.success("只能选择一个");
             }
             else {
-              this.$message.warning(`报完工失败`);
+              axios.post(" " + url + "/shengchan/updateStatusDuanguan",
+                {
+                  "id": this.dgID[0],
+                  "zuoyezhe": this.zuoyezhe,
+                  "type": this.gwType,
+                })
+                .then((res) => {
+                  if (res.data.state === "1") {
+                    this.showTableData(this.stationId, this.dqgw, 1, 1);
+                    axios.post(" " + url + "/importother/publicData", {"code": "duanguan", "pici": this.pici})
+                      .then((res) => {
+                        if (res.data) {
+                          this.excelData = res.data;
+                        }
+                        else {
+                          this.message = "没有查到该工位表";
+                          this.HideModal = false;
+                          const that = this;
+
+                          function a() {
+                            that.message = "";
+                            that.HideModal = true;
+                          }
+
+                          setTimeout(a, 2000);
+                        }
+                      })
+                      .catch((err) => {
+                        console.log(err)
+                      });
+                    this.$message.success(res.data.message);
+                  }
+                  else {
+                    this.$message.warning(res.data.message);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
             }
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+          }
+          else {
+            this.$message.warning("该管是长管,该工位不可报完工");
+          }
+        }
+        else {
+          axios.post(" " + url + "/shengchan/updateStatusBatch",
+            {
+              "ids": [this.id],
+              "zuoyezhe": this.zuoyezhe,
+              "type": this.gwType,
+              "stationid": this.stationId
+            })
+            .then((res) => {
+              if (res.data === "1") {
+                this.showTableData(this.stationId, this.dqgw, 1, 1);
+                this.$message.success(`报完工成功`);
+                let that = this;
+                setTimeout(() => {
+                  that.excelVisible = false;
+                }, 1000)
+              }
+              else {
+                this.$message.warning(`报完工失败`);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+
       },
 
       //加工完成
@@ -3001,6 +3056,7 @@
             }
           }
           else if (this.dqgw === "短管焊") {
+            this.pici= pici
             axios.post(" " + url + "/importother/publicData", {"code": "duanguan", "pici": pici})
               .then((res) => {
                 if (res.data) {
@@ -3065,6 +3121,13 @@
             .catch((err) => {
               console.log(err)
             })
+        }
+      },
+
+      //短管焊选中的ID
+      dghList(val) {
+        if (val.length > 0) {
+          this.dgID=val
         }
       },
 

@@ -907,7 +907,6 @@
             width="55"
             label="残长">
           </el-table-column>
-
         </el-table>
       </div>
       <div class="" v-if="gongHao !== '小组立'&& gongHao !== '枝管切断' && gongHao !== '短管焊' && gongHao !== '弯头焊'">
@@ -1035,6 +1034,7 @@
     data() {
       return {
         rowId: "",
+        dgList:[],
         selectState: false
       }
     },
@@ -1182,39 +1182,23 @@
 
       //短管焊
       selectListDG(val, row){
-        if (row.id == this.rowId) {
-          this.rowId = "";
-          axios.post(" " + url + "/importother/markXiaozuliExcel", {"id": row.id, "status": 0})
-            .then((res) => {
-              if (res.data.state === "1") {
-                this.xzlDataChange();
-                this.tableRowClassName({row})
-              }
-              else if (res.data.state === "-1") {
-                this.$message.warning(res.data.message);
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
+        if (val.length) {
+          let data = [];
+          for (let i = 0; i < val.length; i++) {
+            let a = val[i].nodeid;
+            if(a){
+              data.push(a)
+            }
+          }
+          this.$emit('dghList', data);
         }
         else {
-          this.rowId = row.id;
-          axios.post(" " + url + "/importother/markXiaozuliExcel", {"id": row.id, "status": 1})
-            .then((res) => {
-              if (res.data.state === "1") {
-                this.xzlDataChange();
-                this.tableRowClassName({row})
-              }
-              else if (res.data.state === "-1") {
-                this.$message.warning(res.data.message);
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
+          this.listData = [];
+          this.$emit('dghList', data);
         }
       },
+
+
 
     },
     props: ['gwType', 'gongHao', 'isHideStationExcel', 'excelData', 'gzId']
