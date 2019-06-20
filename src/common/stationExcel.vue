@@ -791,7 +791,126 @@
           </el-table-column>
         </el-table>
       </div>
-      <div class="" v-if="gongHao !== '小组立'&& gongHao !== '枝管切断' && gongHao !== '弯头焊'">
+      <div class="" v-if="gongHao === '短管焊'">
+        <el-table
+          :data="excelData"
+          height="640"
+          :row-class-name="tableRowClassName"
+          @select="selectListDG"
+          :header-cell-style="{
+            background:'#f0f0f0',
+            border: '1px solid #303133',
+            fontSize:'11px',
+            color:'rgba(0, 0, 0, 1)'}"
+          :cell-style="{
+             border: '1px solid #303133',
+             fontSize:'10px'
+            }"
+          highlight-current-row
+          style="width: 100%;border: 1px solid #303133">
+          <el-table-column
+            type="selection"
+            align="center"
+            width="30">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="typev"
+            label="管种">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="waijingv"
+            label="外径"
+            width="60">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="bihouv"
+            label="壁厚"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="sucaichangv"
+            label="素材长"
+            width="60">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="shipcode"
+            label="船号"
+            width="60">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="yiguanhao"
+            label="一贯号"
+            width="65">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="codeno"
+            label="codeNo"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="jiagongxilie"
+            label="加工系列"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="pno"
+            label="PNo"
+            width="45">
+          </el-table-column>
+          <el-table-column
+            width="60"
+            prop="qieduanchang"
+            align="center"
+            label="切断长">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="guanduan"
+            label="管端"
+            width="47">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="wanqu"
+            width="47"
+            label="弯S">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="gdjw"
+            width="45"
+            label="管端金物">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="hjzt"
+            width="45"
+            label="焊接状态">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="albl"
+            label="备注">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="canchang"
+            width="55"
+            label="残长">
+          </el-table-column>
+
+        </el-table>
+      </div>
+      <div class="" v-if="gongHao !== '小组立'&& gongHao !== '枝管切断' && gongHao !== '短管焊' && gongHao !== '弯头焊'">
         <el-table
           :data="excelData"
           height="640"
@@ -802,7 +921,7 @@
             color:'rgba(0, 0, 0, 1)'}"
           :cell-style="{
              border: '1px solid #303133',
-             fontSize:'11px'
+             fontSize:'12px'
             }"
           :row-class-name="tableRowClassName"
           highlight-current-row
@@ -846,7 +965,7 @@
             align="center"
             prop="codeno"
             label="codeNo"
-            width="64">
+            width="50">
           </el-table-column>
           <el-table-column
             align="center"
@@ -1032,7 +1151,43 @@
       xzlDataChange(){
         let flag = true;
         this.$emit('xzlChange', flag);
-      }
+      },
+
+      //短管焊
+      selectListDG(val, row){
+        if (row.id == this.rowId) {
+          this.rowId = "";
+          axios.post(" " + url + "/importother/markXiaozuliExcel", {"id": row.id, "status": 0})
+            .then((res) => {
+              if (res.data.state === "1") {
+                this.xzlDataChange();
+                this.tableRowClassName({row})
+              }
+              else if (res.data.state === "-1") {
+                this.$message.warning(res.data.message);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+        else {
+          this.rowId = row.id;
+          axios.post(" " + url + "/importother/markXiaozuliExcel", {"id": row.id, "status": 1})
+            .then((res) => {
+              if (res.data.state === "1") {
+                this.xzlDataChange();
+                this.tableRowClassName({row})
+              }
+              else if (res.data.state === "-1") {
+                this.$message.warning(res.data.message);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+      },
 
     },
     props: ['gwType', 'gongHao', 'isHideStationExcel', 'excelData', 'gzId']

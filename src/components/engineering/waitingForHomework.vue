@@ -2988,6 +2988,30 @@
                 })
             }
           }
+          else if (this.dqgw === "短管焊") {
+            axios.post(" " + url + "/importother/publicData", {"code": "duanguan", "pici": pici})
+              .then((res) => {
+                if (res.data) {
+                  this.excelData = res.data;
+                  this.excelVisible = true;
+                }
+                else {
+                  this.message = "没有查到该工位表";
+                  this.HideModal = false;
+                  const that = this;
+
+                  function a() {
+                    that.message = "";
+                    that.HideModal = true;
+                  }
+
+                  setTimeout(a, 2000);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
           else {
             axios.post(" " + url + "/importother/publicData", {"code": "qieduan", "pici": pici})
               .then((res) => {
