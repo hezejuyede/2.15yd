@@ -1692,6 +1692,18 @@
     </el-dialog>
 
 
+    <!-- 一品图取消提醒框 -->
+    <el-dialog title=" 报完工提醒" :visible.sync="endVisible" width="300px" center>
+      <div class="del-dialog-cnt">报完工不可取消，是否确定报完工？</div>
+      <span slot="footer" class="dialog-footer">
+                <el-button @click="endVisible = false" style="height:30px;width:80px">取 消</el-button>
+                <el-button type="primary" @click="doWorkEnd" style="height:30px;width:80px">确 定</el-button>
+            </span>
+    </el-dialog>
+
+
+
+
     <div class="upTop" ref="upTop" @click="upToTop">
       <i class="iconfont icon-xiangshang1"></i>
     </div>

@@ -795,7 +795,7 @@
         <el-table
           :data="excelData"
           height="640"
-          :row-class-name="tableRowClassName"
+          :row-class-name="tableRowClassNameDGH"
           @select="selectListDG"
           :header-cell-style="{
             background:'#f0f0f0',
@@ -1080,6 +1080,33 @@
           }
         }
       },
+
+      tableRowClassNameDGH({row, rowIndex}){
+        if (typeof (this.gzId) == "object") {
+          if (row.id === this.gzId[0]) {
+            return 'green-row';
+          }
+        }
+        else if (row.status === 1) {
+          return 'xzl-row';
+        }
+        else {
+          if (row.id === this.gzId) {
+            return 'green-row';
+          }
+          else if  (row.status === "4") {
+            return 'xzl-row';
+          }
+          else if(row.status === "2"){
+            return 'green-row';
+          }
+
+          else if  (row.status === "5") {
+            return 'xzl-row';
+          }
+        }
+      },
+
 
       tableRowClassNameZGQD({row, rowIndex}) {
         if (row.status === 2) {
