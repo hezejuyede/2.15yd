@@ -1098,7 +1098,7 @@
             return 'xzl-row';
           }
           else if(row.status === "2"){
-            return 'green-row';
+            return 'xzl-row';
           }
 
           else if  (row.status === "5") {
