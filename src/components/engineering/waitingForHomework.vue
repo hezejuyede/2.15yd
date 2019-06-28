@@ -1683,6 +1683,63 @@
       </div>
     </el-dialog>
 
+
+    <!--物料统计 -->
+    <el-dialog :visible.sync="yptSelectVisible" :fullscreen="true" :center="true">
+      <div class="closeBtn">
+        <el-button type="danger" @click="yptSelectVisible = false">关闭窗口</el-button>
+      </div>
+
+
+      <div class="yptContainer">
+        <div class="numberDiv">
+          <span>选择了</span><span style="font-size: 40px;color: #dd6161">{{selectYptNumber}}</span><span>,</span>
+          <span>一共多少</span><span style="font-size: 40px;color: #dd6161">{{yptNumber}}</span><span>个</span>
+        </div>
+        <div class="yptContainerExcel">
+          <el-table
+            :data="yptListData"
+            v-tableLoadingMore="addYptList"
+            :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
+            border
+            height="630"
+            highlight-current-row
+            @select="selectOneYYList"
+            @select-all="selectAllYYList"
+            @selection-change="selectYPTChange"
+            style="width: 98%;margin: auto">
+            <el-table-column
+              type="selection"
+              align="center"
+              width="50">
+            </el-table-column>
+            <el-table-column
+              prop="djz"
+              align="center"
+              width="55"
+              label="序号">
+            </el-table-column>
+            <el-table-column
+              prop="yipintu"
+              align="center"
+              label="一品图">
+              <template scope="scope">
+                <div class="" style="height: 310px">
+                  <img :src="scope.row.yipintu" alt="" style="height: 310px;width: 100%">
+                </div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="yptContainerBtn">
+          <el-button type="primary" @click="selectYpt" style="height:50px;width:300px;font-size: 40px">确 定</el-button>
+        </div>
+      </div>
+    </el-dialog>
+
+
+
+
     <!-- 一品图取消提醒框 -->
     <el-dialog title=" 一品图取消提醒" :visible.sync="cenCelVisible" width="300px" center>
       <div class="del-dialog-cnt">取消不可恢复，是否确定取消？</div>
