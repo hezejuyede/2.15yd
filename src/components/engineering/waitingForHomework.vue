@@ -1646,7 +1646,7 @@
           <el-table
             :data="yptListData"
             v-tableLoadingMore="addYptList"
-            :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'20px'}"
+            :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
             border
             height="630"
             highlight-current-row
@@ -1662,7 +1662,7 @@
             <el-table-column
               prop="djz"
               align="center"
-              width="90"
+              width="55"
               label="序号">
             </el-table-column>
             <el-table-column
@@ -1671,7 +1671,7 @@
               label="一品图">
               <template scope="scope">
                 <div class="" style="height: 310px">
-                  <img :src="scope.row.yipintu" alt="" style="height: 310px;width: 60%">
+                  <img :src="scope.row.yipintu" alt="" style="height: 310px;width: 100%">
                 </div>
               </template>
             </el-table-column>
@@ -2094,7 +2094,7 @@
       showTableData(id, name, wz, type) {
         let that = this;
         let screeningConditions = sessionStorage.getItem("screeningConditions");
-        if (screeningConditions === null) {
+        if (screeningConditions == null) {
           if (this.dqgw === "切断") {
             axios.all([
               axios.post(" " + url + "/sys/showTableTitleById", {"stationid": id, "weizhiid": wz, "type": type}),
@@ -2790,14 +2790,17 @@
 
       //直管物料统计
       zgMaterialStatistics() {
+
       },
 
       //短管物料统计
       dgMaterialStatistics() {
+
       },
 
       // 物料统计
       materialStatistics() {
+
       },
 
       //一拼图预览
@@ -3576,43 +3579,105 @@
 
       //显示一品图预约列表
       showYYPipe() {
-        axios.post(" " + url + "/zhuangpeiPre/getZpYipintuList", {"stationid": this.stationId})
-          .then((res) => {
-            if (res.data.length>0) {
-              this.yptList=[];
-              this.yptSelectVisible = true;
-              let data = [];
-              for (let i = 0; i < res.data.length; i++) {
-                let imgUrl =res.data[i].yipintuMap;
-                if(res.data[i].yipintuMap !==null){
-                  let json = {
-                    "id": res.data[i].id,
-                    "djz": res.data[i].xuhao,
-                    "yipintu": url + imgUrl.imgurl
-                  };
-                  data.push(json)
+        let screeningConditions = sessionStorage.getItem("screeningConditions");
+        if (screeningConditions == null) {
+          axios.post(" " + url + "/zhuangpeiPre/getZpYipintuList", {"stationid": this.stationId})
+            .then((res) => {
+              if (res.data.length>0) {
+                this.yptList=[];
+                this.yptSelectVisible = true;
+                let data = [];
+                for (let i = 0; i < res.data.length; i++) {
+                  let imgUrl =res.data[i].yipintuMap;
+                  if(res.data[i].yipintuMap !==null){
+                    let json = {
+                      "id": res.data[i].id,
+                      "djz": res.data[i].xuhao,
+                      "yipintu": url + imgUrl.imgurl
+                    };
+                    data.push(json)
+                  }
+                  else {
+                    console.log(2)
+                  }
                 }
-                else {
-                  console.log(2)
+                this.yptNumber = data.length;
+                this.yptListData = data;
+              }
+              else {
+                this.message = "没有查到一品图";
+                this.HideModal = false;
+                const that = this;
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
                 }
+                setTimeout(a, 2000);
               }
-              this.yptNumber = data.length;
-              this.yptListData = data;
-            }
-            else {
-              this.message = "没有查到一品图";
-              this.HideModal = false;
-              const that = this;
-              function a() {
-                that.message = "";
-                that.HideModal = true;
-              }
-              setTimeout(a, 2000);
-            }
+            })
+            .catch((err) => {
+              console.log(err)
+            });
+        }
+        else {
+          let ScreeningConditions = JSON.parse(screeningConditions);
+          axios.post(" " + url + "/zhuangpeiPre/getZpYipintuList", {
+            "type": 1,
+            "stationid": this.stationId,
+            "jiagongxian": ScreeningConditions.jiagongxian,
+            "pici": ScreeningConditions.pici,
+            "preGongxu": ScreeningConditions.preGongxu,
+            "jiagongxilie": ScreeningConditions.jiagongxilie,
+            "chuanhao": ScreeningConditions.chuanhao,
+            "yiguanhao": ScreeningConditions.yiguanhao,
+            "typeSelect": ScreeningConditions.typeSelect,
+            "koujing": ScreeningConditions.koujing,
+            "youxianji": ScreeningConditions.youxianji,
+            "pno": ScreeningConditions.pno,
+            "bihou": ScreeningConditions.bihou,
+            "codeN": ScreeningConditions.codeN,
+            "zuoyezhe": ScreeningConditions.zuoyezhe,
+            "zgwj": ScreeningConditions.zgwj,
+            "mgwj": ScreeningConditions.mgwj
           })
-          .catch((err) => {
-            console.log(err)
-          });
+            .then((res) => {
+              if (res.data.length>0) {
+                this.yptList=[];
+                this.yptSelectVisible = true;
+                let data = [];
+                for (let i = 0; i < res.data.length; i++) {
+                  let imgUrl =res.data[i].yipintuMap;
+                  if(res.data[i].yipintuMap !==null){
+                    let json = {
+                      "id": res.data[i].id,
+                      "djz": res.data[i].xuhao,
+                      "yipintu": url + imgUrl.imgurl
+                    };
+                    data.push(json)
+                  }
+                  else {
+                    console.log(2)
+                  }
+                }
+                this.yptNumber = data.length;
+                this.yptListData = data;
+              }
+              else {
+                this.message = "没有查到一品图";
+                this.HideModal = false;
+                const that = this;
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                }
+                setTimeout(a, 2000);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            });
+
+        }
       },
 
       //预约一品图清单
