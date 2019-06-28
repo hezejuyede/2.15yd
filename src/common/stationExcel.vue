@@ -1010,17 +1010,26 @@
             prop="gdjw"
             width="50"
             label="管端金物">
+            <template scope="scope">
+              <div class="" style="height: 100%;width: 100%" v-html="scope.row.gdjw"></div>
+            </template>
           </el-table-column>
           <el-table-column
             align="center"
             prop="hjzt"
             width="50"
             label="焊接状态">
+            <template scope="scope">
+              <div class="" style="height: 100%;width: 100%" v-html="scope.row.hjzt"></div>
+            </template>
           </el-table-column>
           <el-table-column
             align="center"
             prop="albl"
             label="备注">
+            <template scope="scope">
+              <div class="" style="height: 100%;width: 100%" v-html="scope.row.albl"></div>
+            </template>
           </el-table-column>
           <el-table-column
             align="center"
