@@ -1643,7 +1643,7 @@
           <span>一共多少</span><span style="font-size: 40px;color: #dd6161">{{yptNumber}}</span><span>个</span>
         </div>
         <div class="yptContainerExcel">
-        <!--  <el-table
+          <el-table
             :data="yptListData"
             v-tableLoadingMore="addYptList"
             :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
@@ -1675,7 +1675,7 @@
                 </div>
               </template>
             </el-table-column>
-          </el-table>-->
+          </el-table>
         </div>
         <div class="yptContainerBtn">
           <el-button type="primary" @click="selectYpt" style="height:50px;width:300px;font-size: 40px">确 定</el-button>
