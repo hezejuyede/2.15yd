@@ -706,7 +706,7 @@
             align="center"
             prop="yiguanhaov"
             label="一贯番号"
-            width="57">
+            width="70">
           </el-table-column>
           <el-table-column
             align="center"
@@ -731,7 +731,7 @@
               align="center"
               prop="hujingv"
               label="呼径"
-              width="51">
+              width="58">
             </el-table-column>
             <el-table-column
               align="center"
@@ -1211,7 +1211,6 @@
           else if(row.status === 2){
             return 'xzl-row';
           }
-
           else if  (row.status === "5") {
             return 'xzl-row';
           }
@@ -1237,13 +1236,11 @@
           else if(row.status === "2"){
             return 'xzl-row';
           }
-
           else if  (row.status === "5") {
             return 'xzl-row';
           }
         }
       },
-
 
       tableRowClassNameZGQD({row, rowIndex}) {
         if (row.status === 2) {
@@ -1252,7 +1249,6 @@
         else if  (row.status === "4") {
           return 'xzl-row';
         }
-
         else if  (row.status === "5") {
           return 'xzl-row';
         }
@@ -1265,10 +1261,8 @@
           console.log(val[0].id)
         }
         else {
-
         }*/
       },
-
       //小组立单选
       selectList(val, row) {
         /*if (row.id == this.rowId) {
@@ -1329,7 +1323,6 @@
         let flag = true;
         this.$emit('xzlChange', flag);
       },
-
       //短管焊
       selectListDG(val, row){
         if (val.length) {
@@ -1347,11 +1340,9 @@
           this.$emit('dghList', data);
         }
       },
-
-
-
     },
     props: ['gwType', 'gongHao', 'isHideStationExcel', 'excelData', 'gzId']
+
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
