@@ -1643,7 +1643,7 @@
           <span>一共多少</span><span style="font-size: 40px;color: #dd6161">{{yptNumber}}</span><span>个</span>
         </div>
         <div class="yptContainerExcel">
-          <el-table
+        <!--  <el-table
             :data="yptListData"
             v-tableLoadingMore="addYptList"
             :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
@@ -1670,12 +1670,12 @@
               align="center"
               label="一品图">
               <template scope="scope">
-                <div class="" style="height: 310px">
-                  <img :src="scope.row.yipintu" alt="" style="height: 310px;width: 100%">
+                <div class="" style="height:600px">
+                  <img :src="scope.row.yipintu" alt="" style="height: 600px;width: 100%">
                 </div>
               </template>
             </el-table-column>
-          </el-table>
+          </el-table>-->
         </div>
         <div class="yptContainerBtn">
           <el-button type="primary" @click="selectYpt" style="height:50px;width:300px;font-size: 40px">确 定</el-button>
@@ -1750,7 +1750,7 @@
     </el-dialog>
 
 
-    <!-- 一品图取消提醒框 -->
+    <!-- 报完工提醒 -->
     <el-dialog title=" 报完工提醒" :visible.sync="endVisible" width="300px" center>
       <div class="del-dialog-cnt">报完工不可取消，是否确定报完工？</div>
       <span slot="footer" class="dialog-footer">
