@@ -2703,6 +2703,38 @@
             this.$message.warning("该管是长管,该工位不可报完工");
           }
         }
+        if (this.dqgw === "小组立") {
+          if(this.dgID.length>1){
+            this.$message.warning("只能选择一个");
+          }
+          else {
+            axios.post(" " + url + "/importother/markXiaozuliExcel",
+              {
+                "id": this.dgID[0],
+                "zuoyezhe": this.zuoyezhe,
+                "type": this.gwType,
+              })
+              .then((res) => {
+                if (res.data.state === "1") {
+                  this.showTableData(this.stationId, this.dqgw, 1, 1);
+                  axios.post(" " + url + "/importother/showXiaozuliExcel", {"pici": this.gwbpici})
+                    .then((res) => {
+                      this.excelData = res.data;
+                    })
+                    .catch((err) => {
+                      console.log(err)
+                    });
+                  this.$message.success(res.data.message);
+                }
+                else {
+                  this.$message.warning(res.data.message);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
+        }
         else {
           axios.post(" " + url + "/shengchan/updateStatusBatch",
             {
@@ -3116,7 +3148,7 @@
             }
           }
           else if (this.dqgw === "短管焊") {
-            this.pici= pici
+            this.pici= pici;
             axios.post(" " + url + "/importother/publicData", {"code": "duanguan", "pici": pici})
               .then((res) => {
                 if (res.data) {

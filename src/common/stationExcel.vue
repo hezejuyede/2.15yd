@@ -667,7 +667,7 @@
           </template>
         </div>
       </div>
-      <div class="" v-if="gongHao === '小组立' || gongHao === '弯头焊'">
+      <div class="" v-if="gongHao === '小组立'">
         <el-table
           :data="excelData"
           height="640"
@@ -690,6 +690,122 @@
             type="selection"
             width="30">
           </el-table-column>
+          <el-table-column
+            align="center"
+            prop="chuanhao"
+            label="船番NE"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="jiagongxiliev"
+            label="加工系列"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="yiguanhaov"
+            label="一贯番号"
+            width="57">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="codenov"
+            label="代号"
+            width="50">
+          </el-table-column>
+          <el-table-column align="center" label="管材">
+            <el-table-column
+              align="center"
+              prop="pno"
+              label="PNo"
+              width="47">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="guigev"
+              label="规格"
+              width="53">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="hujingv"
+              label="呼径"
+              width="51">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="houduv"
+              label="厚度"
+              width="51">
+            </el-table-column>
+            <el-table-column
+              width="59"
+              prop="qieduanchang"
+              align="center"
+              label="切断长">
+            </el-table-column>
+            <el-table-column
+              width="47"
+              prop="danwei"
+              align="center"
+              label="单位">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="guanduan"
+              label="管端"
+              width="70">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="jiaodu"
+              label="角度"
+              width="55">
+            </el-table-column>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="lianjiexinxi"
+            label="连接信息"
+            width="47">
+          </el-table-column>
+          <el-table-column align="center" label="金物">
+            <el-table-column
+              align="center"
+              prop="pinming"
+              label="品名（注番）.">
+            </el-table-column>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="guanduan2"
+            label="管端"
+            width="50">
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="beizhu"
+            label="备注"
+            width="60">
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="" v-if="gongHao === '弯头焊'">
+        <el-table
+          :data="excelData"
+          height="640"
+          ref="Table"
+          :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            fontSize:'12px',
+            color:'rgba(0, 0, 0, 1)'}"
+          :cell-style="{
+             border: '1px solid #303133',
+             fontSize:'11px'
+            }"
+          style="width: 100%;border: 1px solid #303133">
           <el-table-column
             align="center"
             prop="chuanhao"
@@ -1092,6 +1208,9 @@
           else if  (row.status === "4") {
             return 'xzl-row';
           }
+          else if(row.status === 2){
+            return 'xzl-row';
+          }
 
           else if  (row.status === "5") {
             return 'xzl-row';
@@ -1152,7 +1271,7 @@
 
       //小组立单选
       selectList(val, row) {
-        if (row.id == this.rowId) {
+        /*if (row.id == this.rowId) {
           this.rowId = "";
           axios.post(" " + url + "/importother/markXiaozuliExcel", {"id": row.id, "status": 0})
             .then((res) => {
@@ -1183,13 +1302,26 @@
             .catch((err) => {
               console.log(err)
             })
+        }*/
+        if (val.length) {
+          let data = [];
+          for (let i = 0; i < val.length; i++) {
+            let a = val[i].id;
+            if(a){
+              data.push(a)
+            }
+          }
+          this.$emit('dghList', data);
         }
-
+        else {
+          this.listData = [];
+          this.$emit('dghList', data);
+        }
       },
 
       //小组立全选
       selectAll(val) {
-        console.log(val)
+        this.selectList(val)
       },
 
       //小组立数据更新
