@@ -18,7 +18,7 @@
           </div>
           <div class="listSearchBtn">
             <button @click="showScreening">条件筛选</button>
-            <button @click="zgMaterialStatistics">直管物料统计</button>
+            <button @click="materialStatistics">直管物料统计</button>
             <button @click="goGeneralListOfProcessing">总清单</button>
             <button @click="workEnd">报完工</button>
           </div>
@@ -34,7 +34,7 @@
           </div>
           <div class="listSearchBtn">
             <button @click="showScreening">条件筛选</button>
-            <button @click="dgMaterialStatistics">短管物料统计</button>
+            <button @click="materialStatistics">短管物料统计</button>
             <button @click="goGeneralListOfProcessing">总清单</button>
             <button @click="workEnd">报完工</button>
           </div>
@@ -1670,8 +1670,8 @@
               align="center"
               label="一品图">
               <template scope="scope">
-                <div class="" style="height:600px">
-                  <img :src="scope.row.yipintu" alt="" style="height: 600px;width: 100%">
+                <div class="" style="height:1000px">
+                  <img :src="scope.row.yipintu" alt="" style="height: 1000px;width: 100%">
                 </div>
               </template>
             </el-table-column>
@@ -1689,17 +1689,106 @@
       <div class="closeBtn">
         <el-button type="danger" @click="materielVisible = false">关闭窗口</el-button>
       </div>
-
-      <div class="yptContainer">
-        <div class="numberDiv">
-          <span>选择了</span><span style="font-size: 40px;color: #dd6161">{{selectYptNumber}}</span><span>,</span>
-          <span>一共多少</span><span style="font-size: 40px;color: #dd6161">{{yptNumber}}</span><span>个</span>
+      <div class="materielContainer">
+        <div class="materielTop">
+          <div class="materielTopDiv">
+            <el-select
+              v-model="batch"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="批次">
+              <el-option
+                v-for="item in batchOptions"
+                :key="item.indexno"
+                :label="item.name"
+                :value="item.indexno">
+              </el-option>
+            </el-select>
+            <el-button type="primary" @click="doSearchMateriel">查询</el-button>
+          </div>
         </div>
-        <div class="yptContainerExcel">
+        <div class="materielCenter">
+          <el-table
+            :data="materielData"
+            height="520"
+            ref="Table"
+            :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            fontSize:'18px',
+            color:'rgba(0, 0, 0, 1)'}"
+            :cell-style="{
+             border: '1px solid #303133',
+             fontSize:'11px'
+            }"
+            style="width: 100%;border: 1px solid #303133">
+            <el-table-column
+              align="center"
+              label="出力日">
+              <el-table-column
+                align="center"
+                prop="koujing"
+                label="口径">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="guigev"
+              :label="chuliri">
+              <el-table-column
+                align="center"
+                prop="guigev"
+                label="规格">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="zhuwenhao"
+                label="注文号"
+                width="300">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="作业者">
+              <el-table-column
+                align="center"
+                prop="zongshuliang"
+                label="总数量">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column
+              prop="qieduanchang"
+              align="center"
+              :label="zuoyezhe">
+              <el-table-column
+                prop="yinashuliang"
+                align="center"
+                label="已拿数量">
+                <template scope="scope">
+                  <div>
+                    <el-input v-model="scope.row.yinashuliang" label="1" border >选中</el-input>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="quanbunazou"
+                align="center"
+                label="全部拿取">
+                <template scope="scope">
+                  <div>
+                    <el-radio v-model="scope.row.quanbunazou" label="1" border @change="allChangeMateriel">选中</el-radio>
+                  </div>
+                </template>
+              </el-table-column>
+            </el-table-column>
 
+
+          </el-table>
         </div>
-        <div class="yptContainerBtn">
-          <el-button type="primary" @click="selectYpt" style="height:50px;width:300px;font-size: 40px">确 定</el-button>
+        <div class="materielBottom">
+          <el-button type="success" @click="doSaveMateriel">确认</el-button>
         </div>
       </div>
     </el-dialog>
@@ -1765,6 +1854,8 @@
         cols: [],     //总数据的表头
         excelData: [],     //工位表数据
         tdTableData: [],  //特定工位的表数据
+        materielData:[ {"koujing": "111", "guigev": "2222","zhuwenhao":"22","zongshuliang":55,"yinashuliang":0,"quanbunazou":"2",}],  //物料的表数据
+        chuliri:"2019年7月2日", //物料出力日
         tdCols: [
           {"prop": "chuanhao", "label": "船号"},
           {"prop": "yiguanhao", "label": "一贯号"},
@@ -2391,6 +2482,7 @@
         this.tableData = arr;
       },
 
+
       //每次到底部给计算出需要下次添加的数据
       tableLoadingMore() {
         if (this.dqgw === "切断" && this.znSearch === true && this.tableData.length < this.arrAll.length) {
@@ -2845,24 +2937,39 @@
         }
       },
 
-      //直管物料统计
-      zgMaterialStatistics() {
-
-      },
-
-      //短管物料统计
-      dgMaterialStatistics() {
-
-      },
-
       // 物料统计
       materialStatistics() {
+        if (this.dqgw === "直管焊") {
+          axios.post(" " + url + "/sys/getPiciList")
+            .then((res)=>{
+              this.materielVisible=true;
+              this.batchOptions =res.data;
+            })
+            .catch((err)=>{
+              console.log(err)
+
+            })
+        }
+        else if (this.dqgw === "短管焊") {
+
+        }
+        else {
+
+        }
+      },
+
+      //查询物料
+      doSearchMateriel() {
 
       },
 
-      //一拼图预览
-      yptLook() {
+      //保存物料
+      doSaveMateriel() {
 
+      },
+      //保存物料
+      allChangeMateriel(){
+        alert("hahaha")
       },
 
       //前往总清单
@@ -3170,6 +3277,7 @@
           window.event.cancelBubble = true;
         }
       },
+
 
       //工位表中小组立数据更新
       xzlDataChange(val) {
@@ -4260,6 +4368,37 @@
       justify-content: center;
       height: 50px;
     }
+  }
+
+  .materielContainer{
+    .materielTop{
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .materielTopDiv{
+        width: 380px;
+        height:50px;
+        .el-button{
+          width: 120px;
+          height: 40px;
+          margin-left: 10px;
+          font-size: @font-size-large-xxx;
+        }
+      }
+    }
+    .materielBottom{
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .el-button{
+        width: 300px;
+        height: 60px;
+        font-size: @font-size-large-xxxxxxxx;
+      }
+    }
+
   }
 
   .tdContainer {
