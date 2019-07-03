@@ -1701,9 +1701,9 @@
               placeholder="批次">
               <el-option
                 v-for="item in batchOptions"
-                :key="item.indexno"
+                :key="item.id"
                 :label="item.name"
-                :value="item.indexno">
+                :value="item.id">
               </el-option>
             </el-select>
             <el-button type="primary" @click="doSearchMateriel">查询</el-button>
@@ -1721,7 +1721,7 @@
             color:'rgba(0, 0, 0, 1)'}"
             :cell-style="{
              border: '1px solid #303133',
-             fontSize:'11px'
+             fontSize:'16px'
             }"
             style="width: 100%;border: 1px solid #303133">
             <el-table-column
@@ -1736,11 +1736,10 @@
             </el-table-column>
             <el-table-column
               align="center"
-              prop="guigev"
-              :label="chuliri">
+              :label="batch">
               <el-table-column
                 align="center"
-                prop="guigev"
+                prop="guige"
                 label="规格">
               </el-table-column>
               <el-table-column
@@ -1756,7 +1755,7 @@
               <el-table-column
                 align="center"
                 width="80"
-                prop="zongshuliang"
+                prop="allnum"
                 label="总数量">
               </el-table-column>
             </el-table-column>
@@ -1765,22 +1764,22 @@
               align="center"
               :label="zuoyezhe">
               <el-table-column
-                prop="yinashuliang"
+                prop="usednum"
                 align="center"
                 label="已拿数量">
                 <template scope="scope">
                   <div>
-                    <el-input v-model="scope.row.yinashuliang" label="1" border @change="inputChangeMateriel(scope.$index)">选中</el-input>
+                    <el-input v-model="scope.row.usednum" type="number" label="1" border @change="inputChangeMateriel(scope.$index)">选中</el-input>
                   </div>
                 </template>
               </el-table-column>
               <el-table-column
-                prop="quanbunazou"
+                prop="usedflag"
                 align="center"
                 label="全部拿取">
                 <template scope="scope">
-                  <el-radio v-model="scope.row.quanbunazou" label="2" border @change="allChangeMateriel(scope.$index,scope.row.quanbunazou)">取消</el-radio>
-                  <el-radio v-model="scope.row.quanbunazou" label="1" border @change="allChangeMateriel(scope.$index,scope.row.quanbunazou)">选中</el-radio>
+                  <el-radio v-model="scope.row.usedflag" label="1" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">否</el-radio>
+                  <el-radio v-model="scope.row.usedflag" label="2" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">是</el-radio>
                 </template>
               </el-table-column>
             </el-table-column>
@@ -1804,9 +1803,9 @@
               placeholder="批次">
               <el-option
                 v-for="item in batchOptions"
-                :key="item.indexno"
+                :key="item.id"
                 :label="item.name"
-                :value="item.indexno">
+                :value="item.id">
               </el-option>
             </el-select>
             <el-button type="primary" @click="doSearchMateriel">查询</el-button>
@@ -1824,13 +1823,14 @@
             color:'rgba(0, 0, 0, 1)'}"
             :cell-style="{
              border: '1px solid #303133',
-             fontSize:'11px'
+             fontSize:'16px'
             }"
             style="width: 100%;border: 1px solid #303133">
             <el-table-column
               align="center"
               label="出力日">
               <el-table-column
+                width="80"
                 align="center"
                 prop="koujing"
                 label="口径">
@@ -1838,11 +1838,10 @@
             </el-table-column>
             <el-table-column
               align="center"
-              prop="guigev"
-              :label="chuliri">
+              :label="batch">
               <el-table-column
                 align="center"
-                prop="guigev"
+                prop="guige"
                 label="规格">
               </el-table-column>
               <el-table-column
@@ -1857,7 +1856,8 @@
               label="作业者">
               <el-table-column
                 align="center"
-                prop="zongshuliang"
+                width="80"
+                prop="allnum"
                 label="总数量">
               </el-table-column>
             </el-table-column>
@@ -1866,23 +1866,22 @@
               align="center"
               :label="zuoyezhe">
               <el-table-column
-                prop="yinashuliang"
+                prop="usednum"
                 align="center"
                 label="已拿数量">
                 <template scope="scope">
                   <div>
-                    <el-input v-model="scope.row.yinashuliang" label="1" border >选中</el-input>
+                    <el-input v-model="scope.row.usednum" type="number" label="1" border @change="inputChangeMateriel(scope.$index)">选中</el-input>
                   </div>
                 </template>
               </el-table-column>
               <el-table-column
-                prop="quanbunazou"
+                prop="usedflag"
                 align="center"
                 label="全部拿取">
                 <template scope="scope">
-                  <div>
-                    <el-radio v-model="scope.row.quanbunazou" label="1" border @change="allChangeMateriel">选中</el-radio>
-                  </div>
+                  <el-radio v-model="scope.row.usedflag" label="1" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">否</el-radio>
+                  <el-radio v-model="scope.row.usedflag" label="2" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">是</el-radio>
                 </template>
               </el-table-column>
             </el-table-column>
@@ -2057,8 +2056,7 @@
         cols: [],     //总数据的表头
         excelData: [],     //工位表数据
         tdTableData: [],  //特定工位的表数据
-        materielData:[ {"koujing": "111", "guigev": "2222","zhuwenhao":"22","zongshuliang":55,"yinashuliang":0,"quanbunazou":"2",}],  //物料的表数据
-        chuliri:"2019年7月2日", //物料出力日
+        materielData:[],  //物料的表数据
         tdCols: [
           {"prop": "chuanhao", "label": "船号"},
           {"prop": "yiguanhao", "label": "一贯号"},
@@ -3154,6 +3152,7 @@
                 this.materielVisible = true;
               }
               else {
+                this.materielVisible = true;
                 this.$message.warning("暂无数据");
               }
             }
@@ -3171,15 +3170,27 @@
         if (this.dqgw === "直管焊") {
           axios.post(" " + url + "/sys/getPiciList")
             .then((res)=>{
+              this.batch = res.data[0].id;
               this.batchOptions = res.data;
-              this.getMaterielData(1)
+              this.getMaterielData(1,this.batch)
             })
             .catch((err)=>{
               console.log(err)
             })
         }
         else if (this.dqgw === "短管焊") {
-
+          axios.post(" " + url + "/sys/getPiciList")
+            .then((res)=>{
+              this.batch = res.data[0].id;
+              this.batchOptions = res.data;
+              this.getMaterielData(2,this.batch)
+            })
+            .catch((err)=>{
+              console.log(err)
+            })
+        }
+        else if (this.dqgw === "小组立") {
+          this.getMaterielData(2,this.batch);
         }
         else {
 
@@ -3210,51 +3221,63 @@
 
       //保存物料
       doSaveMateriel() {
-        axios.post(" " + url + "/shengchan/updateStatusBatch",
-          {
-            "ids": this.listData,
-            "zuoyezhe": this.zuoyezhe
-          })
-          .then((res) => {
-            if (res.data.state === "1") {
-              this.$message.success("添加成功");
-              this.materielVisible = true;
-            }
-            else {
-              this.$message.warning(res.data.message);
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          });
-
+        if (this.dqgw === "直管焊") {
+          axios.post(" " + url + "/wuliaotongji/saveWuliaoTongji",
+            {
+              "pici":this.batch,
+              "list": this.materielData,
+              "zuoyezhe": this.zuoyezhe,
+            })
+            .then((res) => {
+              if (res.data.state === "1") {
+                this.materielData=[];
+                this.$message.success("添加成功");
+                this.materielVisible = false;
+              }
+              else {
+                this.$message.warning(res.data.message);
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            });
+        }
+        else if (this.dqgw === "短管焊") {
+          this.getMaterielData(2,this.batch);
+        }
+        else if (this.dqgw === "小组立") {
+          this.getMaterielData(2,this.batch);
+        }
+        else {
+          this.$message.success("添加成功");
+        }
       },
 
       //根据input选择框变化
       inputChangeMateriel(index){
-        let z = parseInt(this.materielData[index].zongshuliang);
-        let y = parseInt(this.materielData[index].yinashuliang);
+        let z = parseInt(this.materielData[index].allnum);
+        let y = parseInt(this.materielData[index].usednum);
         if (y === z) {
-          this.materielData[index].quanbunazou = "1";
+          this.materielData[index].usedflag = "2";
         }
         else if (y > z) {
-          this.materielData[index].yinashuliang = z;
-          this.materielData[index].quanbunazou = "1";
+          this.materielData[index].usednum = z;
+          this.materielData[index].usedflag = "2";
           this.$message.warning(`数量不能超出总数量`);
         }
         else {
-          this.materielData[index].quanbunazou = "2";
+          this.materielData[index].usedflag = "1";
         }
       },
 
       //全部拿取选择框变化
       allChangeMateriel(index,label){
-        if(label ==="1"){
-          const n = this.materielData[index].zongshuliang;
-          this.materielData[index].yinashuliang =n;
+        if(label ==="2"){
+          const n = this.materielData[index].allnum;
+          this.materielData[index].usednum =n;
         }
-        else if (label==="2") {
-          this.materielData[index].yinashuliang =0;
+        else if (label==="1") {
+          this.materielData[index].usednum =0;
         }
       },
 
