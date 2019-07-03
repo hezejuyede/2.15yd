@@ -1728,6 +1728,7 @@
               align="center"
               label="出力日">
               <el-table-column
+                width="80"
                 align="center"
                 prop="koujing"
                 label="口径">
@@ -1754,6 +1755,7 @@
               label="作业者">
               <el-table-column
                 align="center"
+                width="80"
                 prop="zongshuliang"
                 label="总数量">
               </el-table-column>
@@ -1768,7 +1770,7 @@
                 label="已拿数量">
                 <template scope="scope">
                   <div>
-                    <el-input v-model="scope.row.yinashuliang" label="1" border >选中</el-input>
+                    <el-input v-model="scope.row.yinashuliang" label="1" border @change="inputChangeMateriel(scope.$index)">选中</el-input>
                   </div>
                 </template>
               </el-table-column>
@@ -1777,9 +1779,8 @@
                 align="center"
                 label="全部拿取">
                 <template scope="scope">
-                  <div>
-                    <el-radio v-model="scope.row.quanbunazou" label="1" border @change="allChangeMateriel">选中</el-radio>
-                  </div>
+                  <el-radio v-model="scope.row.quanbunazou" label="2" border @change="allChangeMateriel(scope.$index,scope.row.quanbunazou)">取消</el-radio>
+                  <el-radio v-model="scope.row.quanbunazou" label="1" border @change="allChangeMateriel(scope.$index,scope.row.quanbunazou)">选中</el-radio>
                 </template>
               </el-table-column>
             </el-table-column>
@@ -3139,17 +3140,42 @@
         }
       },
 
+      //各个工位查询物料
+      getMaterielData(data1, data2) {
+        axios.post(" " + url + "/wuliaotongji/getWuliaotongjiList",
+          {
+            "type": data1,
+            "pici": data2,
+          })
+          .then((res) => {
+            if (res.data.state === "1") {
+              if (res.data.data.length > 0) {
+                this.materielData = res.data.data;
+                this.materielVisible = true;
+              }
+              else {
+                this.$message.warning("暂无数据");
+              }
+            }
+            else {
+              this.$message.warning(res.data.message);
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          });
+      },
+
       // 物料统计
       materialStatistics() {
         if (this.dqgw === "直管焊") {
           axios.post(" " + url + "/sys/getPiciList")
             .then((res)=>{
-              this.materielVisible=true;
-              this.batchOptions =res.data;
+              this.batchOptions = res.data;
+              this.getMaterielData(1)
             })
             .catch((err)=>{
               console.log(err)
-
             })
         }
         else if (this.dqgw === "短管焊") {
@@ -3162,16 +3188,74 @@
 
       //查询物料
       doSearchMateriel() {
+        if (this.batch) {
+          if (this.dqgw === "直管焊") {
+            this.getMaterielData(1,this.batch);
+          }
+          else if (this.dqgw === "短管焊") {
+            this.getMaterielData(2,this.batch);
+          }
+          else if (this.dqgw === "小组立") {
+            this.getMaterielData(2,this.batch);
+          }
+          else {
+            this.$message.success("添加成功");
+          }
+        }
+        else {
+          this.$message.warning("批次不能为空");
+        }
 
       },
 
       //保存物料
       doSaveMateriel() {
+        axios.post(" " + url + "/shengchan/updateStatusBatch",
+          {
+            "ids": this.listData,
+            "zuoyezhe": this.zuoyezhe
+          })
+          .then((res) => {
+            if (res.data.state === "1") {
+              this.$message.success("添加成功");
+              this.materielVisible = true;
+            }
+            else {
+              this.$message.warning(res.data.message);
+            }
+          })
+          .catch((err) => {
+            console.log(err)
+          });
 
       },
-      //保存物料
-      allChangeMateriel(){
-        alert("hahaha")
+
+      //根据input选择框变化
+      inputChangeMateriel(index){
+        let z = parseInt(this.materielData[index].zongshuliang);
+        let y = parseInt(this.materielData[index].yinashuliang);
+        if (y === z) {
+          this.materielData[index].quanbunazou = "1";
+        }
+        else if (y > z) {
+          this.materielData[index].yinashuliang = z;
+          this.materielData[index].quanbunazou = "1";
+          this.$message.warning(`数量不能超出总数量`);
+        }
+        else {
+          this.materielData[index].quanbunazou = "2";
+        }
+      },
+
+      //全部拿取选择框变化
+      allChangeMateriel(index,label){
+        if(label ==="1"){
+          const n = this.materielData[index].zongshuliang;
+          this.materielData[index].yinashuliang =n;
+        }
+        else if (label==="2") {
+          this.materielData[index].yinashuliang =0;
+        }
       },
 
       //前往总清单
