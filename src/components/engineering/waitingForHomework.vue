@@ -1689,7 +1689,7 @@
       <div class="closeBtn">
         <el-button type="danger" @click="closeMaterielVisible">关闭窗口</el-button>
       </div>
-      <div class="materielContainer" v-if="this.listType ==5">
+      <div class="materielContainer" v-if="this.listType ==1 || this.listType ==5 || this.listType ==4 || this.listType ==3 ||this.listType ==11">
         <div class="materielTop">
           <div class="materielTopDiv">
             <el-select
@@ -3169,7 +3169,7 @@
 
       // 物料统计
       materialStatistics() {
-        if (this.dqgw === "直管焊") {
+        if (this.dqgw === "直管焊" ||this.dqgw === "枝管切断" ||this.dqgw === "切断" ||this.dqgw === "弯头焊" |this.dqgw === "弯头切断") {
           axios.post(" " + url + "/sys/getPiciList")
             .then((res)=>{
               this.batch = res.data[0].id;
@@ -3209,7 +3209,7 @@
       //查询物料
       doSearchMateriel() {
         if (this.batch) {
-          if (this.dqgw === "直管焊") {
+          if (this.dqgw === "直管焊" ||this.dqgw === "枝管切断" ||this.dqgw === "切断" ||this.dqgw === "弯头焊" |this.dqgw === "弯头切断") {
             this.getMaterielData(1,this.batch);
           }
           else if (this.dqgw === "短管焊") {
@@ -3231,7 +3231,7 @@
       //保存物料
       doSaveMateriel() {
         if(this.materielData.length>0){
-          if (this.dqgw === "直管焊") {
+          if (this.dqgw === "直管焊" ||this.dqgw === "枝管切断" ||this.dqgw === "切断" ||this.dqgw === "弯头焊" |this.dqgw === "弯头切断") {
             axios.post(" " + url + "/wuliaotongji/saveWuliaoTongji",
               {
                 "pici":this.batch,
