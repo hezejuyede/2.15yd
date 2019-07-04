@@ -2962,7 +2962,7 @@
             this.$message.warning("该管是长管,该工位不可报完工");
           }
         }
-        if (this.dqgw === "小组立") {
+        else if (this.dqgw === "小组立") {
           if(this.dgID.length>1){
             this.$message.warning("只能选择一个");
           }
@@ -3019,7 +3019,6 @@
               console.log(err)
             })
         }
-
       },
 
       //加工完成
