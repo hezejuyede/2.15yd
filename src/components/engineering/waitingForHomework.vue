@@ -1687,7 +1687,7 @@
     <!--物料统计 -->
     <el-dialog :visible.sync="materielVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
-        <el-button type="danger" @click="materielVisible = false">关闭窗口</el-button>
+        <el-button type="danger" @click="closeMaterielVisible">关闭窗口</el-button>
       </div>
       <div class="materielContainer" v-if="this.listType ==5">
         <div class="materielTop">
@@ -1885,8 +1885,6 @@
                 </template>
               </el-table-column>
             </el-table-column>
-
-
           </el-table>
         </div>
         <div class="materielBottom">
@@ -3197,6 +3195,13 @@
         }
       },
 
+      //关闭物料统计
+      closeMaterielVisible() {
+        this.materielVisible = false;
+        this.materielData = [];
+
+      },
+
       //查询物料
       doSearchMateriel() {
         if (this.batch) {
@@ -3221,36 +3226,63 @@
 
       //保存物料
       doSaveMateriel() {
-        if (this.dqgw === "直管焊") {
-          axios.post(" " + url + "/wuliaotongji/saveWuliaoTongji",
-            {
-              "pici":this.batch,
-              "list": this.materielData,
-              "zuoyezhe": this.zuoyezhe,
-            })
-            .then((res) => {
-              if (res.data.state === "1") {
-                this.materielData=[];
-                this.$message.success("添加成功");
-                this.materielVisible = false;
-              }
-              else {
-                this.$message.warning(res.data.message);
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            });
-        }
-        else if (this.dqgw === "短管焊") {
-          this.getMaterielData(2,this.batch);
-        }
-        else if (this.dqgw === "小组立") {
-          this.getMaterielData(2,this.batch);
+        if(this.materielData.length>0){
+          if (this.dqgw === "直管焊") {
+            axios.post(" " + url + "/wuliaotongji/saveWuliaoTongji",
+              {
+                "pici":this.batch,
+                "list": this.materielData,
+                "zuoyezhe": this.zuoyezhe,
+                "type":"1"
+              })
+              .then((res) => {
+                if (res.data.state === "1") {
+                  this.materielData=[];
+                  this.$message.success("添加成功");
+                  this.materielVisible = false;
+                }
+                else {
+                  this.$message.warning(res.data.message);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              });
+          }
+          else if (this.dqgw === "短管焊") {
+            axios.post(" " + url + "/wuliaotongji/saveWuliaoTongji",
+              {
+                "pici":this.batch,
+                "list": this.materielData,
+                "zuoyezhe": this.zuoyezhe,
+                "type":"2"
+              })
+              .then((res) => {
+                if (res.data.state === "1") {
+                  this.materielData=[];
+                  this.$message.success("添加成功");
+                  this.materielVisible = false;
+                }
+                else {
+                  this.$message.warning(res.data.message);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              });
+
+          }
+          else if (this.dqgw === "小组立") {
+            this.getMaterielData(2,this.batch);
+          }
+          else {
+            this.$message.success("添加成功");
+          }
         }
         else {
-          this.$message.success("添加成功");
+          this.$message.warning("数据为空，无需保存");
         }
+
       },
 
       //根据input选择框变化
