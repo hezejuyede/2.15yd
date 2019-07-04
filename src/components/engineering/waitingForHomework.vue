@@ -2995,7 +2995,7 @@
                 })
             }
             else {
-              this.$message.warning("选中才能报完");
+              this.$message.warning("选中才能报完工");
             }
           }
         }
