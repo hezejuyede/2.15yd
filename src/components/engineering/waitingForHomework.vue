@@ -3174,7 +3174,7 @@
             .then((res)=>{
               this.batch = res.data[0].id;
               this.batchOptions = res.data;
-              this.getMaterielData(1,this.batch)
+              this.getMaterielData(2,this.batch)
             })
             .catch((err)=>{
               console.log(err)
@@ -3185,7 +3185,7 @@
             .then((res)=>{
               this.batch = res.data[0].id;
               this.batchOptions = res.data;
-              this.getMaterielData(2,this.batch)
+              this.getMaterielData(1,this.batch)
             })
             .catch((err)=>{
               console.log(err)
@@ -3210,10 +3210,10 @@
       doSearchMateriel() {
         if (this.batch) {
           if (this.dqgw === "直管焊" ||this.dqgw === "枝管切断" ||this.dqgw === "切断" ||this.dqgw === "弯头焊" |this.dqgw === "弯头切断") {
-            this.getMaterielData(1,this.batch);
+            this.getMaterielData(2,this.batch);
           }
           else if (this.dqgw === "短管焊") {
-            this.getMaterielData(2,this.batch);
+            this.getMaterielData(1,this.batch);
           }
           else if (this.dqgw === "小组立") {
             this.getMaterielData(2,this.batch);
@@ -3237,7 +3237,7 @@
                 "pici":this.batch,
                 "list": this.materielData,
                 "zuoyezhe": this.zuoyezhe,
-                "type":"1"
+                "type":"2"
               })
               .then((res) => {
                 if (res.data.state === "1") {
@@ -3259,7 +3259,7 @@
                 "pici":this.batch,
                 "list": this.materielData,
                 "zuoyezhe": this.zuoyezhe,
-                "type":"2"
+                "type":"1"
               })
               .then((res) => {
                 if (res.data.state === "1") {
