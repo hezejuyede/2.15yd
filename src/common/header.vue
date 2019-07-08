@@ -236,7 +236,7 @@
           type: 'warning'
         })
           .then(() => {
-            axios.post("  " + url + "/api/LeavePost", {"username": this.userName})
+            axios.post("  " + url + "/api/LeavePost", {"username": this.userName,"stationid":this.GH})
               .then((res) => {
                 if (res.data === "1") {
                   this.$message({
