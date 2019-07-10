@@ -73,13 +73,14 @@
         <div class="listSearch" v-if="this.listType ==7 || this.listType ==8">
           <div class="listSearchInput">
             <el-input
-              style="width: 350px"
+              style="width: 250px"
               v-model="searchWord"
               ref="siteInput"
               placeholder="检索管子或扫码或手工输入"
               @blur="searchData(searchWord)"
               @input="searchEmptyData(searchWord)"
               @keyup.enter.native="goToPipePage(searchWord)"></el-input>
+            <button @click="materialStatistics">物料统计</button>
             <button @click="showAllList">可作业清单</button>
           </div>
           <div class="listSearchBtn">
@@ -1903,9 +1904,9 @@
               placeholder="批次">
               <el-option
                 v-for="item in batchOptions"
-                :key="item.indexno"
+                :key="item.id"
                 :label="item.name"
-                :value="item.indexno">
+                :value="item.id">
               </el-option>
             </el-select>
             <el-button type="primary" @click="doSearchMateriel">查询</el-button>
@@ -1923,13 +1924,14 @@
             color:'rgba(0, 0, 0, 1)'}"
             :cell-style="{
              border: '1px solid #303133',
-             fontSize:'11px'
+             fontSize:'16px'
             }"
             style="width: 100%;border: 1px solid #303133">
             <el-table-column
               align="center"
               label="出力日">
               <el-table-column
+                width="80"
                 align="center"
                 prop="koujing"
                 label="口径">
@@ -1937,11 +1939,10 @@
             </el-table-column>
             <el-table-column
               align="center"
-              prop="guigev"
-              :label="chuliri">
+              :label="batch">
               <el-table-column
                 align="center"
-                prop="guigev"
+                prop="guige"
                 label="规格">
               </el-table-column>
               <el-table-column
@@ -1956,7 +1957,8 @@
               label="作业者">
               <el-table-column
                 align="center"
-                prop="zongshuliang"
+                width="80"
+                prop="allnum"
                 label="总数量">
               </el-table-column>
             </el-table-column>
@@ -1965,28 +1967,25 @@
               align="center"
               :label="zuoyezhe">
               <el-table-column
-                prop="yinashuliang"
+                prop="usednum"
                 align="center"
                 label="已拿数量">
                 <template scope="scope">
                   <div>
-                    <el-input v-model="scope.row.yinashuliang" label="1" border >选中</el-input>
+                    <el-input v-model="scope.row.usednum" type="number" label="1" border @change="inputChangeMateriel(scope.$index)">选中</el-input>
                   </div>
                 </template>
               </el-table-column>
               <el-table-column
-                prop="quanbunazou"
+                prop="usedflag"
                 align="center"
                 label="全部拿取">
                 <template scope="scope">
-                  <div>
-                    <el-radio v-model="scope.row.quanbunazou" label="1" border @change="allChangeMateriel">选中</el-radio>
-                  </div>
+                  <el-radio v-model="scope.row.usedflag" label="1" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">否</el-radio>
+                  <el-radio v-model="scope.row.usedflag" label="2" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">是</el-radio>
                 </template>
               </el-table-column>
             </el-table-column>
-
-
           </el-table>
         </div>
         <div class="materielBottom">
@@ -3192,7 +3191,38 @@
             })
         }
         else if (this.dqgw === "小组立") {
-          this.getMaterielData(2,this.batch);
+          axios.post(" " + url + "/sys/getPiciList")
+            .then((res)=>{
+              this.batch = res.data[0].id;
+              this.batchOptions = res.data;
+              console.log( this.batch)
+              axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
+                {
+                  "type": 1,
+                  "pici": this.batch,
+                })
+                .then((res) => {
+                  if (res.data.state === "1") {
+                    if (res.data.data.length > 0) {
+                      this.materielData = res.data.data;
+                      this.materielVisible = true;
+                    }
+                    else {
+                      this.materielVisible = true;
+                      this.$message.warning("暂无数据");
+                    }
+                  }
+                  else {
+                    this.$message.warning(res.data.message);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                });
+            })
+            .catch((err)=>{
+              console.log(err)
+            })
         }
         else {
 
@@ -3208,6 +3238,7 @@
 
       //查询物料
       doSearchMateriel() {
+        console.log(this.batch)
         if (this.batch) {
           if (this.dqgw === "直管焊" ||this.dqgw === "枝管切断" ||this.dqgw === "切断" ||this.dqgw === "弯头焊" |this.dqgw === "弯头切断") {
             this.getMaterielData(2,this.batch);
@@ -3216,7 +3247,29 @@
             this.getMaterielData(1,this.batch);
           }
           else if (this.dqgw === "小组立") {
-            this.getMaterielData(2,this.batch);
+            axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
+              {
+                "type": 1,
+                "pici": this.batch,
+              })
+              .then((res) => {
+                if (res.data.state === "1") {
+                  if (res.data.data.length > 0) {
+                    this.materielData = res.data.data;
+                    this.materielVisible = true;
+                  }
+                  else {
+                    this.materielVisible = true;
+                    this.$message.warning("暂无数据");
+                  }
+                }
+                else {
+                  this.$message.warning(res.data.message);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              });
           }
           else {
             this.$message.success("添加成功");
@@ -3277,7 +3330,26 @@
 
           }
           else if (this.dqgw === "小组立") {
-            this.getMaterielData(2,this.batch);
+            axios.post(" " + url + "/wuliaotongji/saveWuliaoXzl",
+              {
+                "pici":this.batch,
+                "list": this.materielData,
+                "zuoyezhe": this.zuoyezhe,
+                "type":"1"
+              })
+              .then((res) => {
+                if (res.data.state === "1") {
+                  this.materielData=[];
+                  this.$message.success("添加成功");
+                  this.materielVisible = false;
+                }
+                else {
+                  this.$message.warning(res.data.message);
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              });
           }
           else {
             this.$message.success("添加成功");
@@ -4432,7 +4504,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 120px;
+            width: 110px;
             height: 50px;
             margin-left: 2%;
             background-color: @color-dlLan;
