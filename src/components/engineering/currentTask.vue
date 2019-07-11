@@ -924,12 +924,14 @@
               width="30">
             </el-table-column>
             <el-table-column
+              width="70"
               prop="cindex"
               label="序号"
               align="center"
               min-width="20%">
             </el-table-column>
             <el-table-column
+              width="150"
               prop="oqtypename"
               label="质量内容"
               align="center"
@@ -944,20 +946,7 @@
                   <el-input v-model="scope.row.oqmsg"></el-input>
                 </div>
                 <div class="" v-if="scope.row.indexno==2">
-                  <el-select
-                    v-model="scope.row.oqmsg"
-                    clearable
-                    filterable
-                    allow-create
-                    default-first-option
-                    placeholder="请选择表名">
-                    <el-option
-                      v-for="item in scope.row.relatableOptions"
-                      :key="item.indexno"
-                      :label="item.name"
-                      :value="item.indexno">
-                    </el-option>
-                  </el-select>
+                  <el-radio  v-for="(item,index) in scope.row.relatableOptions" v-model="scope.row.oqmsg" :label="item.indexno" border>{{item.name}}</el-radio>
                 </div>
               </template>
             </el-table-column>
