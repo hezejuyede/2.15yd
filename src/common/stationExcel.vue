@@ -1206,7 +1206,7 @@
             return 'green-row';
           }
           else if  (row.status === "4") {
-            return 'xzl-row';
+            return 'yellow-row';
           }
           else if(row.status === 2){
             return 'xzl-row';
@@ -1231,7 +1231,7 @@
             return 'green-row';
           }
           else if  (row.status === "4") {
-            return 'xzl-row';
+            return 'yellow-row';
           }
           else if(row.status === "2"){
             return 'xzl-row';
@@ -1247,7 +1247,7 @@
           return 'green-row';
         }
         else if  (row.status === "4") {
-          return 'xzl-row';
+          return 'yellow-row';
         }
         else if  (row.status === "5") {
           return 'xzl-row';
