@@ -1992,6 +1992,206 @@
           <el-button type="success" @click="doSaveMateriel">确认</el-button>
         </div>
       </div>
+      <div class="materielContainer" v-if="this.listType ==7">
+        <div class="materielTop">
+          <div class="materielTopDiv">
+            <el-select
+              v-model="batch"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="批次">
+              <el-option
+                v-for="item in batchOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+            <el-button type="primary" @click="doSearchMateriel">查询</el-button>
+          </div>
+        </div>
+        <div class="materielCenter">
+          <el-table
+            :data="materielData"
+            height="520"
+            ref="Table"
+            :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            fontSize:'18px',
+            color:'rgba(0, 0, 0, 1)'}"
+            :cell-style="{
+             border: '1px solid #303133',
+             fontSize:'16px'
+            }"
+            style="width: 100%;border: 1px solid #303133">
+            <el-table-column
+              align="center"
+              label="出力日">
+              <el-table-column
+                width="80"
+                align="center"
+                prop="koujing"
+                label="口径">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              :label="batch">
+              <el-table-column
+                align="center"
+                prop="guige"
+                label="规格">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="zhuwenhao"
+                label="注文号"
+                width="300">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="作业者">
+              <el-table-column
+                align="center"
+                width="80"
+                prop="allnum"
+                label="总数量">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column
+              prop="qieduanchang"
+              align="center"
+              :label="zuoyezhe">
+              <el-table-column
+                prop="usednum"
+                align="center"
+                label="已拿数量">
+                <template scope="scope">
+                  <div>
+                    <el-input v-model="scope.row.usednum" type="number" label="1" border @change="inputChangeMateriel(scope.$index)">选中</el-input>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="usedflag"
+                align="center"
+                label="全部拿取">
+                <template scope="scope">
+                  <el-radio v-model="scope.row.usedflag" label="1" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">否</el-radio>
+                  <el-radio v-model="scope.row.usedflag" label="2" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">是</el-radio>
+                </template>
+              </el-table-column>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="materielBottom">
+          <el-button type="success" @click="doSaveMateriel">确认</el-button>
+        </div>
+      </div>
+      <div class="materielContainer" v-if="this.listType ==8">
+        <div class="materielTop">
+          <div class="materielTopDiv">
+            <el-select
+              v-model="batch"
+              clearable
+              filterable
+              allow-create
+              default-first-option
+              placeholder="批次">
+              <el-option
+                v-for="item in batchOptions"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+            <el-button type="primary" @click="doSearchMateriel">查询</el-button>
+          </div>
+        </div>
+        <div class="materielCenter">
+          <el-table
+            :data="materielData"
+            height="520"
+            ref="Table"
+            :header-cell-style="{
+            background:'#ffffff',
+            border: '1px solid #303133',
+            fontSize:'18px',
+            color:'rgba(0, 0, 0, 1)'}"
+            :cell-style="{
+             border: '1px solid #303133',
+             fontSize:'16px'
+            }"
+            style="width: 100%;border: 1px solid #303133">
+            <el-table-column
+              align="center"
+              label="出力日">
+              <el-table-column
+                width="80"
+                align="center"
+                prop="koujing"
+                label="口径">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              :label="batch">
+              <el-table-column
+                align="center"
+                prop="guige"
+                label="规格">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="zhuwenhao"
+                label="注文号"
+                width="300">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="作业者">
+              <el-table-column
+                align="center"
+                width="80"
+                prop="allnum"
+                label="总数量">
+              </el-table-column>
+            </el-table-column>
+            <el-table-column
+              prop="qieduanchang"
+              align="center"
+              :label="zuoyezhe">
+              <el-table-column
+                prop="usednum"
+                align="center"
+                label="已拿数量">
+                <template scope="scope">
+                  <div>
+                    <el-input v-model="scope.row.usednum" type="number" label="1" border @change="inputChangeMateriel(scope.$index)">选中</el-input>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="usedflag"
+                align="center"
+                label="全部拿取">
+                <template scope="scope">
+                  <el-radio v-model="scope.row.usedflag" label="1" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">否</el-radio>
+                  <el-radio v-model="scope.row.usedflag" label="2" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">是</el-radio>
+                </template>
+              </el-table-column>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="materielBottom">
+          <el-button type="success" @click="doSaveMateriel">确认</el-button>
+        </div>
+      </div>
     </el-dialog>
 
 
