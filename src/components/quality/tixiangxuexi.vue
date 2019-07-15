@@ -62,7 +62,7 @@
     </div>
 
 
-    <!-- 学校详情 -->
+    <!-- 学习详情 -->
     <el-dialog :visible.sync="sbVisible" width="80%" @close='cancel'>
       <div class="equipmentDiv">
         <div class="closeBtn">
@@ -187,11 +187,11 @@
       },
 
       //瞬间加载数据
-      loadingShowData(data1, data2,data3) {
+      loadingShowData(data1, data2, data3) {
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "xuexibaogaotongji"}),
-          axios.post(" " + url + "/xuexi/xuexiList", {"times": data1,"stationid":data2,"status":data3})
+          axios.post(" " + url + "/anquan/tuisongForPadList", {"times": data1, "stationid": data2, "status": data3})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
@@ -204,7 +204,7 @@
         this.val = val;
         if (val.length) {
           let data = [];
-          let gl =[]
+          let gl = []
           for (let i = 0; i < val.length; i++) {
             let a = val[i].id;
             let b = val[i].relaid;
@@ -255,13 +255,14 @@
               that.message = "";
               that.HideModal = true;
             }
+
             setTimeout(a, 2000);
           }
           else {
             axios.post(" " + url + "/xuexi/xuexiDetail", {"id": this.listData[0]})
               .then((res) => {
-                if(res.data.state==="1"){
-                  if(JSON.stringify(res.data.data) !== "{}"){
+                if (res.data.state === "1") {
+                  if (JSON.stringify(res.data.data) !== "{}") {
                     this.sbVisible = true;
                     this.titilename = res.data.data.titilename;
                     this.htmlData = res.data.data.context;
@@ -305,7 +306,7 @@
       //根据时间查询上报记录
       doSearch() {
         if (this.examineTime) {
-          this.loadingShowData(this.examineTime, this.stationid,this.learn);
+          this.loadingShowData(this.examineTime, this.stationid, this.learn);
         }
         else {
           this.$message.warning("请选择查询时间");
@@ -329,7 +330,7 @@
             setTimeout(a, 2000);
           }
           else {
-            axios.post(" " + url + "/xuexi/updateStatus", {"id": this.glData[0],"xuexiuser":this.userId})
+            axios.post(" " + url + "/xuexi/updateStatus", {"id": this.glData[0], "xuexiuser": this.userId})
               .then((res) => {
                 if (res.data.state === "1") {
                   this.$message.success("上报学习成功");

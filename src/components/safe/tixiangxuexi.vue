@@ -214,8 +214,8 @@
       loadingShowData(data1, data2,data3,data4) {
         let that = this;
         axios.all([
-          axios.post(" " + url + "/sys/showTableTitle", {"name": "zhixingduananquanchaxunjilv"}),
-          axios.post(" " + url + "/anquan/tuisongForPadList", {"times": data1,"stationid":data2,"status":data3,"type":data4})
+          axios.post(" " + url + "/sys/showTableTitle", {"name": "anquanzhiliangtixiangchakan"}),
+          axios.post(" " + url + "/anquan/tuisongList", {"times": data1,"stationid":data2,"status":data3,"type":data4})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
@@ -282,13 +282,13 @@
             setTimeout(a, 2000);
           }
           else {
-            axios.post(" " + url + "/anquan/xuexiDetail", {"id": this.listData[0]})
+            axios.post(" " + url + "/anquan/tuisongDetail", {"id": this.listData[0]})
               .then((res) => {
                 if(res.data.state==="1"){
                   if(JSON.stringify(res.data.data) !== "{}"){
                     this.sbVisible = true;
-                    this.titilename = res.data.data.titilename;
-                    this.htmlData = res.data.data.context;
+                    this.titilename = res.data.data.tuisong.title;
+                    this.htmlData = res.data.data.tuisong.neirong;
                   }
                   else {
                     this.message = "暂无数据";
@@ -313,7 +313,7 @@
           }
         }
         else {
-          this.message = "请勾选要学习的内容";
+          this.message = "请勾选要查看的内容";
           this.HideModal = false;
           const that = this;
 
@@ -353,10 +353,10 @@
             setTimeout(a, 2000);
           }
           else {
-            axios.post(" " + url + "/anquan/updateStatus", {"id": this.glData[0],"xuexiuser":this.userId})
+            axios.post(" " + url + "/anquan/updateLevel", {"id": this.listData[0]})
               .then((res) => {
                 if (res.data.state === "1") {
-                  this.$message.success("上报学习成功");
+                  this.$message.success("阅读成功");
                   this.loadingShowData(this.examineTime, this.stationid, this.learn);
                   this.sbVisible = false;
                 }
