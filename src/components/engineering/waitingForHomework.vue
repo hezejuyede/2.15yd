@@ -3195,7 +3195,72 @@
             .then((res)=>{
               this.batch = res.data[0].id;
               this.batchOptions = res.data;
-              console.log( this.batch)
+              axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
+                {
+                  "type": 1,
+                  "pici": this.batch,
+                })
+                .then((res) => {
+                  if (res.data.state === "1") {
+                    if (res.data.data.length > 0) {
+                      this.materielData = res.data.data;
+                      this.materielVisible = true;
+                    }
+                    else {
+                      this.materielVisible = true;
+                      this.$message.warning("暂无数据");
+                    }
+                  }
+                  else {
+                    this.$message.warning(res.data.message);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                });
+            })
+            .catch((err)=>{
+              console.log(err)
+            })
+        }
+        else if (this.dqgw === "43/48装配") {
+          axios.post(" " + url + "/sys/getPiciList")
+            .then((res)=>{
+              this.batch = res.data[0].id;
+              this.batchOptions = res.data;
+              axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
+                {
+                  "type": 1,
+                  "pici": this.batch,
+                })
+                .then((res) => {
+                  if (res.data.state === "1") {
+                    if (res.data.data.length > 0) {
+                      this.materielData = res.data.data;
+                      this.materielVisible = true;
+                    }
+                    else {
+                      this.materielVisible = true;
+                      this.$message.warning("暂无数据");
+                    }
+                  }
+                  else {
+                    this.$message.warning(res.data.message);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err)
+                });
+            })
+            .catch((err)=>{
+              console.log(err)
+            })
+        }
+        else if (this.dqgw === "45/46装配") {
+          axios.post(" " + url + "/sys/getPiciList")
+            .then((res)=>{
+              this.batch = res.data[0].id;
+              this.batchOptions = res.data;
               axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
                 {
                   "type": 1,
@@ -3269,6 +3334,72 @@
               .catch((err) => {
                 console.log(err)
               });
+          }
+          else if (this.dqgw === "43/48装配") {
+            axios.post(" " + url + "/sys/getPiciList")
+              .then((res)=>{
+                this.batch = res.data[0].id;
+                this.batchOptions = res.data;
+                axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
+                  {
+                    "type": 1,
+                    "pici": this.batch,
+                  })
+                  .then((res) => {
+                    if (res.data.state === "1") {
+                      if (res.data.data.length > 0) {
+                        this.materielData = res.data.data;
+                        this.materielVisible = true;
+                      }
+                      else {
+                        this.materielVisible = true;
+                        this.$message.warning("暂无数据");
+                      }
+                    }
+                    else {
+                      this.$message.warning(res.data.message);
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  });
+              })
+              .catch((err)=>{
+                console.log(err)
+              })
+          }
+          else if (this.dqgw === "45/46装配") {
+            axios.post(" " + url + "/sys/getPiciList")
+              .then((res)=>{
+                this.batch = res.data[0].id;
+                this.batchOptions = res.data;
+                axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
+                  {
+                    "type": 1,
+                    "pici": this.batch,
+                  })
+                  .then((res) => {
+                    if (res.data.state === "1") {
+                      if (res.data.data.length > 0) {
+                        this.materielData = res.data.data;
+                        this.materielVisible = true;
+                      }
+                      else {
+                        this.materielVisible = true;
+                        this.$message.warning("暂无数据");
+                      }
+                    }
+                    else {
+                      this.$message.warning(res.data.message);
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  });
+              })
+              .catch((err)=>{
+                console.log(err)
+              })
           }
           else {
             this.$message.success("添加成功");
@@ -3348,6 +3479,72 @@
               .catch((err) => {
                 console.log(err)
               });
+          }
+          else if (this.dqgw === "43/48装配") {
+            axios.post(" " + url + "/sys/getPiciList")
+              .then((res)=>{
+                this.batch = res.data[0].id;
+                this.batchOptions = res.data;
+                axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
+                  {
+                    "type": 1,
+                    "pici": this.batch,
+                  })
+                  .then((res) => {
+                    if (res.data.state === "1") {
+                      if (res.data.data.length > 0) {
+                        this.materielData = res.data.data;
+                        this.materielVisible = true;
+                      }
+                      else {
+                        this.materielVisible = true;
+                        this.$message.warning("暂无数据");
+                      }
+                    }
+                    else {
+                      this.$message.warning(res.data.message);
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  });
+              })
+              .catch((err)=>{
+                console.log(err)
+              })
+          }
+          else if (this.dqgw === "45/46装配") {
+            axios.post(" " + url + "/sys/getPiciList")
+              .then((res)=>{
+                this.batch = res.data[0].id;
+                this.batchOptions = res.data;
+                axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
+                  {
+                    "type": 1,
+                    "pici": this.batch,
+                  })
+                  .then((res) => {
+                    if (res.data.state === "1") {
+                      if (res.data.data.length > 0) {
+                        this.materielData = res.data.data;
+                        this.materielVisible = true;
+                      }
+                      else {
+                        this.materielVisible = true;
+                        this.$message.warning("暂无数据");
+                      }
+                    }
+                    else {
+                      this.$message.warning(res.data.message);
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  });
+              })
+              .catch((err)=>{
+                console.log(err)
+              })
           }
           else {
             this.$message.success("添加成功");
