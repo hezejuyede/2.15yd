@@ -3,9 +3,6 @@
     <header-nav></header-nav>
     <div class="equipmentTable">
       <div class="handle-box">
-        <label style="margin-right: 5px">
-          <el-input v-model="select_word" placeholder="检索提醒" style="width:120px"></el-input>
-        </label>
         <label style="margin-right: 5px;margin-left: 5px">
           <el-date-picker
             style="width: 240px"
@@ -17,16 +14,35 @@
           </el-date-picker>
         </label>
         <label style="margin-right: 10px;margin-left: 5px">
-          <span>查看状态</span>
+          <span>程度</span>
           <span>:</span>
           <el-select
-            style="width: 120px"
+            style="width: 100px"
+            v-model="state"
+            clearable
+            filterable
+            allow-create
+            default-first-option
+            placeholder="请选择紧急程度">
+            <el-option
+              v-for="item in stateOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </label>
+        <label style="margin-right: 10px;margin-left: 5px">
+          <span>状态</span>
+          <span>:</span>
+          <el-select
+            style="width: 100px"
             v-model="learn"
             clearable
             filterable
             allow-create
             default-first-option
-            placeholder="请选择查看状态">
+            placeholder="请选择学习状态">
             <el-option
               v-for="item in learnOptions"
               :key="item.id"
@@ -62,21 +78,17 @@
     </div>
 
 
-    <!-- 学习详情 -->
+    <!-- 查看详情 -->
     <el-dialog :visible.sync="sbVisible" width="80%" @close='cancel'>
       <div class="equipmentDiv">
         <div class="closeBtn">
           <el-button type="danger" @click="sbVisible = false">关闭窗口</el-button>
         </div>
         <div class="equipmentDivContent">
-          <div class="containerDivTop2" style="width:100%;height:50px;display: flex;align-items: center;justify-items: center">
-            <div style="width: 600px;height: 40px;margin: 0 auto">
-              <span>标题</span>
-              <span>:</span>
-              <el-input v-model="titilename" style="width:500px"   :disabled="true"   placeholder="标题"></el-input>
-            </div>
+          <div style="width:100%;height:50px;display: flex;align-items: center;justify-content: center">{{titilename}}</div>
+          <div style="width:100%;height:350px;overflow: auto;">
+            <quill-editor ref="myTextEditor" v-model="htmlData" :options="editorOption" height="530" :disabled="true"></quill-editor>
           </div>
-          <div class="" v-html="htmlData"></div>
         </div>
         <div class="equipmentDivBtn">
           <el-button type="success" @click="doLearn">查看</el-button>
@@ -102,6 +114,10 @@
   import footerNav from '../../common/footer'
   import Loading from '../../common/loading'
   import {getNowTime} from '../../assets/js/api'
+  import 'quill/dist/quill.core.css';
+  import 'quill/dist/quill.snow.css';
+  import 'quill/dist/quill.bubble.css';
+  import { quillEditor } from 'vue-quill-editor';
 
 
   export default {
@@ -125,13 +141,21 @@
 
         examineTime: "",
         learn: "1",
-        learnOptions: [{"name": "未学习", "id": "1"}, {"name": "已学习", "id": "2"}],
+        learnOptions: [{"name": "未查看", "id": "1"}, {"name": "已查看", "id": "2"}],
+        state: "1",
+        stateOptions: [{"name": "紧急", "id": "1"}, {"name": "普通", "id": "2"}],
         htmlData:'',
         titilename:"",
+        editorOption: {
+          placeholder: '',
+          modules: {
+            toolbar: '',
+          },
+        },
 
       }
     },
-    components: {Loading, Modal, footerNav, headerNav},
+    components: {Loading, Modal, footerNav, headerNav,quillEditor},
     computed: {
       //模糊检索
       tables: function () {
@@ -182,16 +206,16 @@
             times.push(time)
           }
           this.examineTime = times;
-          this.loadingShowData(this.examineTime, this.stationid,this.learn);
+          this.loadingShowData(this.examineTime, this.stationid,this.learn,this.state);
         }
       },
 
       //瞬间加载数据
-      loadingShowData(data1, data2, data3) {
+      loadingShowData(data1, data2,data3,data4) {
         let that = this;
         axios.all([
-          axios.post(" " + url + "/sys/showTableTitle", {"name": "xuexibaogaotongji"}),
-          axios.post(" " + url + "/anquan/tuisongForPadList", {"times": data1, "stationid": data2, "status": data3})
+          axios.post(" " + url + "/sys/showTableTitle", {"name": "anquanzhiliangtixiangchakan"}),
+          axios.post(" " + url + "/anquan/tuisongList", {"times": data1,"stationid":data2,"status":data3,"type":data4})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
@@ -204,7 +228,7 @@
         this.val = val;
         if (val.length) {
           let data = [];
-          let gl = []
+          let gl =[];
           for (let i = 0; i < val.length; i++) {
             let a = val[i].id;
             let b = val[i].relaid;
@@ -255,17 +279,16 @@
               that.message = "";
               that.HideModal = true;
             }
-
             setTimeout(a, 2000);
           }
           else {
-            axios.post(" " + url + "/xuexi/xuexiDetail", {"id": this.listData[0]})
+            axios.post(" " + url + "/anquan/tuisongDetail", {"id": this.listData[0]})
               .then((res) => {
-                if (res.data.state === "1") {
-                  if (JSON.stringify(res.data.data) !== "{}") {
+                if(res.data.state==="1"){
+                  if(JSON.stringify(res.data.data) !== "{}"){
                     this.sbVisible = true;
-                    this.titilename = res.data.data.titilename;
-                    this.htmlData = res.data.data.context;
+                    this.titilename = res.data.data.tuisong.title;
+                    this.htmlData = res.data.data.tuisong.neirong;
                   }
                   else {
                     this.message = "暂无数据";
@@ -290,7 +313,7 @@
           }
         }
         else {
-          this.message = "请勾选要学习的内容";
+          this.message = "请勾选要查看的内容";
           this.HideModal = false;
           const that = this;
 
@@ -306,7 +329,7 @@
       //根据时间查询上报记录
       doSearch() {
         if (this.examineTime) {
-          this.loadingShowData(this.examineTime, this.stationid, this.learn);
+          this.loadingShowData(this.examineTime, this.stationid,this.learn,this.state);
         }
         else {
           this.$message.warning("请选择查询时间");
@@ -330,10 +353,10 @@
             setTimeout(a, 2000);
           }
           else {
-            axios.post(" " + url + "/xuexi/updateStatus", {"id": this.glData[0], "xuexiuser": this.userId})
+            axios.post(" " + url + "/anquan/updateLevel", {"id": this.listData[0]})
               .then((res) => {
                 if (res.data.state === "1") {
-                  this.$message.success("上报学习成功");
+                  this.$message.success("阅读成功");
                   this.loadingShowData(this.examineTime, this.stationid, this.learn);
                   this.sbVisible = false;
                 }
@@ -362,11 +385,7 @@
       height: 85%;
       .handle-box {
         line-height: 100px;
-        padding-left: 20px;
-        .handle-input {
-          width: 300px;
-          display: inline-block;
-        }
+        padding-left: 10px;
         .el-button {
           width: 120px;
           height: 40px;
