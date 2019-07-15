@@ -3238,13 +3238,12 @@
 
       //查询物料
       doSearchMateriel() {
-        console.log(this.batch)
         if (this.batch) {
-          if (this.dqgw === "直管焊" ||this.dqgw === "枝管切断" ||this.dqgw === "切断" ||this.dqgw === "弯头焊" |this.dqgw === "弯头切断") {
-            this.getMaterielData(2,this.batch);
+          if (this.dqgw === "直管焊" || this.dqgw === "枝管切断" || this.dqgw === "切断" || this.dqgw === "弯头焊" | this.dqgw === "弯头切断") {
+            this.getMaterielData(2, this.batch);
           }
           else if (this.dqgw === "短管焊") {
-            this.getMaterielData(1,this.batch);
+            this.getMaterielData(1, this.batch);
           }
           else if (this.dqgw === "小组立") {
             axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
@@ -3278,7 +3277,6 @@
         else {
           this.$message.warning("批次不能为空");
         }
-
       },
 
       //保存物料
