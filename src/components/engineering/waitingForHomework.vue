@@ -3397,7 +3397,7 @@
               this.batchOptions = res.data;
               axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
                 {
-                  "type": 1,
+                  "type": this.gwType,
                   "pici": this.batch,
                 })
                 .then((res) => {
@@ -3513,7 +3513,7 @@
           else if (this.dqgw === "小组立") {
             axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
               {
-                "type": 1,
+                "type": this.gwType,
                 "pici": this.batch,
               })
               .then((res) => {
@@ -3664,7 +3664,7 @@
                 "pici":this.batch,
                 "list": this.materielData,
                 "zuoyezhe": this.zuoyezhe,
-                "type":"1"
+                "type":this.gwType
               })
               .then((res) => {
                 if (res.data.state === "1") {
