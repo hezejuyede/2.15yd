@@ -2,6 +2,10 @@
   <div class="equipment">
     <header-nav></header-nav>
     <div class="equipmentTable">
+      <div class="goBackPreviousPage" @click="goBackPreviousPage">
+        <i class="iconfont icon-tuihui"></i>
+        <span>返回</span>
+      </div>
       <div class="handle-box">
         <label style="margin-right: 5px">
           <el-input v-model="select_word" placeholder="检索出库登记" class="handle-input mr10"
@@ -315,6 +319,13 @@
       },
 
 
+      //返回上一页
+      goBackPreviousPage() {
+        this.$router.push("/haocaiyubeijianguanli")
+      }
+
+
+
 
     }
   }
@@ -324,6 +335,19 @@
   .equipment {
     width: 100%;
     height: 100%;
+    .goBackPreviousPage{
+      height: 50px;
+      line-height: 50px;
+      padding-left: 50px;
+      .icon-tuihui{
+        font-size: @font-size-large-xxxxxx;
+        color: @color-blue;
+      }
+      span{
+        font-size: @font-size-large-xxxxxxx;
+        color: @color-blue;
+      }
+    }
     .equipmentTable{
       width: 100%;
       height: 85%;

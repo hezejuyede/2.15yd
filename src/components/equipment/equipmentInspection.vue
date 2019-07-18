@@ -71,11 +71,6 @@
               </el-button>
             </template>
           </el-table-column>
-          <el-table-column
-            align="center"
-            prop="beizhu"
-            label="备注">
-          </el-table-column>
         </el-table>
       </div>
     </div>
@@ -158,6 +153,12 @@
                   <el-radio v-model="scope.row.jieguo" label="3" border>维修中</el-radio>
                 </div>
               </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              width="200"
+              prop="beizhu"
+              label="备注">
             </el-table-column>
           </el-table>
         </div>
