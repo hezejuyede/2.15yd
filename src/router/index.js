@@ -29,15 +29,17 @@ import equipmentInspection from '../components/equipment/equipmentInspection'
 
 import abnormalReporting from '../components/equipment/abnormalReporting'
 
-import fenlei from '../components/equipment/fenlei'
+import haocaiyubeijianguanli from '../components/equipment/haocaiyubeijianguanli'
 
-import haocairuk from '../components/equipment/haocairuk.vue'
+import fenlei from '../components/equipment/haocaiyushebeiguanli/fenlei'
 
-import haocaichuku from '../components/equipment/haocaichuku.vue'
+import haocairuk from '../components/equipment/haocaiyushebeiguanli/haocairuk.vue'
+
+import haocaichuku from '../components/equipment/haocaiyushebeiguanli/haocaichuku.vue'
 
 import guzhangchuli from '../components/equipment/guzhangchuli.vue'
 
-import haocai from '../components/equipment/haocai'
+import haocai from '../components/equipment/haocaiyushebeiguanli/haocai'
 
 import Materiel from '../components/materiel/materiel'
 
@@ -149,6 +151,14 @@ export default new Router({
       path: '/tixiangxuexi',
       name: 'tixiangxuexi',
       component: tixiangxuexi,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/haocaiyubeijianguanli',
+      name: 'haocaiyubeijianguanli',
+      component: haocaiyubeijianguanli,
       meta: {
         keepAlive: false
       }

@@ -26,10 +26,10 @@
       return {
         img:"",
         iconData: [
-          {"icon": "iconfont icon-jianchafuwu", "text": "设备点检", "url": "/equipmentInspection"},
-          {"icon": "iconfont icon-shangbaowenti", "text": "设备故障上报", "url": "/abnormalReporting"},
-          {"icon": "iconfont icon-suppliesinvoice", "text": "耗材与备件管理", "url": "/haocaiyubeijianguanli"},
-          {"icon": "iconfont icon-chuli", "text": "故障处理", "url": "/guzhangchuli"},
+          {"icon": "iconfont icon-fenlei", "text": "定义分类", "url": "/fenlei"},
+          {"icon": "iconfont icon-suppliesinvoice", "text": "定义耗材", "url": "/haocai"},
+          {"icon": "iconfont icon-chuku", "text": "耗材出库", "url": "/haocaichuku"},
+          {"icon": "iconfont icon-ruku", "text": "耗材入库", "url": "/haocairuk"},
         ]
       }
 

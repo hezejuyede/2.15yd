@@ -97,9 +97,9 @@
       </div>
     </div>
     <!--新增弹出框 -->
-    <el-dialog title="处理故障" :visible.sync="addVisible" width="40%">
+    <el-dialog title="处理故障" :visible.sync="addVisible" width="50%">
       <el-form ref="form"  label-width="100px">
-        <el-form-item label="处理结果">
+        <el-form-item label="处理结果" style="margin-bottom: 20px">
           <el-select
             v-model="cljg"
             clearable
@@ -115,11 +115,11 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="备注">
+        <el-form-item label="处理简况">
           <el-input v-model="beizhu"
                     type="textarea"
-                    placeholder="请输入内容"
-                    maxlength="30"
+                    placeholder="处理简况"
+                    maxlength="50"
                     show-word-limit
                     style="width: 200px "></el-input>
         </el-form-item>
@@ -187,12 +187,9 @@
         shebeiOptions:[],
 
 
-        cljg:"",
+        cljg:"1",
         cljgOptions: [
-          {"name": "故障修复", "id": "1"},
-          {"name": "继续等待", "id": "2"},
-          {"name": "返厂维修", "id": "3"},
-          {"name": "自行维修", "id": "4"}
+          {"name": "故障已处理", "id": "1"},
         ],
         beizhu:"",
       }

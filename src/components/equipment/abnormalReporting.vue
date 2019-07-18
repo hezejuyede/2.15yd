@@ -64,7 +64,7 @@
         </div>
         <div class="equipmentDivTitle" id="sbSelect">
           <el-select
-            style="height: 100px;width: 350px"
+            style="height: 100px;width:700px"
             v-model="equipment"
             clearable
             filterable
@@ -80,7 +80,7 @@
           </el-select>
         </div>
         <div class="equipmentDivContent">
-          <textarea placeholder="请描述设备什么故障" v-model="remarks"></textarea>
+          <textarea placeholder="故障信息填写" v-model="remarks"></textarea>
         </div>
         <div class="equipmentDivBtn">
           <el-button type="success"  @click="submitAbnormal">设备故障上报</el-button>
@@ -284,7 +284,7 @@
 
     .equipmentDiv {
       width: 100%;
-      height:350px;
+      height:450px;
       .closeBtn{
         width: 100%;
         height: 15%;

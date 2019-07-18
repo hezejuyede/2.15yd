@@ -134,12 +134,12 @@
 </template>
 <script type="text/ecmascript-6">
   import axios from 'axios'
-  import url from '../../assets/js/URL'
-  import  Modal from '../../common/modal'
-  import headerNav from '../../common/header'
-  import footerNav from '../../common/footer'
-  import Loading from '../../common/loading'
-  import {getYTime} from '../../assets/js/api'
+  import url from '../../../assets/js/URL'
+  import  Modal from '../../../common/modal'
+  import headerNav from '../../../common/header'
+  import footerNav from '../../../common/footer'
+  import Loading from '../../../common/loading'
+  import {getYTime} from '../../../assets/js/api'
   export default {
     name: 'quality',
     data() {
@@ -319,7 +319,7 @@
   }
 </script>
 <style scoped lang="less" rel="stylesheet/less">
-  @import "../../assets/less/base";
+  @import "../../../assets/less/base";
   .equipment {
     width: 100%;
     height: 100%;
