@@ -4,13 +4,13 @@
     <div class="equipmentTable">
       <div class="handle-box">
         <label style="margin-right: 5px">
-          <el-input v-model="select_word" placeholder="检索点检记录" class="handle-input mr10" style="width: 200px"></el-input>
+          <el-input v-model="select_word" placeholder="检索点检记录" class="handle-input mr10" style="width: 150px"></el-input>
         </label>
         <label style="margin-right: 5px;margin-left: 5px">
           <span>设备</span>
           <span>:</span>
           <el-select
-            style="width: 150px"
+            style="width: 200px"
             v-model="shebei"
             clearable
             filterable
@@ -70,6 +70,11 @@
                 明细
               </el-button>
             </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="beizhu"
+            label="备注">
           </el-table-column>
         </el-table>
       </div>
