@@ -60,6 +60,9 @@
         <el-form-item label="分类名称">
           <el-input v-model="name" style="width: 200px"></el-input>
         </el-form-item>
+        <el-form-item label="资产编号">
+          <el-input v-model="bianhao" style="width: 200px"></el-input>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false" style="height:30px;width:80px">取 消</el-button>
@@ -252,6 +255,7 @@
         axios.post(" " + url + "/devType/devTypeDetail", {"id": this.id})
           .then((res) => {
             this.name = res.data.name;
+            this.bianhao = res.data.bianhao;
           })
           .catch((err) => {
             console.log(err)
