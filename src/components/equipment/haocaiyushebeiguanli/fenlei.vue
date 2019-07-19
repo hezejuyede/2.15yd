@@ -41,8 +41,11 @@
     <!--新增弹出框 -->
     <el-dialog title="新增分类" :visible.sync="addVisible" width="40%">
       <el-form ref="form"  label-width="100px">
-        <el-form-item label="分类名称">
+        <el-form-item label="分类名称" style="margin-bottom: 20px">
           <el-input v-model="name" style="width: 200px"></el-input>
+        </el-form-item>
+        <el-form-item label="资产编号">
+          <el-input v-model="bianhao" style="width: 200px"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -116,6 +119,7 @@
 
 
         name: "",
+        bianhao:""
       }
     },
     components: {Loading, Modal, footerNav, headerNav},
@@ -209,14 +213,16 @@
       showAdd(){
         this.addVisible=true;
         this.name= "";
+        this.bianhao="";
       },
 
       //进行新增
       doAdd() {
-        if (this.name ) {
+        if (this.name && this.bianhao ) {
           axios.post(" " + url + "/devType/devTypeAdd",
             {
-              "name": this.name
+              "name": this.name,
+              "bianhao":this.bianhao
             }
           )
             .then((res) => {
@@ -254,11 +260,12 @@
 
       // 保存编辑
       saveEdit() {
-        if (this.name) {
+        if (this.name && this.bianhao) {
           axios.post(" " + url + "/devType/updateDevType",
             {
               "id": this.id,
               "name": this.name,
+              "bianhao":this.bianhao
             }
           )
             .then((res) => {

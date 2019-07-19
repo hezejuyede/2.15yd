@@ -82,6 +82,7 @@
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'14px'}"
                   border
                   height="450"
+                  :row-class-name="tableRowClassName"
                   @select-all="selectAll"
                   @select="selectList"
                   highlight-current-row
@@ -164,6 +165,7 @@
         message: '',
         HideModal: true,
         listData:[],
+        userId:"",
         id:"",
 
 
@@ -231,9 +233,11 @@
         const userInfo = sessionStorage.getItem("userInfo");
         const info = JSON.parse(userInfo);
         if (info === null) {
+
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
+          this.userId =info.username;
           let time = getNowTime();
           let times = [];
           for (let i = 0; i < 2; i++) {
@@ -388,6 +392,7 @@
           axios.post(" " + url + "/shebei/errorUpdate",
             {
               "id":this.listData[0],
+              "username":this.userId,
               "errortypeid": this.cljg,
               "beizhu": this.beizhu,
             }
@@ -452,6 +457,13 @@
           .catch((err) => {
             console.log(err)
           })
+      },
+
+      //根据状态显示不同颜色
+      tableRowClassName({row, rowIndex}) {
+        if  (row.status === "1") {
+          return 'red-row';
+        }
       },
 
 

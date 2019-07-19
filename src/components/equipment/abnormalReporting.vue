@@ -233,6 +233,7 @@
         if (this.equipment && this.remarks) {
           axios.post(" " + url + "/shebei/finderrorAdd", {
             "finduserid": this.userId,
+            "stationid":this.stationid,
             "shebeiid":this.equipment,
             "beizhu":this.remarks,
           })
