@@ -26,11 +26,7 @@
             return {
                 img:"",
                 iconData: [
-                    {"icon": "iconfont icon-kaishi", "text": "加工开始", "url": "/"},
-                    {"icon": "iconfont icon-zhilianganquan", "text": "质量评定", "url": "/"},
-                    {"icon": "iconfont icon-tuihui", "text": "回退上道工序", "url": "/"},
-                    {"icon": "iconfont icon-zanting", "text": "缺料暂停", "url": "/"},
-                    {"icon": "iconfont icon-wancheng", "text": "加工完成", "url": "/"},
+                   
                 ]
             }
 
