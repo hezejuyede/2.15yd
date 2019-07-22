@@ -2033,8 +2033,8 @@
               <el-table-column
                 width="80"
                 align="center"
-                prop="koujing"
-                label="口径">
+                prop="shipcode"
+                label="船号">
               </el-table-column>
             </el-table-column>
             <el-table-column
@@ -2042,14 +2042,19 @@
               :label="batch">
               <el-table-column
                 align="center"
-                prop="guige"
-                label="规格">
+                width="200"
+                prop="COMPONENT"
+                label="名称">
               </el-table-column>
               <el-table-column
                 align="center"
-                prop="zhuwenhao"
-                label="注文号"
-                width="300">
+                prop="KANRIK"
+                label="管理区分">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="SEIRI_NO"
+                label="行号">
               </el-table-column>
             </el-table-column>
             <el-table-column
@@ -2133,8 +2138,8 @@
               <el-table-column
                 width="80"
                 align="center"
-                prop="koujing"
-                label="口径">
+                prop="shipcode"
+                label="船号">
               </el-table-column>
             </el-table-column>
             <el-table-column
@@ -2142,14 +2147,19 @@
               :label="batch">
               <el-table-column
                 align="center"
-                prop="guige"
-                label="规格">
+                width="200"
+                prop="COMPONENT"
+                label="名称">
               </el-table-column>
               <el-table-column
                 align="center"
-                prop="zhuwenhao"
-                label="注文号"
-                width="300">
+                prop="KANRIK"
+                label="管理区分">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="SEIRI_NO"
+                label="行号">
               </el-table-column>
             </el-table-column>
             <el-table-column

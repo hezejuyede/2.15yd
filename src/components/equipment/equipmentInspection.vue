@@ -159,6 +159,11 @@
               width="200"
               prop="beizhu"
               label="备注">
+              <template scope="scope">
+                <div>
+                  <el-input v-model="scope.row.beizhu" ></el-input>
+                </div>
+              </template>
             </el-table-column>
           </el-table>
         </div>
