@@ -1993,25 +1993,6 @@
         </div>
       </div>
       <div class="materielContainer" v-if="this.listType ==7">
-        <div class="materielTop">
-          <div class="materielTopDiv">
-            <el-select
-              v-model="batch"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              placeholder="批次">
-              <el-option
-                v-for="item in batchOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-            <el-button type="primary" @click="doSearchMateriel">查询</el-button>
-          </div>
-        </div>
         <div class="materielCenter">
           <el-table
             :data="materielData"
@@ -2033,7 +2014,7 @@
               <el-table-column
                 width="80"
                 align="center"
-                prop="shipcode"
+                prop="PROJECT"
                 label="船号">
               </el-table-column>
             </el-table-column>
@@ -2063,11 +2044,11 @@
               <el-table-column
                 align="center"
                 width="80"
-                prop="allnum"
+                prop="num"
                 label="总数量">
               </el-table-column>
             </el-table-column>
-            <el-table-column
+           <!-- <el-table-column
               prop="qieduanchang"
               align="center"
               :label="zuoyezhe">
@@ -2090,33 +2071,11 @@
                   <el-radio v-model="scope.row.usedflag" label="2" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">是</el-radio>
                 </template>
               </el-table-column>
-            </el-table-column>
+            </el-table-column>-->
           </el-table>
-        </div>
-        <div class="materielBottom">
-          <el-button type="success" @click="doSaveMateriel">确认</el-button>
         </div>
       </div>
       <div class="materielContainer" v-if="this.listType ==8">
-        <div class="materielTop">
-          <div class="materielTopDiv">
-            <el-select
-              v-model="batch"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              placeholder="批次">
-              <el-option
-                v-for="item in batchOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-            <el-button type="primary" @click="doSearchMateriel">查询</el-button>
-          </div>
-        </div>
         <div class="materielCenter">
           <el-table
             :data="materielData"
@@ -2138,7 +2097,7 @@
               <el-table-column
                 width="80"
                 align="center"
-                prop="shipcode"
+                prop="PROJECT"
                 label="船号">
               </el-table-column>
             </el-table-column>
@@ -2168,38 +2127,35 @@
               <el-table-column
                 align="center"
                 width="80"
-                prop="allnum"
+                prop="num"
                 label="总数量">
               </el-table-column>
             </el-table-column>
-            <el-table-column
-              prop="qieduanchang"
-              align="center"
-              :label="zuoyezhe">
-              <el-table-column
-                prop="usednum"
-                align="center"
-                label="已拿数量">
-                <template scope="scope">
-                  <div>
-                    <el-input v-model="scope.row.usednum" type="number" label="1" border @change="inputChangeMateriel(scope.$index)">选中</el-input>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="usedflag"
-                align="center"
-                label="全部拿取">
-                <template scope="scope">
-                  <el-radio v-model="scope.row.usedflag" label="1" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">否</el-radio>
-                  <el-radio v-model="scope.row.usedflag" label="2" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">是</el-radio>
-                </template>
-              </el-table-column>
-            </el-table-column>
+            <!-- <el-table-column
+               prop="qieduanchang"
+               align="center"
+               :label="zuoyezhe">
+               <el-table-column
+                 prop="usednum"
+                 align="center"
+                 label="已拿数量">
+                 <template scope="scope">
+                   <div>
+                     <el-input v-model="scope.row.usednum" type="number" label="1" border @change="inputChangeMateriel(scope.$index)">选中</el-input>
+                   </div>
+                 </template>
+               </el-table-column>
+               <el-table-column
+                 prop="usedflag"
+                 align="center"
+                 label="全部拿取">
+                 <template scope="scope">
+                   <el-radio v-model="scope.row.usedflag" label="1" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">否</el-radio>
+                   <el-radio v-model="scope.row.usedflag" label="2" border @change="allChangeMateriel(scope.$index,scope.row.usedflag)">是</el-radio>
+                 </template>
+               </el-table-column>
+             </el-table-column>-->
           </el-table>
-        </div>
-        <div class="materielBottom">
-          <el-button type="success" @click="doSaveMateriel">确认</el-button>
         </div>
       </div>
       <div class="materielContainer" v-if="this.listType ==11">
@@ -3534,70 +3490,42 @@
             })
         }
         else if (this.dqgw === "43/48装配") {
-          axios.post(" " + url + "/sys/getPiciList")
-            .then((res)=>{
-              this.batch = res.data[0].id;
-              this.batchOptions = res.data;
-              axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
-                {
-                  "type": 1,
-                  "pici": this.batch,
-                })
-                .then((res) => {
-                  if (res.data.state === "1") {
-                    if (res.data.data.length > 0) {
-                      this.materielData = res.data.data;
-                      this.materielVisible = true;
-                    }
-                    else {
-                      this.materielVisible = true;
-                      this.$message.warning("暂无数据");
-                    }
-                  }
-                  else {
-                    this.$message.warning(res.data.message);
-                  }
-                })
-                .catch((err) => {
-                  console.log(err)
-                });
+          axios.post(" " + url + "/wuliaotongji/getProWuliaoZpList",
+            {
+              "stationid": this.stationId,
+              "username": this.zuoyezhe,
             })
-            .catch((err)=>{
+            .then((res) => {
+              if (res.data.length > 0) {
+                this.materielData = res.data;
+                this.materielVisible = true;
+              }
+              else {
+                this.$message.warning("暂无数据");
+              }
+            })
+            .catch((err) => {
               console.log(err)
-            })
+            });
         }
         else if (this.dqgw === "45/46装配") {
-          axios.post(" " + url + "/sys/getPiciList")
-            .then((res)=>{
-              this.batch = res.data[0].id;
-              this.batchOptions = res.data;
-              axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
-                {
-                  "type": 1,
-                  "pici": this.batch,
-                })
-                .then((res) => {
-                  if (res.data.state === "1") {
-                    if (res.data.data.length > 0) {
-                      this.materielData = res.data.data;
-                      this.materielVisible = true;
-                    }
-                    else {
-                      this.materielVisible = true;
-                      this.$message.warning("暂无数据");
-                    }
-                  }
-                  else {
-                    this.$message.warning(res.data.message);
-                  }
-                })
-                .catch((err) => {
-                  console.log(err)
-                });
+          axios.post(" " + url + "/wuliaotongji/getProWuliaoZpList",
+            {
+              "stationid": this.stationId,
+              "username": this.zuoyezhe,
             })
-            .catch((err)=>{
+            .then((res) => {
+              if (res.data.length > 0) {
+                this.materielData = res.data;
+                this.materielVisible = true;
+              }
+              else {
+                this.$message.warning("暂无数据");
+              }
+            })
+            .catch((err) => {
               console.log(err)
-            })
+            });
         }
         else {
 
@@ -3644,72 +3572,6 @@
               .catch((err) => {
                 console.log(err)
               });
-          }
-          else if (this.dqgw === "43/48装配") {
-            axios.post(" " + url + "/sys/getPiciList")
-              .then((res)=>{
-                this.batch = res.data[0].id;
-                this.batchOptions = res.data;
-                axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
-                  {
-                    "type": 1,
-                    "pici": this.batch,
-                  })
-                  .then((res) => {
-                    if (res.data.state === "1") {
-                      if (res.data.data.length > 0) {
-                        this.materielData = res.data.data;
-                        this.materielVisible = true;
-                      }
-                      else {
-                        this.materielVisible = true;
-                        this.$message.warning("暂无数据");
-                      }
-                    }
-                    else {
-                      this.$message.warning(res.data.message);
-                    }
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  });
-              })
-              .catch((err)=>{
-                console.log(err)
-              })
-          }
-          else if (this.dqgw === "45/46装配") {
-            axios.post(" " + url + "/sys/getPiciList")
-              .then((res)=>{
-                this.batch = res.data[0].id;
-                this.batchOptions = res.data;
-                axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
-                  {
-                    "type": 1,
-                    "pici": this.batch,
-                  })
-                  .then((res) => {
-                    if (res.data.state === "1") {
-                      if (res.data.data.length > 0) {
-                        this.materielData = res.data.data;
-                        this.materielVisible = true;
-                      }
-                      else {
-                        this.materielVisible = true;
-                        this.$message.warning("暂无数据");
-                      }
-                    }
-                    else {
-                      this.$message.warning(res.data.message);
-                    }
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  });
-              })
-              .catch((err)=>{
-                console.log(err)
-              })
           }
           else if (this.dqgw === "弯头切断") {
             axios.post(" " + url + "/wuliaotongji/getWuliaoWtqdList",
@@ -3839,72 +3701,6 @@
                 });
             }
 
-          }
-          else if (this.dqgw === "43/48装配") {
-            axios.post(" " + url + "/sys/getPiciList")
-              .then((res)=>{
-                this.batch = res.data[0].id;
-                this.batchOptions = res.data;
-                axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
-                  {
-                    "type": 1,
-                    "pici": this.batch,
-                  })
-                  .then((res) => {
-                    if (res.data.state === "1") {
-                      if (res.data.data.length > 0) {
-                        this.materielData = res.data.data;
-                        this.materielVisible = true;
-                      }
-                      else {
-                        this.materielVisible = true;
-                        this.$message.warning("暂无数据");
-                      }
-                    }
-                    else {
-                      this.$message.warning(res.data.message);
-                    }
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  });
-              })
-              .catch((err)=>{
-                console.log(err)
-              })
-          }
-          else if (this.dqgw === "45/46装配") {
-            axios.post(" " + url + "/sys/getPiciList")
-              .then((res)=>{
-                this.batch = res.data[0].id;
-                this.batchOptions = res.data;
-                axios.post(" " + url + "/wuliaotongji/getWuliaoXzlList",
-                  {
-                    "type": 1,
-                    "pici": this.batch,
-                  })
-                  .then((res) => {
-                    if (res.data.state === "1") {
-                      if (res.data.data.length > 0) {
-                        this.materielData = res.data.data;
-                        this.materielVisible = true;
-                      }
-                      else {
-                        this.materielVisible = true;
-                        this.$message.warning("暂无数据");
-                      }
-                    }
-                    else {
-                      this.$message.warning(res.data.message);
-                    }
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  });
-              })
-              .catch((err)=>{
-                console.log(err)
-              })
           }
           else if (this.dqgw === "弯头切断") {
             axios.post(" " + url + "/wuliaotongji/saveWuliaoWtqd",
