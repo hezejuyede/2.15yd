@@ -933,12 +933,12 @@
             <el-table-column
               width="150"
               prop="oqtypename"
-              label="质量内容"
+              label="检查项目"
               align="center"
               min-width="20%">
             </el-table-column>
             <el-table-column
-              label="值"
+              label="检查结果"
               align="center"
               min-width="20%">
               <template slot-scope="scope">
@@ -1842,41 +1842,80 @@
           const id = localStorage.getItem("pipeId");
           const info = JSON.parse(userInfo);
           const userId = info.username;
-          axios.post(" " + url + "/shengchanError/errorEvent",
-            {
-              "userId": userId,
-              "errorId": this.Reason,
-              "context": this.remarks,
-              "id": id
-            })
-            .then((res) => {
-              if (res.data === "1") {
-                this.$message({
-                  message: '提交成功',
-                  type: 'success'
-                });
-                let that = this;
-                setTimeout(function () {
-                  that.abnormalVisible = false;
-                  that.abnormalBtnVisible = false;
-                }, 2000)
-              }
-              else if (res.data === "2") {
-                this.$message({
-                  message: '该管子已经提报异常无需重新提交',
-                  type: 'warning'
-                });
-              }
-              else {
-                this.$message({
-                  message: '提交失败因',
-                  type: 'warning'
-                });
-              }
-            })
-            .catch((err) => {
-              console.log(err)
-            })
+          if(this.gongHao === "43/48装配" || this.gongHao === "45/46装配" || this.gongHao === "大组焊"){
+            axios.post(" " + url + "/shengchanError/errorEventDZH",
+              {
+                "userId": userId,
+                "errorId": this.Reason,
+                "context": this.remarks,
+                "id": id
+              })
+              .then((res) => {
+                if (res.data === "1") {
+                  this.$message({
+                    message: '提交成功',
+                    type: 'success'
+                  });
+                  let that = this;
+                  setTimeout(function () {
+                    that.abnormalVisible = false;
+                    that.abnormalBtnVisible = false;
+                  }, 2000)
+                }
+                else if (res.data === "2") {
+                  this.$message({
+                    message: '该管子已经提报异常无需重新提交',
+                    type: 'warning'
+                  });
+                }
+                else {
+                  this.$message({
+                    message: '提交失败因',
+                    type: 'warning'
+                  });
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
+          else {
+            axios.post(" " + url + "/shengchanError/errorEvent",
+              {
+                "userId": userId,
+                "errorId": this.Reason,
+                "context": this.remarks,
+                "id": id
+              })
+              .then((res) => {
+                if (res.data === "1") {
+                  this.$message({
+                    message: '提交成功',
+                    type: 'success'
+                  });
+                  let that = this;
+                  setTimeout(function () {
+                    that.abnormalVisible = false;
+                    that.abnormalBtnVisible = false;
+                  }, 2000)
+                }
+                else if (res.data === "2") {
+                  this.$message({
+                    message: '该管子已经提报异常无需重新提交',
+                    type: 'warning'
+                  });
+                }
+                else {
+                  this.$message({
+                    message: '提交失败因',
+                    type: 'warning'
+                  });
+                }
+              })
+              .catch((err) => {
+                console.log(err)
+              })
+          }
         }
         else {
           this.$message({
