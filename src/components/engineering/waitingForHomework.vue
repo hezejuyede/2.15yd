@@ -993,7 +993,7 @@
           </div>
         </div>
         <div class="zg-list">
-          <div class="saoMa" v-if="left === true">
+          <div v-if="left === true">
             <el-table
               :key="0"
               class="tb-edit"
@@ -1073,7 +1073,7 @@
               </template>
             </el-table>
           </div>
-          <div class="saoMa" v-if="left2 === true">
+          <div v-if="left2 === true">
             <el-table
               :key="1"
               class="tb-edit"
@@ -1153,7 +1153,7 @@
               </template>
             </el-table>
           </div>
-          <div class="account" v-if="zgCenter === true">
+          <div v-if="zgCenter === true">
             <el-table
               :key="2"
               class="tb-edit"
@@ -1233,7 +1233,7 @@
               </template>
             </el-table>
           </div>
-          <div class="account" v-if="right === true">
+          <div v-if="right === true">
             <el-table
               :key="3"
               class="tb-edit"
@@ -1313,7 +1313,7 @@
               </template>
             </el-table>
           </div>
-          <div class="account" v-if="right2 === true">
+          <div v-if="right2 === true">
             <el-table
               :key="4"
               class="tb-edit"
@@ -1335,33 +1335,20 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='zjg' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='shipcode'  && col.prop !=='zjg' && col.prop !=='yipintu'"
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  v-if="col.prop==='yiguanno'"
+                  v-if="col.prop==='shipcode'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
                     <el-button
                       type="success"
                       style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
                       @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.yiguanno }}
-                    </el-button>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  v-if="col.prop==='codeno'"
-                  :prop="col.prop" :label="col.label">
-                  <template scope="scope">
-                    <el-button
-                      type="success"
-                      style="width: 100%;height: 35px;display: flex;align-items: center;justify-content: center"
-                      @click="goToCurrentTask(scope.row.id)">
-                      {{ scope.row.codeno }}
+                      {{ scope.row.shipcode }}
                     </el-button>
                   </template>
                 </el-table-column>
