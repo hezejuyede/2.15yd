@@ -64,7 +64,7 @@
         </div>
         <div class="equipmentDivTitle" id="sbSelect">
           <el-select
-            style="height: 100px;width:700px"
+            style="height: 100px;width:100%;font-size: 20px"
             v-model="equipment"
             clearable
             filterable
@@ -72,6 +72,7 @@
             default-first-option
             placeholder="请选择设备名称">
             <el-option
+              style="width:750px;font-size: 20px"
               v-for="item in equipmentOptions"
               :key="item.id"
               :label="item.name"
@@ -123,7 +124,7 @@
 
         equipment:"",
         equipmentOptions: [
-          {"name": "设备1", "id": "1"},
+          {"name": "设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1", "id": "1"},
           {"name": "设备2", "id": "2"},
           {"name": "设备3", "id": "3"},
           {"name": "设备4", "id": "4"}
@@ -182,13 +183,13 @@
           }
           this.examineTime = times;
           let that = this;
-          axios.all([
+         /* axios.all([
             axios.post(" " + url + "/shebei/shebeiList", {"stationid": this.stationid}),
           ])
             .then(axios.spread(function (shebei) {
               that.equipmentOptions = shebei.data;
               that.loadingShowData(that.examineTime,that.stationid,that.equipment);
-            }));
+            }));*/
         }
       },
 
