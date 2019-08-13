@@ -123,12 +123,7 @@
 
 
         equipment:"",
-        equipmentOptions: [
-          {"name": "设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1设备1", "id": "1"},
-          {"name": "设备2", "id": "2"},
-          {"name": "设备3", "id": "3"},
-          {"name": "设备4", "id": "4"}
-        ],
+        equipmentOptions: [],
 
         remarks:"",
 
@@ -183,13 +178,13 @@
           }
           this.examineTime = times;
           let that = this;
-         /* axios.all([
+          axios.all([
             axios.post(" " + url + "/shebei/shebeiList", {"stationid": this.stationid}),
           ])
             .then(axios.spread(function (shebei) {
               that.equipmentOptions = shebei.data;
               that.loadingShowData(that.examineTime,that.stationid,that.equipment);
-            }));*/
+            }));
         }
       },
 
