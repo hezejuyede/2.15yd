@@ -16,7 +16,7 @@
       num: Number,
       navBar: [
         {"icon": "iconfont icon-gongcheng-", "text": "工程", "url": "/"},
-        {"icon": "iconfont icon-gongweiguanli", "text": "物料", "url": "/Materiel"},
+       /* {"icon": "iconfont icon-gongweiguanli", "text": "物料", "url": "/Materiel"},*/
         {"icon": "iconfont icon-shebeizuhe", "text": "设备", "url": "/Equipment"},
         {"icon": "iconfont icon-anquan", "text": "安全", "url": "/Safe"},
         {"icon": "iconfont icon-zhilianganquan", "text": "质量", "url": "/Quality"},

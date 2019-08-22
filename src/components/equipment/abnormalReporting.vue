@@ -4,7 +4,7 @@
     <div class="equipmentTable">
       <div class="handle-box">
         <label style="margin-right: 5px">
-          <el-input v-model="select_word" placeholder="检索上报记录" class="handle-input mr10" style="width: 200px"></el-input>
+          <el-input v-model="select_word" placeholder="检索上报记录" class="handle-input mr10" style="width:150px"></el-input>
         </label>
         <label style="margin-right: 5px;margin-left: 5px">
           <span>时间</span>
@@ -22,7 +22,7 @@
           <span>设备</span>
           <span>:</span>
           <el-select
-            style="width: 150px"
+            style="width: 200px"
             v-model="equipment"
             clearable
             filterable
@@ -43,6 +43,7 @@
       <div class="handle-content">
         <el-table class="tb-edit"
                   :data="tables"
+                  :row-class-name="tableRowClassName"
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
                   border
                   height="500"
@@ -252,7 +253,14 @@
         else if (!this.remarks) {
           this.$message.warning(`必须输入设备出现什么故障`);
         }
-      }
+      },
+
+      //根据状态显示不同颜色
+      tableRowClassName({row, rowIndex}) {
+        if (row.status === "2") {
+          return 'red';
+        }
+      },
     }
   }
 </script>
