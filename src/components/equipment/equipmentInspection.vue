@@ -95,6 +95,7 @@
               @change="changeSB"
               placeholder="请选择设备">
               <el-option
+                style="width:350px;font-size: 14px"
                 v-for="item in shebeiOptions"
                 :key="item.id"
                 :label="item.name"
@@ -108,7 +109,7 @@
                     :data="djData"
                     :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'12px'}"
                     border
-                    height="500"
+                    height="480"
                     highlight-current-row
                     :cell-style="{fontSize:'11px'}"
                     style="width: 98%;margin: auto">
@@ -128,7 +129,7 @@
               align="center"
               prop="xiangmu"
               label="检查项目"
-              width="150">
+              width="120">
             </el-table-column>
             <el-table-column
               align="center"
@@ -156,7 +157,7 @@
             </el-table-column>
             <el-table-column
               align="center"
-              width="200"
+              width="100"
               prop="beizhu"
               label="备注">
               <template scope="scope">
@@ -168,7 +169,7 @@
           </el-table>
         </div>
         <div class="closeBottom">
-          <el-button type="primary" @click="addDJjL">提交点检</el-button>
+          <el-button type="success" @click="addDJjL" style="width: 350px;height: 80px;font-size: 50px">提交点检</el-button>
         </div>
       </div>
 
@@ -358,6 +359,7 @@
         for (let i = 0; i < this.djData.length; i++) {
           if (this.djData[i].jieguo === null) {
             this.qbdj = false;
+            return  this.$message.warning(`请全部点检才能提交`);
           }
           else {
             this.qbdj = true;

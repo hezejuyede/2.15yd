@@ -46,7 +46,7 @@
                   :row-class-name="tableRowClassName"
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
                   border
-                  height="500"
+                  :height="tableHeight"
                   highlight-current-row
                   style="width: 98%;margin: auto">
           <template v-for="(col ,index) in cols">
@@ -113,7 +113,7 @@
         img: "",
         userId:"",
         stationid:"",
-
+        tableHeight:Number, //根据页面加载显示table的高度
         sbVisible:false,
 
         examineTime:"",
@@ -123,7 +123,7 @@
         tableData: [],
 
 
-        equipment:"",
+        equipment:"1",
         equipmentOptions: [],
 
         remarks:"",
@@ -178,14 +178,28 @@
             times.push(time)
           }
           this.examineTime = times;
+          this.setTableHeight();
           let that = this;
           axios.all([
             axios.post(" " + url + "/shebei/shebeiList", {"stationid": this.stationid}),
           ])
             .then(axios.spread(function (shebei) {
               that.equipmentOptions = shebei.data;
+              that.equipment=shebei.data[0].id;
               that.loadingShowData(that.examineTime,that.stationid,that.equipment);
             }));
+        }
+      },
+
+      //根据屏幕分辨率设置Table高度
+      setTableHeight() {
+        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+          var H = window.screen.height;
+          this.tableHeight = H - 250 + "px";
+        }
+        else {
+          var h = document.body.clientHeight;
+          this.tableHeight = h - 250 + "px";
         }
       },
 
@@ -221,7 +235,6 @@
       //显示上报异常弹出框
       showYc() {
         this.sbVisible = true;
-        this.equipment = "";
         this.remarks = "";
       },
 
@@ -232,13 +245,13 @@
             "finduserid": this.userId,
             "stationid":this.stationid,
             "shebeiid":this.equipment,
-            "beizhu":this.remarks,
+            "errorinfo":this.remarks,
           })
             .then((res) => {
               if (res.data === "1") {
                 this.$message.success(`提交成功`);
                 this.sbVisible = false;
-                this.loadingShowData();
+                this.loadingShowData(this.examineTime,this.stationid,this.equipment);
               }
               else {
                 this.$message.warning(`提交失败`);
@@ -257,7 +270,8 @@
 
       //根据状态显示不同颜色
       tableRowClassName({row, rowIndex}) {
-        if (row.status === "2") {
+        console.log(row.delresult);
+        if (row.delresult === null) {
           return 'red';
         }
       },
@@ -266,21 +280,22 @@
 </script>
 <style scoped lang="less" rel="stylesheet/less">
   @import "../../assets/less/base";
+
   .equipment {
     width: 100%;
     height: 100%;
-    .equipmentTable{
+    .equipmentTable {
       width: 100%;
       height: 85%;
       .handle-box {
-        line-height:100px;
+        line-height: 100px;
         padding-left: 20px;
         .handle-input {
           width: 300px;
           display: inline-block;
         }
         .el-button {
-          width:120px;
+          width: 120px;
           height: 40px;
           font-size: @font-size-large;
         }

@@ -176,7 +176,7 @@
         this.getZLMessage();
         this.getQAMessage();
         this.getAQPMessage();
-      }, 100000);
+      }, 1000*60);
 
     },
     created() {

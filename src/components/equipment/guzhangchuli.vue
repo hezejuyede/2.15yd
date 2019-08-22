@@ -73,15 +73,15 @@
             </el-option>
           </el-select>
         </label>
-        <el-button type="primary"  class="handle-del mr10" @click="showAdd">处理故障</el-button>
-        <el-button type="danger"   class="handle-del mr10" @click="showDelete">删除故障</el-button>
+        <el-button type="primary"  @click="showAdd">处理</el-button>
+        <el-button type="danger"   @click="showDelete">删除</el-button>
       </div>
       <div class="">
         <el-table class="tb-edit"
                   :data="tables"
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'14px'}"
                   border
-                  height="450"
+                  :height="tableHeight"
                   :row-class-name="tableRowClassName"
                   @select-all="selectAll"
                   @select="selectList"
@@ -110,9 +110,9 @@
             placeholder="请输入或者选择">
             <el-option
               v-for="item in cljgOptions"
-              :key="item.id"
+              :key="item.name"
               :label="item.name"
-              :value="item.id">
+              :value="item.name">
             </el-option>
           </el-select>
         </el-form-item>
@@ -167,7 +167,7 @@
         listData:[],
         userId:"",
         id:"",
-
+        tableHeight:Number, //根据页面加载显示table的高度
 
         cols: [],
         tableData: [],
@@ -189,7 +189,7 @@
         shebeiOptions:[],
 
 
-        cljg:"1",
+        cljg:"故障已处理",
         cljgOptions: [
           {"name": "故障已处理", "id": "1"},
         ],
@@ -233,11 +233,11 @@
         const userInfo = sessionStorage.getItem("userInfo");
         const info = JSON.parse(userInfo);
         if (info === null) {
-
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
           this.userId =info.username;
+          this.stationid =info.GH;
           let time = getNowTime();
           let times = [];
           for (let i = 0; i < 2; i++) {
@@ -245,6 +245,7 @@
           }
           this.examineTime = times;
           let that = this;
+          this.setTableHeight();
           axios.all([
             axios.post(" " + url + "/sys/dictionaryList", {"id": "9"}),
             axios.post(" " + url + "/api/getPersonProcessList", {"name": ""}),
@@ -255,13 +256,26 @@
               that.workStation = workStation.data[0].id;
               that.workStationOptions = workStation.data;
               axios.all([
-                axios.post(" " + url + "/shebei/shebeiList", {"jiagongxian": that.line,"stationid":that.workStation})
+                axios.post(" " + url + "/shebei/shebeiList", {"stationid":that.stationid})
               ])
                 .then(axios.spread(function (shebei) {
                   that.shebeiOptions = shebei.data;
-                  that.loadingShowData(that.examineTime,that.workStation,that.shebei);
+                  that.shebei=shebei.data[0].id;
+                  that.loadingShowData(that.examineTime,that.stationid,that.shebei);
                 }));
             }));
+        }
+      },
+
+      //根据屏幕分辨率设置Table高度
+      setTableHeight() {
+        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+          var H = window.screen.height;
+          this.tableHeight = H - 250 + "px";
+        }
+        else {
+          var h = document.body.clientHeight;
+          this.tableHeight = h - 250 + "px";
         }
       },
 
@@ -367,7 +381,6 @@
           }
           else {
             this.addVisible = true;
-            this.cljg="";
             this.beizhu="";
           }
 
@@ -392,8 +405,8 @@
           axios.post(" " + url + "/shebei/errorUpdate",
             {
               "id":this.listData[0],
-              "username":this.userId,
-              "errortypeid": this.cljg,
+              "dealuserid":this.userId,
+              "delresult": this.cljg,
               "beizhu": this.beizhu,
             }
           )
@@ -461,8 +474,9 @@
 
       //根据状态显示不同颜色
       tableRowClassName({row, rowIndex}) {
-        if  (row.status === "1") {
-          return 'red-row';
+        console.log(row.delresult);
+        if (row.delresult === null) {
+          return 'red';
         }
       },
 
