@@ -1,7 +1,7 @@
 <template>
   <div class="currentTask">
     <header-nav></header-nav>
-    <div class="currentTaskTemplate">
+    <div class="currentTaskTemplate" ref="currentTaskTemplate">
       <div class="currentTaskTitle" v-if="this.gongHao !=='小组立' && this.gongHao !=='枝管切断'">
         <div class="titleDiv" v-for="(item,index) in titleData" :style="{'width':item.width}">
           <div class="titleDivLeft">
@@ -1079,8 +1079,7 @@
     },
     components: {Loading, footerNav, headerNav, Modal,StationExcel},
     mounted() {
-
-
+      this.setDivHeight();
     },
     created() {
       //检索用户状态
@@ -1097,8 +1096,18 @@
       getLoading() {
         this.img = ["1"]
       },
-      goBack(){
-       this.$router.push("/")
+
+      //设置页面一屏幕的高度
+      setDivHeight(){
+        let div = this.$refs.currentTaskTemplate;
+        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+          var H = window.screen.height;
+          div.style.height = H-150 + "px";
+        }
+        else {
+          var h = document.body.clientHeight;
+          div.style.height = h-150 + "px";
+        }
       },
 
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
@@ -1955,9 +1964,10 @@
 
   .currentTask {
     width: 100%;
-    margin-bottom: 80px;
     .currentTaskTemplate {
       width: 100%;
+      overflow: auto;
+
       .currentTaskTemplateBack{
         height: 30px;
         line-height: 30px;
