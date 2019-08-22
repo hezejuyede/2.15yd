@@ -23,23 +23,18 @@ import tixiangxuexi from '../components/quality/tixiangxuexi.vue'
 import jizhunxuexi from '../components/quality/jizhunxuexi.vue'
 
 
+//设备管理
 import Equipment from '../components/equipment/equipment'
-
 import equipmentInspection from '../components/equipment/equipmentInspection'
-
 import abnormalReporting from '../components/equipment/abnormalReporting'
-
 import haocaiyubeijianguanli from '../components/equipment/haocaiyubeijianguanli'
-
 import fenlei from '../components/equipment/haocaiyushebeiguanli/fenlei'
-
 import haocairuk from '../components/equipment/haocaiyushebeiguanli/haocairuk.vue'
-
-import haocaichuku from '../components/equipment/haocaiyushebeiguanli/haocaichuku.vue'
-
 import guzhangchuli from '../components/equipment/guzhangchuli.vue'
-
 import haocai from '../components/equipment/haocaiyushebeiguanli/haocai'
+import trackingCheck  from '../components/equipment/trackingCheck'
+
+
 
 import Materiel from '../components/materiel/materiel'
 
@@ -199,6 +194,14 @@ export default new Router({
       }
     },
     {
+      path: '/fenlei',
+      name: 'fenlei',
+      component: fenlei,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
       path: '/haocai',
       name: 'haocai',
       component: haocai,
@@ -215,9 +218,9 @@ export default new Router({
       }
     },
     {
-      path: '/haocaichuku',
-      name: 'haocaichuku',
-      component: haocaichuku,
+      path: '/trackingCheck',
+      name: 'trackingCheck',
+      component: trackingCheck,
       meta: {
         keepAlive: false
       }

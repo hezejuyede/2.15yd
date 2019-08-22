@@ -4,7 +4,7 @@
     <div class="equipmentTable">
       <div class="handle-box">
         <label style="margin-right: 5px">
-          <el-input v-model="select_word" placeholder="检索点检记录" class="handle-input mr10" style="width: 150px"></el-input>
+          <el-input v-model="select_word" placeholder="检索不良点检记录" class="handle-input mr10" style="width: 150px"></el-input>
         </label>
         <label style="margin-right: 5px;margin-left: 5px">
           <span>设备</span>
@@ -39,7 +39,6 @@
           </el-date-picker>
         </label>
         <el-button type="success" class="handle-del mr10" @click="doSearchJl">查询</el-button>
-        <el-button type="primary" class="handle-del mr10" @click="addDJ">新增点检</el-button>
       </div>
       <div class="handle-content">
         <el-table class="tb-edit"
@@ -76,107 +75,6 @@
       </div>
     </div>
 
-    <!--新增点检 -->
-    <el-dialog  :visible.sync="jlVisible" :fullscreen="true" :center="true">
-      <div class="closeBtn">
-        <el-button type="danger" @click="jlVisible = false">关闭窗口</el-button>
-      </div>
-      <div class="djDiv">
-        <div class="djDivTop" id="tjdjSelect">
-          <label>
-            <span style="font-size: 30px">设备</span>
-            <span>:</span>
-            <el-select
-              style="width: 250px"
-              v-model="shebei"
-              clearable
-              filterable
-              allow-create
-              default-first-option
-              @change="changeSB"
-              placeholder="请选择设备">
-              <el-option
-                style="width:350px;font-size: 14px"
-                v-for="item in shebeiOptions"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </label>
-        </div>
-        <div class="djDivCenter">
-          <el-table class="tb-edit"
-                    :data="djData"
-                    :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'12px'}"
-                    border
-                    height="480"
-                    highlight-current-row
-                    :cell-style="{fontSize:'11px'}"
-                    style="width: 98%;margin: auto">
-            <el-table-column
-              align="center"
-              prop="bujianname"
-              label="检查部位"
-              width="80">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="no"
-              label="No"
-              width="40">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="xiangmu"
-              label="检查项目"
-              width="120">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="neirong"
-              width="200"
-              label="检查内容">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="fangfa"
-              label="检查方法"
-              width="100">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="caozuo"
-              label="点检操作">
-              <template scope="scope">
-                <div>
-                  <el-radio v-model="scope.row.jieguo" label="1" border>OK</el-radio>
-                  <el-radio v-model="scope.row.jieguo" label="2" border>不良</el-radio>
-                  <el-radio v-model="scope.row.jieguo" label="3" border>维修中</el-radio>
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              width="100"
-              prop="beizhu"
-              label="备注">
-              <template scope="scope">
-                <div>
-                  <el-input v-model="scope.row.beizhu" ></el-input>
-                </div>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-        <div class="closeBottom">
-          <el-button type="success" @click="addDJjL" style="width: 350px;height: 80px;font-size: 50px">提交点检</el-button>
-        </div>
-      </div>
-
-    </el-dialog>
-
-
     <!--点检明细 -->
     <el-dialog  :visible.sync="mxVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
@@ -196,10 +94,6 @@
         </el-table>
       </div>
     </el-dialog>
-
-
-
-
 
 
     <div class="loading-container" v-show="!img.length">
@@ -224,11 +118,11 @@
       return {
         img: "",
         userId:"",
-        radio1:"3",
         stationid:"",
 
-        jlVisible:false,
         mxVisible:false,
+        mxData:[],
+        mxCols:[],
 
         examineTime:"",
         select_word:"",
@@ -236,15 +130,9 @@
         cols: [],
         tableData: [],
 
-        djData:[],
-        djCols:[],
-
-        mxData:[],
-        mxCols:[],
 
         shebei:"",
         shebeiOptions:"",
-        qbdj:false,
 
         message: '',
         HideModal: true
@@ -299,16 +187,13 @@
 
           let that = this;
           axios.all([
-            axios.post(" " + url + "/shebei/shebeiList", {"jiagongxian": "","stationid":that.stationid})
+            axios.post(" " + url + "/shebei/shebeiList", {"stationid":that.stationid})
           ])
             .then(axios.spread(function (shebei) {
               that.shebei =shebei.data[0].id;
               that.shebeiOptions = shebei.data;
               that.loadingShowData(that.shebei,that.examineTime)
             }));
-
-
-
         }
       },
 
@@ -340,56 +225,6 @@
         }
       },
 
-      //显示添加点检记录
-      addDJ() {
-        this.jlVisible = true;
-        let that = this;
-        axios.all([
-          axios.post(" " + url + "/sys/showTableTitle", {"name": "zxddjbt"}),
-          axios.post(" " + url + "/shebei/contentListByShebei", {"shebeid": this.shebei})
-        ])
-          .then(axios.spread(function (title, table) {
-            that.djCols = title.data;
-            that.djData = table.data.data;
-          }));
-
-      },
-
-      //进行点检
-      addDJjL(){
-        for (let i = 0; i < this.djData.length; i++) {
-          if (this.djData[i].jieguo === null) {
-            this.qbdj = false;
-            return  this.$message.warning(`请全部点检才能提交`);
-          }
-          else {
-            this.qbdj = true;
-          }
-        }
-        if(this.qbdj === true){
-          axios.post(" " + url + "/shebei/insertRecord", {
-            "shebeid": this.shebei,
-            "list":this.djData,
-          })
-            .then((res) => {
-              if (res.data.state === "1") {
-                this.$message.success("提交成功");
-                let that = this;
-                setTimeout(() => {
-                  that.jlVisible = false;
-                }, 1000)
-              }
-              else {
-                this.$message.warning(res.data.message);
-              }
-            })
-            .catch((err) => {
-            })
-        }
-        else {
-          this.$message.warning(`请全部点检才能提交`);
-        }
-      },
 
       //更改设备切换数据
       changeSB(){

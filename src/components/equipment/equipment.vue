@@ -30,6 +30,7 @@
           {"icon": "iconfont icon-shangbaowenti", "text": "设备故障上报", "url": "/abnormalReporting"},
           {"icon": "iconfont icon-suppliesinvoice", "text": "耗材与备件管理", "url": "/haocaiyubeijianguanli"},
           {"icon": "iconfont icon-chuli", "text": "故障处理", "url": "/guzhangchuli"},
+          {"icon": "iconfont icon--gongzuogenzong", "text": "点检跟踪", "url": "/trackingCheck"},
         ]
       }
 
@@ -156,9 +157,9 @@
         font-size: 500%;
         text-align: center;
       }
-      .icon-ruku {
+      .icon--gongzuogenzong {
         display: block;
-        background-color: @color-bg-anLv;
+        background-color: @color-bg-ch;
         color: @color-white;
         border-radius: 20%;
         width: 100px;
