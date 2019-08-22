@@ -871,7 +871,7 @@
               :key="1"
               class="tb-edit"
               :data="tables"
-              height="450"
+              :height="tableHeight"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
@@ -888,13 +888,13 @@
               <template v-for="(col ,index) in cols">
                 <el-table-column
                   align="center"
-                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='pianfubiao'  && col.prop !=='jinwuzhu' && col.prop !=='yipintu'"
+                  v-if="col.prop !=='yiguanno' && col.prop !=='codeno'  && col.prop !=='pianfubiao'  && col.prop !=='jinwuzhu' && col.prop !=='yipintu' "
                   :prop="col.prop"
                   :label="col.label">
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  width="150"
+                  width="190"
                   v-if="col.prop==='jinwuzhu'"
                   :prop="col.prop" :label="col.label">
                   <template scope="scope">
