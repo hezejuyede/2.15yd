@@ -2,10 +2,6 @@
   <div class="currentTask">
     <header-nav></header-nav>
     <div class="currentTaskTemplate">
-      <div class="currentTaskTemplateBack" @click="goBack">
-        <i class="iconfont icon-54"></i>
-        <span>返回</span>
-      </div>
       <div class="currentTaskTitle" v-if="this.gongHao !=='小组立' && this.gongHao !=='枝管切断'">
         <div class="titleDiv" v-for="(item,index) in titleData" :style="{'width':item.width}">
           <div class="titleDivLeft">
