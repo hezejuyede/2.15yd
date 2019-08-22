@@ -93,7 +93,7 @@
 
       .icon-jianchafuwu {
         display: block;
-        background-color: #F56C6C;
+        background-color: @color-bg-lv;
         color: @color-white;
         border-radius: 20%;
         width: 100px;
@@ -159,7 +159,7 @@
       }
       .icon--gongzuogenzong {
         display: block;
-        background-color: @color-bg-ch;
+        background-color: @color-red;
         color: @color-white;
         border-radius: 20%;
         width: 100px;
@@ -171,7 +171,7 @@
 
       .icon-chuli {
         display: block;
-        background-color: @color-red;
+        background-color: @color-bg-cs;
         color: @color-white;
         border-radius: 20%;
         width: 100px;

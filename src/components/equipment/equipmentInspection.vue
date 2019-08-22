@@ -46,7 +46,7 @@
                   :data="tables"
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
                   border
-                  height="500"
+                  :height="tableHeight"
                   highlight-current-row
                   style="width: 98%;margin: auto">
           <el-table-column
@@ -200,8 +200,6 @@
 
 
 
-
-
     <div class="loading-container" v-show="!img.length">
       <loading></loading>
     </div>
@@ -232,6 +230,7 @@
 
         examineTime:"",
         select_word:"",
+        tableHeight:Number, //根据页面加载显示table的高度
 
         cols: [],
         tableData: [],
@@ -296,7 +295,7 @@
             times.push(time)
           }
           this.examineTime = times;
-
+          this.setTableHeight();
           let that = this;
           axios.all([
             axios.post(" " + url + "/shebei/shebeiList", {"jiagongxian": "","stationid":that.stationid})
@@ -309,6 +308,18 @@
 
 
 
+        }
+      },
+
+      //根据屏幕分辨率设置Table高度
+      setTableHeight() {
+        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+          var H = window.screen.height;
+          this.tableHeight = H - 250 + "px";
+        }
+        else {
+          var h = document.body.clientHeight;
+          this.tableHeight = h - 250 + "px";
         }
       },
 

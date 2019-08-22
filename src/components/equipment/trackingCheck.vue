@@ -4,13 +4,13 @@
     <div class="equipmentTable">
       <div class="handle-box">
         <label style="margin-right: 5px">
-          <el-input v-model="select_word" placeholder="检索不良点检记录" class="handle-input mr10" style="width: 150px"></el-input>
+          <el-input v-model="select_word" placeholder="检索不良点检记录" class="handle-input mr10" style="width: 200px"></el-input>
         </label>
         <label style="margin-right: 5px;margin-left: 5px">
           <span>设备</span>
           <span>:</span>
           <el-select
-            style="width: 200px"
+            style="width: 250px"
             v-model="shebei"
             clearable
             filterable
@@ -30,7 +30,7 @@
           <span>时间</span>
           <span>:</span>
           <el-date-picker
-            style="width: 240px"
+            style="width: 250px"
             v-model="examineTime"
             type="daterange"
             start-placeholder="开始日期"
@@ -45,7 +45,7 @@
                   :data="tables"
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
                   border
-                  height="500"
+                  :height="tableHeight"
                   highlight-current-row
                   style="width: 98%;margin: auto">
           <el-table-column
@@ -126,7 +126,7 @@
 
         examineTime:"",
         select_word:"",
-
+        tableHeight:Number, //根据页面加载显示table的高度
         cols: [],
         tableData: [],
 
@@ -184,6 +184,7 @@
             times.push(time)
           }
           this.examineTime = times;
+          this.setTableHeight();
 
           let that = this;
           axios.all([
@@ -194,6 +195,18 @@
               that.shebeiOptions = shebei.data;
               that.loadingShowData(that.shebei,that.examineTime)
             }));
+        }
+      },
+
+      //根据屏幕分辨率设置Table高度
+      setTableHeight() {
+        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+          var H = window.screen.height;
+          this.tableHeight = H - 250 + "px";
+        }
+        else {
+          var h = document.body.clientHeight;
+          this.tableHeight = h - 250 + "px";
         }
       },
 
