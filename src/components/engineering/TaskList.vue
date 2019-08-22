@@ -41,7 +41,7 @@
       <div class="publicPage" v-if="this.listType ==1">
         <el-table class="tb-edit"
                   :data="tables"
-                  height="500"
+                  :height="tableHeight"
                   border
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'14px'}"
                   :row-class-name="tableRowClassName"
@@ -115,7 +115,7 @@
       <div class="publicPage" v-if="this.listType ==3">
         <el-table class="tb-edit"
                   :data="tables"
-                  height="500"
+                  :height="tableHeight"
                   border
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'14px'}"
                   :row-class-name="tableRowClassName"
@@ -209,7 +209,7 @@
           <div class="saoMa" v-if="left === true">
             <el-table class="tb-edit"
                       :data="tables"
-                      height="450"
+                      :height="tableHeight"
                       border
                       :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
                       :row-class-name="tableRowClassName"
@@ -335,7 +335,7 @@
               :key="1"
               class="tb-edit"
               :data="tableData"
-              height="450"
+              :height="tableHeight"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
@@ -454,7 +454,7 @@
               :key="0"
               class="tb-edit"
               :data="tables"
-              height="450"
+              :height="tableHeight"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
@@ -520,7 +520,7 @@
               :key="0"
               class="tb-edit"
               :data="tables"
-              height="450"
+              :height="tableHeight"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
@@ -586,7 +586,7 @@
               :key="0"
               class="tb-edit"
               :data="tables"
-              height="450"
+              :height="tableHeight"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
@@ -652,7 +652,7 @@
               :key="0"
               class="tb-edit"
               :data="tables"
-              height="450"
+              :height="tableHeight"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
@@ -718,7 +718,7 @@
               :key="0"
               class="tb-edit"
               :data="tables"
-              height="450"
+              :height="tableHeight"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
@@ -1019,7 +1019,7 @@
 
         img: [],
         nowClick: 2,
-
+        tableHeight:Number,
         excelData:[],
         url: "",
 
@@ -1238,8 +1238,36 @@
                 that.tableData = table.data;
               }));
           }
+
+          this.setTableHeight();
         }
       },
+
+
+      //根据屏幕分辨率设置Table高度
+      setTableHeight() {
+
+        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+          var H = window.screen.height;
+          if (this.listType === "2" || this.listType === "4") {
+            this.tableHeight = H - 310 + "px";
+          }
+          else {
+            this.tableHeight = H - 250 + "px";
+          }
+        }
+        else {
+          var h = document.body.clientHeight;
+          if (this.listType === "2" || this.listType === "4") {
+            this.tableHeight = h - 310 + "px";
+          }
+          else {
+            this.tableHeight = h - 250 + "px";
+          }
+        }
+
+      },
+
 
       //查询待作业
       dzySearch() {

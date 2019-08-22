@@ -113,7 +113,7 @@
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
           :data="tableData"
-          height="500"
+          :height="tableHeight"
           border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           :row-class-name="tableRowClassName"
@@ -195,7 +195,7 @@
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
           :data="tables"
-          height="500"
+          :height="tableHeight"
           border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           :row-class-name="tableRowClassName"
@@ -278,7 +278,7 @@
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
           :data="tables"
-          height="500"
+          :height="tableHeight"
           border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'20px'}"
           :row-class-name="tableRowClassName"
@@ -379,7 +379,7 @@
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
           :data="tables"
-          height="500"
+          :height="tableHeight"
           border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           :row-class-name="tableRowClassName"
@@ -503,7 +503,7 @@
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
           :data="tables"
-          height="500"
+          :height="tableHeight"
           border
           @select="selectListWTH"
           @select-all="selectAllWTH"
@@ -608,7 +608,7 @@
           class="tb-edit"
           v-tableLoadingMore="tableLoadingMore"
           :data="tables"
-          height="500"
+          :height="tableHeight"
           border
           :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
           :row-class-name="tableRowClassName"
@@ -720,7 +720,7 @@
               :key="0"
               class="tb-edit"
               :data="tables"
-              height="450"
+              :height="tableHeight"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'14px'}"
               :row-class-name="tableRowClassName"
@@ -998,7 +998,7 @@
               :key="0"
               class="tb-edit"
               :data="tables"
-              height="450"
+              :height="tableHeight"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
@@ -1078,7 +1078,7 @@
               :key="1"
               class="tb-edit"
               :data="tables"
-              height="450"
+              :height="tableHeight"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
@@ -1158,7 +1158,7 @@
               :key="2"
               class="tb-edit"
               :data="tables"
-              height="450"
+              :height="tableHeight"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
@@ -1238,7 +1238,7 @@
               :key="3"
               class="tb-edit"
               :data="tables"
-              height="450"
+              :height="tableHeight"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
@@ -1318,7 +1318,7 @@
               :key="4"
               class="tb-edit"
               :data="tables"
-              height="450"
+              :height="tableHeight"
               border
               :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 1)',fontSize:'16px'}"
               :row-class-name="tableRowClassName"
@@ -2302,6 +2302,7 @@
         arrAll: [],//优化页面的，第一次加载需要容器数据
         num: 1,
         znSearch: true,   //是否查询
+        tableHeight:Number, //根据页面加载显示table的高度
         tableData: [],//总数据的表数据
         cols: [],     //总数据的表头
         excelData: [],     //工位表数据
@@ -2454,10 +2455,12 @@
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
+
           const info = JSON.parse(userInfo);
           this.zuoyezhe = info.username;
           this.dqgw = info.GW;
           this.stationId = info.GH;
+          this.setTableHeight();
           if (info.GW === "切断") {
             this.listType = "1";
             this.showTableData(this.stationId, this.dqgw, 1, 1)
@@ -2624,6 +2627,33 @@
           this.setInputFocus();
         }
       },
+
+
+      //根据屏幕分辨率设置Table高度
+      setTableHeight() {
+
+        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+          var H = window.screen.height;
+          if (this.dqgw === "小组立" || this.dqgw === "枝管切断") {
+            this.tableHeight = H - 310 + "px";
+          }
+          else {
+            this.tableHeight = H - 250 + "px";
+          }
+        }
+        else {
+          var h = document.body.clientHeight;
+          if (this.dqgw === "小组立" || this.dqgw === "枝管切断") {
+            this.tableHeight = h - 310 + "px";
+          }
+          else {
+            this.tableHeight = h - 250 + "px";
+          }
+        }
+
+      },
+
+
 
       //自动聚焦输入框
       setInputFocus() {
