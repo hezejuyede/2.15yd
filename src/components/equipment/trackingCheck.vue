@@ -50,12 +50,7 @@
                   style="width: 98%;margin: auto">
           <el-table-column
             align="center"
-            prop="intime"
-            label="时间">
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="shebeiname"
+            prop="name"
             label="设备">
           </el-table-column>
           <el-table-column
@@ -193,7 +188,7 @@
             .then(axios.spread(function (shebei) {
               that.shebei =shebei.data[0].id;
               that.shebeiOptions = shebei.data;
-              that.loadingShowData(that.shebei,that.examineTime)
+
             }));
         }
       },
@@ -215,11 +210,11 @@
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "zxdsbdjjlcx"}),
-          axios.post(" " + url + "/shebei/getShebeiRecord", {"id":data1,"times":data2})
+          axios.post(" " + url + "/shebei/getDianjianErrorList", {"times":data2})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
-            that.tableData = table.data.data;
+            that.tableData = table.data;
           }));
       },
 

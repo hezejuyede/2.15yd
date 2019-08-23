@@ -4,7 +4,8 @@
     <div class="equipmentTable">
       <div class="handle-box">
         <label style="margin-right: 5px">
-          <el-input v-model="select_word" placeholder="检索点检记录" class="handle-input mr10" style="width: 150px"></el-input>
+          <el-input v-model="select_word" placeholder="检索点检记录" class="handle-input mr10"
+                    style="width: 150px"></el-input>
         </label>
         <label style="margin-right: 5px;margin-left: 5px">
           <span>设备</span>
@@ -77,7 +78,7 @@
     </div>
 
     <!--新增点检 -->
-    <el-dialog  :visible.sync="jlVisible" :fullscreen="true" :center="true">
+    <el-dialog :visible.sync="jlVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
         <el-button type="danger" @click="jlVisible = false">关闭窗口</el-button>
       </div>
@@ -163,7 +164,7 @@
               label="备注">
               <template scope="scope">
                 <div>
-                  <el-input v-model="scope.row.beizhu" ></el-input>
+                  <el-input v-model="scope.row.beizhu"></el-input>
                 </div>
               </template>
             </el-table-column>
@@ -178,7 +179,7 @@
 
 
     <!--点检明细 -->
-    <el-dialog  :visible.sync="mxVisible" :fullscreen="true" :center="true">
+    <el-dialog :visible.sync="mxVisible" :fullscreen="true" :center="true">
       <div class="closeBtn">
         <el-button type="danger" @click="mxVisible = false">关闭窗口</el-button>
       </div>
@@ -198,8 +199,6 @@
     </el-dialog>
 
 
-
-
     <div class="loading-container" v-show="!img.length">
       <loading></loading>
     </div>
@@ -211,40 +210,34 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import url from '../../assets/js/URL'
-  import  Modal from '../../common/modal'
+  import Modal from '../../common/modal'
   import headerNav from '../../common/header'
   import footerNav from '../../common/footer'
   import Loading from '../../common/loading'
   import {getNowTime} from '../../assets/js/api'
+
   export default {
     name: 'quality',
     data() {
       return {
         img: "",
-        userId:"",
-        radio1:"3",
-        stationid:"",
-
-        jlVisible:false,
-        mxVisible:false,
-
-        examineTime:"",
-        select_word:"",
-        tableHeight:Number, //根据页面加载显示table的高度
-
+        userId: "",
+        radio1: "3",
+        stationid: "",
+        jlVisible: false,
+        mxVisible: false,
+        examineTime: "",
+        select_word: "",
+        tableHeight: Number, //根据页面加载显示table的高度
         cols: [],
         tableData: [],
-
-        djData:[],
-        djCols:[],
-
-        mxData:[],
-        mxCols:[],
-
-        shebei:"",
-        shebeiOptions:"",
-        qbdj:false,
-
+        djData: [],
+        djCols: [],
+        mxData: [],
+        mxCols: [],
+        shebei: "",
+        shebeiOptions: "",
+        qbdj: false,
         message: '',
         HideModal: true
       }
@@ -269,7 +262,6 @@
     created() {
       //页面加载检查用户是否登陆，没有登陆就加载登陆页面
       this.getAdminState();
-
       //转圈延迟一秒执行
       setTimeout(() => {
         this.getLoading();
@@ -284,11 +276,10 @@
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
-
           const userInfo = sessionStorage.getItem("userInfo");
           const info = JSON.parse(userInfo);
-          this.userId =info.username;
-          this.stationid =info.GH;
+          this.userId = info.username;
+          this.stationid = info.GH;
           let time = getNowTime();
           let times = [];
           for (let i = 0; i < 2; i++) {
@@ -298,19 +289,15 @@
           this.setTableHeight();
           let that = this;
           axios.all([
-            axios.post(" " + url + "/shebei/shebeiList", {"jiagongxian": "","stationid":that.stationid})
+            axios.post(" " + url + "/shebei/shebeiList", {"jiagongxian": "", "stationid": that.stationid})
           ])
             .then(axios.spread(function (shebei) {
-              that.shebei =shebei.data[0].id;
+              that.shebei = shebei.data[0].id;
               that.shebeiOptions = shebei.data;
-              that.loadingShowData(that.shebei,that.examineTime)
+              that.loadingShowData(that.shebei, that.examineTime)
             }));
-
-
-
         }
       },
-
       //根据屏幕分辨率设置Table高度
       setTableHeight() {
         if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
@@ -322,35 +309,31 @@
           this.tableHeight = h - 250 + "px";
         }
       },
-
       //瞬间加载数据
-      loadingShowData(data1,data2) {
+      loadingShowData(data1, data2) {
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "zxdsbdjjlcx"}),
-          axios.post(" " + url + "/shebei/getShebeiRecord", {"id":data1,"times":data2})
+          axios.post(" " + url + "/shebei/getShebeiRecord", {"id": data1, "times": data2})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
             that.tableData = table.data.data;
           }));
       },
-
       //转圈延迟一秒执行
       getLoading() {
         this.img = ["1"]
       },
-
       //根据时间查询上报记录
-      doSearchJl(){
-        if(this.examineTime && this.shebei){
-          this.loadingShowData(this.shebei,this.examineTime)
+      doSearchJl() {
+        if (this.examineTime && this.shebei) {
+          this.loadingShowData(this.shebei, this.examineTime)
         }
         else {
           this.$message.warning(`必须选择设备和时间`);
         }
       },
-
       //显示添加点检记录
       addDJ() {
         this.jlVisible = true;
@@ -363,24 +346,22 @@
             that.djCols = title.data;
             that.djData = table.data.data;
           }));
-
       },
-
       //进行点检
-      addDJjL(){
+      addDJjL() {
         for (let i = 0; i < this.djData.length; i++) {
           if (this.djData[i].jieguo === null) {
             this.qbdj = false;
-            return  this.$message.warning(`请全部点检才能提交`);
+            return this.$message.warning(`请全部点检才能提交`);
           }
           else {
             this.qbdj = true;
           }
         }
-        if(this.qbdj === true){
+        if (this.qbdj === true) {
           axios.post(" " + url + "/shebei/insertRecord", {
             "shebeid": this.shebei,
-            "list":this.djData,
+            "list": this.djData,
           })
             .then((res) => {
               if (res.data.state === "1") {
@@ -401,9 +382,8 @@
           this.$message.warning(`请全部点检才能提交`);
         }
       },
-
       //更改设备切换数据
-      changeSB(){
+      changeSB() {
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "zxddjbt"}),
@@ -413,9 +393,7 @@
             that.djCols = title.data;
             that.djData = table.data.data;
           }));
-
       },
-
       //查看明细
       showMx(id) {
         this.mxVisible = true;
@@ -436,31 +414,31 @@
 </script>
 <style scoped lang="less" rel="stylesheet/less">
   @import "../../assets/less/base";
+
   .equipment {
     width: 100%;
     height: 100%;
-    .equipmentTable{
+    .equipmentTable {
       width: 100%;
       height: 85%;
       .handle-box {
-        line-height:100px;
+        line-height: 100px;
         padding-left: 20px;
         .handle-input {
           width: 300px;
           display: inline-block;
         }
         .el-button {
-          width:120px;
+          width: 120px;
           height: 40px;
           font-size: @font-size-large;
         }
       }
     }
-
     .equipmentDiv {
       width: 100%;
-      height:350px;
-      .closeBtn{
+      height: 350px;
+      .closeBtn {
         width: 100%;
         height: 15%;
         margin: 0 auto;
@@ -518,27 +496,27 @@
     }
   }
 
-  .djDiv{
+  .djDiv {
     width: 100%;
     height: 100%;
-    .djDivTop{
+    .djDivTop {
       height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
       .el-button {
-        width:100px;
+        width: 100px;
         height: 40px;
         font-size: @font-size-medium;
       }
     }
-    .closeBottom{
+    .closeBottom {
       height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
       .el-button {
-        width:100px;
+        width: 100px;
         height: 40px;
         font-size: @font-size-medium;
       }

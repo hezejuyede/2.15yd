@@ -30,6 +30,7 @@
             default-first-option
             placeholder="请选择设备">
             <el-option
+              style="width: 200px;font-size: 16px"
               v-for="item in equipmentOptions"
               :key="item.id"
               :label="item.name"
