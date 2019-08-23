@@ -7,26 +7,6 @@
           <el-input v-model="select_word" placeholder="检索不良点检记录" class="handle-input mr10" style="width: 200px"></el-input>
         </label>
         <label style="margin-right: 5px;margin-left: 5px">
-          <span>设备</span>
-          <span>:</span>
-          <el-select
-            style="width: 250px"
-            v-model="shebei"
-            clearable
-            filterable
-            allow-create
-            default-first-option
-            placeholder="请选择设备">
-            <el-option
-              style="width: 500px"
-              v-for="item in shebeiOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </label>
-        <label style="margin-right: 5px;margin-left: 5px">
           <span>时间</span>
           <span>:</span>
           <el-date-picker
@@ -112,8 +92,6 @@
     data() {
       return {
         img: "",
-        userId:"",
-        stationid:"",
 
         mxVisible:false,
         mxData:[],
@@ -124,10 +102,6 @@
         tableHeight:Number, //根据页面加载显示table的高度
         cols: [],
         tableData: [],
-
-
-        shebei:"",
-        shebeiOptions:"",
 
         message: '',
         HideModal: true
@@ -168,11 +142,6 @@
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
-
-          const userInfo = sessionStorage.getItem("userInfo");
-          const info = JSON.parse(userInfo);
-          this.userId =info.username;
-          this.stationid =info.GH;
           let time = getNowTime();
           let times = [];
           for (let i = 0; i < 2; i++) {
@@ -180,16 +149,7 @@
           }
           this.examineTime = times;
           this.setTableHeight();
-
-          let that = this;
-          axios.all([
-            axios.post(" " + url + "/shebei/shebeiList", {"stationid":that.stationid})
-          ])
-            .then(axios.spread(function (shebei) {
-              that.shebei =shebei.data[0].id;
-              that.shebeiOptions = shebei.data;
-
-            }));
+          this.loadingShowData(this.examineTime)
         }
       },
 
@@ -206,11 +166,11 @@
       },
 
       //瞬间加载数据
-      loadingShowData(data1,data2) {
+      loadingShowData(data) {
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "zxdsbdjjlcx"}),
-          axios.post(" " + url + "/shebei/getDianjianErrorList", {"times":data2})
+          axios.post(" " + url + "/shebei/getDianjianErrorList", {"times":data})
         ])
           .then(axios.spread(function (title, table) {
             that.cols = title.data;
@@ -225,34 +185,18 @@
 
       //根据时间查询上报记录
       doSearchJl(){
-        if(this.examineTime && this.shebei){
-          this.loadingShowData(this.shebei,this.examineTime)
+        if(this.examineTime){
+          this.loadingShowData(this.examineTime)
         }
         else {
           this.$message.warning(`必须选择设备和时间`);
         }
       },
 
-
-      //更改设备切换数据
-      changeSB(){
-        let that = this;
-        axios.all([
-          axios.post(" " + url + "/sys/showTableTitle", {"name": "zxddjbt"}),
-          axios.post(" " + url + "/shebei/contentListByShebei", {"shebeid": this.shebei})
-        ])
-          .then(axios.spread(function (title, table) {
-            that.djCols = title.data;
-            that.djData = table.data.data;
-          }));
-
-      },
-
       //查看明细
       showMx(id) {
         this.mxVisible = true;
         this.id = id;
-        this.mxVisible = true;
         let that = this;
         axios.all([
           axios.post(" " + url + "/sys/showTableTitle", {"name": "zxdsbdjjlcx"}),
