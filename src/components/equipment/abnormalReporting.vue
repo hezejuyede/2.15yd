@@ -271,7 +271,6 @@
 
       //根据状态显示不同颜色
       tableRowClassName({row, rowIndex}) {
-        console.log(row.delresult);
         if (row.delresult === null) {
           return 'red';
         }

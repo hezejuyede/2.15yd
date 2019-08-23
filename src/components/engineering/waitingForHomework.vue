@@ -65,9 +65,8 @@
                       @keyup.enter.native="goToPipePage(searchWord)"></el-input>
           </div>
           <div class="listSearchBtn">
-            <button @click="showScreening">条件筛选</button>
-            <button @click="materialStatistics">物料统计</button>
-            <button @click="goGeneralListOfProcessing">总清单</button>
+            <button @click="showScreening" style="width: 40%">条件筛选</button>
+            <button @click="goGeneralListOfProcessing" style="width: 40%">总清单</button>
           </div>
         </div>
         <div class="listSearch" v-if="this.listType ==7 || this.listType ==8">
@@ -1702,6 +1701,7 @@
             :data="materielData"
             height="520"
             ref="Table"
+            :row-class-name="tableRowClassNameWL"
             :header-cell-style="{
             background:'#ffffff',
             border: '1px solid #303133',
@@ -1802,6 +1802,7 @@
         <div class="materielCenter">
           <el-table
             :data="materielData"
+            :row-class-name="tableRowClassNameWL"
             height="520"
             ref="Table"
             :header-cell-style="{
@@ -1904,6 +1905,7 @@
             :data="materielData"
             height="520"
             ref="Table"
+            :row-class-name="tableRowClassNameWL"
             :header-cell-style="{
             background:'#ffffff',
             border: '1px solid #303133',
@@ -1985,6 +1987,7 @@
             :data="materielData"
             height="520"
             ref="Table"
+            :row-class-name="tableRowClassNameWL"
             :header-cell-style="{
             background:'#ffffff',
             border: '1px solid #303133',
@@ -2068,6 +2071,7 @@
             :data="materielData"
             height="520"
             ref="Table"
+            :row-class-name="tableRowClassNameWL"
             :header-cell-style="{
             background:'#ffffff',
             border: '1px solid #303133',
@@ -2170,6 +2174,7 @@
             :data="materielData"
             height="520"
             ref="Table"
+            :row-class-name="tableRowClassNameWL"
             :header-cell-style="{
             background:'#ffffff',
             border: '1px solid #303133',
@@ -2652,7 +2657,6 @@
         }
 
       },
-
 
 
       //自动聚焦输入框
@@ -3751,6 +3755,7 @@
 
       },
 
+
       //根据input选择框变化
       inputChangeMateriel(index){
         let z = parseInt(this.materielData[index].allnum);
@@ -3778,6 +3783,16 @@
           this.materielData[index].usednum =0;
         }
       },
+
+      //物料全选变颜色
+      tableRowClassNameWL({row, rowIndex}) {
+        if (row.usedflag  === "2") {
+          return 'red-row';
+        }
+      },
+
+
+
 
       //前往总清单
       goGeneralListOfProcessing() {
