@@ -30,6 +30,11 @@
                   style="width: 98%;margin: auto">
           <el-table-column
             align="center"
+            prop="intime"
+            label="时间">
+          </el-table-column>
+          <el-table-column
+            align="center"
             prop="name"
             label="设备">
           </el-table-column>
