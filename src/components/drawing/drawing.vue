@@ -18,6 +18,7 @@
         <div class="drawingConditionDiv">
           <el-select
             v-model="batch"
+            style="width: 200px;"
             clearable
             filterable
             allow-create
@@ -32,40 +33,10 @@
           </el-select>
         </div>
         <div class="drawingConditionDiv">
-          <el-select
-            v-model="jgx"
-            clearable
-            filterable
-            allow-create
-            default-first-option
-            @change="changeSCX"
-            placeholder="加工线">
-            <el-option
-              v-for="item in jgxOptions"
-              :key="item.indexno"
-              :label="item.name"
-              :value="item.indexno">
-            </el-option>
-          </el-select>
+          <el-input v-model="yiguanhao" placeholder="输入一贯号" ></el-input>
         </div>
         <div class="drawingConditionDiv">
-          <el-select
-            v-model="gw"
-            clearable
-            filterable
-            allow-create
-            default-first-option
-            placeholder="工位">
-            <el-option
-              v-for="item in gwOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="drawingConditionDiv">
-          <el-input v-model="ch" placeholder="船号"></el-input>
+          <el-input v-model="code" placeholder="输入Code号" style="width: 200px"></el-input>
         </div>
         <div class="drawingSearchButton">
           <el-button type="primary" @click="search">搜索</el-button>
@@ -107,15 +78,8 @@
         gzbh: "",
         batch: "",
         batchOptions: [],
-
-        jgx: "",
-        jgxOptions: [],
-
-        gw: "",
-        gwOptions: [],
-
-        ch: "",
-        chOptions: [],
+        yiguanhao:"",
+        code:"",
 
         imgUrl: "",
 
@@ -172,21 +136,6 @@
         })
       },
 
-      //更改生产线
-      changeSCX() {
-        axios.post(" " + url + "/sysconfig/getGongxuList", {"id": this.jgx})
-          .then((res) => {
-            if (res.data ==="-1") {
-              this.gw = "";
-              this.gwOptions =[];
-            }
-            else {
-              this.gw = res.data[0].id;
-              this.gwOptions = res.data;
-            }
-          });
-      },
-
       //扫码搜索一品图
       searchYpt(searchWord) {
 
@@ -233,63 +182,39 @@
 
       //条件搜索一品图
       search() {
-        axios.post(" " + url + "/shengchan/getShaomaData",
-          {
-            "pici": this.batch,
-            "jiagongxian": this.jgx,
-            "gongwei": this.gw,
-            "chuanhao": this.ch,
-            "guanzibianhao": this.gzbh
-          })
-          .then((res) => {
-            if (res.data.state === "1") {
-              if (this.dqgw === "弯管" || this.dqgw === "43/48装配" || this.dqgw === "45/46装配" || this.dqgw === "大组焊") {
-                this.id = res.data.data.id;
-                this.tdVisible = true;
-                this.tdTableData = [{
-                  "jiagongxilie": res.data.data.jiagongxilie,
-                  "yiguanhao": res.data.data.yiguanhao,
-                  "codeno": res.data.data.codeno,
-                  "koujing": res.data.data.koujing,
-                  "chuanhao": res.data.data.chuanhao,
-                  "pno": res.data.data.pno
-                }];
-              }
-              else if (this.dqgw === "弯头焊") {
-                this.$router.push({
-                  name: 'CurrentTask',
-                  params: {
-                    pici: res.data.data.pici,
-                    fuhao: res.data.data.fuhao,
-                    yiguanno: res.data.data.yiguanno,
-                    codeno: res.data.data.codeno
-                  }
-                })
-              }
-              else if (this.dqgw === "枝管切断") {
-                let id = res.data.data.id;
-                localStorage.setItem("pipeId", id);
-                this.$router.push({
-                  name: 'CurrentTask',
-                  params: {
-                    type: res.data.data.type
-                  }
-                })
+        if (this.batch && this.code && this.yiguanhao) {
+          axios.post(" " + url + "/yipintu/getYipintuImg.html",
+            {
+              "pici": this.batch,
+              "yiguanhao": this.yiguanhao,
+              "code": this.code
+            })
+            .then((res) => {
+              if (res.data.imgurl) {
+                this.imgUrl = url + res.data.imgurl;
+                this.imgs = [{"url": this.imgUrl}];
               }
               else {
-                let id = res.data.data.id;
-                localStorage.setItem("pipeId", id);
-                this.$router.push("/CurrentTask");
+                this.message = "没有查到一品图";
+                this.HideModal = false;
+                const that = this;
+
+                function a() {
+                  that.message = "";
+                  that.HideModal = true;
+                }
+
+                setTimeout(a, 2000);
               }
-            }
-            else {
-              this.$message({type: 'warning', message: res.data.message});
-              this.searchWord = "";
-            }
-          })
-          .catch((err) => {
-            console.log(err)
-          });
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+        else {
+          this.$message.warning("批次，一贯号，code号不能有空");
+        }
+
       }
     }
   }
