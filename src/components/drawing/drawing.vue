@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <div class="drawingBottom">
+    <div class="drawingBottom" ref="drawingBottom">
       <viewer :images="imgs">
         <img v-for="src in imgs" :src="src.url" :key="src.title" style="width: 100%;height: 100%">
       </viewer>
@@ -90,7 +90,7 @@
     components: {Loading, timer, footerNav, headerNav, Modal},
     mounted() {
       this.setInputFocus();
-
+      this.setTableHeight();
     },
     created() {
       this.getAdminState();
@@ -215,7 +215,22 @@
           this.$message.warning("批次，一贯号，code号不能有空");
         }
 
-      }
+      },
+
+
+      //设置Div高度
+      setTableHeight() {
+        let div = this.$refs.drawingBottom;
+        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+          var H = window.screen.height;
+          div.style.height = H - 300 + "px";
+        }
+        else {
+          var h = document.body.clientHeight;
+          div.style.height = h - 300 + "px";
+        }
+
+      },
     }
   }
 </script>
@@ -226,10 +241,10 @@
     width: 100%;
     height: 100%;
     .drawingTop {
-      height: 20%;
+      height: 150px;
       border-bottom: 1px solid @color-F0;
       .drawingTitle {
-        height: 40%;
+        height: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -270,18 +285,16 @@
           }
         }
       }
-
     }
     .drawingBottom {
-      height: 55%;
       border-top: 1px solid @color-F0;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      overflow: auto;
       .drawingImg {
-        width: 80%;
-        height: 80%;
+        width: 90%;
+        height: 90%;
         display: flex;
         align-items: center;
         justify-content: center;
