@@ -18,7 +18,7 @@
       <div class="headerMessage fr">
         <i class="iconfont icon-xiaoxi"></i>
         <span>消息</span>
-        <div class="messageNumber" @click="showMessage" v-if="this.messageNumber===1">
+        <div class="messageNumber" @click="showMessage" v-if="this.messageNumber>=1">
           {{messageNumber}}
         </div>
       </div>
@@ -152,7 +152,7 @@
 
         workstation: "",
         workstationOptions: [],
-        messageNumber: 1,
+        messageNumber:1,
         aqwdMessage: 1,
         aqState:false,
         zlwdMessage: 1,
@@ -176,7 +176,7 @@
         this.getZLMessage();
         this.getQAMessage();
         this.getAQPMessage();
-      }, 1000*60);
+      }, 1000*60*10);
 
     },
     created() {
@@ -342,8 +342,8 @@
 
       //定时请求紧急安全消息
       getQAMessage() {
-        if(this.aqState===false){
-          axios.post("  " + url + "/anquan/getTuisongJinji", { "stationid": this.GH})
+        if (this.aqState === false) {
+          axios.post("  " + url + "/anquan/getTuisongJinji", {"stationid": this.GH})
             .then((res) => {
               if (res.data.state === "1") {
                 if (JSON.stringify(res.data.data) !== "{}") {
@@ -351,13 +351,14 @@
                   this.aqMessageVisible = true;
                   this.titilename = res.data.data.title;
                   this.htmlData = res.data.data.neirong;
-                  this.relationid=res.data.data.relationid
+                  this.relationid = res.data.data.relationid
                 }
                 else {
 
                 }
               }
-              else {}
+              else {
+              }
             })
             .catch(() => {
               console.log(err)
@@ -373,7 +374,6 @@
       getAQPMessage(){
 
       },
-
 
 
       //阅读质量
@@ -470,17 +470,17 @@
           margin-right: 5px;
         }
         .messageNumber {
-          width: 25px;
-          height: 25px;
+          width: 30px;
+          height:30px;
           display: flex;
           align-items: center;
           justify-content: center;
           background-color: #d93f30;
           border-radius: 50%;
           position: absolute;
-          top: 10px;
-          left: -15px;
-          font-size: @font-size-large-x;
+          top: 5px;
+          left: -17px;
+          font-size: @font-size-large;
           -webkit-animation: bounce-down 1.5s linear infinite;
           animation: bounce-down 1.5s linear infinite;
         }
