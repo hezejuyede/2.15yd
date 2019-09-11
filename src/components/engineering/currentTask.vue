@@ -1013,6 +1013,7 @@
 
     <Modal :msg="message"
            :isHideModal="HideModal"></Modal>
+
     <div class="loading-container" v-show="!img.length">
       <loading></loading>
     </div>
@@ -1681,6 +1682,23 @@
         }
         //叫料
         else if (type === "7") {
+          let yiguanhao = this.titleData[2].text;
+          let code = this.titleData[3].text;
+          axios.post(" " + url + "/wuliao/peisong/jiaoliao", {"yiguanhao": yiguanhao, "codeno": code})
+            .then((res) => {
+              if (res.data.status === 1) {
+                this.$message.warning("未配货");
+              }
+              else if (res.data.status === 2) {
+                this.$message.success("已经叫料");
+              }
+              else {
+                this.$message.warning("无需叫料");
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+            })
 
         }
         //查看3D图
