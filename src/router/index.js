@@ -33,7 +33,7 @@ import haocairuk from '../components/equipment/haocaiyushebeiguanli/haocairuk.vu
 import guzhangchuli from '../components/equipment/guzhangchuli.vue'
 import haocai from '../components/equipment/haocaiyushebeiguanli/haocai'
 import trackingCheck  from '../components/equipment/trackingCheck'
-
+import haocaichuku  from '../components/equipment/haocaiyushebeiguanli/haocaichuku.vue'
 
 
 import Materiel from '../components/materiel/materiel'
@@ -213,6 +213,14 @@ export default new Router({
       path: '/haocairuk',
       name: 'haocairuk',
       component: haocairuk,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/haocaichuku',
+      name: 'haocaichuku',
+      component: haocaichuku,
       meta: {
         keepAlive: false
       }
