@@ -26,8 +26,11 @@
       return {
         img:"",
         iconData: [
+          {"icon": "iconfont icon-juhe", "text": "不具合处理", "url": "/bujuhechuli"},
           {"icon": "iconfont icon-customer", "text": "误做处理（客户）", "url": "/kehuwuzuo"},
           {"icon": "iconfont icon-neibufankui", "text": "误做处理（内部）", "url": "/neibuwuzuo"},
+          {"icon": "iconfont icon-chuanboyunying", "text": "船东意见反馈", "url": "/chuandongyijian"},
+          {"icon": "iconfont icon-chuanbo", "text": "船级意见反馈", "url": "/chuanjiyijian"},
           {"icon": "iconfont icon-xuexi", "text": "基准学习", "url": "/jizhunxuexi"},
           {"icon": "iconfont icon-xuexi1", "text": "提醒查看", "url": "/tixiangxuexi"},
         ]
@@ -145,7 +148,7 @@
         font-size: 500%;
         text-align: center;
       }
-      .icon-chuku {
+      .icon-chuanbo {
         display: block;
         background-color: #67C23A;
         color: @color-white;
@@ -156,7 +159,7 @@
         font-size: 500%;
         text-align: center;
       }
-      .icon-ruku {
+      .icon-juhe {
         display: block;
         background-color: @color-bg-anLv;
         color: @color-white;
@@ -168,7 +171,7 @@
         text-align: center;
       }
 
-      .icon-chuli {
+      .icon-chuanboyunying {
         display: block;
         background-color: @color-red;
         color: @color-white;

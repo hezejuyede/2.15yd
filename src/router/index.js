@@ -21,6 +21,10 @@ import kehuwuzuo from '../components/quality/kehuwuzuo.vue'
 import neibuwuzuo from '../components/quality/neibuwuzuo.vue'
 import tixiangxuexi from '../components/quality/tixiangxuexi.vue'
 import jizhunxuexi from '../components/quality/jizhunxuexi.vue'
+import bujuhechuli from '../components/quality/bujuhechuli.vue'
+import chuandongyijian from '../components/quality/chuandongyijian.vue'
+import chuanjiyijian from '../components/quality/chuanjiyijian.vue'
+
 
 
 //设备管理
@@ -142,6 +146,35 @@ export default new Router({
         keepAlive: false
       }
     },
+    {
+      path: '/bujuhechuli',
+      name: 'bujuhechuli',
+      component: bujuhechuli,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/chuandongyijian',
+      name: 'chuandongyijian',
+      component: chuandongyijian,
+      meta: {
+        keepAlive: false
+      }
+    },
+    {
+      path: '/chuanjiyijian',
+      name: 'chuanjiyijian',
+      component: chuanjiyijian,
+      meta: {
+        keepAlive: false
+      }
+    },
+
+
+
+
+
     {
       path: '/tixiangxuexi',
       name: 'tixiangxuexi',

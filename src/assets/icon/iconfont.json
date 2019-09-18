@@ -1,0 +1,303 @@
+{
+  "id": "926358",
+  "name": "MZY",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "149741",
+      "name": "任务清单",
+      "font_class": "renwuqingdan",
+      "unicode": "e6f9",
+      "unicode_decimal": 59129
+    },
+    {
+      "icon_id": "271415",
+      "name": "警告/注意",
+      "font_class": "unie62b",
+      "unicode": "e6b6",
+      "unicode_decimal": 59062
+    },
+    {
+      "icon_id": "436383",
+      "name": "返回",
+      "font_class": "54",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "521096",
+      "name": "检查服务",
+      "font_class": "jianchafuwu",
+      "unicode": "e63f",
+      "unicode_decimal": 58943
+    },
+    {
+      "icon_id": "845853",
+      "name": "安全",
+      "font_class": "anquan",
+      "unicode": "e681",
+      "unicode_decimal": 59009
+    },
+    {
+      "icon_id": "947050",
+      "name": "分类",
+      "font_class": "fenlei",
+      "unicode": "e653",
+      "unicode_decimal": 58963
+    },
+    {
+      "icon_id": "1079509",
+      "name": "学习",
+      "font_class": "xuexi1",
+      "unicode": "e635",
+      "unicode_decimal": 58933
+    },
+    {
+      "icon_id": "1221893",
+      "name": "个人 实心",
+      "font_class": "solid-person",
+      "unicode": "e6f2",
+      "unicode_decimal": 59122
+    },
+    {
+      "icon_id": "1274582",
+      "name": "质量安全",
+      "font_class": "zhilianganquan",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "1301387",
+      "name": "向上",
+      "font_class": "xiangshang1",
+      "unicode": "e665",
+      "unicode_decimal": 58981
+    },
+    {
+      "icon_id": "1400865",
+      "name": "完成",
+      "font_class": "wancheng",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "1411089",
+      "name": "8船舶运营",
+      "font_class": "chuanboyunying",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "1440387",
+      "name": "切换角色",
+      "font_class": "qiehuanjiaose",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "1514152",
+      "name": "退回",
+      "font_class": "tuihui",
+      "unicode": "e723",
+      "unicode_decimal": 59171
+    },
+    {
+      "icon_id": "1804645",
+      "name": "图纸 (2)",
+      "font_class": "tuzhi",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "1883239",
+      "name": "客户",
+      "font_class": "customer",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "1883261",
+      "name": "耗材",
+      "font_class": "suppliesinvoice",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "1964444",
+      "name": "操作",
+      "font_class": "caozuo",
+      "unicode": "e6a3",
+      "unicode_decimal": 59043
+    },
+    {
+      "icon_id": "2029536",
+      "name": "学习",
+      "font_class": "xuexi",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
+      "icon_id": "2106152",
+      "name": "密码",
+      "font_class": "mima",
+      "unicode": "e639",
+      "unicode_decimal": 58937
+    },
+    {
+      "icon_id": "2167056",
+      "name": "设备组合",
+      "font_class": "shebeizuhe",
+      "unicode": "e6bf",
+      "unicode_decimal": 59071
+    },
+    {
+      "icon_id": "2480666",
+      "name": "内部反馈",
+      "font_class": "neibufankui",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "2998158",
+      "name": "船",
+      "font_class": "chuan",
+      "unicode": "e66e",
+      "unicode_decimal": 58990
+    },
+    {
+      "icon_id": "3296968",
+      "name": "条形码",
+      "font_class": "iconset0256",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "3405405",
+      "name": "消息",
+      "font_class": "xiaoxi",
+      "unicode": "e6eb",
+      "unicode_decimal": 59115
+    },
+    {
+      "icon_id": "3977826",
+      "name": "任务采集",
+      "font_class": "renwucaiji",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "4305998",
+      "name": "工位管理",
+      "font_class": "gongweiguanli",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "4412480",
+      "name": "上报问题",
+      "font_class": "shangbaowenti",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "4464995",
+      "name": "出库",
+      "font_class": "chuku",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "4465007",
+      "name": "入库",
+      "font_class": "ruku",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "4628601",
+      "name": "工位",
+      "font_class": "youhuiquanguanli-",
+      "unicode": "e6d4",
+      "unicode_decimal": 59092
+    },
+    {
+      "icon_id": "4687460",
+      "name": "离岗",
+      "font_class": "ligang",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "4889699",
+      "name": "开始",
+      "font_class": "kaishi",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "4982159",
+      "name": "暂停",
+      "font_class": "zanting",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "5485123",
+      "name": "物料",
+      "font_class": "wuliao",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    },
+    {
+      "icon_id": "5735219",
+      "name": "工程-1",
+      "font_class": "gongcheng-",
+      "unicode": "e737",
+      "unicode_decimal": 59191
+    },
+    {
+      "icon_id": "5809167",
+      "name": "对号1",
+      "font_class": "duihao",
+      "unicode": "e684",
+      "unicode_decimal": 59012
+    },
+    {
+      "icon_id": "6180533",
+      "name": "关 闭",
+      "font_class": "guanbi",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "8084548",
+      "name": "处理",
+      "font_class": "chuli",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "8504208",
+      "name": "124-工作跟踪",
+      "font_class": "-gongzuogenzong",
+      "unicode": "e803",
+      "unicode_decimal": 59395
+    },
+    {
+      "icon_id": "10352336",
+      "name": "聚合",
+      "font_class": "juhe",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "10487453",
+      "name": "船舶",
+      "font_class": "chuanbo",
+      "unicode": "e68b",
+      "unicode_decimal": 59019
+    }
+  ]
+}
