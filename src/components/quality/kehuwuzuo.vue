@@ -53,7 +53,7 @@
           </el-select>
         </label>-->
         <el-button type="success" class="handle-del mr10" @click="doSearchJl">查询</el-button>
-        <el-button type="primary" class="handle-del mr10" @click="showYc">上报</el-button>
+        <el-button type="primary" class="handle-del mr10" @click="showYc">异常类型</el-button>
       </div>
       <div class="handle-content">
         <el-table class="tb-edit"
@@ -112,7 +112,7 @@
           </div>
           <div class="equipmentDivContentRight">
             <div class="equipmentTitle">
-              误做原因
+              处理对策
             </div>
             <div class="equipmentInput">
               <textarea placeholder="处理对策" v-model="chuliduice"></textarea>

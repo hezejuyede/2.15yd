@@ -26,8 +26,8 @@
       return {
         img:"",
         iconData: [
-          {"icon": "iconfont icon-customer", "text": "客户反馈", "url": "/kehuwuzuo"},
-          {"icon": "iconfont icon-neibufankui", "text": "内部反馈", "url": "/neibuwuzuo"},
+          {"icon": "iconfont icon-customer", "text": "误做处理（客户）", "url": "/kehuwuzuo"},
+          {"icon": "iconfont icon-neibufankui", "text": "误做处理（内部）", "url": "/neibuwuzuo"},
           {"icon": "iconfont icon-xuexi", "text": "基准学习", "url": "/jizhunxuexi"},
           {"icon": "iconfont icon-xuexi1", "text": "提醒查看", "url": "/tixiangxuexi"},
         ]
