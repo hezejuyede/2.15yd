@@ -214,7 +214,7 @@
       loadingShowData(data1, data2,data3,data4) {
         let that = this;
         axios.all([
-          axios.post(" " + url + "/sys/showTableTitle", {"name": "anquanzhiliangtixiangchakan"}),
+          axios.post(" " + url + "/sys/showTableTitle", {"name": "zhixingduananquanxiaoxitixing"}),
           axios.post(" " + url + "/anquan/tuisongList", {"times": data1,"stationid":data2,"status":data3,"type":data4})
         ])
           .then(axios.spread(function (title, table) {
