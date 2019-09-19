@@ -4,7 +4,7 @@
       <div class="collapse-btn" @click="handleFullScreen">
         <i class="el-icon-menu"></i>
       </div>
-      <div class="logo">中二线管加工生产执行系统</div>
+      <div class="logo">管加工车间中二线生产管理系统</div>
     </div>
     <div class="header-right fl">
       <div class="headerOut fr" @click="LeavePost">

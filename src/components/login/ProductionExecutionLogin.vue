@@ -2,7 +2,7 @@
   <div class="login">
     <header class="login-title">
       <img src="../../assets/img/logo.png"/>
-      <h1>中二线管加工生产执行系统</h1>
+      <h1>管加工车间中二线生产管理系统</h1>
     </header>
     <div class="loginIndex">
       <div class="loginIndex-change">
