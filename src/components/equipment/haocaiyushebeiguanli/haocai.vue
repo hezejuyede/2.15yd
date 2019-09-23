@@ -145,7 +145,6 @@
   import headerNav from '../../../common/header'
   import footerNav from '../../../common/footer'
   import Loading from '../../../common/loading'
-  import {getNowTime} from '../../../assets/js/api'
   export default {
     name: 'quality',
     data() {

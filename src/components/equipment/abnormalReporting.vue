@@ -106,7 +106,7 @@
   import headerNav from '../../common/header'
   import footerNav from '../../common/footer'
   import Loading from '../../common/loading'
-  import {getNowTime} from '../../assets/js/api'
+  import {getNowTime,getLestWeekTime} from '../../assets/js/api'
   export default {
     name: 'quality',
     data() {
@@ -173,11 +173,11 @@
           const info = JSON.parse(userInfo);
           this.userId =info.username;
           this.stationid =info.GH;
-          let time = getNowTime();
+          let nowTime = getNowTime();
+          let lestWeekTime= getLestWeekTime();
           let times = [];
-          for (let i = 0; i < 2; i++) {
-            times.push(time)
-          }
+          times.push(lestWeekTime);
+          times .push(nowTime);
           this.examineTime = times;
           this.setTableHeight();
           let that = this;
