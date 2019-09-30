@@ -99,7 +99,7 @@
     </div>
     <!--新增弹出框 -->
     <el-dialog title="处理故障" :visible.sync="addVisible" width="50%">
-      <el-form ref="form"  label-width="100px">
+      <el-form ref="form"  label-width="100px" style="height: 300px">
         <el-form-item label="处理结果" style="margin-bottom: 20px">
           <el-select
             v-model="cljg"
@@ -107,6 +107,7 @@
             filterable
             allow-create
             default-first-option
+            style="width:80%"
             placeholder="请输入或者选择">
             <el-option
               v-for="item in cljgOptions"
@@ -116,13 +117,14 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="处理简况">
+        <el-form-item label="处理简况" id="clTextarea">
           <el-input v-model="beizhu"
                     type="textarea"
                     placeholder="处理简况"
-                    maxlength="50"
+                    maxlength="80"
+                    rows="5"
                     show-word-limit
-                    style="width: 200px "></el-input>
+                    style="width:80%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

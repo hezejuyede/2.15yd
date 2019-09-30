@@ -23,7 +23,7 @@
             filterable
             allow-create
             default-first-option
-            placeholder="请选择紧急程度">
+            placeholder="请选择">
             <el-option
               v-for="item in stateOptions"
               :key="item.id"
@@ -42,7 +42,7 @@
             filterable
             allow-create
             default-first-option
-            placeholder="请选择学习状态">
+            placeholder="请选择">
             <el-option
               v-for="item in learnOptions"
               :key="item.id"
@@ -143,7 +143,7 @@
         learn: "1",
         learnOptions: [{"name": "未查看", "id": "1"}, {"name": "已查看", "id": "2"}],
         state: "1",
-        stateOptions: [{"name": "紧急", "id": "1"}, {"name": "普通", "id": "2"}],
+        stateOptions: [{"name": "紧急", "id": "1"}, {"name": "一般", "id": "2"}, {"name": "全部", "id": "3"}],
         htmlData:'',
         titilename:"",
         editorOption: {

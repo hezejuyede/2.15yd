@@ -82,7 +82,7 @@
             </el-option>
           </el-select>
         </div>
-        <div class="equipmentDivContent">
+        <div class="equipmentDivContent" id="equipmentDivContent">
           <textarea placeholder="故障信息填写" v-model="remarks"></textarea>
         </div>
         <div class="equipmentDivBtn">
