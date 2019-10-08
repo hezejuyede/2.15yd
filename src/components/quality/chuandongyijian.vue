@@ -30,7 +30,7 @@
                   :data="tables"
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
                   border
-                  height="500"
+                  :height="tableHeight"
                   highlight-current-row
                   ref="moviesTable"
                   style="width: 98%;margin: auto">
@@ -70,7 +70,7 @@
 
         cols: [],
         tableData: [],
-
+        tableHeight:Number, //根据页面加载显示table的高度
         select_word: '',
         examineTime: "",
 
@@ -117,6 +117,7 @@
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
+          this.setTableHeight();
           let nowTime = getNowTime();
           let lestWeekTime= getLestWeekTime();
           let times = [];
@@ -124,6 +125,18 @@
           times .push(nowTime);
           this.examineTime = times;
           this.loadingShowData(this.examineTime,1);
+        }
+      },
+
+      //根据屏幕分辨率设置Table高度
+      setTableHeight() {
+        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+          var H = window.screen.height;
+          this.tableHeight = H - 300 + "px";
+        }
+        else {
+          var h = document.body.clientHeight;
+          this.tableHeight = h - 300 + "px";
         }
       },
 

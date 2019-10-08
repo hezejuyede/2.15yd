@@ -66,7 +66,7 @@
                   :data="tables"
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
                   border
-                  height="500"
+                  :height="tableHeight"
                   @select="selectList"
                   @select-all="selectAll"
                   highlight-current-row
@@ -144,7 +144,7 @@
 
         select_word: "",
         sbVisible: false,
-
+        tableHeight:Number, //根据页面加载显示table的高度
         examineTime: "",
         learn: "1",
         learnOptions: [{"name": "未查看", "id": "1"}, {"name": "已查看", "id": "2"}],
@@ -201,7 +201,7 @@
           this.$router.push("/ProductionExecutionLogin")
         }
         else {
-
+          this.setTableHeight();
           const userInfo = sessionStorage.getItem("userInfo");
           const info = JSON.parse(userInfo);
           this.userId = info.username;
@@ -213,6 +213,18 @@
           times .push(nowTime);
           this.examineTime = times;
           this.loadingShowData(this.examineTime, this.stationid,this.learn,this.state);
+        }
+      },
+
+      //根据屏幕分辨率设置Table高度
+      setTableHeight() {
+        if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+          var H = window.screen.height;
+          this.tableHeight = H - 300 + "px";
+        }
+        else {
+          var h = document.body.clientHeight;
+          this.tableHeight = h - 300 + "px";
         }
       },
 
