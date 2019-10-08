@@ -143,7 +143,7 @@
         learn: "1",
         learnOptions: [{"name": "未查看", "id": "1"}, {"name": "已查看", "id": "2"}],
         state: "1",
-        stateOptions: [{"name": "紧急", "id": "1"}, {"name": "一般", "id": "2"}, {"name": "全部", "id": "3"}],
+        stateOptions: [{"name": "紧急", "id": "1"}, {"name": "一般", "id": "2"}, {"name": "全部", "id": ""}],
         htmlData:'',
         titilename:"",
         editorOption: {

@@ -4,7 +4,7 @@
     <div class="equipmentTable">
       <div class="handle-box">
         <label style="margin-right: 5px">
-          <el-input v-model="select_word" placeholder="检索上报记录" class="handle-input mr10"
+          <el-input v-model="select_word" placeholder="检索客户误作" class="handle-input mr10"
                     style="width: 150px"></el-input>
         </label>
         <label style="margin-right: 5px;margin-left: 5px">
@@ -121,7 +121,7 @@
 
         </div>
         <div class="equipmentDivBtn">
-          <el-button type="success" @click="submitAbnormal">进行上报</el-button>
+          <el-button type="success" @click="submitAbnormal">误作上报</el-button>
         </div>
       </div>
     </el-dialog>

@@ -4,7 +4,7 @@
     <div class="equipmentTable">
       <div class="handle-box">
         <label style="margin-right: 5px">
-          <el-input v-model="select_word" placeholder="检索上报记录" class="handle-input mr10"
+          <el-input v-model="select_word" placeholder="检索船东意见" class="handle-input mr10"
                     style="width: 150px"></el-input>
         </label>
         <label style="margin-right: 5px;margin-left: 5px">

@@ -32,7 +32,7 @@
           {"icon": "iconfont icon-chuanboyunying", "text": "船东意见反馈", "url": "/chuandongyijian"},
           {"icon": "iconfont icon-chuanbo", "text": "船级意见反馈", "url": "/chuanjiyijian"},
           {"icon": "iconfont icon-xuexi", "text": "基准学习", "url": "/jizhunxuexi"},
-          {"icon": "iconfont icon-xuexi1", "text": "提醒查看", "url": "/tixiangxuexi"},
+          {"icon": "iconfont icon-xuexi1", "text": "质量提醒", "url": "/tixiangxuexi"},
         ]
       }
 
