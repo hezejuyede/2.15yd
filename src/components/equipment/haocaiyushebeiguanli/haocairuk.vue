@@ -6,6 +6,13 @@
         <i class="iconfont icon-tuihui"></i>
         <span>返回</span>
       </div>
+      <div class="crumbs">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item>设备管理</el-breadcrumb-item>
+          <el-breadcrumb-item>耗材与备件管理</el-breadcrumb-item>
+          <el-breadcrumb-item>耗材入库</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
       <div class="handle-box">
         <label style="margin-right: 5px">
           <el-input v-model="select_word" placeholder="检索出库登记" class="handle-input mr10"
@@ -351,6 +358,13 @@
     .equipmentTable{
       width: 100%;
       height: 85%;
+      .crumbs {
+        height: 50px;
+        padding-top: 20px;
+        padding-left: 20px;
+        border-bottom: 1px solid@color-F0;
+        border-top: 1px solid@color-F0;
+      }
       .handle-box {
         line-height:100px;
         padding-left: 20px;

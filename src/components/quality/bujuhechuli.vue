@@ -2,6 +2,12 @@
   <div class="equipment">
     <header-nav></header-nav>
     <div class="equipmentTable">
+      <div class="crumbs">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item>质量管理</el-breadcrumb-item>
+          <el-breadcrumb-item>不具合处理</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
       <div class="handle-box">
         <label style="margin-right: 5px">
           <el-input v-model="select_word" placeholder="检索不具合" class="handle-input mr10"
@@ -371,6 +377,12 @@
     .equipmentTable {
       width: 100%;
       height: 85%;
+      .crumbs {
+        height: 50px;
+        padding-top: 20px;
+        padding-left: 20px;
+        border-bottom: 1px solid@color-F0;
+      }
       .handle-box {
         line-height: 100px;
         padding-left: 20px;

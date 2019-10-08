@@ -2,6 +2,12 @@
   <div class="equipment">
     <header-nav></header-nav>
     <div class="equipmentTable">
+      <div class="crumbs">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item>质量管理</el-breadcrumb-item>
+          <el-breadcrumb-item>质量提醒</el-breadcrumb-item>
+        </el-breadcrumb>
+      </div>
       <div class="handle-box">
         <label style="margin-right: 5px;margin-left: 5px">
           <el-date-picker
@@ -60,7 +66,7 @@
                   :data="tables"
                   :header-cell-style="{background:'#A1D0FC',color:'rgba(0, 0, 0, 0.8)',fontSize:'16px'}"
                   border
-                  height="500"
+                  :height="tableHeight"
                   @select="selectList"
                   @select-all="selectAll"
                   highlight-current-row
@@ -138,6 +144,7 @@
 
         select_word: "",
         sbVisible: false,
+        tableHeight:Number, //根据页面加载显示table的高度
 
         examineTime: "",
         learn: "1",
@@ -383,6 +390,12 @@
     .equipmentTable {
       width: 100%;
       height: 85%;
+      .crumbs {
+        height: 50px;
+        padding-top: 20px;
+        padding-left: 20px;
+        border-bottom: 1px solid@color-F0;
+      }
       .handle-box {
         line-height: 100px;
         padding-left: 10px;
