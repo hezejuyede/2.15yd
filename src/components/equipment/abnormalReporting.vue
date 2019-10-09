@@ -5,7 +5,7 @@
       <div class="crumbs">
         <el-breadcrumb separator="/">
           <el-breadcrumb-item>设备管理</el-breadcrumb-item>
-          <el-breadcrumb-item>储品不足</el-breadcrumb-item>
+          <el-breadcrumb-item>设备故障上报</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
       <div class="handle-box">
