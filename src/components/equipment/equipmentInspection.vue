@@ -196,6 +196,7 @@
                   border
                   height="600"
                   highlight-current-row
+                  :row-class-name="tableRowClassName"
                   style="width: 98%;margin: auto">
           <template v-for="(col ,index) in mxCols">
             <el-table-column align="center" :prop="col.prop" :label="col.label"></el-table-column>
@@ -417,6 +418,15 @@
             that.mxCols = title.data;
             that.mxData = table.data.data;
           }));
+      },
+
+      tableRowClassName({row, rowIndex}) {
+        if (row.jieguostr === "不良") {
+          return 'red2-row';
+        }
+        else if (row.jieguostr === "维修中") {
+          return 'yellow-row';
+        }
       },
     }
   }
